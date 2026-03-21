@@ -1,0 +1,186 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Language {
+  ENGLISH
+  FRENCH
+  ARABIC
+  SPANISH
+  GERMAN
+  ITALIAN
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum SubmissionType {
+  FREE_WRITE
+  EXAM_PRACTICE
+}
+
+enum ExerciseType {
+  GRAMMAR
+  VOCABULARY
+  COMPREHENSION
+  STRUCTURE
+  MICRO_WRITING
+}
+
+enum MissionStatus {
+  READY
+  COMPLETED
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  passwordHash     String
+  fullName         String?
+  isPremium        Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  submissions      Submission[]
+  studentProfile   StudentProfile?
+  exerciseAttempts ExerciseAttempt[]
+  dailyMissions    DailyMission[]
+}
+
+model Submission {
+  id              String         @id @default(uuid())
+  userId          String
+  examId          String?
+  language        Language       @default(ENGLISH)
+  submissionType  SubmissionType @default(FREE_WRITE)
+  promptText      String?
+  originalText    String
+  correctedText   String
+  overallScore    Float
+  grammarScore    Float
+  vocabularyScore Float
+  structureScore  Float
+  feedbackJson    Json
+  wordCount       Int
+  createdAt       DateTime       @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exam Exam? @relation(fields: [examId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([examId])
+}
+
+model Exam {
+  id               String       @id @default(uuid())
+  slug             String       @unique
+  language         Language     @default(ENGLISH)
+  year             Int
+  title            String
+  prompt           String
+  modelAnswer      String
+  methodology      String
+  difficulty       Difficulty
+  estimatedMinutes Int          @default(45)
+  submissions      Submission[]
+
+  @@index([language, year])
+}
+
+model StudentProfile {
+  id                     String   @id @default(uuid())
+  userId                 String   @unique
+  sectionLabel           String?
+  targetScore            Int      @default(15)
+  examYear               Int?
+  primaryLanguage        Language @default(ENGLISH)
+  secondaryLanguagesJson Json?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Lesson {
+  id               String       @id @default(uuid())
+  slug             String       @unique
+  language         Language     @default(ENGLISH)
+  title            String
+  summary          String
+  body             String
+  theme            String
+  skillFocus       String
+  difficulty       Difficulty   @default(MEDIUM)
+  estimatedMinutes Int          @default(5)
+  takeawayJson     Json
+  createdAt        DateTime     @default(now())
+  exercises        Exercise[]
+  dailyMissions    DailyMission[]
+
+  @@index([language, skillFocus])
+}
+
+model Exercise {
+  id               String           @id @default(uuid())
+  slug             String           @unique
+  language         Language         @default(ENGLISH)
+  lessonId         String?
+  type             ExerciseType
+  prompt           String
+  choicesJson      Json?
+  answerJson       Json
+  explanation      String
+  difficulty       Difficulty       @default(MEDIUM)
+  skillFocus       String
+  xpReward         Int              @default(20)
+  createdAt        DateTime         @default(now())
+  lesson           Lesson?          @relation(fields: [lessonId], references: [id], onDelete: SetNull)
+  attempts         ExerciseAttempt[]
+  dailyMissions    DailyMission[]
+
+  @@index([language, skillFocus])
+}
+
+model ExerciseAttempt {
+  id         String   @id @default(uuid())
+  userId     String
+  exerciseId String
+  answerText String
+  isCorrect  Boolean
+  xpEarned   Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([exerciseId, createdAt])
+}
+
+model DailyMission {
+  id          String        @id @default(uuid())
+  userId      String
+  lessonId    String?
+  exerciseId  String?
+  missionDate DateTime
+  title       String
+  description String
+  skillFocus  String
+  status      MissionStatus @default(READY)
+  xpReward    Int           @default(40)
+  createdAt   DateTime      @default(now())
+  completedAt DateTime?
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson   Lesson?   @relation(fields: [lessonId], references: [id], onDelete: SetNull)
+  exercise Exercise? @relation(fields: [exerciseId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, missionDate])
+  @@index([userId, status])
+}
