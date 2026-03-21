@@ -10,6 +10,7 @@ type SubmissionMetricRecord = {
     year: number;
     title: string;
   } | null;
+  language?: string;
 };
 
 type DashboardMetricsInput = {
@@ -101,6 +102,7 @@ export function buildDashboardMetrics({
 
   return {
     latestScore,
+    language: recentSubmissions[0]?.language ?? null,
     bestScore,
     averageScore,
     averageBreakdown,

@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import { requireAdminUser } from "@/lib/auth";
 import { PlanToggleForm } from "./plan-toggle-form";
+import { LessonForm } from "./lesson-form";
+import { SocialGenerator } from "./social-generator";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +31,10 @@ export default async function AdminPage() {
       </section>
 
       <PlanToggleForm />
+
+      <SocialGenerator />
+
+      <LessonForm />
 
       <section className="card stack">
         <h2 className="section-title">Recent users</h2>

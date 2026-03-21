@@ -10,6 +10,7 @@ type ProfileSetupFormProps = {
     targetScore: number;
     examYear: number | null;
     primaryLanguage: string;
+    secondaryLanguagesJson: any;
   };
 };
 
@@ -19,6 +20,17 @@ export function ProfileSetupForm({ initialProfile }: ProfileSetupFormProps) {
   const [targetScore, setTargetScore] = useState(initialProfile.targetScore);
   const [examYear, setExamYear] = useState(initialProfile.examYear?.toString() ?? "2026");
   const [primaryLanguage, setPrimaryLanguage] = useState(initialProfile.primaryLanguage);
+  
+  let initialSecondary: string[] = [];
+  try {
+    if (initialProfile.secondaryLanguagesJson) {
+      const parsed = typeof initialProfile.secondaryLanguagesJson === 'string' ? JSON.parse(initialProfile.secondaryLanguagesJson) : initialProfile.secondaryLanguagesJson;
+      if (Array.isArray(parsed)) initialSecondary = parsed;
+    }
+  } catch(e) {}
+  
+  const [secondaryLanguages, setSecondaryLanguages] = useState<string[]>(initialSecondary);
+  
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -34,7 +46,8 @@ export function ProfileSetupForm({ initialProfile }: ProfileSetupFormProps) {
         sectionLabel: sectionLabel.trim() || null,
         targetScore,
         examYear: Number(examYear),
-        primaryLanguage
+        primaryLanguage,
+        secondaryLanguages
       })
     });
 
@@ -106,10 +119,32 @@ export function ProfileSetupForm({ initialProfile }: ProfileSetupFormProps) {
           >
             {profileLanguageOptions.map((option) => (
               <option key={option.value} value={option.value}>
-                {option.label} - {option.status}
+                {option.label}
               </option>
             ))}
           </select>
+        </label>
+
+        <label className="stack">
+          <span className="field-label">Option languages (multiple)</span>
+          <div className="checkbox-group">
+            {profileLanguageOptions.filter(o => o.value !== primaryLanguage).map((option) => (
+              <label key={option.value} className="checkbox-label" style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
+                <input
+                  type="checkbox"
+                  checked={secondaryLanguages.includes(option.value)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSecondaryLanguages([...secondaryLanguages, option.value]);
+                    } else {
+                      setSecondaryLanguages(secondaryLanguages.filter(lang => lang !== option.value));
+                    }
+                  }}
+                />
+                {option.label}
+              </label>
+            ))}
+          </div>
         </label>
       </div>
 

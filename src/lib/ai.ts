@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { z } from "zod";
+import { getBacEnglishRubricPromptBlock } from "@/lib/examiner-rubric";
 
 const correctionSchema = z.object({
   overallScore: z.number().min(0).max(20),
@@ -12,12 +13,19 @@ const correctionSchema = z.object({
   improvements: z.array(z.string()).min(3).max(5)
 });
 
-export async function correctEssay(inputText: string, promptText?: string) {
+export async function correctEssay(inputText: string, promptText?: string, language: string = "ENGLISH") {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("Missing OPENAI_API_KEY");
 
   const client = new OpenAI({ apiKey });
   const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+
+  const rubricBlock =
+    language === "ENGLISH"
+      ? getBacEnglishRubricPromptBlock()
+      : `Score grammar, vocabulary, and structure each out of 20 for ${language} bac-style writing. ` +
+        `Blend them into overallScore (similar weighting: grammar ~35%, vocabulary ~30%, structure ~35%), rounded to one decimal. ` +
+        `Keep the same JSON fields and examiner tone.`;
 
   const response = await Promise.race([
     client.responses.create({
@@ -26,7 +34,9 @@ export async function correctEssay(inputText: string, promptText?: string) {
         {
           role: "system",
           content:
-            "You are a strict but encouraging Tunisian Baccalaureate English examiner. Evaluate essays using bac-style criteria: grammar accuracy, vocabulary range, and structure/coherence. Return strict JSON only."
+            `You are a strict but encouraging Tunisian Baccalaureate ${language} examiner. ` +
+            `Evaluate writing using bac-style criteria. Output must be valid JSON only (no markdown).\n\n` +
+            rubricBlock
         },
         {
           role: "user",

@@ -9,7 +9,8 @@ const schema = z.object({
   sectionLabel: z.string().trim().max(80).nullable().optional(),
   targetScore: z.number().int().min(10).max(20),
   examYear: z.number().int().min(2026).max(2035).nullable().optional(),
-  primaryLanguage: z.nativeEnum(Language)
+  primaryLanguage: z.nativeEnum(Language),
+  secondaryLanguages: z.array(z.nativeEnum(Language)).optional()
 });
 
 export async function GET(req: NextRequest) {
@@ -33,14 +34,16 @@ export async function PUT(req: NextRequest) {
         sectionLabel: body.sectionLabel ?? null,
         targetScore: body.targetScore,
         examYear: body.examYear ?? null,
-        primaryLanguage: body.primaryLanguage
+        primaryLanguage: body.primaryLanguage,
+        secondaryLanguagesJson: body.secondaryLanguages ? (body.secondaryLanguages as any) : null
       },
       create: {
         userId: auth.userId,
         sectionLabel: body.sectionLabel ?? null,
         targetScore: body.targetScore,
         examYear: body.examYear ?? null,
-        primaryLanguage: body.primaryLanguage
+        primaryLanguage: body.primaryLanguage,
+        secondaryLanguagesJson: body.secondaryLanguages ? (body.secondaryLanguages as any) : null
       }
     });
 

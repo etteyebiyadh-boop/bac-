@@ -24,8 +24,8 @@ export default async function DailyPage() {
           <span className="pill">{xpTotal} XP earned</span>
         </div>
         <p className="muted">
-          Primary track: {getLanguageLabel(profile.primaryLanguage)}. Today’s mission is generated
-          from your current weak spot so you can improve with one focused session.
+          Primary track: {getLanguageLabel(profile.primaryLanguage)}. Today&apos;s mission is
+          generated from your current weak spot so you can improve with one focused session.
         </p>
       </section>
 

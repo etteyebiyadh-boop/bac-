@@ -33,6 +33,62 @@ enum ExerciseType {
   COMPREHENSION
   STRUCTURE
   MICRO_WRITING
+  PRONUNCIATION
+  COMMUNICATION
+}
+
+enum GrammarCategory {
+  TENSES
+  CONDITIONALS
+  MODALS
+  PASSIVE_VOICE
+  REPORTED_SPEECH
+  ARTICLES
+  PREPOSITIONS
+  CONNECTORS
+  RELATIVE_CLAUSES
+  COMPARATIVES
+}
+
+enum VerbTense {
+  PRESENT_SIMPLE
+  PRESENT_CONTINUOUS
+  PRESENT_PERFECT
+  PAST_SIMPLE
+  PAST_CONTINUOUS
+  PAST_PERFECT
+  FUTURE_SIMPLE
+  FUTURE_CONTINUOUS
+  FUTURE_PERFECT
+  CONDITIONAL_SIMPLE
+  CONDITIONAL_PERFECT
+}
+
+enum VocabTheme {
+  ENVIRONMENT
+  TECHNOLOGY
+  EDUCATION
+  HEALTH
+  SOCIETY
+  POLITICS
+  ECONOMY
+  CULTURE
+  SPORTS
+  TRAVEL
+  WORK
+  FAMILY
+  MEDIA
+  SCIENCE
+  GLOBAL_ISSUES
+}
+
+enum PassageType {
+  ARTICLE
+  ESSAY
+  STORY
+  DIALOGUE
+  SPEECH
+  LETTER
 }
 
 enum MissionStatus {
@@ -183,4 +239,114 @@ model DailyMission {
 
   @@unique([userId, missionDate])
   @@index([userId, status])
+}
+
+model GrammarRule {
+  id          String          @id @default(uuid())
+  slug        String          @unique
+  language    Language        @default(ENGLISH)
+  category    GrammarCategory
+  title       String
+  rule        String
+  formula     String?
+  examples    Json
+  exceptions  Json?
+  usageNotes  String?
+  commonErrors Json?
+  difficulty  Difficulty      @default(MEDIUM)
+  isEssential Boolean         @default(false)
+  relatedRules Json?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([language, category])
+  @@index([difficulty])
+}
+
+model VerbConjugation {
+  id          String    @id @default(uuid())
+  slug        String    @unique
+  language    Language  @default(ENGLISH)
+  baseForm    String
+  pastSimple  String
+  pastParticiple String
+  presentParticiple String?
+  thirdPersonSingular String?
+  isRegular   Boolean   @default(true)
+  isIrregular Boolean   @default(false)
+  isPhrasal   Boolean   @default(false)
+  isModal     Boolean   @default(false)
+  auxiliaryVerb String?
+  fullConjugation Json
+  commonUses  Json
+  exampleSentences Json
+  collocations Json?
+  difficulty  Difficulty @default(MEDIUM)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([language, isIrregular])
+  @@index([baseForm])
+}
+
+model VocabularySet {
+  id          String    @id @default(uuid())
+  slug        String    @unique
+  language    Language  @default(ENGLISH)
+  theme       VocabTheme
+  title       String
+  description String
+  bacContext  String
+  difficulty  Difficulty @default(MEDIUM)
+  items       VocabItem[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([language, theme])
+  @@index([difficulty])
+}
+
+model VocabItem {
+  id              String        @id @default(uuid())
+  vocabularySetId String
+  word            String
+  definition      String
+  partOfSpeech    String
+  pronunciation   String?
+  exampleSentence String
+  bacExample      String
+  synonyms        Json?
+  antonyms        Json?
+  collocations    Json?
+  register        String        @default("neutral")
+  difficulty      Difficulty    @default(MEDIUM)
+  createdAt       DateTime      @default(now())
+
+  vocabularySet VocabularySet @relation(fields: [vocabularySetId], references: [id], onDelete: Cascade)
+
+  @@index([vocabularySetId])
+  @@index([word])
+}
+
+model ReadingPassage {
+  id              String     @id @default(uuid())
+  slug            String     @unique
+  language        Language   @default(ENGLISH)
+  title           String
+  passageType     PassageType
+  source          String?
+  content         String
+  wordCount       Int
+  difficulty      Difficulty @default(MEDIUM)
+  themes          Json
+  keyVocabulary   Json
+  comprehensionQuestions Json?
+  summary         String?
+  bacRelevance    String
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([language, passageType])
+  @@index([difficulty])
+  @@index([themes])
 }

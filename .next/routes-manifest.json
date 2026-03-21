@@ -48,6 +48,18 @@
       "namedRegex": "^/admin(?:/)?$"
     },
     {
+      "page": "/api/admin/generate-social",
+      "regex": "^/api/admin/generate\\-social(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/generate\\-social(?:/)?$"
+    },
+    {
+      "page": "/api/admin/lessons",
+      "regex": "^/api/admin/lessons(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/lessons(?:/)?$"
+    },
+    {
       "page": "/api/admin/users/plan",
       "regex": "^/api/admin/users/plan(?:/)?$",
       "routeKeys": {},
@@ -90,6 +102,24 @@
       "namedRegex": "^/api/exams(?:/)?$"
     },
     {
+      "page": "/api/exercises/attempt",
+      "regex": "^/api/exercises/attempt(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/exercises/attempt(?:/)?$"
+    },
+    {
+      "page": "/api/lessons",
+      "regex": "^/api/lessons(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/lessons(?:/)?$"
+    },
+    {
+      "page": "/api/profile",
+      "regex": "^/api/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/profile(?:/)?$"
+    },
+    {
       "page": "/auth/login",
       "regex": "^/auth/login(?:/)?$",
       "routeKeys": {},
@@ -102,6 +132,12 @@
       "namedRegex": "^/auth/signup(?:/)?$"
     },
     {
+      "page": "/daily",
+      "regex": "^/daily(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/daily(?:/)?$"
+    },
+    {
       "page": "/dashboard",
       "regex": "^/dashboard(?:/)?$",
       "routeKeys": {},
@@ -112,6 +148,18 @@
       "regex": "^/exams(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/exams(?:/)?$"
+    },
+    {
+      "page": "/lessons",
+      "regex": "^/lessons(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/lessons(?:/)?$"
+    },
+    {
+      "page": "/pricing",
+      "regex": "^/pricing(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/pricing(?:/)?$"
     },
     {
       "page": "/privacy",

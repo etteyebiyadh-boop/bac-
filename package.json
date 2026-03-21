@@ -9,7 +9,8 @@
     "lint": "next lint",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "node prisma/seed.js"
+    "prisma:seed": "node prisma/seed.js",
+    "prisma:seed:content": "node prisma/seed-comprehensive.js"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",

@@ -12,6 +12,7 @@ type ExamOption = {
   methodology: string;
   difficulty: "EASY" | "MEDIUM" | "HARD";
   estimatedMinutes: number;
+  language: string;
 };
 
 type CorrectionResult = {
@@ -59,6 +60,7 @@ export function WriteWorkspace({ exams, selectedExam }: WriteWorkspaceProps) {
   const router = useRouter();
   const [selectedExamId, setSelectedExamId] = useState(selectedExam?.id ?? "");
   const [customPrompt, setCustomPrompt] = useState("");
+  const [freeLanguage, setFreeLanguage] = useState("ENGLISH");
   const [studentText, setStudentText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -86,7 +88,8 @@ export function WriteWorkspace({ exams, selectedExam }: WriteWorkspaceProps) {
       body: JSON.stringify({
         examId: activeExam?.id,
         promptText: activeExam ? activeExam.prompt : customPrompt,
-        studentText
+        studentText,
+        language: activeExam ? activeExam.language : freeLanguage
       })
     });
 
@@ -105,12 +108,12 @@ export function WriteWorkspace({ exams, selectedExam }: WriteWorkspaceProps) {
     <div className="page-stack">
       <section className="card practice-layout">
         <div className="stack">
-          <span className="eyebrow">English writing pilot</span>
-          <h1 className="section-title">Train on bac English prompts and get an instant mark.</h1>
+          <span className="eyebrow">Writing practice</span>
+          <h1 className="section-title">Train on bac subjects and get an instant mark.</h1>
           <p className="muted">
             Pick one of the curated bac exams or write a custom essay prompt for extra practice.
-            This is the first live BacLang module before lessons, daily missions, and more
-            languages are layered in.
+            This focused writing workspace now connects directly to your lessons, daily mission,
+            and score history so every draft feeds the wider learning loop.
           </p>
         </div>
 
@@ -126,7 +129,7 @@ export function WriteWorkspace({ exams, selectedExam }: WriteWorkspaceProps) {
             <option value="">Free writing mode</option>
             {exams.map((exam) => (
               <option key={exam.id} value={exam.id}>
-                {exam.year} - {exam.title}
+                {exam.language} - {exam.year} - {exam.title}
               </option>
             ))}
           </select>
@@ -146,6 +149,22 @@ export function WriteWorkspace({ exams, selectedExam }: WriteWorkspaceProps) {
             </div>
           ) : (
             <div className="stack">
+              <label className="field-label" htmlFor="free-language">
+                Language
+              </label>
+              <select
+                id="free-language"
+                value={freeLanguage}
+                onChange={(e) => setFreeLanguage(e.target.value)}
+              >
+                <option value="ENGLISH">English</option>
+                <option value="FRENCH">French</option>
+                <option value="ARABIC">Arabic</option>
+                <option value="SPANISH">Spanish</option>
+                <option value="GERMAN">German</option>
+                <option value="ITALIAN">Italian</option>
+              </select>
+
               <label className="field-label" htmlFor="custom-prompt">
                 Custom prompt
               </label>
@@ -167,7 +186,7 @@ export function WriteWorkspace({ exams, selectedExam }: WriteWorkspaceProps) {
           <textarea
             id="student-text"
             rows={14}
-            placeholder="Write your English essay here. Aim for a clear introduction, developed ideas, and a short conclusion."
+            placeholder={`Write your ${activeExam ? activeExam.language.charAt(0) + activeExam.language.slice(1).toLowerCase() : freeLanguage.charAt(0) + freeLanguage.slice(1).toLowerCase()} essay here. Aim for a clear introduction, developed ideas, and a short conclusion.`}
             value={studentText}
             onChange={(event) => setStudentText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
           />

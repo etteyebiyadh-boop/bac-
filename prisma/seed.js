@@ -246,6 +246,52 @@ const lessons = [
       "Use variety only when the sentence stays clear.",
       "Readable writing usually scores better than forced complexity."
     ]
+  },
+  {
+    slug: "english-communication-opinions",
+    language: "ENGLISH",
+    title: "Expressing Opinion & Agreement",
+    summary: "Master the exact phrases to express and justify your opinion in dialogues and functions.",
+    body: "In the Tunisian bac exam, communication functions require you to use specific phrases. For expressing opinion: 'In my view' or 'I strongly believe that'. For agreeing: 'I share your point of view' or 'I couldn't agree more'. For disagreeing politely: 'I see your point, but...'.",
+    theme: "Functions",
+    skillFocus: "communication",
+    difficulty: "EASY",
+    estimatedMinutes: 5,
+    takeawayJson: [
+      "Always justify your opinion after stating it.",
+      "Use 'I share your point of view' to agree strongly."
+    ]
+  },
+  {
+    slug: "english-pronunciation-ed-sounds",
+    language: "ENGLISH",
+    title: "Pronunciation of final -ed",
+    summary: "Learn the 3 simple rules to never miss the 'ed' pronunciation question.",
+    body: "The final -ed is pronounced /t/ after unvoiced sounds (p, k, s, ch, sh, f). It is pronounced /d/ after voiced sounds (b, g, z, v, m, n, l, r, and vowels). It is pronounced /Id/ only after T and D sounds (e.g., wanted, needed).",
+    theme: "Pronunciation",
+    skillFocus: "pronunciation",
+    difficulty: "MEDIUM",
+    estimatedMinutes: 6,
+    takeawayJson: [
+      "/Id/ after T and D.",
+      "/t/ after P, K, S, SH, CH, F.",
+      "/d/ for all the rest."
+    ]
+  },
+  {
+    slug: "french-reading-comprehension-tricks",
+    language: "FRENCH",
+    title: "Compréhension: Relever et Justifier",
+    summary: "Comment répondre parfaitement aux questions de compréhension de l'écrit sans perdre de points.",
+    body: "Ne copiez jamais toute la phrase ! Quand on vous demande de justifier, trouvez la phrase exacte, ouvrez les guillemets (\"\"), copiez le segment exact, et fermez les guillemets. Pour un relevé, assurez-vous que le mot ou l'expression répond directement à la question.",
+    theme: "Reading Comprehension",
+    skillFocus: "comprehension",
+    difficulty: "EASY",
+    estimatedMinutes: 5,
+    takeawayJson: [
+      "Toujours utiliser les guillemets pour justifier.",
+      "Ne pas recopier tout le paragraphe."
+    ]
   }
 ];
 

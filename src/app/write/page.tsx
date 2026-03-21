@@ -20,7 +20,8 @@ export default async function WritePage({ searchParams }: WritePageProps) {
       prompt: true,
       methodology: true,
       difficulty: true,
-      estimatedMinutes: true
+      estimatedMinutes: true,
+      language: true
     }
   });
 

@@ -17,7 +17,8 @@ import { checkRateLimit } from "@/lib/rate-limit";
 const schema = z.object({
   promptText: z.string().trim().max(600).optional(),
   studentText: z.string().trim().min(MIN_ESSAY_CHARS).max(MAX_ESSAY_CHARS),
-  examId: z.string().optional()
+  examId: z.string().optional(),
+  language: z.nativeEnum(Language).optional()
 });
 
 export async function POST(req: NextRequest) {
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
       body.examId
         ? db.exam.findUnique({
             where: { id: body.examId },
-            select: { id: true, prompt: true }
+            select: { id: true, prompt: true, language: true }
           })
         : Promise.resolve(null),
       db.submission.count({
@@ -80,9 +81,20 @@ export async function POST(req: NextRequest) {
     }
 
     const promptText =
-      (exam?.prompt ?? body.promptText?.trim()) || "General bac-style writing";
+      (exam?.prompt ?? body.promptText?.trim()) || `General bac-style writing`;
+    const language = exam?.language ?? body.language ?? Language.ENGLISH;
+    
+    if (!user.isPremium && language !== Language.ENGLISH) {
+      return NextResponse.json(
+        {
+          error: `The Free plan only supports English corrections. Upgrade to Premium to practice ${language.toLowerCase()}.`
+        },
+        { status: 403 }
+      );
+    }
+    
     const wordCount = body.studentText.split(/\s+/).filter(Boolean).length;
-    const result = await correctEssay(body.studentText, promptText);
+    const result = await correctEssay(body.studentText, promptText, language);
     const weakestSkill = getWeakestSkill({
       grammar: result.grammarScore,
       vocabulary: result.vocabularyScore,
@@ -90,7 +102,7 @@ export async function POST(req: NextRequest) {
     });
     const recommendedLesson = await db.lesson.findFirst({
       where: {
-        language: Language.ENGLISH,
+        language,
         skillFocus: weakestSkill
       },
       orderBy: [{ difficulty: "asc" }, { estimatedMinutes: "asc" }]
@@ -100,7 +112,7 @@ export async function POST(req: NextRequest) {
       data: {
         userId: auth.userId,
         examId: exam?.id,
-        language: Language.ENGLISH,
+        language,
         submissionType: exam ? SubmissionType.EXAM_PRACTICE : SubmissionType.FREE_WRITE,
         promptText,
         originalText: body.studentText,
