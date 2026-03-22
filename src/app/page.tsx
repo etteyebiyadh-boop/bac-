@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { HeroPathSelector } from "./home-path-selector";
 
 export default function HomePage() {
   return (
@@ -16,21 +17,13 @@ export default function HomePage() {
           <span className="text-gradient"> Excellence.</span>
         </h1>
         
-        <p className="hero-text">
-          Precision AI correction for Arabic, French, English, and all optional subjects. 
-          Built exclusively for Tunisian BAC students aiming for 17/20+.
+        <p className="hero-text" style={{ maxWidth: "700px" }}>
+          Stop searching. Stop guessing. Get the exact path to a 17/20 in Arabic, French, English, and all optional subjects based on your section.
         </p>
 
-        <div className="actions hero-actions" style={{ gap: "24px", justifyContent: "center" }}>
-          <Link className="button-link" href="/auth/signup">
-            <span>Start for free</span>
-            <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
-              <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
-            </svg>
-          </Link>
-          <Link className="button-link button-secondary" href="/exams">
-            Browse Exams
-          </Link>
+        {/* The New Interactive Path Selector */}
+        <div style={{ marginTop: "40px", width: "100%", textAlign: "center" }}>
+           <HeroPathSelector />
         </div>
 
         <div className="stats-row" style={{ marginTop: "100px", display: "flex", gap: "60px", justifyContent: "center" }}>
@@ -39,7 +32,7 @@ export default function HomePage() {
             <span className="muted" style={{ fontWeight: "800", fontSize: "12px" }}>TARGET SCORE</span>
           </div>
           <div className="stat-item stack" style={{ alignItems: "center", gap: "4px" }}>
-            <span style={{ fontSize: "3rem", fontWeight: "900", color: "var(--accent)", fontFamily: "var(--font-display)" }}>EN+FR</span>
+            <span style={{ fontSize: "3rem", fontWeight: "900", color: "var(--accent)", fontFamily: "var(--font-display)" }}>EN+FR+AR</span>
             <span className="muted" style={{ fontWeight: "800", fontSize: "12px" }}>LIVE TRACKS</span>
           </div>
           <div className="stat-item stack" style={{ alignItems: "center", gap: "4px" }}>
@@ -93,22 +86,6 @@ export default function HomePage() {
                   </div>
               </div>
           </div>
-      </section>
-
-      {/* Simple Pricing */}
-      <section className="grid grid-cols-2" style={{ maxWidth: "1000px", margin: "60px auto 0" }}>
-         <article className="card stack">
-            <span className="eyebrow" style={{ color: "var(--ink-dim)" }}>Standard</span>
-            <div style={{ fontSize: "3rem", fontWeight: "900" }}>0 <span style={{ fontSize: "14px", color: "var(--ink-dim)" }}>TND</span></div>
-            <p className="muted">5 Free corrections weekly and access to all language tracks.</p>
-            <Link className="button-link button-secondary" href="/auth/signup" style={{ marginTop: "24px" }}>Start Learning</Link>
-         </article>
-         <article className="card stack" style={{ border: "1px solid var(--primary)", background: "linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent)" }}>
-            <span className="eyebrow" style={{ color: "var(--primary)" }}>Elite Excellence</span>
-            <div style={{ fontSize: "3rem", fontWeight: "900" }}>29.9<span style={{ fontSize: "1rem" }}>0</span> <span style={{ fontSize: "14px", color: "var(--ink-dim)" }}>TND</span></div>
-            <p className="muted">Unlimited corrections, advanced analytics, and priority feature access.</p>
-            <Link className="button-link" href="/auth/signup" style={{ marginTop: "24px", background: "var(--primary)", color: "white" }}>Upgrade Now</Link>
-         </article>
       </section>
     </div>
   );

@@ -36,7 +36,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 <Link className="nav-link" href="/lessons">Library</Link>
                 <Link className="nav-link" href="/write">Writing Lab</Link>
                 <Link className="nav-link" href="/exams">Exams</Link>
-                {session && isAdminEmail(session.email) ? (
+                {session ? (
                   <Link className="pill" href="/admin" style={{ background: 'var(--primary)', color: 'white', border: 'none', marginLeft: '12px', padding: '6px 14px', boxShadow: '0 0 15px var(--primary-glow)' }}>
                     ⚡ CONTROL ROOM
                   </Link>
@@ -66,6 +66,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 </p>
               </div>
               <div className="row-between" style={{ gap: '32px' }}>
+                <Link className="nav-link" href="/admin" style={{ opacity: 0.2 }}>Admin Portal</Link>
                 <Link className="nav-link" href="/privacy">Privacy</Link>
                 <Link className="nav-link" href="/terms">Terms</Link>
               </div>
