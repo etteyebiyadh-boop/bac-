@@ -1,12 +1,13 @@
 "use client";
 
+import { BacSection, Language } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { profileLanguageOptions } from "@/lib/learning";
+import { bacSectionOptions } from "@/lib/learning";
 
 type ProfileSetupFormProps = {
   initialProfile: {
-    sectionLabel: string | null;
+    sectionLabel: BacSection | null;
     targetScore: number;
     examYear: number | null;
     primaryLanguage: string;
@@ -16,20 +17,33 @@ type ProfileSetupFormProps = {
 
 export function ProfileSetupForm({ initialProfile }: ProfileSetupFormProps) {
   const router = useRouter();
-  const [sectionLabel, setSectionLabel] = useState(initialProfile.sectionLabel ?? "");
+  const [sectionLabel, setSectionLabel] = useState<BacSection | "">(initialProfile.sectionLabel ?? "");
   const [targetScore, setTargetScore] = useState(initialProfile.targetScore);
   const [examYear, setExamYear] = useState(initialProfile.examYear?.toString() ?? "2026");
-  const [primaryLanguage, setPrimaryLanguage] = useState(initialProfile.primaryLanguage);
   
-  let initialSecondary: string[] = [];
-  try {
-    if (initialProfile.secondaryLanguagesJson) {
-      const parsed = typeof initialProfile.secondaryLanguagesJson === 'string' ? JSON.parse(initialProfile.secondaryLanguagesJson) : initialProfile.secondaryLanguagesJson;
-      if (Array.isArray(parsed)) initialSecondary = parsed;
-    }
-  } catch(e) {}
+  // Compute initial optional language
+  let initialOptional = "none";
+  const optionals = [Language.SPANISH, Language.GERMAN, Language.ITALIAN] as string[];
+  if (optionals.includes(initialProfile.primaryLanguage)) {
+    initialOptional = initialProfile.primaryLanguage;
+  } else {
+    try {
+      if (initialProfile.secondaryLanguagesJson) {
+        const parsed = typeof initialProfile.secondaryLanguagesJson === 'string' 
+          ? JSON.parse(initialProfile.secondaryLanguagesJson) 
+          : initialProfile.secondaryLanguagesJson;
+        if (Array.isArray(parsed)) {
+          for (const lang of parsed) {
+            if (optionals.includes(lang)) {
+              initialOptional = lang;
+            }
+          }
+        }
+      }
+    } catch(e) {}
+  }
   
-  const [secondaryLanguages, setSecondaryLanguages] = useState<string[]>(initialSecondary);
+  const [optionalLanguage, setOptionalLanguage] = useState(initialOptional);
   
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
@@ -39,6 +53,12 @@ export function ProfileSetupForm({ initialProfile }: ProfileSetupFormProps) {
     setSaving(true);
     setStatus("");
 
+    // For a Tunisian BAC student, the core languages are mandatory.
+    const secondaryLanguages = [Language.FRENCH, Language.ARABIC] as string[];
+    if (optionalLanguage !== "none") {
+      secondaryLanguages.push(optionalLanguage);
+    }
+
     const response = await fetch("/api/profile", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -46,7 +66,7 @@ export function ProfileSetupForm({ initialProfile }: ProfileSetupFormProps) {
         sectionLabel: sectionLabel.trim() || null,
         targetScore,
         examYear: Number(examYear),
-        primaryLanguage,
+        primaryLanguage: Language.ENGLISH, // Kept as base language for system defaults
         secondaryLanguages
       })
     });
@@ -73,17 +93,23 @@ export function ProfileSetupForm({ initialProfile }: ProfileSetupFormProps) {
         <span className="pill">Personalization</span>
       </div>
       <p className="muted">
-        This helps BacLang recommend the right mission, lessons, and language roadmap.
+        This keeps recommendations tied exactly to your BAC section and limits content to the languages you actually study.
       </p>
 
       <div className="field-grid">
         <label className="stack">
-          <span className="field-label">Section</span>
-          <input
-            placeholder="Example: Langues or Lettres"
+          <span className="field-label">BAC section</span>
+          <select
             value={sectionLabel}
-            onChange={(event) => setSectionLabel(event.target.value)}
-          />
+            onChange={(event) => setSectionLabel(event.target.value as BacSection | "")}
+          >
+            <option value="">Choose your section</option>
+            {bacSectionOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
         </label>
 
         <label className="stack">
@@ -112,46 +138,23 @@ export function ProfileSetupForm({ initialProfile }: ProfileSetupFormProps) {
         </label>
 
         <label className="stack">
-          <span className="field-label">Primary language</span>
+          <span className="field-label">Optional language (4th language)</span>
           <select
-            value={primaryLanguage}
-            onChange={(event) => setPrimaryLanguage(event.target.value)}
+            value={optionalLanguage}
+            onChange={(event) => setOptionalLanguage(event.target.value)}
           >
-            {profileLanguageOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            <option value="none">None</option>
+            <option value={Language.SPANISH}>Spanish</option>
+            <option value={Language.GERMAN}>German</option>
+            <option value={Language.ITALIAN}>Italian</option>
           </select>
-        </label>
-
-        <label className="stack">
-          <span className="field-label">Option languages (multiple)</span>
-          <div className="checkbox-group">
-            {profileLanguageOptions.filter(o => o.value !== primaryLanguage).map((option) => (
-              <label key={option.value} className="checkbox-label" style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-                <input
-                  type="checkbox"
-                  checked={secondaryLanguages.includes(option.value)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSecondaryLanguages([...secondaryLanguages, option.value]);
-                    } else {
-                      setSecondaryLanguages(secondaryLanguages.filter(lang => lang !== option.value));
-                    }
-                  }}
-                />
-                {option.label}
-              </label>
-            ))}
-          </div>
         </label>
       </div>
 
       <button type="submit" disabled={saving}>
         {saving ? "Saving profile..." : "Save study profile"}
       </button>
-      {status ? <p className="muted">{status}</p> : null}
+      {status ? <p className="muted" style={{ color: "var(--success)" }}>{status}</p> : null}
     </form>
   );
 }

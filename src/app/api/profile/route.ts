@@ -1,4 +1,4 @@
-import { Language } from "@prisma/client";
+import { BacSection, Language } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getUserFromRequest } from "@/lib/auth";
@@ -6,7 +6,7 @@ import { db } from "@/lib/db";
 import { ensureStudentProfile } from "@/lib/missions";
 
 const schema = z.object({
-  sectionLabel: z.string().trim().max(80).nullable().optional(),
+  sectionLabel: z.nativeEnum(BacSection).nullable().optional(),
   targetScore: z.number().int().min(10).max(20),
   examYear: z.number().int().min(2026).max(2035).nullable().optional(),
   primaryLanguage: z.nativeEnum(Language),
@@ -27,23 +27,26 @@ export async function PUT(req: NextRequest) {
 
   try {
     const body = schema.parse(await req.json());
+    const secondaryLanguages = (body.secondaryLanguages ?? []).filter(
+      (language) => language !== body.primaryLanguage
+    );
 
     const profile = await db.studentProfile.upsert({
       where: { userId: auth.userId },
       update: {
-        bacSection: (body.sectionLabel as any) ?? null,
+        bacSection: body.sectionLabel ?? null,
         targetScore: body.targetScore,
         examYear: body.examYear ?? null,
         primaryLanguage: body.primaryLanguage,
-        secondaryLanguagesJson: body.secondaryLanguages ? (body.secondaryLanguages as any) : null
+        secondaryLanguagesJson: secondaryLanguages
       },
       create: {
         userId: auth.userId,
-        bacSection: (body.sectionLabel as any) ?? null,
+        bacSection: body.sectionLabel ?? null,
         targetScore: body.targetScore,
         examYear: body.examYear ?? null,
         primaryLanguage: body.primaryLanguage,
-        secondaryLanguagesJson: body.secondaryLanguages ? (body.secondaryLanguages as any) : null
+        secondaryLanguagesJson: secondaryLanguages
       }
     });
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FREE_CORRECTIONS_PER_WEEK, MAX_ESSAY_CHARS, MIN_ESSAY_CHARS } from "@/lib/constants";
+import { profileLanguageOptions } from "@/lib/learning";
 
 type ExamOption = {
   id: string;
@@ -111,9 +112,9 @@ export function WriteWorkspace({ exams, selectedExam }: WriteWorkspaceProps) {
           <span className="eyebrow">Writing practice</span>
           <h1 className="section-title">Train on bac subjects and get an instant mark.</h1>
           <p className="muted">
-            Pick one of the curated bac exams or write a custom essay prompt for extra practice.
-            This focused writing workspace now connects directly to your lessons, daily mission,
-            and score history so every draft feeds the wider learning loop.
+            Start with the live English exam bank or write your own prompt. Each corrected draft
+            feeds your lessons, daily mission, and score history so the platform behaves like a
+            real BAC progress loop instead of a one-off checker.
           </p>
         </div>
 
@@ -157,12 +158,11 @@ export function WriteWorkspace({ exams, selectedExam }: WriteWorkspaceProps) {
                 value={freeLanguage}
                 onChange={(e) => setFreeLanguage(e.target.value)}
               >
-                <option value="ENGLISH">English</option>
-                <option value="FRENCH">French</option>
-                <option value="ARABIC">Arabic</option>
-                <option value="SPANISH">Spanish</option>
-                <option value="GERMAN">German</option>
-                <option value="ITALIAN">Italian</option>
+                {profileLanguageOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
 
               <label className="field-label" htmlFor="custom-prompt">
@@ -200,8 +200,8 @@ export function WriteWorkspace({ exams, selectedExam }: WriteWorkspaceProps) {
           </button>
 
           <p className="muted">
-            Free plan: {FREE_CORRECTIONS_PER_WEEK} AI corrections per 7 days. Essay length:{" "}
-            {MIN_ESSAY_CHARS} to {MAX_ESSAY_CHARS} characters.
+            Free plan: {FREE_CORRECTIONS_PER_WEEK} AI corrections per 7 days. English is the live
+            free track. Essay length: {MIN_ESSAY_CHARS} to {MAX_ESSAY_CHARS} characters.
           </p>
 
           {error ? <p className="error-text">{error}</p> : null}

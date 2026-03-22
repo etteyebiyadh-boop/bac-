@@ -31,8 +31,8 @@ export default function LoginPage() {
         <span className="eyebrow">Welcome back</span>
         <h1 className="section-title">Login and continue your bac training.</h1>
         <p className="muted">
-          Resume your writing streak, review your score history, and keep improving toward 15+/20
-          with the English-first BacLang study loop.
+          Resume your writing streak, review your score history, and keep moving inside the
+          correction-first BacLang study loop.
         </p>
         <input
           type="email"

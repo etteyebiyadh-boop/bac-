@@ -31,8 +31,8 @@ export default function SignupPage() {
         <span className="eyebrow">Start free</span>
         <h1 className="section-title">Create your BacLang account.</h1>
         <p className="muted">
-          The live MVP focuses on English writing improvement first, then expands into French,
-          Arabic, optional languages, smart lessons, and daily exercises.
+          English correction is the live entry point. French and Arabic are the next tracks being
+          folded into the same correction, lesson, and daily-mission loop.
         </p>
         <input
           type="email"

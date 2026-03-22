@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { profileLanguageOptions } from "@/lib/learning";
 
 export function LanguageSelector({ currentLang, activeTab }: { currentLang: string, activeTab: string }) {
   return (
@@ -12,12 +13,11 @@ export function LanguageSelector({ currentLang, activeTab }: { currentLang: stri
         onChange={(e) => e.target.form?.submit()}
         style={{ padding: '6px 28px 6px 12px', borderRadius: '14px', border: 'none', fontSize: '0.85rem', fontWeight: 700, background: 'rgba(255,255,255,0.95)' }}
       >
-        <option value="ENGLISH">English</option>
-        <option value="FRENCH">French</option>
-        <option value="ARABIC">Arabic</option>
-        <option value="SPANISH">Spanish</option>
-        <option value="GERMAN">German</option>
-        <option value="ITALIAN">Italian</option>
+        {profileLanguageOptions.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
       </select>
     </form>
   );

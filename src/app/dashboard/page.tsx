@@ -92,10 +92,11 @@ export default async function DashboardPage() {
         <section className="card stack hero-panel" style={{ padding: '32px 24px', position: 'relative', overflow: 'hidden' }}>
           <div className="row-between" style={{ alignItems: 'center' }}>
             <div className="stack" style={{ maxWidth: '600px', zIndex: 1 }}>
-              <span className="eyebrow" style={{ color: '#e7bf87' }}>SaaS Pro Tier Available</span>
-              <h2 className="section-title" style={{color: 'white'}}>Master French, Arabic, and your Optional Languages.</h2>
+              <span className="eyebrow" style={{ color: '#e7bf87' }}>Premium access</span>
+              <h2 className="section-title" style={{color: 'white'}}>Keep the correction loop unlimited.</h2>
               <p className="muted" style={{ margin: 0, color: 'rgba(255,255,255,0.85)' }}>
-                You are currently on a limited free plan with 5 corrections/week. Upgrade to unlock unlimited AI corrections and multi-language support (German, Spanish, Italian).
+                You are on a limited free plan with 5 corrections per week. Upgrade for unlimited
+                practice and access to the expanding French and Arabic tracks as they mature.
               </p>
             </div>
             <Link className="button-link" style={{ background: 'white', color: 'var(--primary-strong)', zIndex: 1 }} href="/pricing">
@@ -152,8 +153,8 @@ export default async function DashboardPage() {
           <span className="eyebrow">Complete your setup</span>
           <h2 className="section-title">Finish your study profile to personalize the app.</h2>
           <p className="muted">
-            Add your section and exam year so daily missions and premium study plans can match your
-            path more accurately.
+            Choose your official BAC section and exam year so daily missions and future language
+            tracks match your path more accurately.
           </p>
         </section>
       ) : null}

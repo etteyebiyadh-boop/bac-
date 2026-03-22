@@ -3,20 +3,18 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div className="page-stack home-page">
-      {/* Hero Section */}
       <section className="hero">
         <div className="hero-copy">
           <div className="hero-badge">
-            <span className="badge badge-accent">Tunisian BAC · All Sections</span>
+            <span className="badge badge-accent">Tunisian BAC - English live now</span>
           </div>
           <h1 className="hero-title">
-            Master Your BAC
-            <span className="text-gradient"> Language Exams</span>
+            Turn Writing Practice Into
+            <span className="text-gradient"> Real BAC Progress</span>
           </h1>
           <p className="hero-text">
-            AI-powered essay correction that scores like a real examiner. Get detailed feedback 
-            on grammar, vocabulary, and structure—then improve with targeted lessons tailored 
-            to your BAC section.
+            Start with BAC-style English correction, then keep improving through smart lessons,
+            daily missions, and exam practice built for Tunisian students.
           </p>
 
           <div className="actions hero-actions">
@@ -32,7 +30,7 @@ export default function HomePage() {
           </div>
 
           <p className="muted hero-disclaimer">
-            AI feedback simulates BAC-style marking for all Tunisian BAC sections.
+            English correction is live now. French, Arabic, and Optional Languages (Spanish, German, Italian) are rolling out next.
           </p>
 
           <div className="stats-row">
@@ -41,12 +39,12 @@ export default function HomePage() {
               <span className="stat-label">/20 Target Score</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">6</span>
-              <span className="stat-label">BAC Sections</span>
+              <span className="stat-number">EN</span>
+              <span className="stat-label">Live Now</span>
             </div>
             <div className="stat-item">
-              <span className="stat-number">3</span>
-              <span className="stat-label">Languages</span>
+              <span className="stat-number">FR+AR+Opt</span>
+              <span className="stat-label">Next Tracks</span>
             </div>
           </div>
         </div>
@@ -69,21 +67,21 @@ export default function HomePage() {
               <div className="score-item">
                 <span className="score-label">Grammar</span>
                 <div className="score-bar-mini">
-                  <div className="score-fill-mini" style={{width: '85%'}} />
+                  <div className="score-fill-mini" style={{ width: "85%" }} />
                 </div>
                 <span className="score-mini">17/20</span>
               </div>
               <div className="score-item">
                 <span className="score-label">Vocabulary</span>
                 <div className="score-bar-mini">
-                  <div className="score-fill-mini" style={{width: '78%'}} />
+                  <div className="score-fill-mini" style={{ width: "78%" }} />
                 </div>
                 <span className="score-mini">15.5/20</span>
               </div>
               <div className="score-item">
                 <span className="score-label">Structure</span>
                 <div className="score-bar-mini">
-                  <div className="score-fill-mini" style={{width: '82%'}} />
+                  <div className="score-fill-mini" style={{ width: "82%" }} />
                 </div>
                 <span className="score-mini">16.5/20</span>
               </div>
@@ -107,13 +105,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* BAC Sections Grid */}
       <section className="section section-dark">
         <div className="section-header">
-          <span className="section-overline">All BAC Sections</span>
-          <h2 className="section-title">Language Training for Every Section</h2>
+          <span className="section-overline">Official BAC Sections</span>
+          <h2 className="section-title">Built around the real Tunisian section map</h2>
           <p className="section-subtitle">
-            Whether you are in Math, Sciences, or Lettres—get content tailored to your specific language requirements.
+            We use the official BAC sections to personalize the roadmap now and keep future French,
+            Arabic, and Optional Language tracks aligned with the right students.
           </p>
         </div>
 
@@ -145,8 +143,8 @@ export default function HomePage() {
           <div className="card section-card section-card-featured">
             <div className="section-icon">L</div>
             <h3 className="section-card-title">Lettres</h3>
-            <p className="section-card-subjects">+ Arabic Lit, French Lit, English Lit</p>
-            <span className="section-coef">Coef 3</span>
+            <p className="section-card-subjects">+ Arabic Lit, French Lit, English Lit, Optional Langs</p>
+            <span className="section-coef">Coef 3 / 1.5</span>
           </div>
           <div className="card section-card">
             <div className="section-icon">E</div>
@@ -157,7 +155,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Grid */}
       <section className="card trust-strip">
         <article className="trust-item">
           <div className="trust-icon trust-icon-primary">
@@ -168,7 +165,8 @@ export default function HomePage() {
           <span className="eyebrow">Rubric Scoring</span>
           <strong>Real BAC-style marking criteria</strong>
           <p className="muted">
-            Scores map to official BAC rubrics: grammar, vocabulary, and structure each scored separately.
+            Scores map to BAC-style rubrics with grammar, vocabulary, and structure scored
+            separately.
           </p>
         </article>
 
@@ -179,9 +177,10 @@ export default function HomePage() {
             </svg>
           </div>
           <span className="eyebrow">BAC-Aligned Content</span>
-          <strong>Official modules and themes</strong>
+          <strong>Live English modules, expansion-ready structure</strong>
           <p className="muted">
-            Practice with prompts from the official Tunisian BAC English program: Holidaying, Education, Innovation.
+            The live exam bank follows official BAC English modules while the wider product stays
+            ready for French and Arabic expansion.
           </p>
         </article>
 
@@ -194,12 +193,12 @@ export default function HomePage() {
           <span className="eyebrow">Progress Tracking</span>
           <strong>Daily missions and streaks</strong>
           <p className="muted">
-            Build consistent study habits with daily missions, streak tracking, and skill progression.
+            Build consistent study habits with daily missions, streak tracking, and skill
+            progression.
           </p>
         </article>
       </section>
 
-      {/* How It Works */}
       <section className="page-section">
         <div className="section-header">
           <span className="section-overline">How It Works</span>
@@ -214,29 +213,31 @@ export default function HomePage() {
             <div className="feature-number">01</div>
             <h3 className="feature-title">Pick a Prompt</h3>
             <p className="feature-desc">
-              Choose from curated BAC-style exam questions organized by module. Each prompt includes timing hints and context.
+              Choose from curated BAC-style exam questions organized by module. Each prompt
+              includes timing hints and context.
             </p>
           </article>
 
           <article className="card feature-card">
             <div className="feature-number">02</div>
-            <h3 className="feature-title">Write & Submit</h3>
+            <h3 className="feature-title">Write and Submit</h3>
             <p className="feature-desc">
-              Write your essay in the exam simulator. Get instant scoring with detailed breakdown of your strengths and weaknesses.
+              Write your essay in the exam simulator. Get instant scoring with a clear breakdown of
+              strengths and weak points.
             </p>
           </article>
 
           <article className="card feature-card">
             <div className="feature-number">03</div>
-            <h3 className="feature-title">Learn & Improve</h3>
+            <h3 className="feature-title">Learn and Improve</h3>
             <p className="feature-desc">
-              Review the corrected version, study targeted lessons for your weakest skill, and track your progress over time.
+              Review the corrected version, open the recommended lesson, and keep tracking your
+              progress over time.
             </p>
           </article>
         </div>
       </section>
 
-      {/* Pricing Section */}
       <section className="panel-grid pricing-section">
         <article className="card pricing-card">
           <div className="pricing-header">
@@ -248,7 +249,7 @@ export default function HomePage() {
           </div>
           <ul className="pricing-features">
             <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>5 corrections/week</li>
-            <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>English module access</li>
+            <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>English correction track</li>
             <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>Daily missions</li>
             <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>Progress dashboard</li>
           </ul>
@@ -262,17 +263,17 @@ export default function HomePage() {
           <div className="pricing-header">
             <span className="eyebrow">Premium</span>
             <div className="pricing-price">
-              <span className="price">29</span>
+              <span className="price">29.90</span>
               <span className="currency">TND</span>
-              <span className="period">/month</span>
+              <span className="period">/season</span>
             </div>
           </div>
           <ul className="pricing-features">
             <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>Unlimited corrections</li>
-            <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>All 3 languages (EN, FR, AR)</li>
-            <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>Grammar & vocabulary lessons</li>
+            <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>French, Arabic & Optional tracks access</li>
+            <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>Grammar and vocabulary lessons</li>
             <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>Advanced analytics</li>
-            <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>Priority support</li>
+            <li><svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>Priority new features</li>
           </ul>
           <Link className="button-link button-accent full-width" href="/auth/signup">
             Upgrade to Premium

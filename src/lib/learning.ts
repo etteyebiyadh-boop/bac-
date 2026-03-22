@@ -1,4 +1,4 @@
-import { Language } from "@prisma/client";
+import { BacSection, Language } from "@prisma/client";
 
 type ScoreBreakdown = {
   grammar: number;
@@ -17,13 +17,37 @@ export const profileLanguageOptions = [
   {
     value: Language.FRENCH,
     label: "French",
-    status: "Coming next"
+    status: "Rolling out"
   },
   {
     value: Language.ARABIC,
     label: "Arabic",
-    status: "Coming next"
+    status: "Rolling out"
+  },
+  {
+    value: Language.SPANISH,
+    label: "Spanish (Optional)",
+    status: "Beta"
+  },
+  {
+    value: Language.GERMAN,
+    label: "German (Optional)",
+    status: "Beta"
+  },
+  {
+    value: Language.ITALIAN,
+    label: "Italian (Optional)",
+    status: "Beta"
   }
+] as const;
+
+export const bacSectionOptions = [
+  { value: BacSection.MATHEMATIQUES, label: "Mathematiques" },
+  { value: BacSection.SCIENCES_EXPERIMENTALES, label: "Sciences experimentales" },
+  { value: BacSection.SCIENCES_INFORMATIQUE, label: "Sciences informatique" },
+  { value: BacSection.SCIENCES_TECHNIQUES, label: "Sciences techniques" },
+  { value: BacSection.LETTRES, label: "Lettres" },
+  { value: BacSection.ECONOMIE_GESTION, label: "Economie et gestion" }
 ] as const;
 
 export function getSkillLabel(skill: SkillFocus) {
@@ -43,6 +67,12 @@ export function getWeakestSkill(breakdown: ScoreBreakdown | null): SkillFocus {
 export function getLanguageLabel(language: Language) {
   const found = profileLanguageOptions.find((option) => option.value === language);
   return found?.label ?? language;
+}
+
+export function getBacSectionLabel(section: BacSection | null | undefined) {
+  if (!section) return "Not set";
+  const found = bacSectionOptions.find((option) => option.value === section);
+  return found?.label ?? section;
 }
 
 export function startOfUtcDay(date = new Date()) {
