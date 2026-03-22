@@ -66,7 +66,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 </p>
               </div>
               <div className="row-between" style={{ gap: '32px' }}>
-                <Link className="nav-link" href="/admin" style={{ opacity: 0.2 }}>Admin Portal</Link>
+                <Link className="button-link button-secondary" href="/admin" style={{ padding: '12px 24px', fontSize: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>🛡️ ADMIN ACCESS</Link>
                 <Link className="nav-link" href="/privacy">Privacy</Link>
                 <Link className="nav-link" href="/terms">Terms</Link>
               </div>
