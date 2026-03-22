@@ -1483,6 +1483,7 @@ async function seedVerbConjugations() {
     {
       baseForm: 'can',
       pastSimple: 'could',
+      pastParticiple: '-',
       isModal: true,
       commonUses: ['Ability/possibility', 'Permission', 'Request', 'Offer'],
       exampleSentences: ['I can speak French.', 'Can you help me?', 'It can be difficult.'],
@@ -1491,6 +1492,7 @@ async function seedVerbConjugations() {
     {
       baseForm: 'could',
       pastSimple: 'could',
+      pastParticiple: '-',
       isModal: true,
       commonUses: ['Past ability', 'Polite request', 'Possibility', 'Conditional'],
       exampleSentences: ['I could swim when I was five.', 'Could you open the window?', 'It could rain tomorrow.'],
@@ -1499,6 +1501,7 @@ async function seedVerbConjugations() {
     {
       baseForm: 'may',
       pastSimple: 'might',
+      pastParticiple: '-',
       isModal: true,
       commonUses: ['Permission', 'Possibility', 'Wish/hope'],
       exampleSentences: ['You may leave now.', 'It may rain tomorrow.', 'May you succeed!'],
@@ -1507,6 +1510,7 @@ async function seedVerbConjugations() {
     {
       baseForm: 'might',
       pastSimple: 'might',
+      pastParticiple: '-',
       isModal: true,
       commonUses: ['Remote possibility', 'Suggestion', 'Polite request'],
       exampleSentences: ['We might go tomorrow.', 'You might try restarting it.'],
@@ -1515,6 +1519,7 @@ async function seedVerbConjugations() {
     {
       baseForm: 'must',
       pastSimple: 'had to',
+      pastParticiple: '-',
       isModal: true,
       commonUses: ['Strong obligation', 'Deduction/certainty', 'Necessity'],
       exampleSentences: ['You must study hard.', 'He must be tired.'],
@@ -1523,6 +1528,7 @@ async function seedVerbConjugations() {
     {
       baseForm: 'should',
       pastSimple: 'should have',
+      pastParticiple: '-',
       isModal: true,
       commonUses: ['Advice', 'Expectation', 'Obligation'],
       exampleSentences: ['You should exercise more.', 'The bus should arrive soon.'],
@@ -1531,6 +1537,7 @@ async function seedVerbConjugations() {
     {
       baseForm: 'would',
       pastSimple: 'would have',
+      pastParticiple: '-',
       isModal: true,
       commonUses: ['Conditional', 'Past habit', 'Polite request', 'Preference'],
       exampleSentences: ['I would help if I could.', 'He would walk to school.'],
@@ -1539,6 +1546,7 @@ async function seedVerbConjugations() {
     {
       baseForm: 'shall',
       pastSimple: 'should',
+      pastParticiple: '-',
       isModal: true,
       commonUses: ['Future (formal/UK)', 'Offers/suggestions', 'Legal obligation'],
       exampleSentences: ['Shall we begin?', 'I shall return.'],
