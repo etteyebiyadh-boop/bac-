@@ -23,44 +23,27 @@ export default async function LibraryHubPage() {
 
   const activeLanguages = [profile.primaryLanguage, ...secondaryLanguages];
 
-  const [lessons, grammarRules, vocabSets] = await Promise.all([
-    db.lesson.findMany({
+  const [grammarRules, vocabSets] = await Promise.all([
+    db.grammarRule.findMany({
       where: { language: { in: activeLanguages } },
       orderBy: { createdAt: "desc" }
     }),
-    db.grammarRule.findMany({
-      where: { 
-        language: { in: activeLanguages }
-      },
-      orderBy: { createdAt: "desc" }
-    }),
     db.vocabularySet.findMany({
-      where: { 
-        language: { in: activeLanguages }
-      },
+      where: { language: { in: activeLanguages } },
       orderBy: { createdAt: "desc" }
     })
   ]);
 
-  const filterBySection = <T extends { bacSections: string[] }>(items: T[]) => {
-    if (!profile.bacSection) return items;
-    return items.filter(item => 
-      !item.bacSections || item.bacSections.length === 0 || item.bacSections.includes(profile.bacSection!)
-    );
-  };
-
-  const filteredGrammar = filterBySection(grammarRules as any) as typeof grammarRules;
-  const filteredVocab = filterBySection(vocabSets as any) as typeof vocabSets;
-
   return (
-    <div className="page-stack">
+    <div className="page-stack library-overhaul">
       <section className="card stack hero-panel" style={{ padding: "80px", border: "1px solid var(--primary)", background: "radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent)" }}>
         <div style={{ position: "absolute", right: "-10%", top: "-50%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%)", borderRadius: "50%" }} />
         <div className="stack" style={{ zIndex: 1, position: "relative", gap: "24px" }}>
-          <span className="eyebrow" style={{ color: "var(--primary)" }}>The Study Hub</span>
-          <h1 className="section-title" style={{ fontSize: "4rem", lineHeight: 1 }}>Your Elite <br/>Content Library.</h1>
-          <p className="muted" style={{ fontSize: "1.2rem", maxWidth: "600px", color: "var(--ink-dim)" }}>
-            Everything you need for your section (<strong>{getBacSectionLabel(profile.bacSection)}</strong>) is filtered and organized below across {activeLanguages.length} active tracks.
+          <span className="eyebrow" style={{ color: "var(--primary)" }}>The Excellence Library</span>
+          <h1 className="section-title" style={{ fontSize: "4rem", lineHeight: 1 }}>Deep Knowledge <br/>Curated For You.</h1>
+          <p className="muted" style={{ fontSize: "1.2rem", maxWidth: "600px" }}>
+            Below are your mandatory and optional tracks for **Section {getBacSectionLabel(profile.bacSection)}**. 
+            Organized to take you from understanding to mastery.
           </p>
           <div className="row-between" style={{ justifyContent: "flex-start", gap: "10px" }}>
             {activeLanguages.map(l => (
@@ -71,89 +54,65 @@ export default async function LibraryHubPage() {
       </section>
 
       {activeLanguages.map((lang) => {
-        const langLessons = lessons.filter((l) => l.language === lang);
-        const langGrammar = filteredGrammar.filter((g) => g.language === lang);
-        const langVocab = filteredVocab.filter((v) => v.language === lang);
-
-        if (langLessons.length === 0 && langGrammar.filter(x => x).length === 0 && langVocab.length === 0) {
-          return (
-            <section key={lang} className="card stack" style={{ padding: "48px" }}>
-               <div className="row-between">
-                  <h2 className="section-title" style={{ fontSize: "2rem" }}>{getLanguageLabel(lang)} Track</h2>
-                  <span className="pill">COMING SOON</span>
-               </div>
-               <p className="muted">Detailed rules and interactive modules for this language are currently in active rollout.</p>
-            </section>
-          );
-        }
+        const langGrammar = grammarRules.filter((g) => g.language === lang);
+        const langVocab = vocabSets.filter((v) => v.language === lang);
 
         return (
-          <div key={lang} className="stack" style={{ gap: "48px" }}>
-            <h2 className="section-title" style={{ fontSize: "2.5rem", borderBottom: "1px solid var(--card-border)", paddingBottom: "16px" }}>
-              {getLanguageLabel(lang)} Mastery
-            </h2>
-
-            {/* Grammar Section with High-End Grid Cards */}
-            {langGrammar.length > 0 && (
-              <div className="stack" style={{ gap: "24px" }}>
-                 <div className="row-between">
-                    <span className="eyebrow" style={{ color: "var(--primary)" }}>The Grammar Rules</span>
-                 </div>
-                 <div className="grid grid-cols-3">
-                   {langGrammar.map((rule) => (
-                     <article key={rule.id} className="card stack" style={{ padding: "32px", background: "rgba(255,255,255,0.01)" }}>
-                       <span className={`pill ${rule.difficulty === "HARD" ? "error-pill" : ""}`} style={{ fontSize: "10px", textTransform: "uppercase" }}>{rule.difficulty}</span>
-                       <h3 style={{ fontSize: "1.4rem", fontWeight: "700", marginTop: "12px" }}>{rule.title}</h3>
-                       <p className="muted" style={{ fontSize: "14px", flex: 1 }}>{rule.category.replace(/_/g, " ")} analysis & formula breakdown inside.</p>
-                       <Link href={`/lessons/grammar/${rule.slug}`} className="button-link button-secondary" style={{ marginTop: "20px", justifyContent: "center", width: "100%" }}>Study Rule</Link>
-                     </article>
-                   ))}
+          <div key={lang} className="stack" style={{ gap: "48px", marginTop: "100px" }}>
+            <div className="row-between" style={{ borderBottom: "1px solid var(--glass-border)", paddingBottom: "16px" }}>
+              <h2 className="section-title" style={{ fontSize: "3rem", margin: 0 }}>
+                {getLanguageLabel(lang)} <span style={{ opacity: 0.3 }}>Track</span>
+              </h2>
+              <div className="row-between" style={{ gap: "20px" }}>
+                 <div className="stack" style={{ gap: "4px", textAlign: "right" }}>
+                    <span className="eyebrow" style={{ fontSize: "10px" }}>COEF</span>
+                    <strong style={{ fontSize: "1.2rem", color: "var(--accent)" }}>{lang === "ENGLISH" ? "2" : "2"}</strong>
                  </div>
               </div>
-            )}
+            </div>
 
-            {/* Vocabulary Section */}
-            {langVocab.length > 0 && (
-              <div className="stack" style={{ gap: "24px" }}>
-                 <div className="row-between">
-                    <span className="eyebrow" style={{ color: "var(--success)" }}>The Lexicon Hub</span>
-                 </div>
-                 <div className="grid grid-cols-3">
-                   {langVocab.map((set) => (
-                     <article key={set.id} className="card stack" style={{ padding: "32px", border: "1px solid rgba(16, 185, 129, 0.1)" }}>
-                       <h3 style={{ fontSize: "1.4rem", fontWeight: "700" }}>{set.title}</h3>
-                       <p className="muted" style={{ fontSize: "14px", flex: 1 }}>{set.description}</p>
-                       <div className="row-between" style={{ marginTop: "20px", padding: "12px", background: "rgba(0,0,0,0.2)", borderRadius: "12px" }}>
-                          <span style={{ fontSize: "11px", fontWeight: "700" }}>Theme: {set.theme.replace(/_/g, " ")}</span>
-                          <span style={{ fontSize: "11px", color: "var(--success)" }}>BAC ALIGNED</span>
-                       </div>
-                       <Link href={`/lessons/vocab/${set.slug}`} className="button-link button-secondary" style={{ marginTop: "20px", justifyContent: "center" }}>Review Set</Link>
-                     </article>
-                   ))}
-                 </div>
-              </div>
-            )}
+            <div className="grid grid-cols-2" style={{ gap: "32px", alignItems: "start" }}>
+               {/* Grammar Excellence Section */}
+               <section className="stack" style={{ gap: "24px" }}>
+                  <div className="row-between">
+                    <span className="eyebrow" style={{ color: "var(--primary)" }}>Grammar & Verbs</span>
+                    <span className="pill" style={{ fontSize: "10px" }}>{langGrammar.length} MODULES</span>
+                  </div>
+                  <div className="stack" style={{ gap: "16px" }}>
+                    {langGrammar.map(rule => (
+                      <article key={rule.id} className="card row-between" style={{ padding: "24px", background: "rgba(0,0,0,0.2)", border: "1px solid var(--glass-border)" }}>
+                         <div className="stack" style={{ gap: "4px" }}>
+                            <strong style={{ fontSize: "1.1rem" }}>{rule.title}</strong>
+                            <span className="muted" style={{ fontSize: "12px" }}>{rule.category.replace(/_/g, " ")} · {rule.difficulty}</span>
+                         </div>
+                         <Link href={`/lessons/grammar/${rule.slug}`} className="button-link button-secondary" style={{ padding: "12px 24px", fontSize: "12px" }}>Study</Link>
+                      </article>
+                    ))}
+                    {langGrammar.length === 0 && <p className="muted">Modules for this track are currently being optimized.</p>}
+                  </div>
+               </section>
 
-            {/* Smart Lessons Section */}
-            {langLessons.length > 0 && (
-              <div className="stack" style={{ gap: "24px" }}>
-                 <div className="row-between">
-                    <span className="eyebrow" style={{ color: "var(--accent)" }}>Interactive Lessons</span>
-                 </div>
-                 <div className="grid grid-cols-2">
-                   {langLessons.map((lesson) => (
-                     <article key={lesson.id} className="card row-between" style={{ padding: "32px", border: "1px solid rgba(245, 158, 11, 0.1)" }}>
-                        <div className="stack" style={{ maxWidth: "70%" }}>
-                          <h3 style={{ fontSize: "1.4rem", fontWeight: "700" }}>{lesson.title}</h3>
-                          <p className="muted" style={{ fontSize: "14px" }}>{lesson.summary}</p>
-                          <span className="pill" style={{ opacity: 0.8, fontSize: "10px" }}>{lesson.estimatedMinutes} MIN READ</span>
-                        </div>
-                        <Link href={`/lessons/${lesson.slug}`} className="button-link" style={{ background: "var(--accent)", color: "#000" }}>Start</Link>
-                     </article>
-                   ))}
-                 </div>
-              </div>
-            )}
+               {/* Vocab & Theme Section */}
+               <section className="stack" style={{ gap: "24px" }}>
+                  <div className="row-between">
+                    <span className="eyebrow" style={{ color: "var(--success)" }}>Thematic Lexicon</span>
+                    <span className="pill" style={{ fontSize: "10px" }}>{langVocab.length} SETS</span>
+                  </div>
+                  <div className="stack" style={{ gap: "16px" }}>
+                    {langVocab.map(set => (
+                      <article key={set.id} className="card stack" style={{ padding: "32px", background: "rgba(0,0,0,0.2)", border: "1px solid var(--glass-border)" }}>
+                         <h3 style={{ fontSize: "1.4rem", fontWeight: 800 }}>{set.title}</h3>
+                         <p className="muted" style={{ fontSize: "14px", marginTop: "8px" }}>{set.description}</p>
+                         <div className="row-between" style={{ marginTop: "24px" }}>
+                            <span className="pill" style={{ fontSize: "10px", borderColor: "var(--success)", color: "var(--success)", opacity: 0.6 }}>{set.theme}</span>
+                            <Link href={`/lessons/vocab/${set.slug}`} className="button-link" style={{ background: "var(--success)", color: "black", padding: "12px 24px", fontSize: "12px" }}>Open Vault</Link>
+                         </div>
+                      </article>
+                    ))}
+                    {langVocab.length === 0 && <p className="muted">Vocab modules for this track are coming in the next rollout.</p>}
+                  </div>
+               </section>
+            </div>
           </div>
         );
       })}
