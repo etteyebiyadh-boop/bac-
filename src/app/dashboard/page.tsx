@@ -70,7 +70,7 @@ export default async function DashboardPage() {
   });
 
   const weakestSkill = getWeakestSkill(metrics.averageBreakdown);
-  const profileIsIncomplete = !profile.sectionLabel || !profile.examYear;
+  const profileIsIncomplete = !profile.bacSection || !profile.examYear;
 
   return (
     <div className="page-stack">
@@ -139,7 +139,7 @@ export default async function DashboardPage() {
 
       <ProfileSetupForm
         initialProfile={{
-          sectionLabel: profile.sectionLabel,
+          sectionLabel: profile.bacSection,
           targetScore: profile.targetScore,
           examYear: profile.examYear,
           primaryLanguage: profile.primaryLanguage,

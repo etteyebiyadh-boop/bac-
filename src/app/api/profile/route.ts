@@ -31,7 +31,7 @@ export async function PUT(req: NextRequest) {
     const profile = await db.studentProfile.upsert({
       where: { userId: auth.userId },
       update: {
-        sectionLabel: body.sectionLabel ?? null,
+        bacSection: (body.sectionLabel as any) ?? null,
         targetScore: body.targetScore,
         examYear: body.examYear ?? null,
         primaryLanguage: body.primaryLanguage,
@@ -39,7 +39,7 @@ export async function PUT(req: NextRequest) {
       },
       create: {
         userId: auth.userId,
-        sectionLabel: body.sectionLabel ?? null,
+        bacSection: (body.sectionLabel as any) ?? null,
         targetScore: body.targetScore,
         examYear: body.examYear ?? null,
         primaryLanguage: body.primaryLanguage,

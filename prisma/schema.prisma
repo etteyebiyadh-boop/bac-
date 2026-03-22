@@ -7,6 +7,283 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model BacSubject {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  nameAr      String?
+  nameFr      String?
+  coefficient Int
+  bacSections BacSection[]
+  isCommon    Boolean      @default(false)
+  isLanguage  Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+
+  @@index([bacSections])
+}
+
+model User {
+  id               String            @id @default(uuid())
+  email            String            @unique
+  passwordHash     String
+  fullName         String?
+  isPremium        Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  dailyMissions    DailyMission[]
+  exerciseAttempts ExerciseAttempt[]
+  studentProfile   StudentProfile?
+  submissions      Submission[]
+}
+
+model Submission {
+  id              String         @id @default(uuid())
+  userId          String
+  examId          String?
+  language        Language       @default(ENGLISH)
+  submissionType  SubmissionType @default(FREE_WRITE)
+  promptText      String?
+  originalText    String
+  correctedText   String
+  overallScore    Float
+  grammarScore    Float
+  vocabularyScore Float
+  structureScore  Float
+  feedbackJson    Json
+  wordCount       Int
+  createdAt       DateTime       @default(now())
+  exam            Exam?          @relation(fields: [examId], references: [id])
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([examId])
+}
+
+model Exam {
+  id               String       @id @default(uuid())
+  slug             String       @unique
+  language         Language     @default(ENGLISH)
+  year             Int
+  title            String
+  prompt           String
+  modelAnswer      String
+  methodology      String
+  difficulty       Difficulty
+  estimatedMinutes Int          @default(45)
+  submissions      Submission[]
+
+  @@index([language, year])
+}
+
+model StudentProfile {
+  id                     String      @id @default(uuid())
+  userId                 String      @unique
+  targetScore            Int         @default(15)
+  examYear               Int?
+  primaryLanguage        Language    @default(ENGLISH)
+  secondaryLanguagesJson Json?
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+  bacSection             BacSection?
+  user                   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([bacSection])
+}
+
+model Lesson {
+  id               String         @id @default(uuid())
+  slug             String         @unique
+  language         Language       @default(ENGLISH)
+  title            String
+  summary          String
+  body             String
+  theme            String
+  skillFocus       String
+  difficulty       Difficulty     @default(MEDIUM)
+  estimatedMinutes Int            @default(5)
+  takeawayJson     Json
+  createdAt        DateTime       @default(now())
+  dailyMissions    DailyMission[]
+  exercises        Exercise[]
+
+  @@index([language, skillFocus])
+}
+
+model Exercise {
+  id            String            @id @default(uuid())
+  slug          String            @unique
+  language      Language          @default(ENGLISH)
+  lessonId      String?
+  type          ExerciseType
+  prompt        String
+  choicesJson   Json?
+  answerJson    Json
+  explanation   String
+  difficulty    Difficulty        @default(MEDIUM)
+  skillFocus    String
+  xpReward      Int               @default(20)
+  createdAt     DateTime          @default(now())
+  dailyMissions DailyMission[]
+  lesson        Lesson?           @relation(fields: [lessonId], references: [id])
+  attempts      ExerciseAttempt[]
+
+  @@index([language, skillFocus])
+}
+
+model ExerciseAttempt {
+  id         String   @id @default(uuid())
+  userId     String
+  exerciseId String
+  answerText String
+  isCorrect  Boolean
+  xpEarned   Int      @default(0)
+  createdAt  DateTime @default(now())
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([exerciseId, createdAt])
+}
+
+model DailyMission {
+  id          String        @id @default(uuid())
+  userId      String
+  lessonId    String?
+  exerciseId  String?
+  missionDate DateTime
+  title       String
+  description String
+  skillFocus  String
+  status      MissionStatus @default(READY)
+  xpReward    Int           @default(40)
+  createdAt   DateTime      @default(now())
+  completedAt DateTime?
+  exercise    Exercise?     @relation(fields: [exerciseId], references: [id])
+  lesson      Lesson?       @relation(fields: [lessonId], references: [id])
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, missionDate])
+  @@index([userId, status])
+}
+
+model GrammarRule {
+  id           String          @id @default(uuid())
+  slug         String          @unique
+  language     Language        @default(ENGLISH)
+  category     GrammarCategory
+  title        String
+  rule         String
+  formula      String?
+  examples     Json
+  exceptions   Json?
+  usageNotes   String?
+  commonErrors Json?
+  difficulty   Difficulty      @default(MEDIUM)
+  isEssential  Boolean         @default(false)
+  relatedRules Json?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  bacModule    BacModule?
+  bacSections  BacSection[]
+
+  @@index([language, category])
+  @@index([bacModule])
+  @@index([bacSections])
+  @@index([difficulty])
+}
+
+model VerbConjugation {
+  id                  String     @id @default(uuid())
+  slug                String     @unique
+  language            Language   @default(ENGLISH)
+  baseForm            String
+  pastSimple          String
+  pastParticiple      String
+  presentParticiple   String?
+  thirdPersonSingular String?
+  isRegular           Boolean    @default(true)
+  isIrregular         Boolean    @default(false)
+  isPhrasal           Boolean    @default(false)
+  isModal             Boolean    @default(false)
+  auxiliaryVerb       String?
+  fullConjugation     Json
+  commonUses          Json
+  exampleSentences    Json
+  collocations        Json?
+  difficulty          Difficulty @default(MEDIUM)
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+
+  @@index([language, isIrregular])
+  @@index([baseForm])
+}
+
+model VocabularySet {
+  id          String       @id @default(uuid())
+  slug        String       @unique
+  language    Language     @default(ENGLISH)
+  theme       VocabTheme
+  title       String
+  description String
+  bacContext  String
+  difficulty  Difficulty   @default(MEDIUM)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  bacModule   BacModule?
+  bacSections BacSection[]
+  isCommon    Boolean      @default(true)
+  items       VocabItem[]
+
+  @@index([language, theme])
+  @@index([bacModule])
+  @@index([bacSections])
+  @@index([difficulty])
+}
+
+model VocabItem {
+  id              String        @id @default(uuid())
+  vocabularySetId String
+  word            String
+  definition      String
+  partOfSpeech    String
+  pronunciation   String?
+  exampleSentence String
+  bacExample      String
+  synonyms        Json?
+  antonyms        Json?
+  collocations    Json?
+  register        String        @default("neutral")
+  difficulty      Difficulty    @default(MEDIUM)
+  createdAt       DateTime      @default(now())
+  vocabularySet   VocabularySet @relation(fields: [vocabularySetId], references: [id], onDelete: Cascade)
+
+  @@index([vocabularySetId])
+  @@index([word])
+}
+
+model ReadingPassage {
+  id                     String      @id @default(uuid())
+  slug                   String      @unique
+  language               Language    @default(ENGLISH)
+  title                  String
+  passageType            PassageType
+  source                 String?
+  content                String
+  wordCount              Int
+  difficulty             Difficulty  @default(MEDIUM)
+  themes                 Json
+  keyVocabulary          Json
+  comprehensionQuestions Json?
+  summary                String?
+  bacRelevance           String
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+  bacModule              BacModule?
+
+  @@index([language, passageType])
+  @@index([bacModule])
+  @@index([difficulty])
+  @@index([themes])
+}
+
 enum Language {
   ENGLISH
   FRENCH
@@ -80,6 +357,24 @@ enum VocabTheme {
   MEDIA
   SCIENCE
   GLOBAL_ISSUES
+  TOURISM
+  ARTS_ENTERTAINMENT
+  INNOVATION
+}
+
+enum BacModule {
+  MODULE_1_HOLIDAYING_ART_SHOWS
+  MODULE_2_EDUCATION_MATTERS
+  MODULE_3_CREATIVE_INVENTIVE_MINDS
+}
+
+enum BacSection {
+  MATHEMATIQUES
+  SCIENCES_EXPERIMENTALES
+  SCIENCES_INFORMATIQUE
+  SCIENCES_TECHNIQUES
+  LETTRES
+  ECONOMIE_GESTION
 }
 
 enum PassageType {
@@ -94,259 +389,4 @@ enum PassageType {
 enum MissionStatus {
   READY
   COMPLETED
-}
-
-model User {
-  id               String            @id @default(uuid())
-  email            String            @unique
-  passwordHash     String
-  fullName         String?
-  isPremium        Boolean           @default(false)
-  createdAt        DateTime          @default(now())
-  submissions      Submission[]
-  studentProfile   StudentProfile?
-  exerciseAttempts ExerciseAttempt[]
-  dailyMissions    DailyMission[]
-}
-
-model Submission {
-  id              String         @id @default(uuid())
-  userId          String
-  examId          String?
-  language        Language       @default(ENGLISH)
-  submissionType  SubmissionType @default(FREE_WRITE)
-  promptText      String?
-  originalText    String
-  correctedText   String
-  overallScore    Float
-  grammarScore    Float
-  vocabularyScore Float
-  structureScore  Float
-  feedbackJson    Json
-  wordCount       Int
-  createdAt       DateTime       @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exam Exam? @relation(fields: [examId], references: [id], onDelete: SetNull)
-
-  @@index([userId, createdAt])
-  @@index([examId])
-}
-
-model Exam {
-  id               String       @id @default(uuid())
-  slug             String       @unique
-  language         Language     @default(ENGLISH)
-  year             Int
-  title            String
-  prompt           String
-  modelAnswer      String
-  methodology      String
-  difficulty       Difficulty
-  estimatedMinutes Int          @default(45)
-  submissions      Submission[]
-
-  @@index([language, year])
-}
-
-model StudentProfile {
-  id                     String   @id @default(uuid())
-  userId                 String   @unique
-  sectionLabel           String?
-  targetScore            Int      @default(15)
-  examYear               Int?
-  primaryLanguage        Language @default(ENGLISH)
-  secondaryLanguagesJson Json?
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Lesson {
-  id               String       @id @default(uuid())
-  slug             String       @unique
-  language         Language     @default(ENGLISH)
-  title            String
-  summary          String
-  body             String
-  theme            String
-  skillFocus       String
-  difficulty       Difficulty   @default(MEDIUM)
-  estimatedMinutes Int          @default(5)
-  takeawayJson     Json
-  createdAt        DateTime     @default(now())
-  exercises        Exercise[]
-  dailyMissions    DailyMission[]
-
-  @@index([language, skillFocus])
-}
-
-model Exercise {
-  id               String           @id @default(uuid())
-  slug             String           @unique
-  language         Language         @default(ENGLISH)
-  lessonId         String?
-  type             ExerciseType
-  prompt           String
-  choicesJson      Json?
-  answerJson       Json
-  explanation      String
-  difficulty       Difficulty       @default(MEDIUM)
-  skillFocus       String
-  xpReward         Int              @default(20)
-  createdAt        DateTime         @default(now())
-  lesson           Lesson?          @relation(fields: [lessonId], references: [id], onDelete: SetNull)
-  attempts         ExerciseAttempt[]
-  dailyMissions    DailyMission[]
-
-  @@index([language, skillFocus])
-}
-
-model ExerciseAttempt {
-  id         String   @id @default(uuid())
-  userId     String
-  exerciseId String
-  answerText String
-  isCorrect  Boolean
-  xpEarned   Int      @default(0)
-  createdAt  DateTime @default(now())
-
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
-
-  @@index([userId, createdAt])
-  @@index([exerciseId, createdAt])
-}
-
-model DailyMission {
-  id          String        @id @default(uuid())
-  userId      String
-  lessonId    String?
-  exerciseId  String?
-  missionDate DateTime
-  title       String
-  description String
-  skillFocus  String
-  status      MissionStatus @default(READY)
-  xpReward    Int           @default(40)
-  createdAt   DateTime      @default(now())
-  completedAt DateTime?
-
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson   Lesson?   @relation(fields: [lessonId], references: [id], onDelete: SetNull)
-  exercise Exercise? @relation(fields: [exerciseId], references: [id], onDelete: SetNull)
-
-  @@unique([userId, missionDate])
-  @@index([userId, status])
-}
-
-model GrammarRule {
-  id          String          @id @default(uuid())
-  slug        String          @unique
-  language    Language        @default(ENGLISH)
-  category    GrammarCategory
-  title       String
-  rule        String
-  formula     String?
-  examples    Json
-  exceptions  Json?
-  usageNotes  String?
-  commonErrors Json?
-  difficulty  Difficulty      @default(MEDIUM)
-  isEssential Boolean         @default(false)
-  relatedRules Json?
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-
-  @@index([language, category])
-  @@index([difficulty])
-}
-
-model VerbConjugation {
-  id          String    @id @default(uuid())
-  slug        String    @unique
-  language    Language  @default(ENGLISH)
-  baseForm    String
-  pastSimple  String
-  pastParticiple String
-  presentParticiple String?
-  thirdPersonSingular String?
-  isRegular   Boolean   @default(true)
-  isIrregular Boolean   @default(false)
-  isPhrasal   Boolean   @default(false)
-  isModal     Boolean   @default(false)
-  auxiliaryVerb String?
-  fullConjugation Json
-  commonUses  Json
-  exampleSentences Json
-  collocations Json?
-  difficulty  Difficulty @default(MEDIUM)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([language, isIrregular])
-  @@index([baseForm])
-}
-
-model VocabularySet {
-  id          String    @id @default(uuid())
-  slug        String    @unique
-  language    Language  @default(ENGLISH)
-  theme       VocabTheme
-  title       String
-  description String
-  bacContext  String
-  difficulty  Difficulty @default(MEDIUM)
-  items       VocabItem[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([language, theme])
-  @@index([difficulty])
-}
-
-model VocabItem {
-  id              String        @id @default(uuid())
-  vocabularySetId String
-  word            String
-  definition      String
-  partOfSpeech    String
-  pronunciation   String?
-  exampleSentence String
-  bacExample      String
-  synonyms        Json?
-  antonyms        Json?
-  collocations    Json?
-  register        String        @default("neutral")
-  difficulty      Difficulty    @default(MEDIUM)
-  createdAt       DateTime      @default(now())
-
-  vocabularySet VocabularySet @relation(fields: [vocabularySetId], references: [id], onDelete: Cascade)
-
-  @@index([vocabularySetId])
-  @@index([word])
-}
-
-model ReadingPassage {
-  id              String     @id @default(uuid())
-  slug            String     @unique
-  language        Language   @default(ENGLISH)
-  title           String
-  passageType     PassageType
-  source          String?
-  content         String
-  wordCount       Int
-  difficulty      Difficulty @default(MEDIUM)
-  themes          Json
-  keyVocabulary   Json
-  comprehensionQuestions Json?
-  summary         String?
-  bacRelevance    String
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-
-  @@index([language, passageType])
-  @@index([difficulty])
-  @@index([themes])
 }

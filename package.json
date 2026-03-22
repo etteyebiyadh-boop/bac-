@@ -11,7 +11,9 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "node prisma/seed.js",
-    "prisma:seed:content": "node prisma/seed-comprehensive.js"
+    "prisma:seed:content": "node prisma/seed-comprehensive.js",
+    "prisma:seed:bac": "node prisma/seed-bac-official.js",
+    "prisma:seed:sections": "node prisma/seed-sections.js"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0",
