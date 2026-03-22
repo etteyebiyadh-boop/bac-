@@ -19,11 +19,20 @@ export async function POST(req: NextRequest) {
     const client = new OpenAI({ apiKey });
     const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
-    const prompt = `You are a viral social media manager for 'BacLang', a premium AI platform helping Tunisian Baccalaureate students.
-Write a highly engaging, creative ${platform} post about: ${language} - ${topic}.
-Keep it focused on a specific grammar rule, verb conjugation trick, or vocabulary list for the BAC exam.
-Format it practically (e.g., Slide 1, Slide 2 for Instagram Carousel, or Hook/Body/CTA for short-form video). Use emojis.
-End with a strong Call to Action telling them to practice essays and get instant AI corrections on baclang.com!`;
+    const prompt = `You are a viral social media manager for 'BacLang', the most elite and premium AI-first platform for Tunisian Baccalaureate students.
+Write a highly engaging, high-stakes and elite ${platform} post about: ${language} - ${topic}.
+
+Guidelines:
+1. TARGET: Tunisian BAC students who want to go from a 12 to a 17/20 in their language tracks.
+2. STYLE: Professional, slightly bold, outcome-focused. Use words like 'Excellence', 'Top Tier', 'Bac Score', 'Precision'.
+3. STRUCTURE for ${platform === "Instagram Carousel" ? 'Carousel' : platform}:
+   - Slide 1: High-impact HOOK (e.g. 'Stop losing 3 points on ${topic}').
+   - Slide 2: The Core Rule or Vocab (Simplified but Elite).
+   - Slide 3: The 'Pro-Tip' (The secret trick BAC examiners look for).
+   - Slide 4: Real Example (Context relevant to Tunisian exams).
+   - Slide 5: CTA (Call to Action) to visit baclang.com for unlimited AI corrections.
+4. EMOJIS: Use premium-feeling emojis like 🌌, 💎, 🚀, 🛡️, 💡.
+5. Emphasize that on BacLang, you don't just study, you get instant AI-powered feedback on your specific section's criteria.`;
 
     const response = await client.chat.completions.create({
         model,

@@ -9,6 +9,10 @@ export function SocialGenerator() {
   const [loading, setLoading] = useState(false);
   const [generatedPost, setGeneratedPost] = useState("");
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(generatedPost);
+  };
+
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
     if (!topic) return;
@@ -33,43 +37,44 @@ export function SocialGenerator() {
   }
 
   return (
-    <section className="card stack hero-panel" style={{ padding: "32px 24px" }}>
-      <div className="row-between">
-        <div className="stack" style={{ zIndex: 1 }}>
-          <span className="eyebrow" style={{ color: "#e7bf87" }}>Marketing</span>
-          <h2 className="section-title" style={{ color: "white" }}>AI Social Media Content Generator</h2>
-          <p className="muted" style={{ color: "rgba(255,255,255,0.8)" }}>
-            Need to post instantly? Type a grammar rule, verb, or vocab list. BacLang AI will perfectly script an Instagram carousel or TikTok script so you can drive traffic instantly.
+    <section className="card stack" style={{ border: "1px solid var(--primary)", background: "radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent)", padding: "60px" }}>
+      <div className="row-between" style={{ alignItems: "flex-start" }}>
+        <div className="stack" style={{ maxWidth: "600px" }}>
+          <span className="eyebrow" style={{ color: "var(--primary)" }}>Content Engine</span>
+          <h2 className="section-title" style={{ fontSize: "3rem" }}>Generate Viral <br/>BAC Excellence.</h2>
+          <p className="muted" style={{ fontSize: "1.1rem" }}>
+            Create shareable Social Media hooks and carousel scripts crafted in the elite BacLang style. 
+            Perfect for Instagram, TikTok, and scaling our community.
           </p>
         </div>
-        <span className="pill">Content Engine</span>
+        <div className="pill" style={{ borderColor: "var(--primary)", color: "var(--primary)" }}>AD-HOC MARKETING</div>
       </div>
 
-      <form className="stack" onSubmit={handleGenerate} style={{ marginTop: "16px", zIndex: 1 }}>
-        <div className="field-grid" style={{ gridTemplateColumns: "1fr 1fr 2fr" }}>
-          <label className="stack">
-            <span className="field-label" style={{ color: "rgba(255,255,255,0.9)" }}>Language</span>
+      <form className="stack" onSubmit={handleGenerate} style={{ marginTop: "40px", gap: "24px" }}>
+        <div className="grid grid-cols-3">
+          <label className="stack" style={{ gap: "8px" }}>
+            <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Language Track</span>
             <select value={language} onChange={e => setLanguage(e.target.value)}>
-              <option value="ENGLISH">English</option>
-              <option value="FRENCH">French</option>
-              <option value="ARABIC">Arabic</option>
-              <option value="SPANISH">Spanish</option>
-              <option value="GERMAN">German</option>
-              <option value="ITALIAN">Italian</option>
+              <option value="ENGLISH">English (Live)</option>
+              <option value="FRENCH">French (Expansion)</option>
+              <option value="ARABIC">Arabic (Expansion)</option>
+              <option value="SPANISH">Spanish (Optional)</option>
+              <option value="GERMAN">German (Optional)</option>
+              <option value="ITALIAN">Italian (Optional)</option>
             </select>
           </label>
-          <label className="stack">
-            <span className="field-label" style={{ color: "rgba(255,255,255,0.9)" }}>Format</span>
+          <label className="stack" style={{ gap: "8px" }}>
+            <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Format</span>
             <select value={platform} onChange={e => setPlatform(e.target.value)}>
               <option value="Instagram Carousel">Instagram Carousel</option>
-              <option value="TikTok Script">TikTok Script</option>
-              <option value="Facebook/Twitter Post">Facebook Post</option>
+              <option value="TikTok/Reels Script">TikTok Script</option>
+              <option value="High-Impact Twitter thread">Thread Pack</option>
             </select>
           </label>
-          <label className="stack">
-            <span className="field-label" style={{ color: "rgba(255,255,255,0.9)" }}>Topic (Rule / Vocab)</span>
+          <label className="stack" style={{ gap: "8px" }}>
+            <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Viral Topic / Rule</span>
             <input 
-              placeholder="e.g. 'Si + Imparfait' or 'Synonyms for Important'" 
+              placeholder="e.g. 'How to master inversions' or 'Environment Vocab'" 
               value={topic}
               onChange={e => setTopic(e.target.value)}
               required
@@ -77,22 +82,40 @@ export function SocialGenerator() {
           </label>
         </div>
 
-        <button type="submit" disabled={loading} style={{ background: "white", color: "var(--primary-strong)" }}>
-          {loading ? "Writing Viral Post..." : "Generate Magic Prompt 🪄"}
+        <button type="submit" disabled={loading} style={{ background: "linear-gradient(135deg, var(--primary), #ec4899)", padding: "20px", fontSize: "1rem", boxShadow: "0 0 30px var(--primary-glow)" }}>
+          {loading ? "Optimizing Viral Hooks..." : "Generate Social Strategy 🚀"}
         </button>
       </form>
 
       {generatedPost && (
-        <div className="stack" style={{ marginTop: "24px", padding: "20px", background: "rgba(255,255,255,0.1)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.2)" }}>
-          <span className="eyebrow" style={{ color: "#e7bf87" }}>Your Custom Script is Ready</span>
-          <textarea 
-            readOnly 
-            value={generatedPost} 
-            style={{ minHeight: "350px", background: "transparent", color: "white", border: "none", resize: "none" }} 
-            onClick={(e) => { (e.target as HTMLTextAreaElement).select(); navigator.clipboard.writeText(generatedPost); }}
-            title="Click to copy"
-          />
-          <p className="muted" style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.6)" }}>Click text to select and copy</p>
+        <div className="grid grid-cols-2" style={{ gap: "32px", marginTop: "48px" }}>
+          {/* Script Copy */}
+          <div className="card stack" style={{ background: "rgba(0,0,0,0.3)", padding: "32px" }}>
+            <div className="row-between">
+               <span className="eyebrow">The Script</span>
+               <button onClick={handleCopy} className="pill" style={{ cursor: "pointer", background: "rgba(255,255,255,0.1)", fontSize: "10px" }}>COPY TEXT</button>
+            </div>
+            <textarea 
+              readOnly 
+              value={generatedPost} 
+              style={{ minHeight: "450px", background: "transparent", color: "white", border: "none", resize: "none", fontSize: "14px", lineHeight: "1.6", fontFamily: "monospace" }} 
+            />
+          </div>
+
+          {/* Visual Concept Card */}
+          <div className="stack" style={{ gap: "20px" }}>
+             <span className="eyebrow">Elite Visual Style Preview</span>
+             <div className="card stack" style={{ minHeight: "500px", padding: "40px", position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", background: "radial-gradient(circle at 10% 10%, #6366f1 0%, #000 70%)" }}>
+                <div style={{ position: "absolute", top: "20px", left: "20px", opacity: 0.4 }}><strong style={{ fontFamily: "Outfit" }}>BacLang</strong></div>
+                <div style={{ position: "absolute", bottom: "20px", right: "20px", opacity: 0.4 }}><span style={{ fontSize: "10px" }}>baclang.com</span></div>
+                
+                <h1 style={{ fontSize: "2.5rem", fontFamily: "Outfit", fontWeight: 900, lineHeight: 1 }}>{generatedPost.split('\n')[0].replace(/Slide 1:|Hook:/, "").trim()}</h1>
+                <p className="muted" style={{ marginTop: "24px", color: "var(--ink)", fontWeight: 600 }}>{language} Track excellence.</p>
+                <div style={{ marginTop: "40px", width: "100%", height: "2px", background: "linear-gradient(to right, transparent, var(--primary), transparent)" }}></div>
+                <p style={{ marginTop: "20px", fontSize: "0.9rem", color: "rgba(255,255,255,0.6)" }}>BacLang Elite Content Engine &copy; 2026</p>
+             </div>
+             <p className="muted" style={{ fontSize: "12px", textAlign: "center" }}>This is the elite visual branding to follow for your cards.</p>
+          </div>
         </div>
       )}
     </section>
