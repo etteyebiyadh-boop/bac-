@@ -37,8 +37,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 <Link className="nav-link" href="/write">Writing Lab</Link>
                 <Link className="nav-link" href="/exams">Exams</Link>
                 {session && isAdminEmail(session.email) ? (
-                  <Link className="pill" href="/admin" style={{ background: 'var(--primary)', color: 'white', border: 'none', marginLeft: '12px', padding: '6px 14px' }}>
-                    ⚡ ADMIN
+                  <Link className="pill" href="/admin" style={{ background: 'var(--primary)', color: 'white', border: 'none', marginLeft: '12px', padding: '6px 14px', boxShadow: '0 0 15px var(--primary-glow)' }}>
+                    ⚡ CONTROL ROOM
                   </Link>
                 ) : null}
               </nav>
