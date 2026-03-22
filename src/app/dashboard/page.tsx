@@ -15,7 +15,7 @@ import { ProfileSetupForm } from "./profile-setup-form";
 export const dynamic = "force-dynamic";
 
 function formatScore(score: number | null) {
-  return score === null ? "No score yet" : `${score.toFixed(1)} / 20`;
+  return score === null ? "—" : `${score.toFixed(1)}`;
 }
 
 export default async function DashboardPage() {
@@ -74,226 +74,144 @@ export default async function DashboardPage() {
 
   return (
     <div className="page-stack">
-      <section className="card stack">
-        <span className="eyebrow">Student dashboard</span>
+      {/* Header Info Section */}
+      <section className="card" style={{ border: "none", background: "none", padding: 0 }}>
         <div className="row-between">
-          <div className="stack">
-            <h1 className="section-title">Track your road to {TARGET_BAC_SCORE}+/20.</h1>
-            <p className="muted">
-              Logged in as {user.email}. Your next gains come from one focused mission, one smart
-              lesson, and one new corrected draft at a time.
-            </p>
-          </div>
-          <span className="pill">{user.isPremium ? "Premium plan" : "Free plan"}</span>
+           <div className="stack" style={{ gap: "8px" }}>
+              <span className="eyebrow" style={{ color: "var(--primary)" }}>Student Portal</span>
+              <h1 className="section-title" style={{ fontSize: "3rem" }}>Hi, ready for {TARGET_BAC_SCORE}/20?</h1>
+              <p className="muted" style={{ fontSize: "1.1rem" }}>Track your daily streaks, explore lessons, and perfect your writing style.</p>
+           </div>
+           <div className="stack" style={{ alignItems: "flex-end" }}>
+              <span className="pill" style={{ fontSize: "14px", padding: "8px 20px" }}>
+                {user.isPremium ? "💎 EXCELLENCE PLAN" : "🛡️ STANDARD PLAN"}
+              </span>
+           </div>
         </div>
       </section>
 
-      {!user.isPremium && (
-        <section className="card stack hero-panel" style={{ padding: '32px 24px', position: 'relative', overflow: 'hidden' }}>
-          <div className="row-between" style={{ alignItems: 'center' }}>
-            <div className="stack" style={{ maxWidth: '600px', zIndex: 1 }}>
-              <span className="eyebrow" style={{ color: '#e7bf87' }}>Premium access</span>
-              <h2 className="section-title" style={{color: 'white'}}>Keep the correction loop unlimited.</h2>
-              <p className="muted" style={{ margin: 0, color: 'rgba(255,255,255,0.85)' }}>
-                You are on a limited free plan with 5 corrections per week. Upgrade for unlimited
-                practice and access to the expanding French and Arabic tracks as they mature.
-              </p>
+      {/* Grid for Primary Stats */}
+      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "24px" }}>
+        {[
+          { label: "Latest Score", value: formatScore(metrics.latestScore), sub: "/ 20", color: "var(--primary)" },
+          { label: "Best Score", value: formatScore(metrics.bestScore), sub: "/ 20", color: "var(--success)" },
+          { label: "Current Streak", value: metrics.currentStreak, sub: "DAYS", color: "var(--accent)" },
+          { label: "XP Earned", value: xpTotal, sub: "TOTAL", color: "#ec4899" }
+        ].map((stat, i) => (
+          <article key={i} className="card stack" style={{ padding: "32px", alignItems: "center", textAlign: "center" }}>
+            <span className="eyebrow" style={{ fontSize: "10px" }}>{stat.label}</span>
+            <div className="row-between" style={{ gap: "4px", justifyContent: "center" }}>
+               <strong style={{ fontSize: "3rem", fontWeight: "900", color: stat.color, lineHeight: 1 }}>{stat.value}</strong>
+               <span className="muted" style={{ fontSize: "12px", fontWeight: "800", marginTop: "12px" }}>{stat.sub}</span>
             </div>
-            <Link className="button-link" style={{ background: 'white', color: 'var(--primary-strong)', zIndex: 1 }} href="/pricing">
-              Upgrade to Premium
-            </Link>
-          </div>
-          <div style={{ position: 'absolute', right: '-10%', top: '-50%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(231,191,135,0.15) 0%, transparent 70%)', borderRadius: '50%' }} />
-        </section>
-      )}
-
-      <section className="stats-grid">
-        <article className="card metric-card">
-          <span className="metric-label">Primary track</span>
-          <strong className="metric-value">{getLanguageLabel(profile.primaryLanguage)}</strong>
-        </article>
-        <article className="card metric-card">
-          <span className="metric-label">Latest score</span>
-          <strong className="metric-value">{formatScore(metrics.latestScore)}</strong>
-        </article>
-        <article className="card metric-card">
-          <span className="metric-label">Best score</span>
-          <strong className="metric-value">{formatScore(metrics.bestScore)}</strong>
-        </article>
-        <article className="card metric-card">
-          <span className="metric-label">Current streak</span>
-          <strong className="metric-value">{metrics.currentStreak} day(s)</strong>
-        </article>
-        <article className="card metric-card">
-          <span className="metric-label">XP earned</span>
-          <strong className="metric-value">{xpTotal}</strong>
-        </article>
-        <article className="card metric-card">
-          <span className="metric-label">Usage this week</span>
-          <strong className="metric-value">
-            {user.isPremium
-              ? `${metrics.correctionsThisWeek} corrections`
-              : `${metrics.remainingFreeCorrections} free correction(s) left`}
-          </strong>
-        </article>
+          </article>
+        ))}
       </section>
 
-      <ProfileSetupForm
-        initialProfile={{
-          sectionLabel: profile.bacSection,
-          targetScore: profile.targetScore,
-          examYear: profile.examYear,
-          primaryLanguage: profile.primaryLanguage,
-          secondaryLanguagesJson: profile.secondaryLanguagesJson
-        }}
-      />
+      <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: "32px" }}>
+         {/* Main Column */}
+         <div className="stack" style={{ gap: "32px" }}>
+            <ProfileSetupForm
+              initialProfile={{
+                sectionLabel: profile.bacSection,
+                targetScore: profile.targetScore,
+                examYear: profile.examYear,
+                primaryLanguage: profile.primaryLanguage,
+                secondaryLanguagesJson: profile.secondaryLanguagesJson
+              }}
+            />
 
-      {profileIsIncomplete ? (
-        <section className="card stack">
-          <span className="eyebrow">Complete your setup</span>
-          <h2 className="section-title">Finish your study profile to personalize the app.</h2>
-          <p className="muted">
-            Choose your official BAC section and exam year so daily missions and future language
-            tracks match your path more accurately.
-          </p>
-        </section>
-      ) : null}
-
-      <section className="panel-grid">
-        <article className="card stack">
-          <div className="row-between">
-            <h2 className="section-title">Skill averages</h2>
-            <span className="pill">Recent attempts</span>
-          </div>
-          {metrics.averageBreakdown ? (
-            <div className="score-grid">
-              <div className="score-line">
-                <div className="row-between">
-                  <span>Grammar</span>
-                  <strong>{metrics.averageBreakdown.grammar.toFixed(1)} / 20</strong>
-                </div>
-                <div className="score-bar">
-                  <div
-                    className="score-fill"
-                    style={{ width: `${(metrics.averageBreakdown.grammar / 20) * 100}%` }}
-                  />
-                </div>
+            <article className="card stack" style={{ padding: "48px" }}>
+              <div className="row-between">
+                <h2 className="section-title">Skill Averages</h2>
+                <span className="pill">BASED ON RECENT ATTEMPTS</span>
               </div>
-              <div className="score-line">
-                <div className="row-between">
-                  <span>Vocabulary</span>
-                  <strong>{metrics.averageBreakdown.vocabulary.toFixed(1)} / 20</strong>
+              
+              {metrics.averageBreakdown ? (
+                <div className="stack" style={{ gap: "32px", marginTop: "24px" }}>
+                  {[
+                    { label: "Grammar", value: metrics.averageBreakdown.grammar, color: "var(--primary)" },
+                    { label: "Vocabulary", value: metrics.averageBreakdown.vocabulary, color: "var(--success)" },
+                    { label: "Structure", value: metrics.averageBreakdown.structure, color: "var(--accent)" }
+                  ].map((s, i) => (
+                    <div key={i} className="stack" style={{ gap: "12px" }}>
+                       <div className="row-between">
+                          <span style={{ fontWeight: "700", opacity: 0.8 }}>{s.label}</span>
+                          <strong style={{ color: s.color }}>{s.value.toFixed(1)} / 20</strong>
+                       </div>
+                       <div className="score-bar" style={{ height: "10px", background: "rgba(255,255,255,0.05)" }}>
+                          <div className="score-fill" style={{ width: `${(s.value / 20) * 100}%`, background: s.color, borderRadius: "100px", boxShadow: `0 0 15px ${s.color}` }}></div>
+                       </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="score-bar">
-                  <div
-                    className="score-fill"
-                    style={{ width: `${(metrics.averageBreakdown.vocabulary / 20) * 100}%` }}
-                  />
-                </div>
+              ) : (
+                <p className="muted" style={{ padding: "40px 0", textAlign: "center" }}>Submit your first essay to unlock deep skill analytics.</p>
+              )}
+            </article>
+
+            <section className="card stack" style={{ padding: "48px" }}>
+              <div className="row-between">
+                <h2 className="section-title">Recent Work</h2>
+                <Link href="/write" className="nav-link" style={{ fontSize: "14px" }}>View All Activity →</Link>
               </div>
-              <div className="score-line">
-                <div className="row-between">
-                  <span>Structure</span>
-                  <strong>{metrics.averageBreakdown.structure.toFixed(1)} / 20</strong>
+              {recentSubmissions.length === 0 ? (
+                <p className="muted" style={{ padding: "40px 0", textAlign: "center" }}>No activity yet. Start with your first simulation.</p>
+              ) : (
+                <div className="stack" style={{ gap: "16px", marginTop: "24px" }}>
+                  {recentSubmissions.map((submission) => (
+                    <div key={submission.id} className="row-between" style={{ padding: "20px", background: "rgba(255,255,255,0.02)", borderRadius: "16px", border: "1px solid var(--card-border)" }}>
+                      <div className="stack" style={{ gap: "4px" }}>
+                        <strong style={{ fontSize: "1.1rem" }}>{submission.exam?.title || "Free Practice"}</strong>
+                        <span className="muted" style={{ fontSize: "13px" }}>{new Date(submission.createdAt).toLocaleDateString()} • {submission.wordCount} words</span>
+                      </div>
+                      <div className="stack" style={{ alignItems: "flex-end" }}>
+                        <strong style={{ fontSize: "1.5rem", color: "var(--primary)" }}>{submission.overallScore.toFixed(1)}</strong>
+                        <span className="pill" style={{ fontSize: "10px", padding: "2px 8px" }}>{submission.language}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="score-bar">
-                  <div
-                    className="score-fill"
-                    style={{ width: `${(metrics.averageBreakdown.structure / 20) * 100}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="muted">Submit your first essay to unlock score analytics.</p>
-          )}
-          <p className="muted">
-            {metrics.averageScore === null
-              ? "No average yet."
-              : `Average score across recent submissions: ${metrics.averageScore.toFixed(1)} / 20`}
-          </p>
-        </article>
+              )}
+            </section>
+         </div>
 
-        <article className="card stack">
-          <span className="eyebrow">Daily mission</span>
-          <h2 className="section-title">{mission.title}</h2>
-          <p className="muted">{mission.description}</p>
-          <p className="muted">
-            Priority skill: {getSkillLabel(mission.skillFocus as "grammar" | "vocabulary" | "structure")}
-          </p>
-          <span className={`pill ${mission.status === "COMPLETED" ? "success-pill" : ""}`}>
-            {mission.status === "COMPLETED" ? "Completed today" : `Ready for +${mission.xpReward} XP`}
-          </span>
-          <Link className="button-link full-width" href="/daily">
-            Open daily mission
-          </Link>
-          <Link className="button-link button-secondary full-width" href="/lessons">
-            Review smart lessons
-          </Link>
-        </article>
-      </section>
+         {/* Sidebar */}
+         <div className="stack" style={{ gap: "32px" }}>
+            <article className="card pricing-card elite stack" style={{ padding: "40px", borderColor: "var(--accent)" }}>
+               <span className="eyebrow" style={{ color: "var(--accent)" }}>Daily Mission</span>
+               <h3 className="section-title" style={{ fontSize: "1.8rem", lineHeight: 1.2 }}>{mission.title}</h3>
+               <p className="muted" style={{ fontSize: "14px" }}>{mission.description}</p>
+               <div className="row-between" style={{ padding: "12px", background: "rgba(0,0,0,0.2)", borderRadius: "12px" }}>
+                  <span style={{ fontSize: "12px", fontWeight: "700" }}>Focus: {mission.skillFocus}</span>
+                  <span style={{ color: "var(--accent)", fontWeight: "900" }}>+{mission.xpReward} XP</span>
+               </div>
+               <Link href="/daily" className="button-link" style={{ background: "var(--accent)", color: "#000", justifyContent: "center" }}>Complete Mission</Link>
+            </article>
 
-      <section className="panel-grid">
-        <article className="card stack">
-          <h2 className="section-title">Next best actions</h2>
-          <p className="muted">{buildRecommendedLessonMessage(weakestSkill)}</p>
-          <Link className="button-link full-width" href="/write">
-            Write a new essay
-          </Link>
-          <Link className="button-link button-secondary full-width" href="/exams">
-            Practice a past exam
-          </Link>
-        </article>
+            <article className="card stack" style={{ padding: "40px" }}>
+               <span className="eyebrow">Smart Recommendation</span>
+               <p style={{ fontWeight: "600", fontSize: "1.1rem" }}>{buildRecommendedLessonMessage(weakestSkill)}</p>
+               {mission.lesson ? (
+                 <div className="stack" style={{ marginTop: "20px", padding: "20px", background: "rgba(255,255,255,0.02)", borderRadius: "16px" }}>
+                    <strong>{mission.lesson.title}</strong>
+                    <p className="muted" style={{ fontSize: "13px", marginTop: "8px" }}>{mission.lesson.summary}</p>
+                    <Link href="/lessons" className="button-link button-secondary" style={{ marginTop: "16px", justifyContent: "center" }}>Study Now</Link>
+                 </div>
+               ) : (
+                 <p className="muted" style={{ marginTop: "16px" }}>Complete the profile setup to unlock tailored lessons.</p>
+               )}
+            </article>
 
-        <article className="card stack">
-          <h2 className="section-title">Recommended lesson</h2>
-          {mission.lesson ? (
-            <>
-              <strong>{mission.lesson.title}</strong>
-              <p className="muted">{mission.lesson.summary}</p>
-              <Link className="button-link full-width" href="/lessons">
-                Study this lesson
-              </Link>
-            </>
-          ) : (
-            <p className="muted">
-              Lesson recommendations unlock here once content is seeded for your active track.
-            </p>
-          )}
-        </article>
-      </section>
-
-      <section className="card stack">
-        <div className="row-between">
-          <h2 className="section-title">Recent submissions</h2>
-          <span className="pill">{metrics.totalCorrections} total correction(s)</span>
-        </div>
-        {recentSubmissions.length === 0 ? (
-          <p className="muted">No submissions yet. Start with one bac exam or a free writing task.</p>
-        ) : (
-          <div className="recent-list">
-            {recentSubmissions.map((submission) => (
-              <article className="recent-item" key={submission.id}>
-                <div className="stack">
-                  <strong>
-                    {submission.exam
-                      ? `${submission.exam.year} - ${submission.exam.title}`
-                      : "Free writing practice"}
-                  </strong>
-                  <span className="muted">
-                    <span className="pill" style={{marginRight: '8px', padding: '2px 8px', fontSize: '0.75rem', fontWeight: 600}}>
-                      {submission.language?.charAt(0) + (submission.language?.slice(1).toLowerCase() ?? '')}
-                    </span>
-                    {new Date(submission.createdAt).toLocaleDateString("en-GB")} -{" "}
-                    {submission.wordCount} words
-                  </span>
-                </div>
-                <strong>{submission.overallScore.toFixed(1)} / 20</strong>
-              </article>
-            ))}
-          </div>
-        )}
-      </section>
+            {!user.isPremium && (
+               <article className="card stack" style={{ padding: "40px", background: "linear-gradient(135deg, var(--primary), #ec4899)", border: "none" }}>
+                  <h3 style={{ fontSize: "1.5rem", fontWeight: "800" }}>Unlock Excellence.</h3>
+                  <p style={{ fontSize: "15px", color: "rgba(255,255,255,0.8)" }}>Upgrade to unlimited corrections and full track access.</p>
+                  <Link href="/pricing" className="button-link" style={{ background: "#fff", color: "#000", justifyContent: "center" }}>See Plans</Link>
+               </article>
+            )}
+         </div>
+      </div>
     </div>
   );
 }
