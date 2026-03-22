@@ -4,137 +4,110 @@ export default function HomePage() {
   return (
     <div className="page-stack home-page">
       <section className="hero">
-        <div className="hero-badge" style={{ marginBottom: "32px", animation: "reveal-up 1s ease" }}>
-          <span className="pill" style={{ textTransform: "uppercase", letterSpacing: "2px", fontWeight: "900", background: "rgba(99, 102, 241, 0.15)", color: "var(--primary)", borderColor: "var(--primary)" }}>
-            Tunisian BAC - High-Stakes Language Track
+        <div className="hero-badge" style={{ marginBottom: "32px" }}>
+          <span className="pill" style={{ fontSize: "12px", letterSpacing: "2px", fontWeight: "900", background: "rgba(99, 102, 241, 0.15)", color: "var(--primary)", borderColor: "var(--primary)" }}>
+            Tunisian BAC - High-Stakes Languages
           </span>
         </div>
         
         <h1 className="hero-title">
-          Turn Language <br/>
-          Skills Into
-          <span className="text-gradient"> Excellence</span>
+          Master the <br/>
+          Language of
+          <span className="text-gradient"> Excellence.</span>
         </h1>
         
         <p className="hero-text">
-          Master Arabic, French, English, and all optional subjects with AI-powered corrections, 
-          structured BAC-style libraries, and daily missions built specifically for Tunisian students.
+          Precision AI correction for Arabic, French, English, and all optional subjects. 
+          Built exclusively for Tunisian BAC students aiming for 17/20+.
         </p>
 
         <div className="actions hero-actions" style={{ gap: "24px", justifyContent: "center" }}>
-          <Link className="button-link" href="/auth/signup" style={{ padding: "20px 48px", fontSize: "18px" }}>
-            <span>Start Learning for Free</span>
+          <Link className="button-link" href="/auth/signup">
+            <span>Start for free</span>
             <svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
               <path fillRule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clipRule="evenodd" />
             </svg>
           </Link>
-          <Link className="button-link button-secondary" href="/exams" style={{ padding: "20px 48px", fontSize: "18px" }}>
+          <Link className="button-link button-secondary" href="/exams">
             Browse Exams
           </Link>
         </div>
 
-        <div className="stats-row row-between" style={{ marginTop: "100px", maxWidth: "900px", margin: "100px auto 0", padding: "0 20px" }}>
-          <div className="stat-item stack" style={{ alignItems: "center" }}>
-            <span className="stat-number" style={{ fontSize: "3rem", fontWeight: "800", color: "var(--primary)" }}>15+</span>
-            <span className="stat-label muted">Target Score</span>
+        <div className="stats-row" style={{ marginTop: "100px", display: "flex", gap: "60px", justifyContent: "center" }}>
+          <div className="stat-item stack" style={{ alignItems: "center", gap: "4px" }}>
+            <span style={{ fontSize: "3rem", fontWeight: "900", color: "var(--primary)", fontFamily: "var(--font-display)" }}>15+</span>
+            <span className="muted" style={{ fontWeight: "800", fontSize: "12px" }}>TARGET SCORE</span>
           </div>
-          <div className="stat-item stack" style={{ alignItems: "center" }}>
-            <span className="stat-number" style={{ fontSize: "3rem", fontWeight: "800", color: "var(--accent)" }}>LIVE</span>
-            <span className="stat-label muted">Arabic / French / English</span>
+          <div className="stat-item stack" style={{ alignItems: "center", gap: "4px" }}>
+            <span style={{ fontSize: "3rem", fontWeight: "900", color: "var(--accent)", fontFamily: "var(--font-display)" }}>EN+FR</span>
+            <span className="muted" style={{ fontWeight: "800", fontSize: "12px" }}>LIVE TRACKS</span>
           </div>
-          <div className="stat-item stack" style={{ alignItems: "center" }}>
-            <span className="stat-number" style={{ fontSize: "3rem", fontWeight: "800", color: "#ec4899" }}>OPT</span>
-            <span className="stat-label muted">Spanish / German / Italian</span>
+          <div className="stat-item stack" style={{ alignItems: "center", gap: "4px" }}>
+            <span style={{ fontSize: "3rem", fontWeight: "900", color: "#ec4899", fontFamily: "var(--font-display)" }}>OPT</span>
+            <span className="muted" style={{ fontWeight: "800", fontSize: "12px" }}>SPANISH/GERMAN</span>
           </div>
         </div>
       </section>
 
-      {/* Feature Section with Glassmorphism */}
-      <section className="stack">
-        <div className="section-header" style={{ textAlign: "center", marginBottom: "40px" }}>
-          <span className="eyebrow" style={{ color: "var(--primary)" }}>The Loop</span>
-          <h2 className="section-title" style={{ fontSize: "3.5rem", marginBottom: "16px" }}>Complete the Cycle of Mastery.</h2>
-        </div>
-
-        <div className="grid grid-cols-3">
-          <article className="card stack">
-            <div style={{ fontSize: "40px", marginBottom: "20px" }}>✍️</div>
-            <h3 className="section-title" style={{ fontSize: "1.5rem" }}>Writing Simulator</h3>
-            <p className="muted">Write essays using actual past BAC prompts and receive instant criteria-based marking across Grammar, Vocabulary, and Structure.</p>
-          </article>
-          <article className="card stack">
-            <div style={{ fontSize: "40px", marginBottom: "20px" }}>📚</div>
-            <h3 className="section-title" style={{ fontSize: "1.5rem" }}>Personalized Library</h3>
-            <p className="muted">An ultra-clean hub showing only the language rules and vocabulary sets needed for your specific BAC section and chosen languages.</p>
-          </article>
-          <article className="card stack">
-            <div style={{ fontSize: "40px", marginBottom: "20px" }}>⚡</div>
-            <h3 className="section-title" style={{ fontSize: "1.5rem" }}>Daily Missions</h3>
-            <p className="muted">Earn XP and keep your streak alive by completing targeted mini-missions generated every single day to patch your skill gaps.</p>
-          </article>
-        </div>
+      {/* Simplified Showcase */}
+      <section className="grid grid-cols-3">
+        <article className="card stack">
+           <div style={{ fontSize: "48px" }}>⌨️</div>
+           <h3 style={{ fontSize: "1.5rem", fontWeight: 800 }}>Writing Lab</h3>
+           <p className="muted">Write essays with actual past BAC prompts and get instant correction across grammar, vocab, and structure.</p>
+        </article>
+        <article className="card stack">
+           <div style={{ fontSize: "48px" }}>🎓</div>
+           <h3 style={{ fontSize: "1.5rem", fontWeight: 800 }}>Smart Library</h3>
+           <p className="muted">Personalized modules filtering only what you need for your BAC section and optional languages.</p>
+        </article>
+        <article className="card stack">
+           <div style={{ fontSize: "48px" }}>⚡</div>
+           <h3 style={{ fontSize: "1.5rem", fontWeight: 800 }}>Daily Missions</h3>
+           <p className="muted">Earn XP and keep your streak alive by completing targeted mini-missions generated specifically for your track.</p>
+        </article>
       </section>
 
-      <section className="stack" style={{ marginTop: "60px" }}>
-        <div className="card hero-panel" style={{ padding: "80px", textAlign: "left", background: "radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent)", border: "1px solid var(--primary)" }}>
-           <div className="row-between">
-              <div className="stack" style={{ maxWidth: "60%", gap: "24px" }}>
-                <span className="eyebrow">Real Feedback</span>
-                <h2 className="section-title" style={{ fontSize: "3.5rem" }}>See Your Essay Score Instantly.</h2>
-                <p className="muted" style={{ fontSize: "1.2rem" }}>No more waiting days for corrections. Our smart logic breaks down your mistakes with 16.5+ precision scoring across every Tunisian criteria.</p>
-                <Link className="button-link" href="/write" style={{ alignSelf: "flex-start" }}>Try the Correction Engine</Link>
+      <section className="card" style={{ padding: "80px", textAlign: "left", background: "radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent)", border: "1px solid var(--primary)" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: "48px", alignItems: "center" }}>
+              <div className="stack" style={{ gap: "32px" }}>
+                <span className="pill" style={{ color: "var(--primary)", borderColor: "var(--primary)" }}>AI FEEDBACK</span>
+                <h2 style={{ fontSize: "4rem", fontFamily: "var(--font-display)", fontWeight: 800, lineHeight: 1 }}>Instant Criteria <br/>Precision Scoring.</h2>
+                <p className="muted" style={{ fontSize: "1.2rem" }}>No more guessing. Get 16.5+ precision scoring across every Tunisian criteria instantly after submission.</p>
               </div>
-              <div className="stack" style={{ width: "300px" }}>
-                <div className="card" style={{ padding: "32px", transform: "rotate(2deg)" }}>
-                  <div className="row-between">
-                    <span>Overall</span>
-                    <strong style={{ fontSize: "2rem", color: "var(--accent)" }}>16.5</strong>
+              <div className="card" style={{ padding: "40px", transform: "rotate(3deg)", background: "rgba(0,0,0,0.5)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "32px" }}>
+                     <span style={{ fontSize: "14px", fontWeight: "700" }}>Overall Score</span>
+                     <strong style={{ fontSize: "3rem", color: "var(--accent)" }}>16.5</strong>
                   </div>
-                  <div className="stack" style={{ marginTop: "20px", gap: "12px" }}>
-                    <div className="stack" style={{ gap: "4px" }}>
-                      <span className="muted" style={{ fontSize: "11px" }}>Grammar</span>
-                      <div className="score-bar" style={{ height: "6px" }}><div className="score-fill" style={{ width: "85%", borderRadius: "100px" }}></div></div>
-                    </div>
-                    <div className="stack" style={{ gap: "4px" }}>
-                      <span className="muted" style={{ fontSize: "11px" }}>Vocabulary</span>
-                      <div className="score-bar" style={{ height: "6px" }}><div className="score-fill" style={{ width: "70%", borderRadius: "100px" }}></div></div>
+                  <div className="stack" style={{ gap: "16px" }}>
+                    <div style={{ padding: "0 0 12px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "8px" }}>
+                        <span>Grammar</span>
+                        <strong>17/20</strong>
+                      </div>
+                      <div style={{ height: "6px", background: "rgba(255,255,255,0.05)", borderRadius: "100px" }}>
+                        <div style={{ height: "100%", width: "85%", background: "var(--primary)", borderRadius: "inherit", boxShadow: "0 0 15px var(--primary)" }}></div>
+                      </div>
                     </div>
                   </div>
-                </div>
               </div>
-           </div>
-        </div>
+          </div>
       </section>
 
-      {/* Pricing Section with Enhanced Elite Card */}
-      <section className="pricing-grid">
-         <article className="card pricing-card stack">
-            <span className="eyebrow">The Standard</span>
-            <div className="row-between">
-               <span style={{ fontSize: "3rem", fontWeight: "900" }}>0</span>
-               <span className="muted">TND / Forever</span>
-            </div>
-            <ul className="stack" style={{ listStyle: "none", padding: 0 }}>
-               <li className="row-between" style={{ justifyContent: "flex-start", gap: "10px" }}><span>✅</span> 5 Free corrections / Week</li>
-               <li className="row-between" style={{ justifyContent: "flex-start", gap: "10px" }}><span>✅</span> English / French / Arabic Tracks</li>
-               <li className="row-between" style={{ justifyContent: "flex-start", gap: "10px" }}><span>✅</span> All Daily Missions</li>
-            </ul>
-            <Link className="button-link button-secondary" href="/auth/signup" style={{ marginTop: "20px" }}>Get Started Free</Link>
+      {/* Simple Pricing */}
+      <section className="grid grid-cols-2" style={{ maxWidth: "1000px", margin: "60px auto 0" }}>
+         <article className="card stack">
+            <span className="eyebrow" style={{ color: "var(--ink-dim)" }}>Standard</span>
+            <div style={{ fontSize: "3rem", fontWeight: "900" }}>0 <span style={{ fontSize: "14px", color: "var(--ink-dim)" }}>TND</span></div>
+            <p className="muted">5 Free corrections weekly and access to all language tracks.</p>
+            <Link className="button-link button-secondary" href="/auth/signup" style={{ marginTop: "24px" }}>Start Learning</Link>
          </article>
-
-         <article className="card pricing-card elite stack" style={{ position: "relative", overflow: "hidden" }}>
-            <div style={{ position: "absolute", top: "16px", right: "16px" }}><span className="pill" style={{ color: "var(--primary)", borderColor: "var(--primary)" }}>MOST POPULAR</span></div>
-            <span className="eyebrow" style={{ color: "var(--primary)" }}>The Excellence</span>
-            <div className="row-between">
-               <span style={{ fontSize: "3rem", fontWeight: "900" }}>29.9<span style={{ fontSize: "1rem" }}>0</span></span>
-               <span className="muted">TND / Season</span>
-            </div>
-            <ul className="stack" style={{ listStyle: "none", padding: 0 }}>
-               <li className="row-between" style={{ justifyContent: "flex-start", gap: "10px" }}><span>🚀</span> Unlimited Corrections</li>
-               <li className="row-between" style={{ justifyContent: "flex-start", gap: "10px" }}><span>🎨</span> All Optional Language Access</li>
-               <li className="row-between" style={{ justifyContent: "flex-start", gap: "10px" }}><span>🛠️</span> Advanced Skill Analytics</li>
-            </ul>
-            <Link className="button-link" href="/auth/signup" style={{ marginTop: "20px" }}>Upgrade to Elite Now</Link>
+         <article className="card stack" style={{ border: "1px solid var(--primary)", background: "linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent)" }}>
+            <span className="eyebrow" style={{ color: "var(--primary)" }}>Elite Excellence</span>
+            <div style={{ fontSize: "3rem", fontWeight: "900" }}>29.9<span style={{ fontSize: "1rem" }}>0</span> <span style={{ fontSize: "14px", color: "var(--ink-dim)" }}>TND</span></div>
+            <p className="muted">Unlimited corrections, advanced analytics, and priority feature access.</p>
+            <Link className="button-link" href="/auth/signup" style={{ marginTop: "24px", background: "var(--primary)", color: "white" }}>Upgrade Now</Link>
          </article>
       </section>
     </div>

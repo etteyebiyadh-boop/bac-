@@ -18,28 +18,24 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <div className="bg-engine">
-          <div className="bg-orb orb-1" />
-          <div className="bg-orb orb-2" />
+        <div className="magic-background">
+          <div className="glow-orb orb-indigo" />
+          <div className="glow-orb orb-amber" />
         </div>
         
         <div className="site-shell">
           <header className="topbar">
-            <div className="container topbar-inner">
+            <div className="topbar-inner">
               <Link className="brand" href="/">
                 <div className="brand-mark">B</div>
-                <div className="brand-copy">
-                  <strong style={{ display: 'block', fontSize: '1.2rem', fontWeight: 800 }}>{APP_NAME}</strong>
-                  <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--ink-dim)' }}>Elite Bac Preparation</span>
-                </div>
+                <strong style={{ fontSize: '1rem', fontWeight: 800 }}>{APP_NAME}</strong>
               </Link>
 
               <nav aria-label="Primary" className="nav-links">
                 <Link className="nav-link" href="/dashboard">Dashboard</Link>
-                <Link className="nav-link" href="/daily">Daily Mission</Link>
-                <Link className="nav-link" href="/lessons">Study Hub</Link>
+                <Link className="nav-link" href="/lessons">Library</Link>
                 <Link className="nav-link" href="/write">Writing Lab</Link>
-                <Link className="nav-link" href="/exams">Exam Archive</Link>
+                <Link className="nav-link" href="/exams">Exams</Link>
                 {session && isAdminEmail(session.email) ? (
                   <Link className="nav-link" href="/admin">Admin</Link>
                 ) : null}
@@ -49,33 +45,30 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
                 {session ? (
                   <LogoutButton />
                 ) : (
-                  <>
-                    <Link className="nav-link" href="/auth/login" style={{ marginRight: '16px' }}>Login</Link>
-                    <Link className="button-link" href="/auth/signup" style={{ padding: '10px 24px', minHeight: 'auto' }}>
-                      Start Now
-                    </Link>
-                  </>
+                  <Link className="pill" href="/auth/signup" style={{ background: 'white', color: 'black', border: 'none' }}>
+                    Join Now
+                  </Link>
                 )}
               </div>
             </div>
           </header>
 
-          <main className="container">{children}</main>
+          <main className="container" style={{ paddingTop: '120px' }}>{children}</main>
 
-          <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--card-border)', marginTop: '100px' }}>
+          <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--glass-border)', marginTop: '100px' }}>
             <div className="container row-between" style={{ alignItems: 'flex-start' }}>
               <div className="stack" style={{ maxWidth: '400px' }}>
                 <strong style={{ fontSize: '1.5rem', fontFamily: 'var(--font-display)' }}>{APP_NAME}</strong>
-                <p className="muted">
-                  The ultimate AI-first companion for Tunisian students aiming for Excellence in the National Baccalaureate.
+                <p className="muted" style={{ fontSize: "14px" }}>
+                  The AI-first companion for Tunisian students.
                 </p>
               </div>
-              <div className="row-between" style={{ gap: '40px' }}>
-                <Link className="nav-link" href="/privacy">Privacy Policy</Link>
-                <Link className="nav-link" href="/terms">Terms of Service</Link>
+              <div className="row-between" style={{ gap: '32px' }}>
+                <Link className="nav-link" href="/privacy">Privacy</Link>
+                <Link className="nav-link" href="/terms">Terms</Link>
               </div>
             </div>
-            <div className="container" style={{ textAlign: 'center', marginTop: '40px', color: 'rgba(255,255,255,0.2)', fontSize: '13px' }}>
+            <div className="container" style={{ textAlign: 'center', marginTop: '40px', color: 'var(--ink-dim)', fontSize: '12px' }}>
               &copy; 2026 {APP_NAME}. For Tunisian students, with 💙.
             </div>
           </footer>
