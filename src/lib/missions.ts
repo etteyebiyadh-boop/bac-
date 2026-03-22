@@ -138,6 +138,16 @@ export async function getXpTotal(userId: string) {
   return aggregate._sum.xpEarned ?? 0;
 }
 
+export async function getDashboardMissions(userId: string) {
+  const missionDate = startOfUtcDay();
+  return db.dailyMission.findMany({
+    where: { userId },
+    orderBy: { missionDate: "desc" },
+    take: 3,
+    include: missionInclude
+  });
+}
+
 export function buildRecommendedLessonMessage(skillFocus: SkillFocus) {
   if (skillFocus === "grammar") {
     return "Your fastest gain is grammar control. Fix the repeated errors before writing another draft.";

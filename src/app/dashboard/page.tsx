@@ -19,7 +19,7 @@ export default async function DashboardPage() {
           <span className="pill" style={{ color: "var(--primary)", borderColor: "var(--primary)" }}>Section {getBacSectionLabel(profile.bacSection)}</span>
           <h1 className="section-title" style={{ fontSize: "5rem", letterSpacing: "-4px", lineHeight: 0.9 }}>
              Welcome, <br/>
-             <span className="text-gradient">{user.fullName.split(' ')[0]}.</span>
+             <span className="text-gradient">{(user.fullName || "Student").split(' ')[0]}.</span>
           </h1>
         </div>
         <div className="stack" style={{ alignItems: "flex-end", gap: "12px" }}>
