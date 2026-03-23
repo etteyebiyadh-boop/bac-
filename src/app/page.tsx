@@ -30,11 +30,11 @@ export default async function HomePage() {
             {t.hero_subtitle}
           </p>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '80px' }}>
-             <a href="#selector" className="button-link hover-glow" style={{ padding: '20px 48px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', marginBottom: '80px' }}>
+             <a href="#selector" className="button-link hover-glow" style={{ padding: '20px 48px', flex: '1 1 auto', textAlign: 'center', justifyContent: 'center' }}>
                 {t.hero_cta}
              </a>
-             <Link href="/lessons" className="button-link button-secondary" style={{ padding: '20px 48px' }}>
+             <Link href="/lessons" className="button-link button-secondary" style={{ padding: '20px 48px', flex: '1 1 auto', textAlign: 'center', justifyContent: 'center' }}>
                 {t.hero_explore}
              </Link>
           </div>
@@ -63,7 +63,7 @@ export default async function HomePage() {
 
       {/* 🎨 THE SECTIONS GRID */}
       <section className="section-padding container">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+        <div className="grid grid-cols-2" style={{ gap: '40px', alignItems: 'center' }}>
            <div className="reveal">
               <span className="eyebrow">{langCookie === "ar" ? "جميع الشعب مشمولة" : (langCookie === "fr" ? "Toutes les séries incluses" : "All Series Included")}</span>
               <h2 className="section-title-large">{langCookie === "ar" ? "مصممة لكل شعبة على حدة." : (langCookie === "fr" ? "Adapté à chaque section." : "Tailored for every single section.")}</h2>

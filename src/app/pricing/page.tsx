@@ -17,7 +17,7 @@ export default async function PricingPage() {
         </p>
       </section>
 
-      <section className="pricing-strip" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px", alignItems: "start", marginTop: "24px" }}>
+      <section className="pricing-strip grid grid-cols-2" style={{ gap: "24px", alignItems: "start", marginTop: "24px" }}>
         <div className="card stack" style={{ borderTop: "4px solid rgba(20, 36, 54, 0.1)" }}>
           <span className="eyebrow">Starter Plan</span>
           <h2 className="section-title">Free Forever</h2>

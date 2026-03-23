@@ -41,9 +41,9 @@ export default function SignupPage() {
 
   return (
     <div className="auth-shell" style={{ direction: lang === "ar" ? "rtl" : "ltr" }}>
-      <form className="card auth-card stack" onSubmit={onSubmit} style={{ maxWidth: "500px", padding: "60px", border: "1px solid var(--primary)" }}>
+      <form className="card auth-card stack" onSubmit={onSubmit} style={{ maxWidth: "500px", padding: "clamp(24px, 5vw, 60px)", border: "1px solid var(--primary)" }}>
         <span className="eyebrow" style={{ color: "var(--primary)" }}>{lang === "ar" ? "ابدأ مجاناً" : (lang === "fr" ? "Commencer gratuitement" : "Start free")}</span>
-        <h1 className="section-title" style={{ fontSize: "2.5rem" }}>{t.auth_signup_title}</h1>
+        <h1 className="section-title" style={{ fontSize: "clamp(1.8rem, 5vw, 2.5rem)" }}>{t.auth_signup_title}</h1>
         <p className="muted" style={{ fontSize: "1.1rem" }}>
           {t.auth_signup_subtitle}
         </p>

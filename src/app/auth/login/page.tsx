@@ -41,9 +41,9 @@ export default function LoginPage() {
 
   return (
     <div className="auth-shell" style={{ direction: lang === "ar" ? "rtl" : "ltr" }}>
-      <form className="card auth-card stack" onSubmit={onSubmit} style={{ maxWidth: "500px", padding: "60px", border: "1px solid var(--accent)" }}>
+      <form className="card auth-card stack" onSubmit={onSubmit} style={{ maxWidth: "500px", padding: "clamp(24px, 5vw, 60px)", border: "1px solid var(--accent)" }}>
         <span className="eyebrow" style={{ color: "var(--accent)" }}>{lang === "ar" ? "مرحباً بك مجدداً" : (lang === "fr" ? "Bon retour" : "Welcome back")}</span>
-        <h1 className="section-title" style={{ fontSize: "2.5rem" }}>{t.auth_btn_login}</h1>
+        <h1 className="section-title" style={{ fontSize: "clamp(1.8rem, 5vw, 2.5rem)" }}>{t.auth_btn_login}</h1>
         <p className="muted" style={{ fontSize: "1.1rem" }}>
           {lang === "ar" ? "أكمل رحلتك نحو التميز في الباكالوريا." : (lang === "fr" ? "Continuez votre parcours vers l'excellence." : "Continue your journey towards excellence.")}
         </p>

@@ -65,13 +65,13 @@ export default async function LibraryHubPage() {
   const availableCurriculumSlugs = new Set(curriculumLessons.map((lesson) => lesson.slug));
 
   return (
-    <div className="page-stack library-overhaul" style={{ gap: "80px", direction: langCookie === "ar" ? "rtl" : "ltr" }}>
+    <div className="page-stack library-overhaul" style={{ gap: "clamp(40px, 8vw, 80px)", direction: langCookie === "ar" ? "rtl" : "ltr" }}>
       {/* Dynamic Cinematic Header */}
-      <section className="card stack hero-panel" style={{ padding: "80px", border: "1px solid var(--primary)", background: "radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent)" }}>
-        <div style={{ position: "absolute", right: "-10%", top: "-50%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%)", borderRadius: "50%" }} />
+      <section className="card stack hero-panel" style={{ padding: "clamp(32px, 8vw, 80px)", overflow: "hidden", border: "1px solid var(--primary)", background: "radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent)" }}>
+        <div style={{ position: "absolute", right: "-10%", top: "-50%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
         <div className="stack" style={{ zIndex: 1, position: "relative", gap: "24px" }}>
           <span className="eyebrow" style={{ color: "var(--primary)" }}>{t.lib_title}</span>
-          <h1 className="section-title" style={{ fontSize: "4.5rem", lineHeight: 1, letterSpacing: "-2px" }}>
+          <h1 className="section-title" style={{ fontSize: "clamp(2.5rem, 8vw, 4.5rem)", lineHeight: 1, letterSpacing: "-2px" }}>
              {langCookie === "ar" ? "الدراسة المعمقة.." : "Deep Study."}<br/>
              {langCookie === "ar" ? "مُصممة خصيصاً لشُعبة" : "Curated For "} <span className="text-gradient">Bac {getBacSectionLabel(profile.bacSection)}</span>.
           </h1>
