@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { HeroPathSelector } from "./home-path-selector";
-import { FeaturesSection, ResultsSection, TestimonialsSection, FinalCTA } from "@/components/landing-sections";
+import { FeaturesSection, FinalCTA } from "@/components/landing-sections";
 
 export default async function HomePage() {
   const cookieStore = await cookies();
@@ -86,11 +86,6 @@ export default async function HomePage() {
       </section>
 
       <FeaturesSection lang={langCookie} />
-      
-      <ResultsSection lang={langCookie} />
-
-      <TestimonialsSection lang={langCookie} />
-
       <FinalCTA lang={langCookie} />
     </div>
   );
