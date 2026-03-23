@@ -4,6 +4,7 @@ import { OverallProgress, GradePredictions, HighYieldTopics, LanguageModules, Wo
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { SiteLanguage, translations } from "@/lib/translations";
+import { ProfileSetupForm } from "./profile-setup-form";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,18 @@ export default async function DashboardPage() {
   } catch {}
 
   const activeLanguages = [profile.primaryLanguage, ...secondaryLanguages];
+
+  if (!profile.bacSection) {
+    return (
+      <div className="dashboard-layout" style={{ position: "fixed", inset: 0, overflow: "hidden", background: "#000205", direction: langCookie === "ar" ? "rtl" : "ltr" }}>
+        <main style={{ padding: "40px 60px", overflowY: "auto", flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ maxWidth: "600px", width: "100%" }}>
+            <ProfileSetupForm initialProfile={profile as any} />
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-layout" style={{ position: "fixed", inset: 0, overflow: "hidden", background: "#000205", direction: langCookie === "ar" ? "rtl" : "ltr" }}>
