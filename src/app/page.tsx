@@ -56,7 +56,7 @@ export default async function HomePage() {
              {langCookie === "ar" ? "اختر شعبتك واللغات المناسبة لإنشاء خارطة الطريق الخاصة بك." : (langCookie === "fr" ? "Choisissez votre section et langue optionnelle pour générer votre roadmap personnalisée." : "Select your section and optional language to generate your custom 17/20 roadmap.")}
           </p>
           <div className="reveal delay-3">
-             <HeroPathSelector />
+             <HeroPathSelector lang={langCookie} />
           </div>
         </div>
       </section>

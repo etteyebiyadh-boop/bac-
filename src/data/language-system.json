@@ -1,0 +1,683 @@
+{
+  "languages": [
+    {
+      "language": "ENGLISH",
+      "label": "English",
+      "mode": "bac-core",
+      "levels": [
+        {
+          "level": "A1",
+          "summary": "Repair the basics and start speaking without fear.",
+          "skills": [
+            {
+              "skill": "grammar",
+              "lessons": [
+                {
+                  "slug": "bac-english-a1-sentence-starter",
+                  "title": "Sentence Starter Kit",
+                  "summary": "Use be, have, and do to build correct simple sentences.",
+                  "theme": "Foundations",
+                  "estimatedMinutes": 6,
+                  "explanation": "Use be for identity, have for possession, and do for many questions and negatives.",
+                  "example": "I am a Bac student. Do you have your notebook?",
+                  "exercise": "Complete: My brother ___ very serious about school.",
+                  "answer": "is",
+                  "correction": "Use be to describe a person or a state.",
+                  "arabicHint": "الجملة الانجليزية تحتاج فاعلا + فعلا واضحا.",
+                  "mistake": "Wrong: She serious."
+                }
+              ]
+            },
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-english-a1-classroom-survival",
+                  "title": "Classroom Survival English",
+                  "summary": "Ask for help and answer simply with confidence.",
+                  "theme": "Daily speaking",
+                  "estimatedMinutes": 5,
+                  "explanation": "Memorize short polite chunks you can use in class every day.",
+                  "example": "Can you repeat, please?",
+                  "exercise": "What do you say if you did not hear the teacher well?",
+                  "answer": "Can you repeat, please?",
+                  "correction": "This is a safe and polite classroom request.",
+                  "arabicHint": "احفظ سؤالا قصيرا وجوابا قصيرا.",
+                  "mistake": "Answering with yes or no only."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "A2",
+          "summary": "Move from single sentences to short exam-style answers.",
+          "skills": [
+            {
+              "skill": "structure",
+              "lessons": [
+                {
+                  "slug": "bac-english-a2-clear-paragraph",
+                  "title": "Write One Clear Paragraph",
+                  "summary": "Use topic sentence, support, and a short closing sentence.",
+                  "theme": "Writing basics",
+                  "estimatedMinutes": 8,
+                  "explanation": "A strong paragraph has one main idea, one or two supports, and a closing line.",
+                  "example": "Topic sentence: Social media can help students learn faster.",
+                  "exercise": "What is the first sentence you should write in a paragraph?",
+                  "answer": "The topic sentence.",
+                  "correction": "The topic sentence tells the reader the main idea.",
+                  "arabicHint": "الفقرة = فكرة رئيسية + دعم + جملة ختامية.",
+                  "mistake": "Mixing two ideas in one paragraph."
+                }
+              ]
+            },
+            {
+              "skill": "comprehension",
+              "lessons": [
+                {
+                  "slug": "bac-english-a2-skim-scan",
+                  "title": "Skim First, Scan Second",
+                  "summary": "Read faster and answer easier comprehension questions.",
+                  "theme": "Reading strategy",
+                  "estimatedMinutes": 6,
+                  "explanation": "Skim for the big idea, then scan for names, dates, and key words.",
+                  "example": "Scan for pollution if the question asks about the environment.",
+                  "exercise": "If the question asks for a date, should you skim or scan first?",
+                  "answer": "scan",
+                  "correction": "A date is specific information, so scanning is faster.",
+                  "arabicHint": "skim = فكرة عامة، scan = معلومة محددة.",
+                  "mistake": "Trying to translate every word."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B1",
+          "summary": "Target the grammar and vocabulary that show up often in BAC tasks.",
+          "skills": [
+            {
+              "skill": "grammar",
+              "lessons": [
+                {
+                  "slug": "bac-english-b1-grammar-trio",
+                  "title": "Conditionals, Modals, Passive",
+                  "summary": "Master three structures that return again and again in Bac work.",
+                  "theme": "Exam grammar",
+                  "estimatedMinutes": 9,
+                  "explanation": "Use conditionals for results, modals for advice and obligation, and passive for formal style.",
+                  "example": "If we recycle more, pollution will decrease.",
+                  "exercise": "Complete: If we work harder, we ___ better results.",
+                  "answer": "will get",
+                  "correction": "Use will in the result clause of the first conditional.",
+                  "arabicHint": "if + present then will + verb.",
+                  "mistake": "Wrong: If we will work harder."
+                }
+              ]
+            },
+            {
+              "skill": "vocabulary",
+              "lessons": [
+                {
+                  "slug": "bac-english-b1-education-technology",
+                  "title": "Vocabulary: Education and Technology",
+                  "summary": "Learn high-frequency words and collocations for two core BAC themes.",
+                  "theme": "BAC themes",
+                  "estimatedMinutes": 7,
+                  "explanation": "Study words in groups such as digital divide, online learning, and critical thinking.",
+                  "example": "Schools should promote critical thinking, not rote learning.",
+                  "exercise": "Complete: Education should develop ___ thinking.",
+                  "answer": "critical",
+                  "correction": "Critical thinking is the correct academic collocation.",
+                  "arabicHint": "تعلم الكلمة مع الكلمة التي ترافقها.",
+                  "mistake": "Repeating good, bad, and important too often."
+                }
+              ]
+            },
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-english-b1-roleplay-bank",
+                  "title": "Roleplay Bank",
+                  "summary": "Practice useful dialogues for school, travel, and interviews.",
+                  "theme": "Practical language",
+                  "estimatedMinutes": 6,
+                  "explanation": "A good roleplay answer is short, polite, and complete.",
+                  "example": "I am applying for this club because I enjoy teamwork.",
+                  "exercise": "Which sentence can you use in a short school interview?",
+                  "answer": "I am applying for this club because I enjoy teamwork.",
+                  "correction": "It gives a reason and sounds natural.",
+                  "arabicHint": "ابدأ بسبب واضح بعد رأيك.",
+                  "mistake": "Replying with one word only."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B2",
+          "summary": "Turn solid English into exam-ready writing and deeper reading.",
+          "skills": [
+            {
+              "skill": "structure",
+              "lessons": [
+                {
+                  "slug": "bac-english-b2-argumentative-essay",
+                  "title": "Argumentative Essay Blueprint",
+                  "summary": "Write a Bac essay with introduction, body paragraphs, and conclusion.",
+                  "theme": "Essay writing",
+                  "estimatedMinutes": 10,
+                  "explanation": "The introduction gives context and position, each body paragraph gives one reason, and the conclusion restates the idea.",
+                  "example": "One major advantage is that online tools save time and widen access to information.",
+                  "exercise": "What should come at the end of the introduction?",
+                  "answer": "A clear thesis or position.",
+                  "correction": "The thesis tells the reader what the essay will defend.",
+                  "arabicHint": "المقدمة تعرف الموضوع وتعلن الموقف.",
+                  "mistake": "Putting many arguments in one paragraph."
+                }
+              ]
+            },
+            {
+              "skill": "comprehension",
+              "lessons": [
+                {
+                  "slug": "bac-english-b2-inference-context",
+                  "title": "Inference and Vocabulary in Context",
+                  "summary": "Answer deeper comprehension questions without translating every line.",
+                  "theme": "Advanced reading",
+                  "estimatedMinutes": 8,
+                  "explanation": "Use nearby clues to understand implied meaning and unknown words.",
+                  "example": "If a writer mentions an empty fridge, the text may suggest poverty.",
+                  "exercise": "If a town became quieter after a factory closed, what is likely implied?",
+                  "answer": "Jobs were lost or economic activity decreased.",
+                  "correction": "The factory closure is the clue to the hidden meaning.",
+                  "arabicHint": "ابحث عن القرائن حول الجملة لا عن الترجمة الحرفية.",
+                  "mistake": "Copying a line without answering the question."
+                }
+              ]
+            },
+            {
+              "skill": "pronunciation",
+              "lessons": [
+                {
+                  "slug": "bac-english-b2-speaking-rhythm",
+                  "title": "Pronunciation Basics",
+                  "summary": "Control rhythm, stress, and endings to sound clearer in English.",
+                  "theme": "Confidence speaking",
+                  "estimatedMinutes": 5,
+                  "explanation": "Word stress and final sounds often carry the meaning in English.",
+                  "example": "worked ends with a soft t sound; students needs a clear final s.",
+                  "exercise": "Which syllable is stressed in PREsent as a noun?",
+                  "answer": "the first syllable",
+                  "correction": "The noun PREsent takes stress on the first syllable.",
+                  "arabicHint": "ركز على النبر وعلى نهاية -s و -ed.",
+                  "mistake": "Dropping final sounds."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "language": "FRENCH",
+      "label": "Français",
+      "mode": "bac-core",
+      "levels": [
+        {
+          "level": "A1",
+          "summary": "Reprendre les bases et parler sans blocage.",
+          "skills": [
+            {
+              "skill": "grammar",
+              "lessons": [
+                {
+                  "slug": "bac-french-a1-present-articles",
+                  "title": "Présent et articles",
+                  "summary": "Former des phrases simples avec un sujet, un verbe et un article correct.",
+                  "theme": "Fondations",
+                  "estimatedMinutes": 6,
+                  "explanation": "Une phrase simple a besoin d'un sujet, d'un verbe clair et souvent d'un article.",
+                  "example": "Je suis élève en terminale. L'école commence à huit heures.",
+                  "exercise": "Complète: Nous ___ motivés pour le Bac.",
+                  "answer": "sommes",
+                  "correction": "Avec nous, on utilise sommes.",
+                  "arabicHint": "الاسم في الفرنسية يحتاج غالبا article.",
+                  "mistake": "Oublier l'article devant le nom."
+                }
+              ]
+            },
+            {
+              "skill": "vocabulary",
+              "lessons": [
+                {
+                  "slug": "bac-french-a1-presentation-ecole",
+                  "title": "Se présenter et parler de l'école",
+                  "summary": "Les mots essentiels pour parler de soi et de sa routine scolaire.",
+                  "theme": "Vie quotidienne",
+                  "estimatedMinutes": 6,
+                  "explanation": "Apprends les mots fréquents de l'identité, des matières et des devoirs.",
+                  "example": "Ma matière préférée est le français.",
+                  "exercise": "Choisis le bon mot: Je fais mes ___ le soir.",
+                  "answer": "devoirs",
+                  "correction": "Les devoirs appartiennent au champ lexical de l'école.",
+                  "arabicHint": "احفظ الكلمة داخل جملة.",
+                  "mistake": "Confondre cours et classe."
+                }
+              ]
+            },
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-french-a1-classe-politesse",
+                  "title": "Parler en classe avec politesse",
+                  "summary": "Demander de l'aide et répondre brièvement avec confiance.",
+                  "theme": "Communication quotidienne",
+                  "estimatedMinutes": 5,
+                  "explanation": "Des expressions simples et polies rendent la prise de parole plus facile.",
+                  "example": "Pouvez-vous répéter, s'il vous plaît ?",
+                  "exercise": "Quelle phrase utilises-tu si tu n'as pas compris la consigne ?",
+                  "answer": "Pouvez-vous répéter, s'il vous plaît ?",
+                  "correction": "C'est une formule claire et polie.",
+                  "arabicHint": "استعمل عبارات جاهزة محترمة.",
+                  "mistake": "Répondre avec un seul mot."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "A2",
+          "summary": "Passer de la phrase simple au paragraphe court.",
+          "skills": [
+            {
+              "skill": "grammar",
+              "lessons": [
+                {
+                  "slug": "bac-french-a2-passe-compose-imparfait",
+                  "title": "Passé composé ou imparfait ?",
+                  "summary": "Choisir le bon temps du passé dans les récits et réponses d'examen.",
+                  "theme": "Temps du passé",
+                  "estimatedMinutes": 8,
+                  "explanation": "L'imparfait décrit une habitude ou un décor; le passé composé raconte une action terminée.",
+                  "example": "Quand j'étais petit, je lisais beaucoup. Hier, j'ai terminé mon devoir.",
+                  "exercise": "Complète: Hier soir, nous ___ un documentaire.",
+                  "answer": "avons regardé",
+                  "correction": "Hier soir indique une action terminée, donc passé composé.",
+                  "arabicHint": "imparfait للوصف، passé composé للحدث المنتهي.",
+                  "mistake": "Utiliser toujours le passé composé."
+                }
+              ]
+            },
+            {
+              "skill": "structure",
+              "lessons": [
+                {
+                  "slug": "bac-french-a2-paragraphe-argumente",
+                  "title": "Construire un paragraphe argumenté",
+                  "summary": "Organiser une idée, une explication et un exemple.",
+                  "theme": "Rédaction",
+                  "estimatedMinutes": 7,
+                  "explanation": "Un bon paragraphe avance une idée claire puis la développe avec un exemple.",
+                  "example": "L'école doit développer l'esprit critique. Par exemple, un débat en classe aide les élèves à défendre une opinion.",
+                  "exercise": "Quelle partie vient après l'idée principale ?",
+                  "answer": "L'explication.",
+                  "correction": "L'explication développe et précise l'idée.",
+                  "arabicHint": "الفقرة = فكرة + شرح + مثال.",
+                  "mistake": "Ajouter plusieurs idées dans le même paragraphe."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B1",
+          "summary": "Renforcer la langue utile pour la compréhension et l'expression.",
+          "skills": [
+            {
+              "skill": "vocabulary",
+              "lessons": [
+                {
+                  "slug": "bac-french-b1-environnement-technologie",
+                  "title": "Vocabulaire: environnement et technologie",
+                  "summary": "Les mots fréquents pour comprendre les textes et enrichir les essais.",
+                  "theme": "Thèmes du Bac",
+                  "estimatedMinutes": 7,
+                  "explanation": "Travaille les groupes de mots utiles comme développement durable et fracture numérique.",
+                  "example": "La fracture numérique crée des inégalités entre les élèves.",
+                  "exercise": "Quel groupe de mots est correct ? développement ___",
+                  "answer": "durable",
+                  "correction": "Développement durable est l'expression correcte.",
+                  "arabicHint": "تعلم التعبير كاملا لا الكلمة وحدها.",
+                  "mistake": "Employer un mot soutenu sans comprendre son sens."
+                }
+              ]
+            },
+            {
+              "skill": "comprehension",
+              "lessons": [
+                {
+                  "slug": "bac-french-b1-idee-generale-details",
+                  "title": "Idée générale puis détails",
+                  "summary": "Lire avec méthode pour ne pas se perdre dans le texte.",
+                  "theme": "Méthodologie lecture",
+                  "estimatedMinutes": 6,
+                  "explanation": "Lis d'abord pour comprendre le thème, puis cherche seulement l'information demandée.",
+                  "example": "Le titre et la première phrase donnent souvent l'idée générale.",
+                  "exercise": "Si la question demande une cause précise, dois-tu relire tout le texte ?",
+                  "answer": "Non, il faut chercher le passage utile.",
+                  "correction": "La lecture ciblée fait gagner du temps.",
+                  "arabicHint": "ابدأ بالفكرة العامة ثم عد للتفصيل المطلوب.",
+                  "mistake": "Traduire chaque mot."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B2",
+          "summary": "Transformer la maîtrise de base en copies plus structurées et plus convaincantes.",
+          "skills": [
+            {
+              "skill": "structure",
+              "lessons": [
+                {
+                  "slug": "bac-french-b2-dissertation-plan",
+                  "title": "Plan de dissertation",
+                  "summary": "Construire une rédaction claire avec introduction, développement et conclusion.",
+                  "theme": "Essai argumentatif",
+                  "estimatedMinutes": 10,
+                  "explanation": "L'introduction pose la problématique, le développement avance des arguments distincts et la conclusion répond clairement au sujet.",
+                  "example": "Il est légitime de se demander si la technologie rapproche réellement les individus.",
+                  "exercise": "Que faut-il annoncer dans l'introduction après la problématique ?",
+                  "answer": "Le plan ou la direction de la réflexion.",
+                  "correction": "Le lecteur doit comprendre comment le texte va se développer.",
+                  "arabicHint": "المقدمة تعرف الموضوع وتطرح الإشكالية.",
+                  "mistake": "Commencer sans problématique claire."
+                }
+              ]
+            },
+            {
+              "skill": "pronunciation",
+              "lessons": [
+                {
+                  "slug": "bac-french-b2-liaisons-nasales",
+                  "title": "Liaisons et sons nasaux",
+                  "summary": "Parler plus clairement en français sans chercher un accent parfait.",
+                  "theme": "Confiance orale",
+                  "estimatedMinutes": 5,
+                  "explanation": "Certaines liaisons et voyelles nasales reviennent souvent et améliorent immédiatement la clarté.",
+                  "example": "vous avez, un bon étudiant",
+                  "exercise": "Dans vous avez, faut-il faire la liaison ?",
+                  "answer": "oui",
+                  "correction": "Oui, la liaison est naturelle et très fréquente.",
+                  "arabicHint": "المطلوب وضوح وثقة لا accent parfait.",
+                  "mistake": "Prononcer toutes les liaisons partout."
+                }
+              ]
+            },
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-french-b2-opinion-nuance",
+                  "title": "Exprimer son opinion avec nuance",
+                  "summary": "Répondre avec un avis, une justification et un exemple court.",
+                  "theme": "Communication avancée",
+                  "estimatedMinutes": 6,
+                  "explanation": "Une opinion forte devient plus crédible quand elle est suivie d'une raison simple.",
+                  "example": "À mon avis, les réseaux sociaux sont utiles, mais ils demandent une utilisation responsable.",
+                  "exercise": "Quelle expression peux-tu utiliser pour introduire une opinion personnelle ?",
+                  "answer": "À mon avis",
+                  "correction": "Cette expression est simple, claire et correcte.",
+                  "arabicHint": "ابدأ بالرأي ثم أضف سببا.",
+                  "mistake": "Donner un avis sans justification."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "language": "SPANISH",
+      "label": "Español",
+      "mode": "communication-first",
+      "levels": [
+        {
+          "level": "A1",
+          "summary": "Presentarte y usar frases muy frecuentes.",
+          "skills": [
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-spanish-a1-presentacion",
+                  "title": "Presentación básica",
+                  "summary": "Di tu nombre, origen y una frase de cortesía.",
+                  "theme": "Comunicación inicial",
+                  "estimatedMinutes": 5,
+                  "explanation": "Empieza con me llamo, soy de y usa por favor para sonar natural.",
+                  "example": "Me llamo Mariem y soy de Túnez.",
+                  "exercise": "¿Cómo dices I am from Tunisia?",
+                  "answer": "Soy de Túnez.",
+                  "correction": "Usa soy de + lugar para indicar origen.",
+                  "mistake": "Decir yo soy llamo."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "A2",
+          "summary": "Hablar de rutinas y planes cercanos.",
+          "skills": [
+            {
+              "skill": "grammar",
+              "lessons": [
+                {
+                  "slug": "bac-spanish-a2-presente-futuro",
+                  "title": "Presente y futuro cercano",
+                  "summary": "Habla de hábitos y planes con estructuras simples.",
+                  "theme": "Gramática esencial",
+                  "estimatedMinutes": 6,
+                  "explanation": "El presente describe rutinas y voy a + infinitivo expresa un plan próximo.",
+                  "example": "Voy a revisar mis apuntes esta noche.",
+                  "exercise": "Completa: Esta tarde ___ a practicar.",
+                  "answer": "voy",
+                  "correction": "Para un plan próximo usamos voy a + infinitivo.",
+                  "mistake": "Usar ser en lugar de ir a."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B1",
+          "summary": "Mantener diálogos simples sobre estudios y viajes.",
+          "skills": [
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-spanish-b1-dialogos-opinion",
+                  "title": "Diálogos y opinión",
+                  "summary": "Responde con frases simples pero completas.",
+                  "theme": "Comunicación funcional",
+                  "estimatedMinutes": 6,
+                  "explanation": "Una respuesta buena tiene opinión + razón breve.",
+                  "example": "Creo que aprender idiomas abre muchas puertas.",
+                  "exercise": "¿Qué expresión introduce una opinión?",
+                  "answer": "creo que",
+                  "correction": "Creo que introduce una opinión de forma natural.",
+                  "mistake": "Responder con palabras aisladas."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "language": "GERMAN",
+      "label": "Deutsch",
+      "mode": "communication-first",
+      "levels": [
+        {
+          "level": "A1",
+          "summary": "Sich vorstellen und einfache Bitten sagen.",
+          "skills": [
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-german-a1-vorstellung",
+                  "title": "Vorstellung",
+                  "summary": "Name, Herkunft und höfliche Bitten sicher sagen.",
+                  "theme": "Grundkommunikation",
+                  "estimatedMinutes": 5,
+                  "explanation": "Benutze Ich heiße, ich komme aus und bitte.",
+                  "example": "Ich heiße Ahmed.",
+                  "exercise": "Wie sagst du My name is Sara?",
+                  "answer": "Ich heiße Sara.",
+                  "correction": "Ich heiße is the standard self-introduction pattern.",
+                  "mistake": "Using English order for the name."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "A2",
+          "summary": "Über Routine und nächste Pläne sprechen.",
+          "skills": [
+            {
+              "skill": "grammar",
+              "lessons": [
+                {
+                  "slug": "bac-german-a2-prasens-plan",
+                  "title": "Präsens und Plan",
+                  "summary": "Gewohnheiten und kurze Zukunftspläne formulieren.",
+                  "theme": "Essenzielle Grammatik",
+                  "estimatedMinutes": 6,
+                  "explanation": "Das Präsens beschreibt Routine und kann mit morgen auch Zukunft ausdrücken.",
+                  "example": "Morgen schreibe ich einen Test.",
+                  "exercise": "Welcher Satz zeigt einen Plan?",
+                  "answer": "Ich lerne morgen.",
+                  "correction": "The present tense with morgen can express a future action.",
+                  "mistake": "Putting the verb in the wrong position."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B1",
+          "summary": "Kurze Gespräche über Schule, Reisen und Meinungen führen.",
+          "skills": [
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-german-b1-dialoge-meinung",
+                  "title": "Dialoge und Meinung",
+                  "summary": "Kurze vollständige Antworten statt einzelner Wörter geben.",
+                  "theme": "Funktionale Kommunikation",
+                  "estimatedMinutes": 6,
+                  "explanation": "Sag zuerst deine Meinung und dann einen kurzen Grund.",
+                  "example": "Ich denke, Sprachen sind sehr wichtig.",
+                  "exercise": "Welcher Ausdruck zeigt eine Meinung?",
+                  "answer": "ich denke",
+                  "correction": "Ich denke introduces a personal opinion.",
+                  "mistake": "Giving only one-word answers."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "language": "ITALIAN",
+      "label": "Italiano",
+      "mode": "communication-first",
+      "levels": [
+        {
+          "level": "A1",
+          "summary": "Presentarsi e usare formule semplici.",
+          "skills": [
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-italian-a1-presentarsi",
+                  "title": "Presentarsi",
+                  "summary": "Nome, origine e frasi di cortesia essenziali.",
+                  "theme": "Comunicazione iniziale",
+                  "estimatedMinutes": 5,
+                  "explanation": "Usa mi chiamo, sono di e per favore per parlare con calma.",
+                  "example": "Mi chiamo Youssef e sono di Tunisi.",
+                  "exercise": "Come dici My name is Lina?",
+                  "answer": "Mi chiamo Lina.",
+                  "correction": "Mi chiamo is the standard self-introduction pattern.",
+                  "mistake": "Using io sono chiamo."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "A2",
+          "summary": "Parlare di routine e progetti vicini.",
+          "skills": [
+            {
+              "skill": "grammar",
+              "lessons": [
+                {
+                  "slug": "bac-italian-a2-presente-futuro",
+                  "title": "Presente e futuro vicino",
+                  "summary": "Descrivi abitudini e piani immediati con frasi brevi.",
+                  "theme": "Grammatica essenziale",
+                  "estimatedMinutes": 6,
+                  "explanation": "Il presente descrive azioni abituali e, con un marcatore temporale, anche un piano.",
+                  "example": "Domani parlo con il professore.",
+                  "exercise": "Completa: Domani io ___ con il professore.",
+                  "answer": "parlo",
+                  "correction": "The present tense can express a near future plan.",
+                  "mistake": "Choosing a past form for a plan."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B1",
+          "summary": "Gestire dialoghi semplici su scuola, viaggi e opinioni.",
+          "skills": [
+            {
+              "skill": "communication",
+              "lessons": [
+                {
+                  "slug": "bac-italian-b1-dialoghi-opinione",
+                  "title": "Dialoghi e opinione",
+                  "summary": "Risposte brevi ma complete per situazioni reali.",
+                  "theme": "Comunicazione funzionale",
+                  "estimatedMinutes": 6,
+                  "explanation": "Una risposta efficace ha idea + motivo breve.",
+                  "example": "Penso che studiare lingue sia molto utile.",
+                  "exercise": "Quale espressione introduce un'opinione?",
+                  "answer": "penso che",
+                  "correction": "Penso che is a natural opinion opener.",
+                  "mistake": "Answering with isolated words only."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

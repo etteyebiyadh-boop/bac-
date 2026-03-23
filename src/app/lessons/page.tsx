@@ -6,6 +6,7 @@ import { getLanguageLabel, getBacSectionLabel } from "@/lib/learning";
 import { Language, BacSection, BacModule } from "@prisma/client";
 import { db } from "@/lib/db";
 import { SiteLanguage, translations } from "@/lib/translations";
+import { getCurriculumSlugs, getCurriculumTrack, skillLabels } from "@/lib/language-system";
 
 export const dynamic = "force-dynamic";
 
@@ -38,8 +39,9 @@ export default async function LibraryHubPage() {
   } catch(e) {}
 
   const activeLanguages = [profile.primaryLanguage, ...secondaryLanguages];
+  const curriculumSlugs = [...new Set(activeLanguages.flatMap((language) => getCurriculumSlugs(language)))];
 
-  const [grammarRules, vocabSets, readingPassages] = await Promise.all([
+  const [grammarRules, vocabSets, readingPassages, curriculumLessons] = await Promise.all([
     db.grammarRule.findMany({
       where: { language: { in: activeLanguages } },
       orderBy: { createdAt: "desc" }
@@ -51,8 +53,16 @@ export default async function LibraryHubPage() {
     db.readingPassage.findMany({
       where: { language: { in: activeLanguages } },
       orderBy: { createdAt: "desc" }
-    })
+    }),
+    curriculumSlugs.length > 0
+      ? db.lesson.findMany({
+          where: { slug: { in: curriculumSlugs } },
+          select: { slug: true }
+        })
+      : Promise.resolve([])
   ]);
+
+  const availableCurriculumSlugs = new Set(curriculumLessons.map((lesson) => lesson.slug));
 
   return (
     <div className="page-stack library-overhaul" style={{ gap: "80px", direction: langCookie === "ar" ? "rtl" : "ltr" }}>
@@ -80,6 +90,10 @@ export default async function LibraryHubPage() {
         const langGrammar = grammarRules.filter((g) => g.language === lang);
         const langVocab = vocabSets.filter((v) => v.language === lang);
         const langReading = readingPassages.filter((r) => r.language === lang);
+        const curriculumTrack = getCurriculumTrack(lang);
+        const hasCurriculumRoadmap = curriculumTrack?.levels.some((level) =>
+          level.skills.some((skill) => skill.lessons.some((lesson) => availableCurriculumSlugs.has(lesson.slug)))
+        );
 
         const modules = Object.values(BacModule);
 
@@ -96,6 +110,79 @@ export default async function LibraryHubPage() {
                 </strong>
               </div>
             </div>
+
+            {curriculumTrack && hasCurriculumRoadmap ? (
+              <section className="stack" style={{ gap: "28px" }}>
+                <div className="row-between" style={{ background: "rgba(255,255,255,0.03)", padding: "24px 28px", borderRadius: "18px", border: "1px solid var(--glass-border)" }}>
+                  <div className="stack" style={{ gap: "6px" }}>
+                    <span className="eyebrow" style={{ color: "var(--success)" }}>
+                      {curriculumTrack.mode === "communication-first" ? "Communication-first track" : "Bac micro-learning path"}
+                    </span>
+                    <h3 style={{ fontSize: "1.8rem", margin: 0 }}>
+                      {curriculumTrack.label} roadmap by level
+                    </h3>
+                    <p className="muted" style={{ margin: 0, maxWidth: "720px", fontSize: "0.95rem" }}>
+                      Short lessons with one explanation, one example, one exercise, and a direct correction.
+                    </p>
+                  </div>
+                  <span className="pill" style={{ borderColor: "var(--success)", color: "var(--success)" }}>
+                    {curriculumTrack.mode === "communication-first" ? "A1 to B1" : "A1 to B2"}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2" style={{ gap: "24px", alignItems: "start" }}>
+                  {curriculumTrack.levels.map((level) => {
+                    const populatedSkills = level.skills
+                      .map((skill) => ({
+                        ...skill,
+                        lessons: skill.lessons.filter((lesson) => availableCurriculumSlugs.has(lesson.slug))
+                      }))
+                      .filter((skill) => skill.lessons.length > 0);
+
+                    if (populatedSkills.length === 0) return null;
+
+                    return (
+                      <article key={level.level} className="card stack" style={{ padding: "28px", gap: "20px", background: "rgba(0,0,0,0.22)", border: "1px solid var(--glass-border)" }}>
+                        <div className="row-between" style={{ alignItems: "flex-start", gap: "12px" }}>
+                          <div className="stack" style={{ gap: "8px" }}>
+                            <span className="pill" style={{ width: "fit-content", borderColor: "var(--primary)", color: "var(--primary)" }}>
+                              {level.level}
+                            </span>
+                            <strong style={{ fontSize: "1.1rem" }}>{level.summary}</strong>
+                          </div>
+                          <span className="muted" style={{ fontSize: "11px" }}>
+                            {populatedSkills.reduce((count, skill) => count + skill.lessons.length, 0)} lessons
+                          </span>
+                        </div>
+
+                        <div className="stack" style={{ gap: "18px" }}>
+                          {populatedSkills.map((skill) => (
+                            <div key={`${level.level}-${skill.skill}`} className="stack" style={{ gap: "10px" }}>
+                              <span className="eyebrow" style={{ color: "var(--accent)" }}>
+                                {skillLabels[skill.skill]}
+                              </span>
+                              <div className="stack" style={{ gap: "10px" }}>
+                                {skill.lessons.map((lesson) => (
+                                  <article key={lesson.slug} className="card row-between" style={{ padding: "16px 18px", background: "rgba(255,255,255,0.03)", border: "1px solid var(--glass-border)" }}>
+                                    <div className="stack" style={{ gap: "4px", maxWidth: "70%" }}>
+                                      <strong>{lesson.title}</strong>
+                                      <span className="muted" style={{ fontSize: "12px" }}>{lesson.summary}</span>
+                                    </div>
+                                    <Link href={`/lessons/${lesson.slug}`} className="button-link button-secondary" style={{ padding: "8px 14px", fontSize: "11px" }}>
+                                      Open
+                                    </Link>
+                                  </article>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              </section>
+            ) : null}
 
             {/* Units/Modules Grid */}
             <div className="stack" style={{ gap: "100px" }}>

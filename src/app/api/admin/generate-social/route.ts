@@ -19,20 +19,21 @@ export async function POST(req: NextRequest) {
     const client = new OpenAI({ apiKey });
     const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
-    const prompt = `You are a viral social media manager for 'BacLang', the most elite and premium AI-first platform for Tunisian Baccalaureate students.
+    const prompt = `You are a viral social media manager for 'Bac Excellence', the most elite and premium AI-first platform for Tunisian Baccalaureate students.
 Write a highly engaging, high-stakes and elite ${platform} post about: ${language} - ${topic}.
 
 Guidelines:
-1. TARGET: Tunisian BAC students who want to go from a 12 to a 17/20 in their language tracks.
+1. TARGET: Tunisian BAC students who want to go from a 12 to a 17/20 in their language tracks (English, French, Arabic or Optionals).
 2. STYLE: Professional, slightly bold, outcome-focused. Use words like 'Excellence', 'Top Tier', 'Bac Score', 'Precision'.
-3. STRUCTURE for ${platform === "Instagram Carousel" ? 'Carousel' : platform}:
+3. LANGUAGE CONTEXT: If the track is FRENCH or ARABIC, the post should be written PRIMARILY in that language (with some English branding) to showcase our proficiency.
+4. STRUCTURE for ${platform === "Instagram Carousel" ? 'Carousel' : platform}:
    - Slide 1: High-impact HOOK (e.g. 'Stop losing 3 points on ${topic}').
    - Slide 2: The Core Rule or Vocab (Simplified but Elite).
    - Slide 3: The 'Pro-Tip' (The secret trick BAC examiners look for).
    - Slide 4: Real Example (Context relevant to Tunisian exams).
-   - Slide 5: CTA (Call to Action) to visit baclang.com for unlimited AI corrections.
-4. EMOJIS: Use premium-feeling emojis like 🌌, 💎, 🚀, 🛡️, 💡.
-5. Emphasize that on BacLang, you don't just study, you get instant AI-powered feedback on your specific section's criteria.`;
+   - Slide 5: CTA (Call to Action) to visit bacexcellence.com for unlimited AI corrections.
+5. EMOJIS: Use premium-feeling emojis like 🌌, 💎, 🚀, 🛡️, 💡.
+6. Emphasize that on Bac Excellence, you don't just study, you get instant AI-powered feedback on your specific section's criteria.`;
 
     const response = await client.chat.completions.create({
         model,
