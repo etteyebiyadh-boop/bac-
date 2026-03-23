@@ -19,8 +19,8 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const session = await getSession();
   const cookieStore = await cookies();
-  const langCookie = cookieStore.get("site-lang")?.value as SiteLanguage || "en";
-  const t = translations[langCookie];
+  const langCookie = (cookieStore.get("site-lang")?.value as SiteLanguage) || "en";
+  const t = translations[langCookie] || translations.en;
 
   return (
     <html lang={langCookie} dir={langCookie === "ar" ? "rtl" : "ltr"}>

@@ -61,7 +61,7 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
           <LanguageSwitcher />
           {session ? (
             <Link className="pill" href="/profile" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", color: "white" }}>
-               {session.user.email.split('@')[0]}
+               {session.email.split('@')[0]}
             </Link>
           ) : (
             <Link className="pill" href="/auth/signup" style={{ background: 'white', color: 'black', border: 'none' }}>
