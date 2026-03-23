@@ -268,3 +268,102 @@ body {
   .grid-cols-3, .grid-cols-2 { grid-template-columns: 1fr; }
   .topbar { left: 16px; right: 16px; top: 12px; }
 }
+
+/* 🏔️ ADVANCED UI & ANIMATIONS */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(30px); filter: blur(10px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.reveal {
+  opacity: 0;
+  animation: reveal-up 0.8s var(--ease) forwards;
+}
+
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+
+.text-reveal {
+  overflow: hidden;
+}
+
+.text-reveal-content {
+  animation: reveal-up 1s var(--ease) both;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px var(--primary-glow);
+  border-color: var(--primary);
+}
+
+.section-padding { padding: 120px 0; }
+
+.eyebrow {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.section-title-large {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 24px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+}
+
+.pathway-card {
+  height: 480px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+  cursor: pointer;
+  transition: all 0.5s var(--ease);
+}
+
+.pathway-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), transparent 70%);
+  border-radius: inherit;
+}
+
+.pathway-card-content {
+  position: relative;
+  z-index: 1;
+}
+
+.grid-overlay {
+  background-image: radial-gradient(var(--glass-border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}

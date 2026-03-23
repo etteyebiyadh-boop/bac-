@@ -49,7 +49,7 @@ export function FocusWidget() {
 export function ExcellenceStats() {
   return (
     <div className="grid grid-cols-2" style={{ gap: "20px" }}>
-      <div className="card stack" style={{ padding: "32px", boarder: "1px solid var(--accent-glow)" }}>
+      <div className="card stack" style={{ padding: "32px", border: "1px solid var(--accent-glow)" }}>
         <span className="eyebrow" style={{ color: "var(--accent)" }}>Predicted Score</span>
         <div style={{ fontSize: "3rem", fontWeight: "900", fontFamily: "var(--font-display)" }}>17.5<span style={{ fontSize: "1rem" }}>/20</span></div>
         <div style={{ height: "4px", background: "rgba(255,255,255,0.05)", borderRadius: "10px", marginTop: "12px" }}>
