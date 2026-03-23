@@ -1,14 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { SiteLanguage, translations } from "@/lib/translations";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [lang, setLang] = useState<SiteLanguage>("en");
   const router = useRouter();
+
+  useEffect(() => {
+    const cookieValue = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("site-lang="))
+      ?.split("=")[1];
+    if (cookieValue === "ar" || cookieValue === "fr" || cookieValue === "en") {
+      setLang(cookieValue as SiteLanguage);
+    }
+  }, []);
+
+  const t = translations[lang];
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -19,41 +33,55 @@ export default function LoginPage() {
       body: JSON.stringify({ email, password })
     });
     if (!res.ok) {
-      setError("Invalid credentials");
+      setError(lang === "ar" ? "بيانات الدخول غير صحيحة" : (lang === "fr" ? "Identifiants invalides" : "Invalid credentials"));
       return;
     }
     router.push("/dashboard");
   }
 
   return (
-    <div className="auth-shell">
-      <form className="card auth-card stack" onSubmit={onSubmit}>
-        <span className="eyebrow">Welcome back</span>
-        <h1 className="section-title">Login and continue your bac training.</h1>
-        <p className="muted">
-          Resume your writing streak, review your score history, and keep moving inside the
-          correction-first BacLang study loop.
+    <div className="auth-shell" style={{ direction: lang === "ar" ? "rtl" : "ltr" }}>
+      <form className="card auth-card stack" onSubmit={onSubmit} style={{ maxWidth: "500px", padding: "60px", border: "1px solid var(--accent)" }}>
+        <span className="eyebrow" style={{ color: "var(--accent)" }}>{lang === "ar" ? "مرحباً بك مجدداً" : (lang === "fr" ? "Bon retour" : "Welcome back")}</span>
+        <h1 className="section-title" style={{ fontSize: "2.5rem" }}>{t.auth_btn_login}</h1>
+        <p className="muted" style={{ fontSize: "1.1rem" }}>
+          {lang === "ar" ? "أكمل رحلتك نحو التميز في الباكالوريا." : (lang === "fr" ? "Continuez votre parcours vers l'excellence." : "Continue your journey towards excellence.")}
         </p>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error ? <p className="error-text">{error}</p> : null}
-        <button className="full-width" type="submit">
-          Login
+
+        <div className="stack" style={{ marginTop: "40px", gap: "24px" }}>
+           <div className="stack">
+              <label className="field-label">{t.auth_email}</label>
+              <input
+                type="email"
+                placeholder="bac@student.tn"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={{ background: "rgba(255,255,255,0.02)", padding: "16px", borderRadius: "12px", border: "1px solid var(--glass-border)" }}
+              />
+           </div>
+           
+           <div className="stack">
+              <label className="field-label">{t.auth_password}</label>
+              <input
+                type="password"
+                placeholder="********"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={{ background: "rgba(255,255,255,0.02)", padding: "16px", borderRadius: "12px", border: "1px solid var(--glass-border)" }}
+              />
+           </div>
+        </div>
+
+        {error ? <p className="error-text" style={{ marginTop: "24px" }}>{error}</p> : null}
+
+        <button className="full-width hover-glow" type="submit" style={{ marginTop: "40px", padding: "20px", background: "var(--accent)", color: "black" }}>
+          {t.auth_btn_login}
         </button>
-        <p className="muted">
-          New here? <Link href="/auth/signup">Create your free account</Link>
+
+        <p className="muted" style={{ textAlign: "center", marginTop: "32px" }}>
+          {t.auth_no_account} <Link href="/auth/signup" style={{ color: "var(--accent)", fontWeight: 700 }}>{t.auth_btn_signup}</Link>
         </p>
       </form>
     </div>

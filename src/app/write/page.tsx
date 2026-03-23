@@ -1,5 +1,7 @@
 import { db } from "@/lib/db";
 import { requireCurrentUser } from "@/lib/auth";
+import { cookies } from "next/headers";
+import { SiteLanguage } from "@/lib/translations";
 import { WriteWorkspace } from "./write-workspace";
 
 type WritePageProps = {
@@ -27,5 +29,8 @@ export default async function WritePage({ searchParams }: WritePageProps) {
 
   const selectedExam = exams.find((exam) => exam.id === params?.examId) ?? null;
 
-  return <WriteWorkspace exams={exams} selectedExam={selectedExam} />;
+  const cookieStore = await cookies();
+  const langCookie = cookieStore.get("site-lang")?.value as SiteLanguage || "en";
+
+  return <WriteWorkspace exams={exams} selectedExam={selectedExam} lang={langCookie} />;
 }
