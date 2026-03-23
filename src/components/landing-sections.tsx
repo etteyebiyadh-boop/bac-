@@ -16,18 +16,23 @@ export function FeaturesSection() {
         </p>
       </div>
 
-      <div className="feature-grid">
+      <div className="grid grid-cols-2" style={{ gap: "32px" }}>
         <div className="card stack reveal delay-1">
           <div style={{ fontSize: '40px' }}>🖋️</div>
           <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Writing Lab AI</h3>
           <p className="muted">Submit your essays and get instant feedback based on official exam criteria (Grammar, Vocab, Content, Cohesion).</p>
         </div>
         <div className="card stack reveal delay-2">
+          <div style={{ fontSize: '40px' }}>📖</div>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Comprehension Masterclass</h3>
+          <p className="muted">Master the 12/20 points of your exam with 50+ reading passages designed to mimic the national BAC format.</p>
+        </div>
+        <div className="card stack reveal delay-3">
           <div style={{ fontSize: '40px' }}>📚</div>
           <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Section-Specific Library</h3>
           <p className="muted">Whether you're Maths or Lettres, your library only shows the content relevant to your coefficient and series.</p>
         </div>
-        <div className="card stack reveal delay-3">
+        <div className="card stack reveal delay-4">
           <div style={{ fontSize: '40px' }}>🎯</div>
           <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Daily High-Yield Missions</h3>
           <p className="muted">15-minute daily sessions designed to tackle your weakest points and ensure you never lose your streak.</p>

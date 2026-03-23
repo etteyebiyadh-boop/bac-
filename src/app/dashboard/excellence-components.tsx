@@ -48,22 +48,37 @@ export function FocusWidget() {
 
 export function ExcellenceStats() {
   return (
-    <div className="grid grid-cols-2" style={{ gap: "20px" }}>
-      <div className="card stack" style={{ padding: "32px", border: "1px solid var(--accent-glow)" }}>
-        <span className="eyebrow" style={{ color: "var(--accent)" }}>Predicted Score</span>
-        <div style={{ fontSize: "3rem", fontWeight: "900", fontFamily: "var(--font-display)" }}>17.5<span style={{ fontSize: "1rem" }}>/20</span></div>
-        <div style={{ height: "4px", background: "rgba(255,255,255,0.05)", borderRadius: "10px", marginTop: "12px" }}>
-           <div style={{ height: "100%", width: "88%", background: "var(--accent)", boxShadow: "0 0 10px var(--accent-glow)", borderRadius: "inherit" }} />
+    <div className="stack" style={{ gap: "20px" }}>
+      <div className="grid grid-cols-2" style={{ gap: "20px" }}>
+        <div className="card stack" style={{ padding: "32px", border: "1px solid var(--accent-glow)" }}>
+          <span className="eyebrow" style={{ color: "var(--accent)" }}>Predicted Score</span>
+          <div style={{ fontSize: "3rem", fontWeight: "900", fontFamily: "var(--font-display)" }}>
+            17.5<span style={{ fontSize: "1rem" }}>/20</span>
+          </div>
+          <div style={{ height: "4px", background: "rgba(255,255,255,0.05)", borderRadius: "10px", marginTop: "12px" }}>
+             <div style={{ height: "100%", width: "88%", background: "var(--accent)", boxShadow: "0 0 10px var(--accent-glow)", borderRadius: "inherit" }} />
+          </div>
+          <p className="muted" style={{ fontSize: "11px", marginTop: "8px" }}>Based on last 5 essay submissions.</p>
         </div>
-        <p className="muted" style={{ fontSize: "11px", marginTop: "8px" }}>Based on last 5 essay submissions.</p>
+        <div className="card stack" style={{ padding: "32px" }}>
+          <span className="eyebrow" style={{ color: "var(--success)" }}>Syllabus Mastery</span>
+          <div style={{ fontSize: "3rem", fontWeight: "900", fontFamily: "var(--font-display)" }}>64%</div>
+          <div style={{ height: "4px", background: "rgba(255,255,255,0.05)", borderRadius: "10px", marginTop: "12px" }}>
+             <div style={{ height: "100%", width: "64%", background: "var(--success)", borderRadius: "inherit" }} />
+          </div>
+          <p className="muted" style={{ fontSize: "11px", marginTop: "8px" }}>12/18 Essential Rules Completed.</p>
+        </div>
       </div>
-      <div className="card stack" style={{ padding: "32px" }}>
-        <span className="eyebrow" style={{ color: "var(--success)" }}>Syllabus Mastery</span>
-        <div style={{ fontSize: "3rem", fontWeight: "900", fontFamily: "var(--font-display)" }}>64%</div>
-        <div style={{ height: "4px", background: "rgba(255,255,255,0.05)", borderRadius: "10px", marginTop: "12px" }}>
-           <div style={{ height: "100%", width: "64%", background: "var(--success)", borderRadius: "inherit" }} />
+      
+      <div className="card row-between" style={{ padding: "24px 32px", border: "1px solid var(--primary-glow)", background: "rgba(99, 102, 241, 0.03)" }}>
+        <div className="stack" style={{ gap: "4px" }}>
+          <span className="eyebrow" style={{ color: "var(--primary)" }}>Comprehension Masterclass</span>
+          <div style={{ fontSize: "1.5rem", fontWeight: "900" }}>3/50 Passages Completed</div>
         </div>
-        <p className="muted" style={{ fontSize: "11px", marginTop: "8px" }}>12/18 Essential Rules Completed.</p>
+        <div className="stack" style={{ alignItems: "flex-end", gap: "8px" }}>
+           <div className="pill" style={{ fontSize: "10px" }}>Top 5% of users</div>
+           <Link href="/lessons" className="button-link" style={{ padding: "8px 20px", fontSize: "12px" }}>Continue Reading</Link>
+        </div>
       </div>
     </div>
   );
