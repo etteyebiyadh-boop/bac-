@@ -367,3 +367,36 @@ body {
   background-size: 40px 40px;
   pointer-events: none;
 }
+
+/* 🌍 RTL SUPPORT */
+[dir="ar"] {
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; /* Keep same font stack or replace with Arabic-ready if needed */
+}
+
+[dir="ar"] .row-between {
+  flex-direction: row-reverse;
+}
+
+[dir="ar"] .stack {
+  align-items: flex-start;
+}
+
+[dir="ar"] .nav-links {
+  flex-direction: row-reverse;
+}
+
+[dir="ar"] .hero-title, 
+[dir="ar"] .section-title-large, 
+[dir="ar"] .hero-text, 
+[dir="ar"] .muted {
+  text-align: inherit; /* Allow dir="rtl" to handle it */
+}
+
+[dir="ar"] .button-link svg {
+  transform: rotate(180deg);
+}
+
+/* Fix for specific flex components that shouldn't reverse globally but need internal logic */
+[dir="ar"] .topbar-inner {
+  flex-direction: row-reverse;
+}
