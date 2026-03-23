@@ -40,6 +40,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
               <nav aria-label="Primary" className="nav-links">
                 <Link className="nav-link" href="/dashboard">{t.nav_dashboard}</Link>
                 <Link className="nav-link" href="/lessons">{t.nav_library}</Link>
+                <Link className="nav-link" href="/calculator">{t.nav_calc}</Link>
                 <Link className="nav-link" href="/write">{t.nav_writing}</Link>
                 <Link className="nav-link" href="/exams">{t.nav_exams}</Link>
                 {session ? (
