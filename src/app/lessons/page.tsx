@@ -100,7 +100,7 @@ export default async function LibraryHubPage() {
         return (
           <div key={lang} className="stack" style={{ gap: "60px" }}>
             <div className="row-between" style={{ borderBottom: "1px solid var(--glass-border)", paddingBottom: "24px" }}>
-              <h2 className="section-title" style={{ fontSize: "3.5rem", margin: 0 }}>
+              <h2 className="section-title" style={{ fontSize: "clamp(1.5rem, 8vw, 3.5rem)", margin: 0 }}>
                 {getLanguageLabel(lang)} <span style={{ opacity: 0.3 }}>{t.lib_curriculum}</span>
               </h2>
               <div className="stack" style={{ gap: "4px", textAlign: langCookie === "ar" ? "left" : "right" }}>
@@ -118,7 +118,7 @@ export default async function LibraryHubPage() {
                     <span className="eyebrow" style={{ color: "var(--success)" }}>
                       {curriculumTrack.mode === "communication-first" ? "Communication-first track" : "Bac micro-learning path"}
                     </span>
-                    <h3 style={{ fontSize: "1.8rem", margin: 0 }}>
+                    <h3 style={{ fontSize: "clamp(1.2rem, 5vw, 1.8rem)", margin: 0 }}>
                       {curriculumTrack.label} roadmap by level
                     </h3>
                     <p className="muted" style={{ margin: 0, maxWidth: "720px", fontSize: "0.95rem" }}>

@@ -7,7 +7,7 @@ export default async function PricingPage() {
   return (
     <div className="page-stack container">
       <section className="card stack hero-panel" style={{ textAlign: "center", padding: "48px 24px" }}>
-        <span className="eyebrow" style={{ color: "#e7bf87" }}>BacLang Premium</span>
+        <span className="eyebrow" style={{ color: "#e7bf87" }}>Bac Excellence Premium</span>
         <h1 className="section-title" style={{ maxWidth: "600px", margin: "0 auto", color: "white" }}>
           Unlock unlimited corrections for the BAC language loop.
         </h1>

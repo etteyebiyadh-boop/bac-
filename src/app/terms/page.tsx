@@ -4,7 +4,7 @@ export default function TermsPage() {
       <h1 className="section-title">Terms of Service</h1>
       <p className="muted">Last updated: 2026-03-21</p>
       <p>
-        BacLang provides educational guidance for Tunisian Baccalaureate language preparation. AI
+        Bac Excellence provides educational guidance for Tunisian Baccalaureate language preparation. AI
         scores and corrections are advisory and not official ministry grading.
       </p>
       <p>

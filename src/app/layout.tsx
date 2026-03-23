@@ -8,6 +8,7 @@ import { LogoutButton } from "@/components/logout-button";
 import { cookies } from "next/headers";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: `${APP_NAME} | All-in-one Tunisian Bac Prep`,
@@ -30,38 +31,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         </div>
         
         <div className="site-shell">
-          <header className="topbar">
-            <div className="topbar-inner">
-              <Link className="brand" href="/" style={{ gap: langCookie === "ar" ? "12px" : "12px", flexDirection: langCookie === "ar" ? "row-reverse" : "row" }}>
-                <div className="brand-mark">B</div>
-                <strong style={{ fontSize: '1rem', fontWeight: 800 }}>{APP_NAME}</strong>
-              </Link>
-
-              <nav aria-label="Primary" className="nav-links">
-                <Link className="nav-link" href="/dashboard">{t.nav_dashboard}</Link>
-                <Link className="nav-link" href="/lessons">{t.nav_library}</Link>
-                <Link className="nav-link" href="/calculator">{t.nav_calc}</Link>
-                <Link className="nav-link" href="/write">{t.nav_writing}</Link>
-                <Link className="nav-link" href="/exams">{t.nav_exams}</Link>
-                {session ? (
-                  <Link className="pill" href="/admin" style={{ background: 'var(--primary)', color: 'white', border: 'none', marginLeft: '12px', padding: '6px 14px', boxShadow: '0 0 15px var(--primary-glow)' }}>
-                    {t.nav_controlRoom}
-                  </Link>
-                ) : null}
-              </nav>
-
-              <div className="nav-actions row-between" style={{ gap: "20px" }}>
-                <LanguageSwitcher />
-                {session ? (
-                  <LogoutButton />
-                ) : (
-                  <Link className="pill" href="/auth/signup" style={{ background: 'white', color: 'black', border: 'none' }}>
-                    {t.nav_join}
-                  </Link>
-                )}
-              </div>
-            </div>
-          </header>
+          <Navbar session={session} translations={t} lang={langCookie} />
 
           <main className="container" style={{ paddingTop: '120px' }}>{children}</main>
 

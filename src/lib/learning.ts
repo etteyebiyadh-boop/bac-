@@ -17,7 +17,7 @@ export const profileLanguageOptions = [
   {
     value: Language.FRENCH,
     label: "French",
-    status: "Rolling out"
+    status: "Live now"
   },
   {
     value: Language.ARABIC,
@@ -27,17 +27,17 @@ export const profileLanguageOptions = [
   {
     value: Language.SPANISH,
     label: "Spanish (Optional)",
-    status: "Beta"
+    status: "Communication track"
   },
   {
     value: Language.GERMAN,
     label: "German (Optional)",
-    status: "Beta"
+    status: "Communication track"
   },
   {
     value: Language.ITALIAN,
     label: "Italian (Optional)",
-    status: "Beta"
+    status: "Communication track"
   }
 ] as const;
 

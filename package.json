@@ -12,6 +12,7 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "node prisma/seed.js",
     "prisma:seed:content": "node prisma/seed-comprehensive.js",
+    "prisma:seed:language-system": "node prisma/seed-language-system.js",
     "prisma:seed:bac": "node prisma/seed-bac-official.js",
     "prisma:seed:sections": "node prisma/seed-sections.js"
   },

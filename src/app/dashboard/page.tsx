@@ -14,6 +14,18 @@ export default async function DashboardPage() {
   const langCookie = cookieStore.get("site-lang")?.value as SiteLanguage || "en";
   const t = translations[langCookie];
 
+  let secondaryLanguages: string[] = [];
+  try {
+    if (profile.secondaryLanguagesJson) {
+      const parsed = typeof profile.secondaryLanguagesJson === "string"
+        ? JSON.parse(profile.secondaryLanguagesJson)
+        : profile.secondaryLanguagesJson;
+      if (Array.isArray(parsed)) secondaryLanguages = parsed as string[];
+    }
+  } catch {}
+
+  const activeLanguages = [profile.primaryLanguage, ...secondaryLanguages];
+
   return (
     <div className="dashboard-layout" style={{ position: "fixed", inset: 0, overflow: "hidden", background: "#000205", direction: langCookie === "ar" ? "rtl" : "ltr" }}>
       {/* 🧭 SIDEBAR */}
@@ -95,7 +107,11 @@ export default async function DashboardPage() {
          {/* Language Modules Section */}
          <div style={{ marginTop: "60px" }}>
             <h2 className="eyebrow" style={{ color: "var(--ink-dim)", fontSize: "12px" }}>LANGUAGE MODULES</h2>
-            <LanguageModules />
+            <LanguageModules
+              activeLanguages={activeLanguages}
+              sectionLabel={profile.bacSection}
+              targetScore={profile.targetScore}
+            />
          </div>
       </main>
     </div>

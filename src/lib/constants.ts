@@ -1,7 +1,7 @@
 const parsedFreeCorrectionLimit = Number(process.env.FREE_CORRECTIONS_PER_WEEK ?? 3);
 const parsedCorrectionRateLimitPerMinute = Number(process.env.CORRECTION_RATE_LIMIT_PER_MINUTE ?? 6);
 
-export const APP_NAME = "BacLang";
+export const APP_NAME = "Bac Excellence";
 export const MVP_LANGUAGE = "English";
 export const TARGET_BAC_SCORE = 15;
 export const FREE_CORRECTIONS_PER_WEEK = Number.isFinite(parsedFreeCorrectionLimit)

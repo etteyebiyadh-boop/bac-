@@ -43,7 +43,7 @@ export function SocialGenerator() {
           <span className="eyebrow" style={{ color: "var(--primary)" }}>Content Engine</span>
           <h2 className="section-title" style={{ fontSize: "3rem" }}>Generate Viral <br/>BAC Excellence.</h2>
           <p className="muted" style={{ fontSize: "1.1rem" }}>
-            Create shareable Social Media hooks and carousel scripts crafted in the elite BacLang style. 
+            Create shareable Social Media hooks and carousel scripts crafted in the elite Bac Excellence style. 
             Perfect for Instagram, TikTok, and scaling our community.
           </p>
         </div>
@@ -106,13 +106,13 @@ export function SocialGenerator() {
           <div className="stack" style={{ gap: "20px" }}>
              <span className="eyebrow">Elite Visual Style Preview</span>
              <div className="card stack" style={{ minHeight: "500px", padding: "40px", position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", background: "radial-gradient(circle at 10% 10%, #6366f1 0%, #000 70%)" }}>
-                <div style={{ position: "absolute", top: "20px", left: "20px", opacity: 0.4 }}><strong style={{ fontFamily: "Outfit" }}>BacLang</strong></div>
-                <div style={{ position: "absolute", bottom: "20px", right: "20px", opacity: 0.4 }}><span style={{ fontSize: "10px" }}>baclang.com</span></div>
+                <div style={{ position: "absolute", top: "20px", left: "20px", opacity: 0.4 }}><strong style={{ fontFamily: "Outfit" }}>Bac Excellence</strong></div>
+                <div style={{ position: "absolute", bottom: "20px", right: "20px", opacity: 0.4 }}><span style={{ fontSize: "10px" }}>bacexcellence.com</span></div>
                 
                 <h1 style={{ fontSize: "2.5rem", fontFamily: "Outfit", fontWeight: 900, lineHeight: 1 }}>{generatedPost.split('\n')[0].replace(/Slide 1:|Hook:/, "").trim()}</h1>
                 <p className="muted" style={{ marginTop: "24px", color: "var(--ink)", fontWeight: 600 }}>{language} Track excellence.</p>
                 <div style={{ marginTop: "40px", width: "100%", height: "2px", background: "linear-gradient(to right, transparent, var(--primary), transparent)" }}></div>
-                <p style={{ marginTop: "20px", fontSize: "0.9rem", color: "rgba(255,255,255,0.6)" }}>BacLang Elite Content Engine &copy; 2026</p>
+                <p style={{ marginTop: "20px", fontSize: "0.9rem", color: "rgba(255,255,255,0.6)" }}>Bac Excellence Elite Content Engine &copy; 2026</p>
              </div>
              <p className="muted" style={{ fontSize: "12px", textAlign: "center" }}>This is the elite visual branding to follow for your cards.</p>
           </div>
