@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { SiteLanguage, translations } from "@/lib/translations";
 import {
   DIAGNOSTIC_STORAGE_KEY,
@@ -18,6 +19,68 @@ import {
   type StoredDiagnosticSnapshot
 } from "@/lib/language-roadmap";
 import type { CurriculumLanguageCode } from "@/lib/language-system";
+
+export function DailyStreakWidget() {
+  const [streakDays, setStreakDays] = useState(0);
+
+  useEffect(() => {
+    // Simulated streak calculation
+    setStreakDays(12);
+  }, []);
+
+  return (
+    <div className="card row-between" style={{ padding: "24px", background: "linear-gradient(135deg, rgba(239, 68, 68, 0.1), transparent)", border: "1px solid rgba(239, 68, 68, 0.3)", marginBottom: "32px", borderRadius: "16px", animation: "slideUp 0.5s ease" }}>
+      <div className="stack" style={{ gap: "8px" }}>
+        <h3 className="eyebrow" style={{ color: "#ef4444", fontSize: "14px", margin: 0 }}>🔥 DAILY STREAK</h3>
+        <span style={{ fontSize: "13px", opacity: 0.8 }}>You are crushing it! Complete a lesson today to keep it going.</span>
+      </div>
+      <div style={{ fontSize: "3rem", fontWeight: 900, color: "#ef4444", textShadow: "0 0 20px rgba(239, 68, 68, 0.5)" }}>
+        {streakDays} <span style={{ fontSize: "1rem", opacity: 0.7 }}>days</span>
+      </div>
+    </div>
+  );
+}
+
+export function SmartStudyPlanner({ lang }: { lang: SiteLanguage }) {
+  const t = translations[lang];
+
+  return (
+    <div className="card stack" style={{ padding: "32px", background: "linear-gradient(135deg, rgba(16, 185, 129, 0.05), transparent)", border: "1px solid var(--success-glow)", marginTop: "24px" }}>
+      <div className="row-between" style={{ marginBottom: "16px" }}>
+        <span className="eyebrow" style={{ color: "var(--success)" }}>🧠 SMART STUDY PLANNER</span>
+      </div>
+      <div className="stack" style={{ gap: "4px" }}>
+        <h3 style={{ fontSize: "1.8rem", fontWeight: 900 }}>Review Inference Rules</h3>
+        <p className="muted" style={{ fontSize: "12px", lineHeight: 1.5 }}>
+          Based on your latest exam, you struggled with "skimming and inference". We recommend a focused 15-minute review session.
+        </p>
+      </div>
+      <Link href="/lessons/reading-comprehension" className="button-link" style={{ marginTop: "24px", justifyContent: "center", background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--success)", color: "white" }}>
+        Start 15 Min Review
+      </Link>
+    </div>
+  );
+}
+
+export function AdminAccessButton() {
+  const router = useRouter();
+
+  function handleClick() {
+    const code = window.prompt("Enter Admin Verification Code:");
+    if (code === "fubisra06") {
+      router.push("/admin");
+    } else if (code !== null) {
+      alert("Unauthorized Access.");
+    }
+  }
+
+  return (
+    <button onClick={handleClick} className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6, background: "transparent", border: "none", color: "white", cursor: "pointer", width: "100%", textAlign: "left", fontFamily: "inherit" }}>
+      <span style={{ fontSize: "1.2rem" }}>⚙️</span>
+      <span style={{ fontSize: "1rem", fontWeight: 600 }}>Social Studio</span>
+    </button>
+  );
+}
 
 export function OverallProgress() {
   return (

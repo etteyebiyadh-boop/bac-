@@ -95,7 +95,18 @@ export default async function LibraryHubPage() {
           level.skills.some((skill) => skill.lessons.some((lesson) => availableCurriculumSlugs.has(lesson.slug)))
         );
 
-        const modules = Object.values(BacModule);
+        // Restrict official BAC modules based on section.
+        // Lettres has 6 modules. Scientific/Math/Eco have 4.
+        let modules: BacModule[] = [
+          BacModule.MODULE_1_HOLIDAYING_ART_SHOWS,
+          BacModule.MODULE_2_EDUCATION_MATTERS,
+          BacModule.MODULE_3_CREATIVE_INVENTIVE_MINDS,
+          BacModule.MODULE_4_YOUTH_ISSUES,
+        ];
+        if (profile.bacSection === "LETTRES") {
+          modules.push(BacModule.MODULE_5_WOMEN_POWER);
+          modules.push(BacModule.MODULE_6_SUSTAINABLE_DEVELOPMENT);
+        }
 
         // Dynamic Coef Logic for Tunisian Bac
         let coef = 2;

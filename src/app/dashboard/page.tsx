@@ -1,6 +1,6 @@
 import { requireCurrentUser } from "@/lib/auth";
 import { ensureStudentProfile } from "@/lib/missions";
-import { OverallProgress, GradePredictions, HighYieldTopics, LanguageModules, WordOfTheDay } from "./excellence-components";
+import { OverallProgress, GradePredictions, HighYieldTopics, LanguageModules, WordOfTheDay, DailyStreakWidget, SmartStudyPlanner, AdminAccessButton } from "./excellence-components";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { SiteLanguage, translations } from "@/lib/translations";
@@ -69,6 +69,7 @@ export default async function DashboardPage() {
               <span style={{ fontSize: "1.2rem" }}>📝</span>
               <span>{t.nav_exams}</span>
            </Link>
+           <AdminAccessButton />
         </nav>
 
         <div className="stack" style={{ gap: "20px" }}>
@@ -102,6 +103,14 @@ export default async function DashboardPage() {
                </div>
             </div>
          </header>
+
+         {/* Gamification and AI Layers */}
+         <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
+            <DailyStreakWidget />
+            <div style={{ marginTop: "-24px" }}>
+              <SmartStudyPlanner lang={langCookie} />
+            </div>
+         </div>
 
          {/* Grid Layout mimicking the mockup */}
          <div className="grid" style={{ gridTemplateColumns: "1fr 1fr 1.2fr", gap: "24px", alignItems: "stretch" }}>
