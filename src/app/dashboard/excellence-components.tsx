@@ -68,6 +68,7 @@ export function AdminAccessButton() {
   function handleClick() {
     const code = window.prompt("Enter Admin Verification Code:");
     if (code === "fubisra06") {
+      document.cookie = "admin_pass=fubisra06; path=/; max-age=86400;";
       router.push("/admin");
     } else if (code !== null) {
       alert("Unauthorized Access.");
