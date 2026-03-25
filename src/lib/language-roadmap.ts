@@ -229,6 +229,7 @@ export function isSupportedDiagnosticLanguage(value: string | null | undefined):
 export const languageLabelMap: Record<CurriculumLanguageCode, string> = {
   ENGLISH: "English",
   FRENCH: "French",
+  ARABIC: "Arabic",
   SPANISH: "Spanish",
   GERMAN: "German",
   ITALIAN: "Italian"

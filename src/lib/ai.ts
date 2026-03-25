@@ -94,3 +94,77 @@ export async function correctEssay(inputText: string, promptText?: string, langu
   const parsed = correctionSchema.parse(JSON.parse(content));
   return parsed;
 }
+
+const drillSchema = z.object({
+  questions: z.array(z.object({
+    question: z.string(),
+    options: z.array(z.string()).length(4),
+    correctIndex: z.number().min(0).max(3),
+    explanation: z.string()
+  }))
+});
+
+export async function generateGrammarDrill(ruleName: string, ruleExplanation: string, language: string = "ENGLISH") {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) throw new Error("Missing OPENAI_API_KEY");
+
+  const client = new OpenAI({ apiKey });
+  const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+
+  const promptLanguage = language === "ARABIC" ? "Arabic" : (language === "FRENCH" ? "French" : (language === "SPANISH" ? "Spanish" : "English"));
+
+  const response = await Promise.race([
+    client.responses.create({
+      model,
+      input: [
+        {
+          role: "system",
+          content:
+            `You are an expert ${promptLanguage} tutor for Tunisian Baccalaureate students. ` +
+            `Create exactly 3 challenging multiple-choice questions targeting the grammar rule: ${ruleName}.\n` +
+            `Context: ${ruleExplanation}\n\n` +
+            `Return valid JSON with 4 options per question, the correct index (0-3), and a helpful explanation. ` +
+            `The questions, options, AND explanations MUST be in ${promptLanguage}.`
+        },
+        {
+          role: "user",
+          content: `Generate 3 practice questions for ${ruleName} in ${promptLanguage}.`
+        }
+      ],
+      text: {
+        format: {
+          type: "json_schema",
+          name: "grammar_drill",
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              questions: {
+                type: "array",
+                items: {
+                  type: "object",
+                  additionalProperties: false,
+                  properties: {
+                    question: { type: "string" },
+                    options: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
+                    correctIndex: { type: "number", minimum: 0, maximum: 3 },
+                    explanation: { type: "string" }
+                  },
+                  required: ["question", "options", "correctIndex", "explanation"]
+                }
+              }
+            },
+            required: ["questions"]
+          },
+          strict: true
+        }
+      }
+    }),
+    new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("AI_TIMEOUT")), 25000);
+    })
+  ]);
+
+  const content = (response as { output_text: string }).output_text;
+  return drillSchema.parse(JSON.parse(content));
+}

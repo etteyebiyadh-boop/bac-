@@ -97,6 +97,11 @@ export const translations = {
     auth_btn_login: "Login",
     auth_have_account: "Already have an account?",
     auth_no_account: "Don't have an account?",
+    lib_roadmap_title: "Roadmap by level",
+    lib_roadmap_desc: "Short lessons with one explanation, one example, one exercise, and a direct correction.",
+    lib_lessons_count: "lessons",
+    lib_roadmap_range: "Target: A1 to B2",
+    lib_open_btn: "Open",
   },
   fr: {
     nav_dashboard: "Tableau de Bord",
@@ -194,6 +199,11 @@ export const translations = {
     auth_btn_login: "Se connecter",
     auth_have_account: "Vous avez déjà un compte ?",
     auth_no_account: "Pas encore de compte ?",
+    lib_roadmap_title: "Feuille de route par niveau",
+    lib_roadmap_desc: "Leçons courtes avec une explication, un exemple, un exercice et une correction directe.",
+    lib_lessons_count: "leçons",
+    lib_roadmap_range: "Objectif: A1 à B2",
+    lib_open_btn: "Ouvrir",
   },
   ar: {
     nav_dashboard: "لوحة التحكم",
@@ -291,5 +301,10 @@ export const translations = {
     auth_btn_login: "تسجيل الدخول",
     auth_have_account: "لديك حساب بالفعل؟",
     auth_no_account: "ليس لديك حساب؟",
+    lib_roadmap_title: "خارطة الطريق حسب المستوى",
+    lib_roadmap_desc: "دروس قصيرة تحتوي على شرح، مثال، تمرين وإصلاح مباشر.",
+    lib_lessons_count: "دروس",
+    lib_roadmap_range: "الهدف: من A1 إلى B2",
+    lib_open_btn: "فتح",
   }
 };

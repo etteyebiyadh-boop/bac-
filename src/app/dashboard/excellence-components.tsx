@@ -108,8 +108,9 @@ type LanguageModulesProps = {
 };
 
 const moduleColors: Record<CurriculumLanguageCode, [string, string]> = {
-  ENGLISH: ["#10b981", "#3b82f6"],
+  ENGLISH: ["#3b82f6", "#10b981"],
   FRENCH: ["#f59e0b", "#ef4444"],
+  ARABIC: ["#059669", "#10b981"],
   SPANISH: ["#ef4444", "#f59e0b"],
   GERMAN: ["#111827", "#dc2626"],
   ITALIAN: ["#22c55e", "#ef4444"]

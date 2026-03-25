@@ -7,7 +7,7 @@ const exams = [
     slug: "2024-social-media-youth",
     language: "ENGLISH",
     year: 2024,
-    title: "Social Media and Youth",
+    title: "Bac 2024 (Principal Session): Social Media & Youth",
     difficulty: "MEDIUM",
     estimatedMinutes: 45,
     prompt:
@@ -21,7 +21,7 @@ const exams = [
     slug: "2024-student-volunteering",
     language: "ENGLISH",
     year: 2024,
-    title: "Student Volunteering",
+    title: "Bac 2024 (Control Session): Student Volunteering",
     difficulty: "MEDIUM",
     estimatedMinutes: 45,
     prompt:
@@ -35,7 +35,7 @@ const exams = [
     slug: "2023-travel-and-education",
     language: "ENGLISH",
     year: 2023,
-    title: "Travel and Education",
+    title: "Bac 2023 (Principal Session): Travel and Education",
     difficulty: "EASY",
     estimatedMinutes: 45,
     prompt: "Explain how traveling can contribute to a student's education.",
@@ -48,7 +48,7 @@ const exams = [
     slug: "2023-reading-habits",
     language: "ENGLISH",
     year: 2023,
-    title: "Reading Habits",
+    title: "Bac 2023 (Control Session): Reading Habits",
     difficulty: "EASY",
     estimatedMinutes: 40,
     prompt:
@@ -62,7 +62,7 @@ const exams = [
     slug: "2022-technology-in-schools",
     language: "ENGLISH",
     year: 2022,
-    title: "Technology in Schools",
+    title: "Bac 2022 (Principal Session): Technology in Schools",
     difficulty: "MEDIUM",
     estimatedMinutes: 50,
     prompt:
@@ -76,7 +76,7 @@ const exams = [
     slug: "2022-online-learning-balance",
     language: "ENGLISH",
     year: 2022,
-    title: "Online Learning Balance",
+    title: "Bac 2022 (Control Session): Online Learning Balance",
     difficulty: "MEDIUM",
     estimatedMinutes: 45,
     prompt:
@@ -90,7 +90,7 @@ const exams = [
     slug: "2021-environmental-responsibility",
     language: "ENGLISH",
     year: 2021,
-    title: "Environmental Responsibility",
+    title: "Bac 2021 (Principal Session): Environmental Responsibility",
     difficulty: "HARD",
     estimatedMinutes: 50,
     prompt:
@@ -104,7 +104,7 @@ const exams = [
     slug: "2021-part-time-work",
     language: "ENGLISH",
     year: 2021,
-    title: "Part-Time Work for Students",
+    title: "Bac 2021 (Control Session): Part-Time Work for Students",
     difficulty: "HARD",
     estimatedMinutes: 50,
     prompt:
@@ -118,7 +118,7 @@ const exams = [
     slug: "2020-success-and-failure",
     language: "ENGLISH",
     year: 2020,
-    title: "Success and Failure",
+    title: "Bac 2020 (Principal Session): Success and Failure",
     difficulty: "HARD",
     estimatedMinutes: 50,
     prompt:
@@ -132,7 +132,7 @@ const exams = [
     slug: "2020-youth-and-technology-dependence",
     language: "ENGLISH",
     year: 2020,
-    title: "Technology Dependence",
+    title: "Bac 2020 (Control Session): Technology Dependence",
     difficulty: "HARD",
     estimatedMinutes: 50,
     prompt:

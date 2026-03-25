@@ -185,21 +185,92 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
             </div>
           )}
 
-          <div className="stack" style={{ gap: "12px" }}>
-            <div className="row-between">
-              <label className="field-label" htmlFor="student-text">
-                {t.wr_essay}
-              </label>
-              <span className="muted">{wordCount} words</span>
+          <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+            <div className="stack" style={{ gap: "12px" }}>
+              <div className="row-between">
+                <label className="field-label" htmlFor="student-text">
+                  {t.wr_essay}
+                </label>
+                <span className="muted">{wordCount} {lang === "ar" ? "كلمة" : "words"}</span>
+              </div>
+              <textarea
+                id="student-text"
+                rows={16}
+                placeholder={lang === "ar" ? "اكتب مقالك هنا. ابدأ بتوطئة، ثم طور أفكارك، وانته بخاتمة موجزة." : (lang === "fr" ? "Écrivez votre texte ici. Prévoyez une introduction, un développement et une conclusion." : "Write your essay here. Aim for a clear introduction, developed ideas, and a short conclusion.")}
+                value={studentText}
+                onChange={(event) => setStudentText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
+                style={{ padding: "24px", borderRadius: "16px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--glass-border)", fontSize: "1.1rem", lineHeight: "1.6", resize: "vertical", textAlign: (activeExam?.language === "ARABIC" || freeLanguage === "ARABIC") ? "right" : "left" }}
+              />
             </div>
-            <textarea
-              id="student-text"
-              rows={14}
-              placeholder={lang === "ar" ? "اكتب مقالك هنا. ابدأ بتوطئة، ثم طور أفكارك، وانته بخاتمة موجزة." : (lang === "fr" ? "Écrivez votre texte ici. Prévoyez une introduction, un développement et une conclusion." : "Write your essay here. Aim for a clear introduction, developed ideas, and a short conclusion.")}
-              value={studentText}
-              onChange={(event) => setStudentText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
-              style={{ padding: "24px", borderRadius: "16px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--glass-border)", fontSize: "1.1rem", lineHeight: "1.6" }}
-            />
+
+            <div className="card stack" style={{ padding: "28px", background: "rgba(245, 158, 11, 0.05)", border: "1px solid var(--accent-glow)" }}>
+               <h3 className="eyebrow" style={{ color: "var(--accent)" }}>💡 15/20 Cheat Sheet</h3>
+               <p className="muted" style={{ fontSize: "13px", marginTop: "4px" }}>
+                 {lang === "ar" ? "اضغط على أي رابط لإضافته فوراً إلى مسودتك." : (lang === "fr" ? "Appuyez sur n'importe quel connecteur pour l'insérer." : "Tap any connector to instantly inject it into your draft.")}
+               </p>
+               
+               <div className="stack" style={{ gap: "20px", marginTop: "16px" }}>
+                  {(() => {
+                    const currentLang = activeExam?.language || freeLanguage;
+                    const connectorGroups: Record<string, { label: string, labels: Record<string, string>, words: string[] }[]> = {
+                      ENGLISH: [
+                        { label: "Contrast", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Nevertheless,", "On the other hand,", "Conversely,", "Despite this,"] },
+                        { label: "Addition", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Furthermore,", "Moreover,", "In addition,", "Not only... but also"] },
+                        { label: "Conclusion", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["To sum up,", "Ultimately,", "Taking everything into consideration,"] }
+                      ],
+                      FRENCH: [
+                        { label: "Contraste", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Néanmoins,", "Pourtant,", "En revanche,", "Cependant,"] },
+                        { label: "Addition", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["De plus,", "En outre,", "Par ailleurs,", "D'ailleurs,"] },
+                        { label: "Conclusion", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["En conclusion,", "Finalement,", "Pour conclure,", "Somme toute,"] }
+                      ],
+                      ARABIC: [
+                        { label: "التناقض", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["بالمقابل،", "وعلى الرغم من ذلك،", "بيد أن،", "من ناحية أخرى،"] },
+                        { label: "الإضافة", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["علاوة على ذلك،", "بالإضافة إلى ذلك،", "وفضلاً عن ذلك،", "كما أن،"] },
+                        { label: "الخاتمة", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["ختاماً،", "وفي النهاية،", "ومما سبق نستنتج أن،", "وخلاصة القول،"] }
+                      ],
+                      SPANISH: [
+                        { label: "Contraste", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Sin embargo,", "No obstante,", "Por otro lado,", "En cambio,"] },
+                        { label: "Adición", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Además,", "Asimismo,", "Incluso,", "Por otra parte,"] },
+                        { label: "Conclusión", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["En conclusión,", "Para concluir,", "En resumen,", "Por último,"] }
+                      ],
+                      GERMAN: [
+                        { label: "Gegensatz", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Trotzdem,", "Dagegen,", "Andererseits,", "Dennoch,"] },
+                        { label: "Ergänzung", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Außerdem,", "Zudem,", "Darüber hinaus,", "Ebenfalls,"] },
+                        { label: "Schluss", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["Schließlich,", "Zum Schluss,", "Zusammenfassend,", "Zuletzt,"] }
+                      ],
+                      ITALIAN: [
+                        { label: "Contrasto", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Tuttavia,", "Eppure,", "D'altra parte,", "Ciononostante,"] },
+                        { label: "Aggiunta", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Inoltre,", "In aggiunta,", "Oltre a ciò,", "Pure,"] },
+                        { label: "Conclusione", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["In conclusione,", "Per concludere,", "In breve,", "Infine,"] }
+                      ]
+                    };
+
+                    const groups = connectorGroups[currentLang as string] || connectorGroups.ENGLISH;
+
+                    return groups.map(group => (
+                      <div key={group.label}>
+                        <strong style={{ fontSize: "0.95rem", color: "white" }}>{group.labels[lang] || group.label}</strong>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "10px", direction: currentLang === "ARABIC" ? "rtl" : "ltr" }}>
+                           {group.words.map(w => (
+                              <button 
+                                key={w} 
+                                type="button" 
+                                className="pill hover-glow" 
+                                style={{ fontSize: "12px", cursor: "pointer", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--ink)" }} 
+                                onClick={(e) => { 
+                                  e.preventDefault(); 
+                                  setStudentText(prev => prev + (prev.endsWith(" ") || prev === "" ? "" : " ") + w + " "); 
+                                }}
+                              >
+                                {w}
+                              </button>
+                           ))}
+                        </div>
+                      </div>
+                    ));
+                  })()}
+               </div>
+            </div>
           </div>
 
           <button
@@ -246,7 +317,7 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
               <h3 className="section-title" style={{ fontSize: "1.5rem" }}>{t.wr_strengths}</h3>
               <ul className="bullet-list stack" style={{ gap: "12px", marginTop: "20px" }}>
                 {result.strengths.map((item) => (
-                  <li key={item}>{item}</li>
+                   <li key={item}>{item}</li>
                 ))}
               </ul>
             </div>

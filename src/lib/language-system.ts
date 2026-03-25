@@ -1,6 +1,6 @@
 import curriculumData from "@/data/language-system.json";
 
-export type CurriculumLanguageCode = "ENGLISH" | "FRENCH" | "SPANISH" | "GERMAN" | "ITALIAN";
+export type CurriculumLanguageCode = "ENGLISH" | "FRENCH" | "ARABIC" | "SPANISH" | "GERMAN" | "ITALIAN";
 export type CurriculumLevel = "A1" | "A2" | "B1" | "B2";
 export type CurriculumSkillFocus =
   | "grammar"

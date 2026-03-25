@@ -357,5 +357,88 @@ export const diagnosticQuestionBank: Record<CurriculumLanguageCode, DiagnosticTr
         explanation: "Theme vocabulary should serve school and daily communication first."
       }
     ]
+  },
+  ARABIC: {
+    intro: "Diagnostic rapid for the core Arabic Bac track.",
+    questions: [
+      {
+        id: "ar-a1-grammar",
+        prompt: "اختر الجملة الصحيحة تركيبياً:",
+        skill: "grammar",
+        targetLevel: "A1",
+        choices: [
+          { id: "a", text: "الطالب يدرسُ بجدٍ." },
+          { id: "b", text: "الطالب يدرسون بجدٍ." },
+          { id: "c", text: "الطالب يدرس بجدُّ." }
+        ],
+        correctChoiceId: "a",
+        explanation: "At this level, basic subject-verb agreement is essential."
+      },
+      {
+        id: "ar-a2-structure",
+        prompt: "ما هي الجملة الأنسب لتكون مقدمة لفقرة عن التكنولوجيا؟",
+        skill: "structure",
+        targetLevel: "A2",
+        choices: [
+          { id: "a", text: "أمس اشتريت هاتفا جديدا." },
+          { id: "b", text: "أصبحت التكنولوجيا جزءاً لا يتجزأ من حياتنا المعاصرة." },
+          { id: "c", text: "التكنولوجيا سريعة جدا ومفيدة." }
+        ],
+        correctChoiceId: "b",
+        explanation: "A strong opening sentence sets the formal tone for the paragraph."
+      },
+      {
+        id: "ar-b1-vocabulary",
+        prompt: "اختر المصطلح المناسب للجملة: 'يجب علينا حماية ___ للأجيال القادمة.'",
+        skill: "vocabulary",
+        targetLevel: "B1",
+        choices: [
+          { id: "a", text: "الشارع" },
+          { id: "b", text: "البيئة" },
+          { id: "c", text: "المكتب" }
+        ],
+        correctChoiceId: "b",
+        explanation: "Environmental vocabulary is a recurring theme in Bac Arabic exams."
+      },
+      {
+        id: "ar-b1-comprehension",
+        prompt: "عندما نقول 'غابت الشمس وراء الأفق'، ماذا نقصد غضافة إلى المعنى الحرفي؟",
+        skill: "comprehension",
+        targetLevel: "B1",
+        choices: [
+          { id: "a", text: "أن وقت النهار انتهى وبدأ المساء." },
+          { id: "b", text: "أن الشمس اختفت تماماً من الوجود." },
+          { id: "c", text: "أن الأفق مكان مظلم." }
+        ],
+        correctChoiceId: "a",
+        explanation: "Inference involves understanding temporal and symbolic shifts."
+      },
+      {
+        id: "ar-b2-grammar",
+        prompt: "ما هو الوزن الصرفي لكلمة 'استخراج'؟",
+        skill: "grammar",
+        targetLevel: "B2",
+        choices: [
+          { id: "a", text: "استفعال" },
+          { id: "b", text: "انفعال" },
+          { id: "c", text: "افتعل" }
+        ],
+        correctChoiceId: "a",
+        explanation: "Morphology (Sarfi weights) is critical for higher-level Arabic proficiency."
+      },
+      {
+        id: "ar-b2-communication",
+        prompt: "أي من الجمل التالية تعبر عن رأي نقدي متوازن؟",
+        skill: "communication",
+        targetLevel: "B2",
+        choices: [
+          { id: "a", text: "العمل سلاح ذو حدين، فهو يوفر الدخل ولكنه قد يستنزف الطاقة." },
+          { id: "b", text: "العمل جيد ومفيد للجميع." },
+          { id: "c", text: "لا أحب العمل لأنه متعب." }
+        ],
+        correctChoiceId: "a",
+        explanation: "B2 communication requires stating an argument and its nuance."
+      }
+    ]
   }
 };

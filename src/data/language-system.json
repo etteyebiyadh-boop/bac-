@@ -401,25 +401,6 @@
               ]
             },
             {
-              "skill": "pronunciation",
-              "lessons": [
-                {
-                  "slug": "bac-french-b2-liaisons-nasales",
-                  "title": "Liaisons et sons nasaux",
-                  "summary": "Parler plus clairement en français sans chercher un accent parfait.",
-                  "theme": "Confiance orale",
-                  "estimatedMinutes": 5,
-                  "explanation": "Certaines liaisons et voyelles nasales reviennent souvent et améliorent immédiatement la clarté.",
-                  "example": "vous avez, un bon étudiant",
-                  "exercise": "Dans vous avez, faut-il faire la liaison ?",
-                  "answer": "oui",
-                  "correction": "Oui, la liaison est naturelle et très fréquente.",
-                  "arabicHint": "المطلوب وضوح وثقة لا accent parfait.",
-                  "mistake": "Prononcer toutes les liaisons partout."
-                }
-              ]
-            },
-            {
               "skill": "communication",
               "lessons": [
                 {
@@ -489,7 +470,7 @@
                   "exercise": "Completa: Esta tarde ___ a practicar.",
                   "answer": "voy",
                   "correction": "Para un plan próximo usamos voy a + infinitivo.",
-                  "mistake": "Usar ser en lugar de ir a."
+                  "mistake": "Usar ser in lugar de ir a."
                 }
               ]
             }
@@ -514,6 +495,30 @@
                   "answer": "creo que",
                   "correction": "Creo que introduce una opinión de forma natural.",
                   "mistake": "Responder con palabras aisladas."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B2",
+          "summary": "Analizar textos y redactar ensayos sobre temas del Bac.",
+          "skills": [
+            {
+              "skill": "structure",
+              "lessons": [
+                {
+                  "slug": "bac-spanish-b2-ensayo-argumentativo",
+                  "title": "Ensayo Argumentativo",
+                  "summary": "Escribe un ensayo con introducción, argumentos y conclusión.",
+                  "theme": "Redacción avanzada",
+                  "estimatedMinutes": 10,
+                  "explanation": "Usa conectores como 'en primer lugar', 'por otro lado' y 'en conclusión'.",
+                  "example": "En primer lugar, el turismo aporta beneficios económicos.",
+                  "exercise": "¿Qué conector se usa para concluir?",
+                  "answer": "en conclusión",
+                  "correction": "'En conclusión' es ideal para cerrar el ensayo.",
+                  "mistake": "Mezclar pros y contras en el mismo párrafo."
                 }
               ]
             }
@@ -597,6 +602,30 @@
               ]
             }
           ]
+        },
+        {
+          "level": "B2",
+          "summary": "Texte analysieren und Stellungnahmen zum Bac-Programm schreiben.",
+          "skills": [
+            {
+              "skill": "structure",
+              "lessons": [
+                {
+                  "slug": "bac-german-b2-erorterung",
+                  "title": "Die Erörterung writing",
+                  "summary": "Eine strukturierte Argumentation schreiben.",
+                  "theme": "Schreiben im Bac",
+                  "estimatedMinutes": 10,
+                  "explanation": "Benutze Konnektoren wie 'zuerst', 'außerdem' und 'schließlich'.",
+                  "example": "Zuerst ist Bildung sehr wichtig für die Zukunft.",
+                  "exercise": "Welcher Konnektor passt für den Schluss?",
+                  "answer": "schließlich",
+                  "correction": "'Schließlich' oder 'zum Schluss' beenden die Argumentation.",
+                  "mistake": "Keine Beispiele im Hauptteil geben."
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -672,6 +701,159 @@
                   "answer": "penso che",
                   "correction": "Penso che is a natural opinion opener.",
                   "mistake": "Answering with isolated words only."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B2",
+          "summary": "Analizzare i mass media e scrivere saggi brevi.",
+          "skills": [
+            {
+              "skill": "structure",
+              "lessons": [
+                {
+                  "slug": "bac-italian-b2-saggio-breve",
+                  "title": "Saggio Breve",
+                  "summary": "Scrivere un testo argomentativo sui media.",
+                  "theme": "Scrittura Bac",
+                  "estimatedMinutes": 10,
+                  "explanation": "Usa connettori come 'innanzitutto', 'inoltre' e 'infine'.",
+                  "example": "Inoltre, internet facilita la comunicazione.",
+                  "exercise": "¿Quale parola introduce un'aggiunta?",
+                  "answer": "inoltre",
+                  "correction": "'Inoltre' si usa per aggiungere un nuovo argomento.",
+                  "mistake": "Scrivere frasi troppo lunghe e confuse."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "language": "ARABIC",
+      "label": "العربية",
+      "mode": "bac-core",
+      "levels": [
+        {
+          "level": "A1",
+          "summary": "أساسيات اللغة العربية والإنشاء السليم.",
+          "skills": [
+            {
+              "skill": "grammar",
+              "lessons": [
+                {
+                  "slug": "bac-arabic-a1-sentence-structure",
+                  "title": "بناء الجملة الأساسية",
+                  "summary": "تعلم أساسيات الجملة الاسمية والجملة الفعلية.",
+                  "theme": "الأساسيات",
+                  "estimatedMinutes": 5,
+                  "explanation": "تتكون الجملة الاسمية من مبتدأ وخبر، والجملة الفعلية من فعل وفاعل.",
+                  "example": "العلمُ نورٌ. كتبَ التلميذُ الدرسَ.",
+                  "exercise": "ما نوع الجملة التالية: 'الشمسُ مشرقةٌ'؟",
+                  "answer": "جملة اسمية",
+                  "correction": "هي جملة اسمية لأنها تبدأ باسم (مبتدأ).",
+                  "mistake": "نسيان علامات الإعراب الأساسية."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "A2",
+          "summary": "تطوير مهارات التحليل والربط بين الأفكار.",
+          "skills": [
+            {
+              "skill": "structure",
+              "lessons": [
+                {
+                  "slug": "bac-arabic-a2-paragraph-links",
+                  "title": "روابط الفقرة",
+                  "summary": "استخدام الروابط المنطقية لبناء فقرة متماسكة.",
+                  "theme": "مهارات الكتابة",
+                  "estimatedMinutes": 7,
+                  "explanation": "استخدم روابط مثل 'بالإضافة إلى'، 'علاوة على ذلك'، و'من جهة أخرى'.",
+                  "example": "يعتبر التعليم أساس التقدم، بالإضافة إلى كونه حقاً لكل طفل.",
+                  "exercise": "اختر الرابط المناسب للإضافة: '____ ذلك، يجب تنمية المهارات'.",
+                  "answer": "علاوة على",
+                  "correction": "'علاوة على' تستخدم لإضافة معلومة جديدة.",
+                  "mistake": "تكرار نفس الروابط عدة مرات."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B1",
+          "summary": "دراسة المحاور الرسمية للباكالوريا (التفكير العلمي).",
+          "skills": [
+            {
+              "skill": "comprehension",
+              "lessons": [
+                {
+                  "slug": "bac-arabic-b1-scientific-thought",
+                  "title": "محور التفكير العلمي",
+                  "summary": "تحليل نصوص حول إسهامات العرب في العلم.",
+                  "theme": "المحاور الرسمية",
+                  "estimatedMinutes": 8,
+                  "explanation": "ركز على المنهج التجريبي وكيف طوره العرب قديماً.",
+                  "example": "ساهم ابن الهيثم في تطوير علم البصريات من خلال التجربة.",
+                  "exercise": "من هو العالم الذي طور علم البصريات؟",
+                  "answer": "ابن الهيثم",
+                  "correction": "ابن الهيثم هو رائد المنهج العلمي في البصريات.",
+                  "mistake": "خلط التواريخ أو أسماء العلماء."
+                },
+                {
+                  "slug": "bac-arabic-b1-environment",
+                  "title": "محور البيئة والمحيط",
+                  "summary": "المصطلحات الأساسية للتعبير عن قضايا البيئة.",
+                  "theme": "البيئة",
+                  "estimatedMinutes": 7,
+                  "explanation": "البيئة هي الإطار الذي يعيش فيه الإنسان، وحمايتها واجب وطني.",
+                  "example": "يجب علينا الحد من التلوث واستخدام الطاقات المتجددة.",
+                  "exercise": "ما هو الحل المقترح للحد من التلوث؟",
+                  "answer": "الطاقات المتجددة",
+                  "correction": "استخدام الطاقات البديلة يقلل من الانبعاثات الضارة.",
+                  "mistake": "إهمال دور الفرد في حماية المحيط."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "B2",
+          "summary": "إتقان كتابة المقال الفلسفي والأدبي في الباك.",
+          "skills": [
+            {
+              "skill": "structure",
+              "lessons": [
+                {
+                  "slug": "bac-arabic-b2-essay-blueprint",
+                  "title": "هيكلة المقال الأدبي",
+                  "summary": "كتابة مقال متكامل: مقدمة، جوهر، وخاتمة.",
+                  "theme": "الإنشاء الأدبي",
+                  "estimatedMinutes": 10,
+                  "explanation": "يجب أن تحتوي المقدمة على تمهيد وطرح إشكالية.",
+                  "example": "المقدمة: هل يمكن اعتبار التطور التكنولوجي خطراً على القيم؟",
+                  "exercise": "ماذا نضع في نهاية المقدمة؟",
+                  "answer": "طرح الإشكالية",
+                  "correction": "الإشكالية هي التي توجه مسار التحليل في المقال.",
+                  "mistake": "نسيان الإجابة على الإشكالية في الخاتمة."
+                },
+                {
+                  "slug": "bac-arabic-b2-modern-tech",
+                  "title": "محور الشواغل المعاصرة: التكنولوجيا",
+                  "summary": "تحليل أثر الثورة الرقمية على المجتمع العربي.",
+                  "theme": "التكنولوجيا",
+                  "estimatedMinutes": 9,
+                  "explanation": "التكنولوجيا سلاح ذو حدين، فهي تيسر الحياة وتطرح تحديات أخلاقية.",
+                  "example": "غيرت وسائل التواصل الاجتماعي أنماط التفاعل بين الشباب.",
+                  "exercise": "كيف أثرت التكنولوجيا على الشباب؟",
+                  "answer": "غيرت أنماط التفاعل",
+                  "correction": "أحدثت التكنولوجيا تحولاً جذرياً في التواصل الاجتماعي.",
+                  "mistake": "التركيز على السلبيات فقط دون الإيجابيات."
                 }
               ]
             }

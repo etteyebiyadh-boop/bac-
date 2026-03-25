@@ -3,6 +3,7 @@ import { requireCurrentUser } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLanguageLabel } from "@/lib/learning";
+import { GrammarPractice } from "./GrammarPractice";
 
 export default async function GrammarDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
@@ -16,6 +17,7 @@ export default async function GrammarDetailPage({ params }: { params: Promise<{ 
 
   const examples = Array.isArray(rule.examples) ? rule.examples : [];
   const exceptions = Array.isArray(rule.exceptions) ? rule.exceptions : [];
+  const commonErrors = Array.isArray(rule.commonErrors) ? rule.commonErrors : [];
 
   return (
     <div className="page-stack">
@@ -74,6 +76,21 @@ export default async function GrammarDetailPage({ params }: { params: Promise<{ 
             </ul>
           </article>
         )}
+
+        {commonErrors.length > 0 && (
+          <article className="card stack" style={{ background: "rgba(245, 158, 11, 0.05)", border: "1px solid rgba(245, 158, 11, 0.15)", gridColumn: exceptions.length > 0 ? "span 1" : "span 2" }}>
+            <h2 className="section-title" style={{ color: "var(--accent)" }}>⚠️ Common BAC Mistakes</h2>
+            <ul className="bullet-list" style={{ marginTop: "16px" }}>
+              {commonErrors.map((err, i) => (
+                <li key={i} style={{ fontSize: "1.1rem", paddingBottom: "8px" }}>
+                  <strong style={{ color: "white" }}>{String(err)}</strong>
+                </li>
+              ))}
+            </ul>
+          </article>
+        )}
+
+        <GrammarPractice title={rule.title} description={rule.rule} />
       </div>
 
       {rule.usageNotes && (

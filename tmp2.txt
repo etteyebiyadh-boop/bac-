@@ -1,0 +1,48 @@
+🌱 Seeding rich Tunisian Baccalaureate English curriculum data...
+PrismaClientValidationError: 
+Invalid `prisma.lesson.upsert()` invocation in
+C:\Users\Anis\Desktop\Nouveau dossier\prisma\seed-tunisian-bac-english.js:80:40
+
+  77 ];
+  78 
+  79 for (const item of bacEnglishContent) {
+→ 80   const lesson = await prisma.lesson.upsert({
+         where: {
+           slug: "education-matters-virtual-schools"
+         },
+         update: {},
+         create: {
+           slug: "education-matters-virtual-schools",
+           title: "Virtual Schools: Pros and Cons",
+           summary: "Learn how to write a balanced essay comparing traditional schooling with virtual learning, a frequent topic in the exam.",
+           body: "When discussing 'Education Matters', a common essay topic is comparing traditional education to virtual schools. To write a balanced essay, use contrast connectors like 'On the one hand... On the other hand', 'Whereas', or 'While'. \n\n**Pros of Virtual Schools:** Flexibility, personalized pacing, and accessibility. \n**Cons of Virtual Schools:** Lack of social interaction, need for self-discipline, and excessive screen time.",
+           theme: "MODULE_2_EDUCATION_MATTERS",
+           language: "ENGLISH",
+           skillFocus: "writing",
+           difficulty: "MEDIUM",
+           takeawayJson: {
+             level: "Medium",
+             section: "ALL",
+             tip: "BAC WRITING TIP: Always dedicate one full paragraph to the pros and a separate paragraph to the cons to ensure good essay structure!",
+             content: "When discussing 'Education Matters', a common essay topic is comparing traditional education to virtual schools. To write a balanced essay, use contrast connectors like 'On the one hand... On the other hand', 'Whereas', or 'While'. \n\n**Pros of Virtual Schools:** Flexibility, personalized pacing, and accessibility. \n**Cons of Virtual Schools:** Lack of social interaction, need for self-discipline, and excessive screen time.",
+             examples: "**Example:** 'While virtual schools offer unparalleled flexibility, they often lack the crucial social interaction that traditional schools provide.'"
+           },
+           bacModule: "MODULE_2_EDUCATION_MATTERS",
+           ~~~~~~~~~
+           estimatedMinutes: 5,
+       ?   id?: String,
+       ?   createdAt?: DateTime,
+       ?   dailyMissions?: DailyMissionCreateNestedManyWithoutLessonInput,
+       ?   exercises?: ExerciseCreateNestedManyWithoutLessonInput
+         }
+       })
+
+Unknown argument `bacModule`. Available options are marked with ?.
+    at Nn (C:\Users\Anis\Desktop\Nouveau dossier\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at ei.handleRequestError (C:\Users\Anis\Desktop\Nouveau dossier\node_modules\@prisma\client\runtime\library.js:121:6911)
+    at ei.handleAndLogRequestError (C:\Users\Anis\Desktop\Nouveau dossier\node_modules\@prisma\client\runtime\library.js:121:6593)
+    at ei.request (C:\Users\Anis\Desktop\Nouveau dossier\node_modules\@prisma\client\runtime\library.js:121:6300)
+    at async a (C:\Users\Anis\Desktop\Nouveau dossier\node_modules\@prisma\client\runtime\library.js:130:9551)
+    at async main (C:\Users\Anis\Desktop\Nouveau dossier\prisma\seed-tunisian-bac-english.js:80:20) {
+  clientVersion: '6.19.2'
+}

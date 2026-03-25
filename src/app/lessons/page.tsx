@@ -97,16 +97,37 @@ export default async function LibraryHubPage() {
 
         const modules = Object.values(BacModule);
 
+        // Dynamic Coef Logic for Tunisian Bac
+        let coef = 2;
+        if (profile.bacSection === "LETTRES") coef = 3;
+        if (lang === "ARABIC") coef = profile.bacSection === "LETTRES" ? 4 : 2.5;
+
+        // Language branding
+        const langColors: Record<string, string> = {
+          ENGLISH: "rgba(99, 102, 241, 0.05)",
+          FRENCH: "rgba(236, 72, 153, 0.05)",
+          ARABIC: "rgba(16, 185, 129, 0.05)",
+          SPANISH: "rgba(245, 158, 11, 0.05)",
+          GERMAN: "rgba(239, 68, 68, 0.05)",
+          ITALIAN: "rgba(59, 130, 246, 0.05)",
+        };
+
         return (
-          <div key={lang} className="stack" style={{ gap: "60px" }}>
+          <div key={lang} className="stack" style={{ 
+            gap: "60px",
+            background: langColors[lang] || "transparent",
+            padding: "40px",
+            borderRadius: "32px",
+            border: "1px solid var(--glass-border)"
+          }}>
             <div className="row-between" style={{ borderBottom: "1px solid var(--glass-border)", paddingBottom: "24px" }}>
               <h2 className="section-title" style={{ fontSize: "clamp(1.5rem, 8vw, 3.5rem)", margin: 0 }}>
                 {getLanguageLabel(lang)} <span style={{ opacity: 0.3 }}>{t.lib_curriculum}</span>
               </h2>
               <div className="stack" style={{ gap: "4px", textAlign: langCookie === "ar" ? "left" : "right" }}>
                 <span className="eyebrow" style={{ fontSize: "10px" }}>COEF</span>
-                <strong style={{ fontSize: "1.5rem", color: profile.bacSection === "LETTRES" ? "var(--error)" : "var(--accent)" }}>
-                  {lang === "ENGLISH" && profile.bacSection === "LETTRES" ? "3" : "2"}
+                <strong style={{ fontSize: "1.5rem", color: coef >= 3 ? "var(--error)" : "var(--accent)" }}>
+                  {coef}
                 </strong>
               </div>
             </div>
@@ -116,17 +137,17 @@ export default async function LibraryHubPage() {
                 <div className="row-between" style={{ background: "rgba(255,255,255,0.03)", padding: "24px 28px", borderRadius: "18px", border: "1px solid var(--glass-border)" }}>
                   <div className="stack" style={{ gap: "6px" }}>
                     <span className="eyebrow" style={{ color: "var(--success)" }}>
-                      {curriculumTrack.mode === "communication-first" ? "Communication-first track" : "Bac micro-learning path"}
+                      {curriculumTrack.mode === "communication-first" ? "Communication Track" : "Bac Path"}
                     </span>
                     <h3 style={{ fontSize: "clamp(1.2rem, 5vw, 1.8rem)", margin: 0 }}>
-                      {curriculumTrack.label} roadmap by level
+                      {t.lib_roadmap_title}
                     </h3>
-                    <p className="muted" style={{ margin: 0, maxWidth: "720px", fontSize: "0.95rem" }}>
-                      Short lessons with one explanation, one example, one exercise, and a direct correction.
+                    <p className="muted" style={{ margin: 0, maxWidth: "720px", fontSize: "0.91rem" }}>
+                      {t.lib_roadmap_desc}
                     </p>
                   </div>
                   <span className="pill" style={{ borderColor: "var(--success)", color: "var(--success)" }}>
-                    {curriculumTrack.mode === "communication-first" ? "A1 to B1" : "A1 to B2"}
+                    {t.lib_roadmap_range}
                   </span>
                 </div>
 
@@ -148,10 +169,10 @@ export default async function LibraryHubPage() {
                             <span className="pill" style={{ width: "fit-content", borderColor: "var(--primary)", color: "var(--primary)" }}>
                               {level.level}
                             </span>
-                            <strong style={{ fontSize: "1.1rem" }}>{level.summary}</strong>
+                            <strong style={{ fontSize: "1.05rem" }}>{level.summary}</strong>
                           </div>
                           <span className="muted" style={{ fontSize: "11px" }}>
-                            {populatedSkills.reduce((count, skill) => count + skill.lessons.length, 0)} lessons
+                            {populatedSkills.reduce((count, skill) => count + skill.lessons.length, 0)} {t.lib_lessons_count}
                           </span>
                         </div>
 
@@ -159,17 +180,17 @@ export default async function LibraryHubPage() {
                           {populatedSkills.map((skill) => (
                             <div key={`${level.level}-${skill.skill}`} className="stack" style={{ gap: "10px" }}>
                               <span className="eyebrow" style={{ color: "var(--accent)" }}>
-                                {skillLabels[skill.skill]}
+                                {skillLabels[skill.skill] || skill.skill}
                               </span>
                               <div className="stack" style={{ gap: "10px" }}>
                                 {skill.lessons.map((lesson) => (
-                                  <article key={lesson.slug} className="card row-between" style={{ padding: "16px 18px", background: "rgba(255,255,255,0.03)", border: "1px solid var(--glass-border)" }}>
+                                  <article key={lesson.slug} className="card row-between" style={{ padding: "16px 18px", background: "rgba(255,255,255,0.03)", border: "1px solid var(--glass-border)", transition: "all 0.2s ease" }}>
                                     <div className="stack" style={{ gap: "4px", maxWidth: "70%" }}>
                                       <strong>{lesson.title}</strong>
-                                      <span className="muted" style={{ fontSize: "12px" }}>{lesson.summary}</span>
+                                      <span className="muted" style={{ fontSize: "12px", opacity: 0.7 }}>{lesson.summary}</span>
                                     </div>
                                     <Link href={`/lessons/${lesson.slug}`} className="button-link button-secondary" style={{ padding: "8px 14px", fontSize: "11px" }}>
-                                      Open
+                                      {t.lib_open_btn}
                                     </Link>
                                   </article>
                                 ))}
@@ -185,7 +206,7 @@ export default async function LibraryHubPage() {
             ) : null}
 
             {/* Units/Modules Grid */}
-            <div className="stack" style={{ gap: "100px" }}>
+            <div className="stack" style={{ gap: "80px" }}>
               {modules.map((mod) => {
                 const modReading = langReading.filter(r => r.bacModule === mod);
                 const modGrammar = langGrammar.filter(g => g.bacModule === mod);
