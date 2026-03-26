@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma db push --accept-data-loss && node prisma/seed.js && node prisma/seed-comprehensive.js && node prisma/seed-language-system.js && node prisma/seed-bac-official.js && node prisma/seed-sections.js && node prisma/seed-global-bac-parity.js && next build",
+    "build": "prisma generate && next build",
+    "db:sync": "prisma generate && prisma db push --accept-data-loss && node prisma/seed.js && node prisma/seed-comprehensive.js && node prisma/seed-language-system.js && node prisma/seed-bac-official.js && node prisma/seed-sections.js && node prisma/seed-global-bac-parity.js",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
