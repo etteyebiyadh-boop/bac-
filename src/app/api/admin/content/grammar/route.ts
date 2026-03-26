@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { getUserFromRequest } from "@/lib/auth";
+import { getUserFromRequest, hasAdminAccess } from "@/lib/auth";
 import { Language, GrammarCategory, Difficulty } from "@prisma/client";
 import { z } from "zod";
 
@@ -27,9 +27,7 @@ export async function GET(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
-  const { isAdminEmail } = await import("@/lib/auth");
-  const adminCookie = req.cookies.get("admin_pass")?.value;
-  if (!isAdminEmail(auth.email) && adminCookie !== "fubisra06") {
+  if (!hasAdminAccess(req, auth.email)) {
     return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
   }
 
@@ -62,8 +60,7 @@ export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
-  const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(",") : [];
-  if (!adminEmails.includes(auth.email)) {
+  if (!hasAdminAccess(req, auth.email)) {
     return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
   }
 
@@ -99,8 +96,7 @@ export async function PUT(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
-  const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(",") : [];
-  if (!adminEmails.includes(auth.email)) {
+  if (!hasAdminAccess(req, auth.email)) {
     return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
   }
 
@@ -125,8 +121,7 @@ export async function DELETE(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
-  const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(",") : [];
-  if (!adminEmails.includes(auth.email)) {
+  if (!hasAdminAccess(req, auth.email)) {
     return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
   }
 

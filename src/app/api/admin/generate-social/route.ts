@@ -1,14 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserFromRequest } from "@/lib/auth";
+import { getUserFromRequest, hasAdminAccess } from "@/lib/auth";
 import OpenAI from "openai";
 
 export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
-  const { isAdminEmail } = await import("@/lib/auth");
-  const adminCookie = req.cookies.get("admin_pass")?.value;
-  if (!isAdminEmail(auth.email) && adminCookie !== "fubisra06") {
+  if (!hasAdminAccess(req, auth.email)) {
     return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
   }
 
