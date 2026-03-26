@@ -102,7 +102,7 @@ export function DiagnosticWorkspace({
   sectionLabel,
   recommendedLanguages
 }: DiagnosticWorkspaceProps) {
-  const copy = labels(lang);
+  const copy = labels(lang) || labels("en");
   const [selectedLanguage, setSelectedLanguage] = useState<CurriculumLanguageCode>(initialLanguage);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<DiagnosticLanguageResult | null>(null);

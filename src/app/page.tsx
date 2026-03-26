@@ -7,7 +7,7 @@ import { FeaturesSection, FinalCTA } from "@/components/landing-sections";
 export default async function HomePage() {
   const cookieStore = await cookies();
   const langCookie = cookieStore.get("site-lang")?.value as SiteLanguage || "en";
-  const t = translations[langCookie];
+  const t = translations[langCookie] || translations.en;
 
   return (
     <div className="page-stack home-page">

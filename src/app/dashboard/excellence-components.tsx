@@ -42,7 +42,7 @@ export function DailyStreakWidget() {
 }
 
 export function SmartStudyPlanner({ lang }: { lang: SiteLanguage }) {
-  const t = translations[lang];
+  const t = translations[lang] || translations.en;
 
   return (
     <div className="card stack" style={{ padding: "32px", background: "linear-gradient(135deg, rgba(16, 185, 129, 0.05), transparent)", border: "1px solid var(--success-glow)", marginTop: "24px" }}>
@@ -267,7 +267,7 @@ export function LanguageModules({ activeLanguages, sectionLabel, targetScore }: 
 }
 
 export function HighYieldTopics({ lang }: { lang: SiteLanguage }) {
-  const t = translations[lang];
+  const t = translations[lang] || translations.en;
   const topics = [
     { title: lang === "ar" ? "الابداع والابتكار" : (lang === "fr" ? "Creativite et innovation" : "Creativity and Innovation"), coef: "Core", skill: "English" },
     { title: lang === "ar" ? "Connecteurs logiques" : (lang === "fr" ? "Connecteurs logiques" : "Connectors"), coef: "Essay", skill: "Writing" },

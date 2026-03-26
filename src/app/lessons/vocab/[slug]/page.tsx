@@ -57,7 +57,7 @@ export default async function VocabVaultPage({ params }: { params: Promise<{ slu
                </div>
             </div>
 
-            {item.synonyms && (Array.isArray(item.synonyms) ? item.synonyms.length > 0 : Object.keys(item.synonyms).length > 0) && (
+            {item.synonyms && Array.isArray(item.synonyms) && item.synonyms.length > 0 && (
               <div style={{ marginTop: "20px", display: "flex", flexWrap: "wrap", gap: "8px" }}>
                  <span className="muted" style={{ fontSize: "11px", alignSelf: "center", marginRight: "8px" }}>Synonyms:</span>
                  {(item.synonyms as string[]).map(s => <span key={s} className="pill" style={{ fontSize: "10px", borderColor: "var(--accent)", color: "var(--accent)" }}>{s}</span>)}

@@ -15,7 +15,7 @@ export default async function LibraryHubPage() {
   const profile = await ensureStudentProfile(user.id);
   const cookieStore = await cookies();
   const langCookie = cookieStore.get("site-lang")?.value as SiteLanguage || "en";
-  const t = translations[langCookie];
+  const t = translations[langCookie] || translations.en;
   
   const MODULE_LABELS: Record<BacModule, string> = {
     MODULE_1_HOLIDAYING_ART_SHOWS: t.unit_1_title,

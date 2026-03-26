@@ -12,7 +12,7 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
   await requireCurrentUser();
   const cookieStore = await cookies();
   const langCookie = cookieStore.get("site-lang")?.value as SiteLanguage || "en";
-  const t = translations[langCookie];
+  const t = translations[langCookie] || translations.en;
 
   const resolvedParams = await params;
   const lesson = await db.lesson.findUnique({

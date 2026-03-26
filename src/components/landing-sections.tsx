@@ -8,7 +8,7 @@ interface SectionProps {
 }
 
 export function FeaturesSection({ lang }: SectionProps) {
-  const t = translations[lang];
+  const t = translations[lang] || translations.en;
   return (
     <section className="section-padding container">
       <span className="eyebrow reveal">{t.feat_eyebrow}</span>
@@ -48,7 +48,7 @@ export function FeaturesSection({ lang }: SectionProps) {
 }
 
 export function FinalCTA({ lang }: SectionProps) {
-  const t = translations[lang];
+  const t = translations[lang] || translations.en;
   return (
     <section className="section-padding container">
       <div className="card stack" style={{ padding: '100px 40px', textAlign: 'center', background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(245, 158, 11, 0.05))', border: '1px solid var(--primary)' }}>

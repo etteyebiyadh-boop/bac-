@@ -8,7 +8,7 @@ export default async function ExamsArchivePage() {
   await requireCurrentUser();
   const cookieStore = await cookies();
   const langCookie = (cookieStore.get("site-lang")?.value as SiteLanguage) || "en";
-  const t = translations[langCookie];
+  const t = translations[langCookie] || translations.en;
 
   const exams = await db.exam.findMany({
     orderBy: { year: "desc" },

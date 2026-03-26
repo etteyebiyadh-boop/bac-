@@ -10,7 +10,7 @@ export default async function WritingLabPage() {
   const profile = await ensureStudentProfile(user.id);
   const cookieStore = await cookies();
   const langCookie = (cookieStore.get("site-lang")?.value as SiteLanguage) || "en";
-  const t = translations[langCookie];
+  const t = translations[langCookie] || translations.en;
 
   // We should also look for vocabulary and synonyms here to provide as cheat sheets.
   const vocabSets = await db.vocabularySet.findMany({
