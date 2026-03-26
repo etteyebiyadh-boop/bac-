@@ -223,16 +223,57 @@ export function SocialGenerator() {
                 <option value="High-Impact Twitter thread">Thread Pack</option>
               </select>
             </label>
-            <label className="stack" style={{ gap: "8px" }}>
-              <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Viral Topic / Rule</span>
-              <input 
-                placeholder="e.g. 'How to master inversions'" 
-                value={topic}
-                onChange={e => setTopic(e.target.value)}
-                required
-                style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}
-              />
-            </label>
+              <label className="stack" style={{ gap: "8px" }}>
+                <div className="row-between">
+                  <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Viral Topic / Rule</span>
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      const suggestions = [
+                        "Brain Drain: Push vs Pull Factors",
+                        "Sustainable Development: Eco-Actions",
+                        "Cause and Effect Connectors",
+                        "Subject-Verb Inversion Mastery",
+                        "Passive Voice in Formal Reports",
+                        "Youth Issues: Empowerment",
+                        "The Impact of Globalization",
+                        "Modern Technology in Education",
+                        "How to Score 20/20 in Writing"
+                      ];
+                      setTopic(suggestions[Math.floor(Math.random() * suggestions.length)]);
+                    }}
+                    style={{ background: "transparent", border: "none", color: "var(--primary)", fontSize: "10px", cursor: "pointer", fontWeight: 800 }}
+                  >
+                    🎲 SURPRISE ME
+                  </button>
+                </div>
+                <input 
+                  placeholder="e.g. 'How to master inversions'" 
+                  value={topic}
+                  onChange={e => setTopic(e.target.value)}
+                  required
+                  style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}
+                />
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "4px" }}>
+                  {[
+                    "Brain Drain",
+                    "Eco-Actions",
+                    "Connectors",
+                    "Inversion",
+                    "Writing Tips"
+                  ].map(suggestion => (
+                    <button
+                      key={suggestion}
+                      type="button"
+                      onClick={() => setTopic(suggestion + " Mastery")}
+                      className="pill"
+                      style={{ fontSize: "10px", padding: "4px 10px", opacity: 0.7, cursor: "pointer", border: "1px solid rgba(255,255,255,0.1)" }}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
+              </label>
           </div>
 
           <button type="submit" disabled={loading} className="full-width hover-glow" style={{ background: "var(--primary)", color: "black", padding: "20px", fontSize: "1rem", fontWeight: 800 }}>
