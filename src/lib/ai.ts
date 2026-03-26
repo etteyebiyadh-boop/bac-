@@ -1,4 +1,4 @@
-import OpenAI from "openai";
+import { getAIClient } from "@/lib/ai-provider";
 import { z } from "zod";
 import { getBacEnglishRubricPromptBlock } from "@/lib/examiner-rubric";
 
@@ -14,11 +14,7 @@ const correctionSchema = z.object({
 });
 
 export async function correctEssay(inputText: string, promptText?: string, language: string = "ENGLISH") {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("Missing OPENAI_API_KEY");
-
-  const client = new OpenAI({ apiKey });
-  const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+  const { client, model } = getAIClient();
 
   const rubricBlock =
     language === "ENGLISH"
@@ -27,70 +23,27 @@ export async function correctEssay(inputText: string, promptText?: string, langu
         `Blend them into overallScore (similar weighting: grammar ~35%, vocabulary ~30%, structure ~35%), rounded to one decimal. ` +
         `Keep the same JSON fields and examiner tone.`;
 
-  const response = await Promise.race([
-    client.responses.create({
-      model,
-      input: [
-        {
-          role: "system",
-          content:
-            `You are a strict but encouraging Tunisian Baccalaureate ${language} examiner. ` +
-            `Evaluate writing using bac-style criteria. Output must be valid JSON only (no markdown).\n\n` +
-            rubricBlock
-        },
-        {
-          role: "user",
-          content: `Prompt: ${promptText || "General bac-style writing"}\n\nStudent text:\n${inputText}`
-        }
-      ],
-      text: {
-        format: {
-          type: "json_schema",
-          name: "correction",
-          schema: {
-            type: "object",
-            additionalProperties: false,
-            properties: {
-              overallScore: { type: "number", minimum: 0, maximum: 20 },
-              grammarScore: { type: "number", minimum: 0, maximum: 20 },
-              vocabularyScore: { type: "number", minimum: 0, maximum: 20 },
-              structureScore: { type: "number", minimum: 0, maximum: 20 },
-              summary: { type: "string" },
-              correctedText: { type: "string" },
-              strengths: {
-                type: "array",
-                minItems: 2,
-                maxItems: 4,
-                items: { type: "string" }
-              },
-              improvements: {
-                type: "array",
-                minItems: 3,
-                maxItems: 5,
-                items: { type: "string" }
-              }
-            },
-            required: [
-              "overallScore",
-              "grammarScore",
-              "vocabularyScore",
-              "structureScore",
-              "summary",
-              "correctedText",
-              "strengths",
-              "improvements"
-            ]
-          },
-          strict: true
-        }
+  const response = await client.chat.completions.create({
+    model,
+    messages: [
+      {
+        role: "system",
+        content:
+          `You are a strict but encouraging Tunisian Baccalaureate ${language} examiner. ` +
+          `Evaluate writing using bac-style criteria. Output must be valid JSON only.\n\n` +
+          rubricBlock
+      },
+      {
+        role: "user",
+        content: `Prompt: ${promptText || "General bac-style writing"}\n\nStudent text:\n${inputText}`
       }
-    }),
-    new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("AI_TIMEOUT")), 15000);
-    })
-  ]);
+    ],
+    response_format: { type: "json_object" },
+    max_tokens: 1200,
+    temperature: 0.2,
+  });
 
-  const content = (response as { output_text: string }).output_text;
+  const content = response.choices[0]?.message?.content || "{}";
   const parsed = correctionSchema.parse(JSON.parse(content));
   return parsed;
 }
@@ -105,66 +58,32 @@ const drillSchema = z.object({
 });
 
 export async function generateGrammarDrill(ruleName: string, ruleExplanation: string, language: string = "ENGLISH") {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) throw new Error("Missing OPENAI_API_KEY");
-
-  const client = new OpenAI({ apiKey });
-  const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+  const { client, model } = getAIClient();
 
   const promptLanguage = language === "ARABIC" ? "Arabic" : (language === "FRENCH" ? "French" : (language === "SPANISH" ? "Spanish" : "English"));
 
-  const response = await Promise.race([
-    client.responses.create({
-      model,
-      input: [
-        {
-          role: "system",
-          content:
-            `You are an expert ${promptLanguage} tutor for Tunisian Baccalaureate students. ` +
-            `Create exactly 3 challenging multiple-choice questions targeting the grammar rule: ${ruleName}.\n` +
-            `Context: ${ruleExplanation}\n\n` +
-            `Return valid JSON with 4 options per question, the correct index (0-3), and a helpful explanation. ` +
-            `The questions, options, AND explanations MUST be in ${promptLanguage}.`
-        },
-        {
-          role: "user",
-          content: `Generate 3 practice questions for ${ruleName} in ${promptLanguage}.`
-        }
-      ],
-      text: {
-        format: {
-          type: "json_schema",
-          name: "grammar_drill",
-          schema: {
-            type: "object",
-            additionalProperties: false,
-            properties: {
-              questions: {
-                type: "array",
-                items: {
-                  type: "object",
-                  additionalProperties: false,
-                  properties: {
-                    question: { type: "string" },
-                    options: { type: "array", items: { type: "string" }, minItems: 4, maxItems: 4 },
-                    correctIndex: { type: "number", minimum: 0, maximum: 3 },
-                    explanation: { type: "string" }
-                  },
-                  required: ["question", "options", "correctIndex", "explanation"]
-                }
-              }
-            },
-            required: ["questions"]
-          },
-          strict: true
-        }
+  const response = await client.chat.completions.create({
+    model,
+    messages: [
+      {
+        role: "system",
+        content:
+          `You are an expert ${promptLanguage} tutor for Tunisian Baccalaureate students. ` +
+          `Create exactly 3 challenging multiple-choice questions targeting the grammar rule: ${ruleName}.\n` +
+          `Context: ${ruleExplanation}\n\n` +
+          `Return valid JSON with 4 options per question, the correct index (0-3), and a helpful explanation. ` +
+          `The questions, options, AND explanations MUST be in ${promptLanguage}.`
+      },
+      {
+        role: "user",
+        content: `Generate 3 practice questions for ${ruleName} in ${promptLanguage}.`
       }
-    }),
-    new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("AI_TIMEOUT")), 25000);
-    })
-  ]);
+    ],
+    response_format: { type: "json_object" },
+    max_tokens: 800,
+    temperature: 0.2,
+  });
 
-  const content = (response as { output_text: string }).output_text;
+  const content = response.choices[0]?.message?.content || "{}";
   return drillSchema.parse(JSON.parse(content));
 }

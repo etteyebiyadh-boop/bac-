@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest, hasAdminAccess } from "@/lib/auth";
 import { getAIClient } from "@/lib/ai-provider";
 
+function getErrorStatus(error: any): number | undefined {
+  return (
+    error?.status ??
+    error?.response?.status ??
+    error?.error?.status ??
+    error?.code
+  );
+}
+
 export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -39,13 +48,22 @@ IMPORTANT: You MUST return your response ONLY as a valid JSON object with the fo
     const response = await client.chat.completions.create({
         model,
         messages: [{ role: "user", content: prompt }],
-        response_format: { type: "json_object" }
+        response_format: { type: "json_object" },
+        max_tokens: 650,
+        temperature: 0.4,
     });
 
     const body = JSON.parse(response.choices[0]?.message?.content || "{}");
     return NextResponse.json({ ok: true, ...body });
   } catch (error: any) {
     console.error(error);
+    const status = getErrorStatus(error);
+    if (status === 429) {
+      return NextResponse.json(
+        { error: "OpenAI quota reached (429). Please wait and retry later." },
+        { status: 429 }
+      );
+    }
     return NextResponse.json({ error: error.message || "Failed to generate content" }, { status: 500 });
   }
 }

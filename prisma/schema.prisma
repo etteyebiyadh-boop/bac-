@@ -63,8 +63,19 @@ model Exam {
   language         Language     @default(ENGLISH)
   year             Int
   title            String
+  
+  // Part I: Reading Comprehension
+  readingTitle     String?
+  readingContent   String?
+  readingQuestions Json?        // Array of { question: string, type: 'mcq' | 'gap-fill' | 'true-false', choices?: string[], answer: any }
+
+  // Part II: Language / Grammar
+  languageQuestions Json?       // Array of { prompt: string, type: 'grammar' | 'vocab', answer: any }
+
+  // Part III: Writing
   prompt           String
   modelAnswer      String
+  
   methodology      String
   difficulty       Difficulty
   estimatedMinutes Int          @default(45)

@@ -26,6 +26,16 @@ export default async function ExamPracticePage({ params }: { params: Promise<{ s
           <span className="eyebrow" style={{ color: "var(--primary)" }}>{t.nav_exams} - {exam.year}</span>
           <h1 className="section-title" style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", lineHeight: 1 }}>{exam.title}</h1>
           <p className="muted" style={{ maxWidth: "800px" }}>{exam.methodology}</p>
+          
+          <div style={{ marginTop: "24px" }}>
+             <Link 
+               href={`/exams/${exam.slug}/mock`} 
+               className="button-link hover-glow" 
+               style={{ background: "var(--primary)", color: "black", padding: "20px 40px", fontSize: "1.2rem", fontWeight: 800, textDecoration: "none", display: "inline-block" }}
+             >
+                🎯 START FULL 3-HOUR MOCK EXAM
+             </Link>
+          </div>
         </div>
       </section>
 
