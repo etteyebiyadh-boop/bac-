@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FREE_CORRECTIONS_PER_WEEK, MAX_ESSAY_CHARS, MIN_ESSAY_CHARS } from "@/lib/constants";
@@ -71,6 +71,22 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
   const [error, setError] = useState("");
   const [result, setResult] = useState<CorrectionResult | null>(null);
 
+  const [isFocusMode, setIsFocusMode] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    if (!isFocusMode || timeLeft <= 0) return;
+    const interval = setInterval(() => setTimeLeft((t) => t - 1), 1000);
+    return () => clearInterval(interval);
+  }, [isFocusMode, timeLeft]);
+
+  function startFocusMode() {
+    if (!activeExam) return;
+    setTimeLeft(activeExam.estimatedMinutes * 60);
+    setStudentText("");
+    setIsFocusMode(true);
+  }
+
   const activeExam = exams.find((exam) => exam.id === selectedExamId) ?? null;
 
   const wordCount = studentText.trim().length === 0 ? 0 : studentText.trim().split(/\s+/).length;
@@ -107,6 +123,71 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
     }
 
     setResult(data);
+  }
+
+  if (isFocusMode && activeExam) {
+    const mins = Math.floor(timeLeft / 60).toString().padStart(2, "0");
+    const secs = Math.floor(timeLeft % 60).toString().padStart(2, "0");
+    
+    return (
+      <div style={{ position: "fixed", inset: 0, zIndex: 9999, background: "#000", color: "white", padding: "40px", display: "flex", flexDirection: "column" }}>
+        <div className="row-between" style={{ paddingBottom: "20px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+          <div className="stack" style={{ gap: "4px" }}>
+            <span className="eyebrow" style={{ color: "var(--accent)" }}>BAC FOCUS MODE</span>
+            <strong style={{ fontSize: "1.2rem" }}>{activeExam.year} - {activeExam.title}</strong>
+          </div>
+          
+          <div style={{ fontSize: "2.5rem", fontWeight: 900, fontFamily: "monospace", color: timeLeft < 300 ? "var(--error)" : "var(--primary)" }}>
+            {mins}:{secs}
+          </div>
+          
+          <button className="pill hover-glow" onClick={() => setIsFocusMode(false)} style={{ background: "rgba(239,68,68,0.1)", color: "var(--error)", border: "1px solid var(--error)", cursor: "pointer" }}>
+            Abort Exam
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-2" style={{ gap: "40px", flex: 1, marginTop: "40px", overflow: "hidden" }}>
+          <div className="stack card" style={{ padding: "40px", background: "rgba(255,255,255,0.02)", overflowY: "auto", border: "1px solid var(--glass-border)" }}>
+            <h2 style={{ fontSize: "1.5rem", marginBottom: "20px" }}>Official Exam Prompt</h2>
+            <p style={{ fontSize: "1.2rem", lineHeight: 1.8 }}>{activeExam.prompt}</p>
+            <div style={{ marginTop: "40px", padding: "20px", background: "rgba(99, 102, 241, 0.05)", borderLeft: "4px solid var(--primary)" }}>
+              <h3 style={{ fontSize: "1rem", color: "var(--primary)", marginBottom: "10px" }}>Methodology Target 🎯</h3>
+              <p style={{ fontSize: "0.95rem", opacity: 0.8 }}>{activeExam.methodology}</p>
+            </div>
+          </div>
+          
+          <div className="stack" style={{ gap: "10px", flex: 1 }}>
+            <div className="row-between">
+              <span className="eyebrow">Your Response</span>
+              <span className="muted">{wordCount} words</span>
+            </div>
+            <textarea 
+              autoFocus
+              value={studentText}
+              onChange={(e) => setStudentText(e.target.value.slice(0, MAX_ESSAY_CHARS))}
+              placeholder="Start writing under exam conditions... Make every word count."
+              style={{ flex: 1, padding: "30px", fontSize: "1.2rem", lineHeight: 1.8, background: "rgba(0,0,0,0.5)", border: "1px solid var(--glass-border)", borderRadius: "12px", resize: "none", outline: "none", color: "white" }}
+              onPaste={(e) => e.preventDefault()} // Block pasting in focus mode
+            />
+          </div>
+        </div>
+        
+        <div className="row-between" style={{ marginTop: "24px" }}>
+           <span className="muted" style={{ fontSize: "12px" }}>Stay focused. Copy-paste is disabled. Good luck.</span>
+           <button 
+             className="button-link hover-glow" 
+             style={{ background: "var(--primary)", color: "black", padding: "16px 40px", fontSize: "1.2rem", fontWeight: 800, cursor: "pointer" }}
+             disabled={isLoading || wordCount < 10}
+             onClick={() => {
+               setIsFocusMode(false);
+               submitEssay();
+             }}
+           >
+             {isLoading ? "Submitting..." : "Submit Exam for AI Grading"}
+           </button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -282,7 +363,18 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
             {isLoading ? t.wr_correcting : t.wr_submit}
           </button>
 
-          <p className="muted" style={{ fontSize: "12px", textAlign: "center" }}>
+          {activeExam && !result ? (
+            <button 
+              type="button" 
+              onClick={startFocusMode} 
+              className="button-link hover-glow" 
+              style={{ background: "rgba(239, 68, 68, 0.05)", border: "1px solid var(--error)", color: "var(--error)", padding: "20px", fontSize: "1.1rem", fontWeight: 800, justifyContent: "center", cursor: "pointer" }}
+            >
+               ⏱️ Start Timed Mock Exam (Focus Mode)
+            </button>
+          ) : null}
+
+          <p className="muted" style={{ fontSize: "12px", textAlign: "center", marginTop: "10px" }}>
             {FREE_CORRECTIONS_PER_WEEK} AI corrections per week. Essay length: {MIN_ESSAY_CHARS} to {MAX_ESSAY_CHARS} characters.
           </p>
 
