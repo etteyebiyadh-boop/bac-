@@ -10,6 +10,54 @@ export function VideoGenerator() {
   const [suggesting, setSuggesting] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [blueprint, setBlueprint] = useState<any>(null);
+  const [rendering, setRendering] = useState(false);
+  const [renderStatus, setRenderStatus] = useState<string | null>(null);
+  const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
+
+  async function handleRender() {
+    if (!blueprint?.voiceover) return;
+    
+    setRendering(true);
+    setRenderStatus("Initiating Digital Teacher...");
+    setFinalVideoUrl(null);
+
+    try {
+      const res = await fetch("/api/admin/render-video", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ script: blueprint.voiceover })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+
+      // Start polling
+      const poll = setInterval(async () => {
+        const checkRes = await fetch("/api/admin/render-video", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "check", videoId: data.videoId })
+        });
+        const checkData = await checkRes.json();
+        
+        if (checkData.status === "completed") {
+           setFinalVideoUrl(checkData.url);
+           setRenderStatus("Completed!");
+           setRendering(false);
+           clearInterval(poll);
+        } else if (checkData.status === "failed") {
+           setRenderStatus("Generation Failed.");
+           setRendering(false);
+           clearInterval(poll);
+        } else {
+           setRenderStatus(`Rendering Digital Teacher... (${checkData.status || "Processing"})`);
+        }
+      }, 5000);
+
+    } catch(e: any) {
+      alert(e.message);
+      setRendering(false);
+    }
+  }
 
   async function handleSuggest() {
     setSuggesting(true);
@@ -159,6 +207,28 @@ export function VideoGenerator() {
 
               <div style={{ whiteSpace: "pre-wrap", fontSize: "1.1rem", lineHeight: "1.8", opacity: 0.9 }}>
                  {blueprint.voiceover}
+              </div>
+
+              <div style={{ marginTop: "40px", padding: "40px", border: "2px solid #ef4444", borderRadius: "24px", background: "rgba(239, 68, 68, 0.05)", textAlign: "center" }}>
+                  <h3 className="section-title" style={{ fontSize: "1.5rem" }}>Step 2: Synthesize Real Video</h3>
+                  <p className="muted" style={{ marginBottom: "24px" }}>Turn this script into a high-fidelity AI Talking Head (Digital Teacher).</p>
+                  
+                  {!finalVideoUrl ? (
+                    <button 
+                      onClick={handleRender} 
+                      disabled={rendering}
+                      className="button-link hover-glow" 
+                      style={{ background: "#ef4444", color: "white", padding: "16px 48px", fontSize: "1.1rem", fontWeight: 800, border: "none" }}
+                    >
+                      {rendering ? `🎬 ${renderStatus}` : "💎 GENERATE DIGITAL TEACHER"}
+                    </button>
+                  ) : (
+                    <div className="stack" style={{ gap: "20px" }}>
+                       <span className="pill success-pill" style={{ alignSelf: "center" }}>AI TEACHER READY 🎬</span>
+                       <video src={finalVideoUrl} controls style={{ width: "100%", borderRadius: "20px", boxShadow: "0 0 50px rgba(0,0,0,0.5)", border: "1px solid var(--primary)" }} />
+                       <a href={finalVideoUrl} download className="button-link" style={{ alignSelf: "center", background: "var(--primary)", color: "white" }}>Download .MP4</a>
+                    </div>
+                  )}
               </div>
            </div>
 
