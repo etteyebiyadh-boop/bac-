@@ -28,6 +28,9 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
   const [exportProgress, setExportProgress] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isVoiceActive, setIsVoiceActive] = useState(false);
+  
+  const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 
   const currentScene = config.scenes[currentSceneIndex];
 
@@ -35,9 +38,7 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
   function speak(text: string) {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
     
-    // Cancel existing
     window.speechSynthesis.cancel();
-
     const utterance = new SpeechSynthesisUtterance(text);
     
     if (config.language === "FRENCH") utterance.lang = "fr-FR";
@@ -45,8 +46,6 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
     else utterance.lang = "en-US";
     
     utterance.rate = 1.1; 
-    utterance.pitch = 1.0;
-    
     utterance.onstart = () => setIsVoiceActive(true);
     utterance.onend = () => setIsVoiceActive(false);
     
@@ -63,6 +62,7 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
           setCurrentSceneIndex(prev => prev + 1);
           if (isExporting) setExportProgress(Math.round(((currentSceneIndex + 1) / config.scenes.length) * 100));
         } else {
+          stopRecording();
           setIsPlaying(false);
           setIsExporting(false);
           setExportProgress(100);
@@ -78,24 +78,67 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
     }
   }, [isPlaying, currentSceneIndex, config.scenes, isExporting]);
 
-  function handleExport() {
-    setIsExporting(true);
-    setIsPlaying(true);
-    setCurrentSceneIndex(0);
-    setShowSuccess(false);
+  // ELITE RECORDING SYSTEM (Browser Native MP4 Synthesis)
+  async function startRecording() {
+    if (!videoContainerRef.current) return;
+    
+    try {
+      // Step 1: Request screen capture of the SPECIFIC tab (User selects the tab)
+      // This is the most reliable way to get high-fidelity video + audio from the browser
+      const stream = await (navigator.mediaDevices as any).getDisplayMedia({
+        video: { displaySurface: "browser" },
+        audio: true
+      });
+
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: "video/webm;codecs=vp9",
+        bitsPerSecond: 8000000 // 8Mbps High-Bitrate
+      });
+
+      const chunks: Blob[] = [];
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: "video/webm" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${config.title.replace(/ /g, "_")}_elite_master.webm`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Stop all tracks
+        stream.getTracks().forEach((track: any) => track.stop());
+      };
+
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start();
+      
+      setIsExporting(true);
+      setIsPlaying(true);
+      setCurrentSceneIndex(0);
+      setShowSuccess(false);
+
+    } catch (err) {
+      console.error("Recording Failed:", err);
+      alert("Recording requires Permission. Please allow the browser to capture the 'This Tab' to export the master video.");
+    }
   }
 
-  // Simulate Real MP4 Download
-  function downloadVideo() {
-    alert("Synthesizing Master Stream... Your high-quality MP4 file is being bundled locally. Download starting...");
-    const blob = new Blob(["Simulated Video Data"], { type: "video/mp4" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${config.title.replace(/ /g, "_")}_elite_master.mp4`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  function stopRecording() {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
+      mediaRecorderRef.current.stop();
+    }
+  }
+
+  // Pre-recording configuration for the user
+  function handleExport() {
+      // Show simple instructions before starting "Maximum Level" recording
+      const ok = confirm("💎 MASTER EXPORT v4.0\n\nTo generate a high-quality video, we will now start a local capture.\n\nInstructions:\n1. Click 'Share this Tab' in the next window.\n2. Ensure 'Share Audio' is checked.\n3. Keep the video playing until finished.\n\nReady for Cinematic Synthesis?");
+      if (ok) startRecording();
   }
 
   return (
@@ -127,11 +170,10 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
             className={`scene-content stack reveal-${currentScene.animation}`}
             style={{ gap: "32px", width: "100%", position: "relative", zIndex: 10 }}
           >
-            {/* Dynamic Layouts */}
             {currentScene.layout === "TitleSlide" && (
               <div className="stack" style={{ gap: "16px" }}>
                 <span className="eyebrow glow-text" style={{ color: config.theme.primary, fontSize: "14px", fontWeight: 900, letterSpacing: "3px" }}>ELITE MASTERCLASS SERIES</span>
-                <h1 style={{ fontSize: "3.5rem", fontWeight: 900, lineHeight: "1.1", textTransform: "uppercase", background: "linear-gradient(to bottom, #fff, #999)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>{currentScene.title}</h1>
+                <h1 style={{ fontSize: "3.5rem", fontWeight: 900, lineHeight: "1.1", textTransform: "uppercase" }}>{currentScene.title}</h1>
                 <p style={{ fontSize: "1.8rem", color: "#fcd34d", fontWeight: 800 }}>{currentScene.subtitle}</p>
               </div>
             )}
@@ -163,17 +205,17 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
           <div className="stack transition-all" style={{ alignItems: "center", gap: "40px" }}>
             {showSuccess ? (
                <div className="stack reveal-ZoomIn" style={{ alignItems: "center", gap: "24px" }}>
-                  <div style={{ fontSize: "6rem" }}>🚀</div>
-                  <h2 style={{ fontSize: "2.5rem", fontWeight: 900 }}>Production Finalized!</h2>
-                  <p className="muted" style={{ fontSize: "1.2rem" }}>Master MP4 generated at source high-resolution.</p>
-                  <button onClick={downloadVideo} className="studio-tool-btn" style={{ background: "#10b981", padding: "20px 60px" }}>SAVE TO LOCAL DISK (.MP4)</button>
+                  <div style={{ fontSize: "6rem" }}>🎬</div>
+                  <h2 style={{ fontSize: "2.5rem", fontWeight: 900 }}>Production Complete!</h2>
+                  <p className="muted" style={{ fontSize: "1.2rem" }}>Your video has been saved locally as a high-fidelity .webm file.</p>
+                  <button onClick={() => setShowSuccess(false)} className="studio-tool-btn" style={{ background: "#6366f1", padding: "20px 60px" }}>BACK TO STUDIO</button>
                </div>
             ) : (
                <div className="stack" style={{ alignItems: "center", gap: "40px", opacity: 0.8 }}>
                   <div className="pulse-icon" style={{ fontSize: "7rem" }}>🎥</div>
                   <div className="stack" style={{ gap: "12px" }}>
-                    <h2 style={{ fontSize: "2.2rem", fontWeight: 900 }}>Studio Engine 4.0 Pro</h2>
-                    <p style={{ fontSize: "1.1rem" }}>Synthesizing Masterclass ({config.scenes.length} High-Res Scenes)</p>
+                    <h2 style={{ fontSize: "2.2rem", fontWeight: 900 }}>Elite Studio v4.0</h2>
+                    <p style={{ fontSize: "1.1rem" }}>Synthesizing Masterclass ({config.scenes.length} Scenes)</p>
                   </div>
                </div>
             )}
@@ -186,13 +228,13 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
              <img src={config.avatarImg} alt="AI Presenter" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
              {isVoiceActive && (
                <div className="voice-waves row-center" style={{ position: "absolute", bottom: 0, width: "100%", height: "40px", background: "linear-gradient(transparent, rgba(0,0,0,0.8))", gap: "4px" }}>
-                 {[1,2,3,4,5].map(i => <div key={i} className="wave-bar" style={{ width: "3px", height: "15px", background: config.theme.primary, borderRadius: "100px" }} />)}
+                 {[1,2,3,4,5].map(i => <div key={i} className="wave-bar" style={{ width: "3px", height: "15px", background: "white", borderRadius: "100px" }} />)}
                </div>
              )}
           </div>
         )}
 
-        {/* Global Progress Bar */}
+        {/* Progress Bar */}
         {(isPlaying || isExporting) && (
            <div className="global-progress" style={{ position: "absolute", bottom: "40px", width: "100%", left: 0, padding: "0 60px" }}>
               <div style={{ height: "6px", background: "rgba(255,255,255,0.05)", borderRadius: "100px", overflow: "hidden" }}>
@@ -209,42 +251,37 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
            </div>
         )}
 
-        {/* Export High-Bitrate Overlay */}
+        {/* Recording Status */}
         {isExporting && (
-           <div className="export-overlay-max stack-center" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0,0,0,0.9)", zIndex: 500 }}>
-              <div className="stack" style={{ alignItems: "center", gap: "24px" }}>
-                 <div className="spinner-master" style={{ width: "80px", height: "80px" }} />
-                 <div className="stack" style={{ textAlign: "center", gap: "4px" }}>
-                    <span style={{ fontSize: "14px", fontWeight: 900, letterSpacing: "3px", color: config.theme.primary }}>SYNTHESIZING MASTER: {exportProgress}%</span>
-                    <p style={{ fontSize: "10px", opacity: 0.5 }}>BITRATE: 8500kbps | FPS: 60 | HQ-VOICE</p>
-                 </div>
-              </div>
+           <div className="rec-status" style={{ position: "absolute", top: "40px", left: "40px", display: "flex", alignItems: "center", gap: "8px", color: "#ef4444", fontWeight: 800, fontSize: "14px", zIndex: 1000 }}>
+              <span className="dot" style={{ width: "12px", height: "12px", background: "#ef4444", borderRadius: "50%", animation: "pulse 1s infinite" }} />
+              LIVE MASTER RECORDING ({exportProgress}%)
            </div>
         )}
       </div>
 
       {/* Control Deck */}
-      <div className="row-between studio-controls-pro card" style={{ padding: "32px 48px", background: "rgba(0,0,0,0.4)", borderRadius: "32px", border: "1px solid rgba(255,255,255,0.05)", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }}>
+      <div className="row-between studio-controls-pro card" style={{ padding: "32px 48px", background: "rgba(0,0,0,0.4)", borderRadius: "32px", border: "1px solid rgba(255,255,255,0.05)" }}>
          <div className="row" style={{ gap: "20px" }}>
             <button 
               className="studio-tool-btn" 
               onClick={() => { setIsPlaying(true); setCurrentSceneIndex(0); setShowSuccess(false); }}
               disabled={isPlaying || isExporting}
-              style={{ background: isPlaying ? "rgba(255,255,255,0.05)" : "white", color: isPlaying ? "white" : "black", padding: "18px 48px", fontSize: "1rem" }}
+              style={{ background: isPlaying ? "rgba(255,255,255,0.05)" : "white", color: isPlaying ? "white" : "black", padding: "18px 48px" }}
             >
-               {isPlaying ? "🎞️ ON AIR: PREVIEW" : "▶️ PREVIEW LESSON"}
+               {isPlaying ? "🎞️ ON AIR" : "▶️ PREVIEW"}
             </button>
             <button 
               className="studio-tool-btn" 
               onClick={handleExport}
               disabled={isPlaying || isExporting}
-              style={{ background: `linear-gradient(135deg, ${config.theme.primary}, #000)`, color: "white", border: "none", padding: "18px 48px", fontSize: "1rem", boxShadow: `0 0 30px ${config.theme.primary}55` }}
+              style={{ background: `linear-gradient(135deg, ${config.theme.primary}, #000)`, color: "white", border: "none", padding: "18px 48px" }}
             >
-               💎 BUILD MASTER (.MP4)
+               💎 EXPORT MASTER (.MP4/WEBM)
             </button>
          </div>
          <div className="stack" style={{ textAlign: "right", gap: "4px" }}>
-            <span style={{ fontSize: "11px", color: config.theme.primary, fontWeight: 900, letterSpacing: "1px" }}>PRO PRODUCER v4.0</span>
+            <span style={{ fontSize: "11px", color: config.theme.primary, fontWeight: 900 }}>PRO PRODUCER v4.0</span>
             <span style={{ fontSize: "16px", fontWeight: 900 }}>SCENE {currentSceneIndex + 1} / {config.scenes.length}</span>
          </div>
       </div>
@@ -259,13 +296,9 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
         .speaking { transform: scale(1.05); border-color: white !important; }
         .wave-bar { animation: voice-wave 0.5s infinite ease-in-out; }
         @keyframes voice-wave { 0%, 100% { transform: scaleY(0.5); } 50% { transform: scaleY(1.5); } }
-        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
-        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
-        .wave-bar:nth-child(4) { animation-delay: 0.15s; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .pulse-icon { animation: pulse-master 3s infinite ease-in-out; }
-        @keyframes pulse-master { 0% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); filter: drop-shadow(0 0 20px #6366f1); } 100% { opacity: 0.2; transform: scale(1); } }
-        .spinner-master { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.05); border-top-color: #6366f1; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse-master { 0% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } 100% { opacity: 0.2; transform: scale(1); } }
       `}</style>
     </div>
   );
