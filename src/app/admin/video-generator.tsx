@@ -1,63 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { VideoCanvas } from "./video-canvas";
 
 export function VideoGenerator() {
   const [topic, setTopic] = useState("");
   const [language, setLanguage] = useState("ENGLISH");
-  const [duration, setDuration] = useState("3"); // Minutes
+  const [duration, setDuration] = useState("1"); // Default to 1min for Viral format
+  const [vibe, setVibe] = useState("ELITE BROTHER");
   const [loading, setLoading] = useState(false);
   const [suggesting, setSuggesting] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [blueprint, setBlueprint] = useState<any>(null);
-  const [rendering, setRendering] = useState(false);
-  const [renderStatus, setRenderStatus] = useState<string | null>(null);
-  const [finalVideoUrl, setFinalVideoUrl] = useState<string | null>(null);
-
-  async function handleRender() {
-    if (!blueprint?.voiceover) return;
-    
-    setRendering(true);
-    setRenderStatus("Initiating Digital Teacher...");
-    setFinalVideoUrl(null);
-
-    try {
-      const res = await fetch("/api/admin/render-video", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ script: blueprint.voiceover })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
-
-      // Start polling
-      const poll = setInterval(async () => {
-        const checkRes = await fetch("/api/admin/render-video", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "check", videoId: data.videoId })
-        });
-        const checkData = await checkRes.json();
-        
-        if (checkData.status === "completed") {
-           setFinalVideoUrl(checkData.url);
-           setRenderStatus("Completed!");
-           setRendering(false);
-           clearInterval(poll);
-        } else if (checkData.status === "failed") {
-           setRenderStatus("Generation Failed.");
-           setRendering(false);
-           clearInterval(poll);
-        } else {
-           setRenderStatus(`Rendering Digital Teacher... (${checkData.status || "Processing"})`);
-        }
-      }, 5000);
-
-    } catch(e: any) {
-      alert(e.message);
-      setRendering(false);
-    }
-  }
+  const [productionStep, setProductionStep] = useState<"CONFIG" | "PREVIEW" | "EXPORT">("CONFIG");
 
   async function handleSuggest() {
     setSuggesting(true);
@@ -82,16 +37,18 @@ export function VideoGenerator() {
     
     setLoading(true);
     setBlueprint(null);
+    setProductionStep("CONFIG");
 
     try {
       const res = await fetch("/api/admin/generate-video", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, language, duration })
+        body: JSON.stringify({ topic, language, duration, vibe })
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to generate video blueprint");
+      if (!res.ok) throw new Error(data.error || "Failed to direct cinematic production");
       setBlueprint(data);
+      setProductionStep("PREVIEW");
     } catch (err: any) {
       alert(err.message);
     } finally {
@@ -100,165 +57,196 @@ export function VideoGenerator() {
   }
 
   return (
-    <section className="stack" style={{ gap: "40px", padding: "40px 0" }}>
-      <header className="card stack" style={{ padding: "40px", background: "radial-gradient(circle at top right, rgba(239, 68, 68, 0.05), transparent)", border: "1px solid rgba(239, 68, 68, 0.2)" }}>
-        <div className="row-between">
-           <div className="stack">
-              <span className="eyebrow" style={{ color: "#ef4444" }}>🎬 Production Master Studio</span>
-              <h2 className="section-title" style={{ fontSize: "2.5rem" }}>Elite Video Architect.</h2>
-              <p className="muted" style={{ fontSize: "1.1rem" }}>
-                Generate cinematic lesson blueprints, high-energy Tunisian voiceovers, and frame-by-frame storyboards for <strong>Bac Excellence</strong>. 
+    <div className="video-studio-container stack-center" style={{ gap: "40px", padding: "40px 0" }}>
+      {/* Studio Header: Free Elite Tech */}
+      <header className="card studio-header stack" style={{ width: "100%", maxWidth: "1200px" }}>
+        <div className="row-between studio-nav">
+           <div className="stack" style={{ gap: "8px" }}>
+              <div className="live-pill" style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "10px", color: "#10b981", fontWeight: 800 }}>
+                  <span className="dot" style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 10px #10b981" }} />
+                  SPECIAL AI PRODUCTION (FREE LOCAL ENGINE)
+              </div>
+              <h1 className="studio-title">Elite Video Architect.</h1>
+              <p className="muted" style={{ fontSize: "1.1rem", maxWidth: "600px" }}>
+                Generating cinematic MP4 pedagogical experiences with **locally synthesis** (No paid API keys needed).
               </p>
            </div>
-           <button 
-             type="button" 
-             onClick={handleSuggest} 
-             disabled={suggesting}
-             style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--accent-glow)", color: "var(--accent)", padding: "16px 24px", borderRadius: "100px", cursor: "pointer", fontWeight: 800 }}
-           >
-              {suggesting ? "Analyzing Viral Potential..." : "💡 SUGGEST VIRAL TOPICS"}
-           </button>
+           
+           <div className="studio-controls row" style={{ gap: "12px" }}>
+              <button 
+                type="button" 
+                onClick={handleSuggest} 
+                className="studio-tool-btn"
+                disabled={suggesting}
+              >
+                 {suggesting ? "Analyzing Viral Pot..." : "💡 VIRAL RADAR"}
+              </button>
+           </div>
         </div>
 
         {suggestions.length > 0 && (
-          <div className="stack" style={{ marginTop: "24px", gap: "10px", padding: "20px", background: "rgba(245, 158, 11, 0.05)", border: "1px solid var(--accent-glow)", borderRadius: "20px" }}>
-             <span className="eyebrow" style={{ color: "var(--accent)", fontSize: "10px" }}>ADAPTED TO YOUR CONTENT:</span>
-             <div className="row-between" style={{ flexWrap: "wrap", gap: "10px", justifyContent: "flex-start" }}>
-                {suggestions.map((s, i) => (
-                  <button 
-                    key={i} 
-                    type="button" 
-                    onClick={() => { setTopic(s); setSuggestions([]); }} 
-                    style={{ background: "white", color: "black", padding: "8px 16px", borderRadius: "100px", fontSize: "12px", border: "none", cursor: "pointer", fontWeight: 700 }}
-                  >
-                    🔥 {s}
-                  </button>
-                ))}
-             </div>
+          <div className="suggestion-cloud row" style={{ marginTop: "24px", flexWrap: "wrap", gap: "10px" }}>
+             {suggestions.map((s, i) => (
+                <button 
+                  key={i} 
+                  type="button" 
+                  onClick={() => { setTopic(s); setSuggestions([]); }} 
+                  className="suggestion-pill"
+                >
+                  🔥 {s}
+                </button>
+             ))}
           </div>
         )}
       </header>
 
-      <form className="card stack" onSubmit={handleGenerate} style={{ gap: "32px", padding: "40px", border: "1px solid var(--glass-border)", background: "rgba(0,0,0,0.2)" }}>
-        <div className="grid grid-cols-3" style={{ gap: "24px" }}>
-          <label className="stack" style={{ gap: "8px" }}>
-            <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Language Track</span>
-            <select value={language} onChange={e => setLanguage(e.target.value)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
-               <option value="ENGLISH">English (Live)</option>
-               <option value="FRENCH">French (Live)</option>
-               <option value="ARABIC">Arabic (Live)</option>
-               <option value="SPANISH">Spanish (Optional)</option>
-            </select>
-          </label>
-          <label className="stack" style={{ gap: "8px" }}>
-             <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Duration (Minutes)</span>
-             <select value={duration} onChange={e => setDuration(e.target.value)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
-                <option value="1">1 Min / High Viral</option>
-                <option value="3">3 Min / Mid Lesson</option>
-                <option value="5">5 Min / Deep Tutorial</option>
-                <option value="8">8 Min / Masterclass</option>
-             </select>
-          </label>
-          <label className="stack" style={{ gap: "8px" }}>
-             <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Video Topic / Myth to Bust</span>
-             <input 
-               placeholder="e.g. 'Simple Past vs Present Perfect'" 
-               value={topic}
-               onChange={e => setTopic(e.target.value)}
-               required
-               style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1rem" }}
-             />
-          </label>
+      {/* Main Studio Workspace */}
+      <div className="grid grid-cols-12" style={{ gap: "32px", width: "100%", maxWidth: "1200px", alignItems: "flex-start" }}>
+        
+        {/* Left Control Panel */}
+        <div className="col-span-4 stack" style={{ gap: "24px", position: "sticky", top: "20px" }}>
+          <form className="card studio-sidebar stack" onSubmit={handleGenerate} style={{ gap: "24px", padding: "32px", border: "1px solid rgba(255,255,255,0.05)" }}>
+             <h3 className="section-title" style={{ fontSize: "1.1rem", color: "var(--ink-dim)" }}>Production Deck</h3>
+             
+             <label className="stack" style={{ gap: "8px" }}>
+                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Language Track</span>
+                <select value={language} onChange={e => setLanguage(e.target.value)} className="studio-select">
+                   <option value="ENGLISH">English (Elite)</option>
+                   <option value="FRENCH">French (Elite)</option>
+                   <option value="ARABIC">Arabic (Core)</option>
+                </select>
+             </label>
+
+             <label className="stack" style={{ gap: "8px" }}>
+                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Directorial Vibe</span>
+                <select value={vibe} onChange={e => setVibe(e.target.value)} className="studio-select">
+                   <option value="ELITE BROTHER">Elite Brother (Tunisian Senior)</option>
+                   <option value="THE MASTER">The Master Mentor</option>
+                   <option value="VIRAL REBEL">Social Viral Rebel</option>
+                </select>
+             </label>
+
+             <label className="stack" style={{ gap: "12px" }}>
+                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Lesson Focus / Myth</span>
+                <textarea 
+                  placeholder="e.g. 'Why everyone fails the Reading Section'" 
+                  value={topic}
+                  onChange={e => setTopic(e.target.value)}
+                  required
+                  className="studio-input"
+                  style={{ height: "100px", resize: "none" }}
+                />
+             </label>
+
+             <button type="submit" disabled={loading} className="studio-generate-btn hover-glow">
+               {loading ? "AI DIRECTOR ANALYZING..." : "🚀 DIRECT CINEMATIC PRODUCTION"}
+             </button>
+          </form>
+
+          {blueprint && (
+            <div className="card stack" style={{ padding: "24px", background: "rgba(16, 185, 129, 0.05)", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
+               <h4 style={{ fontSize: "0.9rem", color: "#10b981", fontWeight: 800 }}>Master Script Generated</h4>
+               <p className="muted" style={{ fontSize: "0.8rem", marginTop: "8px", fontStyle: "italic" }}>
+                 "{blueprint.voiceover_full.substring(0, 100)}..."
+               </p>
+            </div>
+          )}
         </div>
 
-        <button type="submit" disabled={loading} className="full-width hover-glow" style={{ background: "#ef4444", color: "white", padding: "20px", fontSize: "1.2rem", fontWeight: 900, border: "none" }}>
-          {loading ? "Synthesizing Producer Blueprint..." : "🎬 Initiate Video Production"}
-        </button>
-      </form>
+        {/* Cinematic Preview & Canvas */}
+        <div className="col-span-8 stack" style={{ gap: "32px", minHeight: "800px" }}>
+           {blueprint && productionStep === "PREVIEW" ? (
+             <div className="page-stack reveal" style={{ gap: "32px" }}>
+                <div className="row-between">
+                   <h2 className="section-title">Cinematic Canvas Preview</h2>
+                   <button className="pill" onClick={() => setProductionStep("CONFIG")} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "white", cursor: "pointer" }}>EDIT PRODUCTION CONFIG</button>
+                </div>
+                
+                <VideoCanvas 
+                  config={blueprint} 
+                  onComplete={() => console.log("Video Finished")}
+                />
 
-      {blueprint && (
-        <div className="page-stack reveal" style={{ gap: "32px" }}>
-           {/* Summary Cards */}
-           <div className="grid grid-cols-2" style={{ gap: "24px" }}>
-              <div className="card stack" style={{ border: "1px solid var(--accent)", background: "rgba(245, 158, 11, 0.05)" }}>
-                 <span className="eyebrow" style={{ color: "var(--accent)" }}>🎧 MUSIC VIBE</span>
-                 <p style={{ margin: "10px 0 0", fontSize: "1.1rem", fontWeight: 700 }}>{blueprint.musicVibe}</p>
-              </div>
-              <div className="card stack" style={{ border: "1px solid #ef4444", background: "rgba(239, 68, 68, 0.05)" }}>
-                 <span className="eyebrow" style={{ color: "#ef4444" }}>🖼️ THUMBNAIL HOOK</span>
-                 <p style={{ margin: "10px 0 0", fontSize: "1.1rem", fontWeight: 700 }}>{blueprint.thumbnailHook}</p>
-              </div>
-           </div>
-
-           {/* Voiceover Script */}
-           <div className="card stack" style={{ padding: "48px", background: "rgba(0,0,0,0.4)" }}>
-              <div className="row-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "24px", marginBottom: "32px" }}>
-                 <div className="stack" style={{ gap: "4px" }}>
-                    <h3 className="section-title" style={{ fontSize: "1.8rem" }}>{blueprint.title}</h3>
-                    <span className="pill success-pill">Vibe: Tunisian Senior 🇹🇳</span>
-                 </div>
-                 <button onClick={() => { navigator.clipboard.writeText(blueprint.voiceover); alert("Script Copied!"); }} className="pill" style={{ background: "transparent", border: "1px solid var(--glass-border)", color: "white", cursor: "pointer" }}>Copy Script</button>
-              </div>
-
-              <div style={{ background: "rgba(255,255,255,0.02)", padding: "24px", borderRadius: "16px", border: "1px solid var(--glass-border)", marginBottom: "32px" }}>
-                  <span className="eyebrow" style={{ color: "var(--accent)", display: "block", marginBottom: "12px" }}>🚀 THE HOOK (FIRST 5s)</span>
-                  <p style={{ fontSize: "1.4rem", color: "white", fontWeight: 800 }}>"{blueprint.hook}"</p>
-              </div>
-
-              <div style={{ whiteSpace: "pre-wrap", fontSize: "1.1rem", lineHeight: "1.8", opacity: 0.9 }}>
-                 {blueprint.voiceover}
-              </div>
-
-              <div style={{ marginTop: "40px", padding: "40px", border: "2px solid #ef4444", borderRadius: "24px", background: "rgba(239, 68, 68, 0.05)", textAlign: "center" }}>
-                  <h3 className="section-title" style={{ fontSize: "1.5rem" }}>Step 2: Synthesize Real Video</h3>
-                  <p className="muted" style={{ marginBottom: "24px" }}>Turn this script into a high-fidelity AI Talking Head (Digital Teacher).</p>
-                  
-                  {!finalVideoUrl ? (
-                    <button 
-                      onClick={handleRender} 
-                      disabled={rendering}
-                      className="button-link hover-glow" 
-                      style={{ background: "#ef4444", color: "white", padding: "16px 48px", fontSize: "1.1rem", fontWeight: 800, border: "none" }}
-                    >
-                      {rendering ? `🎬 ${renderStatus}` : "💎 GENERATE DIGITAL TEACHER"}
-                    </button>
-                  ) : (
-                    <div className="stack" style={{ gap: "20px" }}>
-                       <span className="pill success-pill" style={{ alignSelf: "center" }}>AI TEACHER READY 🎬</span>
-                       <video src={finalVideoUrl} controls style={{ width: "100%", borderRadius: "20px", boxShadow: "0 0 50px rgba(0,0,0,0.5)", border: "1px solid var(--primary)" }} />
-                       <a href={finalVideoUrl} download className="button-link" style={{ alignSelf: "center", background: "var(--primary)", color: "white" }}>Download .MP4</a>
-                    </div>
-                  )}
-              </div>
-           </div>
-
-           {/* Performance Storyboard */}
-           <div className="stack" style={{ gap: "24px" }}>
-              <h3 className="section-title">🎬 Storyboard / Performance Plan</h3>
-              <div className="grid grid-cols-1" style={{ gap: "16px" }}>
-                {blueprint.storyboard?.map((s: any, i: number) => (
-                  <div key={i} className="card row-between" style={{ padding: "32px", background: "rgba(255,255,255,0.03)", border: "1px solid var(--glass-border)", gap: "40px" }}>
-                    <div style={{ minWidth: "120px", color: "var(--accent)", fontSize: "1.2rem", fontWeight: 900 }}>{s.time}</div>
-                    <div className="stack" style={{ flex: 1, gap: "10px" }}>
-                       <div style={{ color: "white", fontSize: "1.1rem", fontWeight: 800 }}>{s.scene}</div>
-                       <div className="muted" style={{ fontSize: "0.9rem" }}>{s.instruction}</div>
-                    </div>
-                    <div className="pill" style={{ background: "rgba(255,255,255,0.05)", borderColor: "var(--primary)", color: "var(--primary)", whiteSpace: "nowrap" }}>
-                      {s.visual}
+                <div className="card stack" style={{ padding: "24px", background: "rgba(0,0,0,0.3)", border: "1px dashed rgba(255,255,255,0.1)" }}>
+                   <p className="muted" style={{ fontSize: "0.9rem" }}>
+                     💡 <strong>Free Local Hack:</strong> This video uses your browser's native hardware to render animations and text-to-speech. To share it, click <strong>EXPORT .MP4</strong> and we will initiate the local capture sequence.
+                   </p>
+                </div>
+             </div>
+           ) : (
+             <div className="studio-empty-state card stack" style={{ height: "100%", minHeight: "700px", justifyContent: "center", alignItems: "center", gap: "24px", border: "2px dashed rgba(255,255,255,0.05)", background: "rgba(255,255,255,0.01)" }}>
+                {loading ? (
+                   <div className="stack" style={{ alignItems: "center", gap: "20px" }}>
+                      <div className="spinner" style={{ width: "50px", height: "50px", border: "4px solid rgba(255,255,255,0.1)", borderTopColor: "#ef4444", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+                      <p className="muted">The AI Director is designing scene layouts and syncing Tunisian script...</p>
+                   </div>
+                ) : (
+                  <div className="stack" style={{ alignItems: "center", gap: "24px", textAlign: "center" }}>
+                    <div className="cinema-icon" style={{ fontSize: "4rem", opacity: 0.1 }}>🎬</div>
+                    <div className="stack" style={{ gap: "8px" }}>
+                       <h2 className="section-title" style={{ opacity: 0.3 }}>Production Studio Idle</h2>
+                       <p className="muted" style={{ maxWidth: "400px" }}>Configure your viral pedagogical mission on the left to start the local AI Cinema engine.</p>
                     </div>
                   </div>
-                ))}
-              </div>
-           </div>
-
-           <div style={{ padding: "40px", textAlign: "center", background: "rgba(255,255,255,0.02)", border: "1px dashed #ef4444", borderRadius: "20px" }}>
-               <h3 className="section-title" style={{ fontSize: "1.3rem" }}>Director's Note</h3>
-               <p className="muted" style={{ marginTop: "10px" }}>
-                 Keep the energy high. In Tunisian videos, the personality is 70% of the result. Use fast cuts when changing from rule explanation to Derja examples.
-               </p>
-           </div>
+                )}
+             </div>
+           )}
         </div>
-      )}
-    </section>
+      </div>
+
+      <style jsx>{`
+        .studio-header {
+           padding: 48px;
+           background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.05), transparent);
+           border-radius: 32px;
+        }
+        .studio-title {
+           font-size: 3rem;
+           font-weight: 900;
+           letter-spacing: -2px;
+        }
+        .studio-tool-btn {
+           background: rgba(255,255,255,0.05);
+           border: 1px solid rgba(255,255,255,0.1);
+           color: white;
+           padding: 12px 24px;
+           border-radius: 100px;
+           font-weight: 700;
+           cursor: pointer;
+        }
+        .studio-tool-btn:hover { background: rgba(255,255,255,0.1); }
+        .suggestion-pill {
+           background: white;
+           color: black;
+           padding: 8px 16px;
+           border-radius: 100px;
+           font-size: 0.85rem;
+           font-weight: 800;
+           border: none;
+           cursor: pointer;
+        }
+        .studio-select, .studio-input {
+           padding: 16px;
+           background: rgba(255,255,255,0.03);
+           border: 1px solid rgba(255,255,255,0.1);
+           border-radius: 16px;
+           color: white;
+           outline: none;
+        }
+        .studio-generate-btn {
+           background: linear-gradient(135deg, #10b981, #059669);
+           color: white;
+           padding: 24px;
+           border-radius: 20px;
+           font-size: 1.1rem;
+           font-weight: 900;
+           border: none;
+           cursor: pointer;
+        }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .reveal { animation: reveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+        @keyframes reveal { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      `}</style>
+    </div>
   );
 }
