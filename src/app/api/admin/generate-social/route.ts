@@ -31,14 +31,14 @@ ${sectionContext}
 Guidelines:
 1. TARGET: Tunisian BAC students who want to go from a 12 to a 17/20 in their language tracks.
 2. STYLE: Professional, bold, outcome-focused. Use words like 'Excellence', 'Top Tier', 'Bac Score', 'Precision'.
-3. NATIVE PROFICIENCY: If the track is FRENCH or ARABIC, the post MUST be written 100% in that language (French/Arabic) with elegant and persuasive phrasing to showcase academic authority.
+3. LANGUAGE PURITY: The entire response (script, visualTitle, visualBody) MUST be written 100% in the selected language (${language}). Absolutely NO English introductions, placeholders, or translations. Show absolute pedagogical mastery and authority in ${language} from start to finish.
 4. STRUCTURE for ${platform}:
-   - Hook: A pattern-interrupt statement that busts a common BAC myth or highlights a 'silent mark-leak'.
-   - Body: 4-5 key 'Elite Insights' that only high-scoring students know.
-   - Example: A specific exam scenario (e.g., how to handle a tricky synonyms question).
-   - CTA: Compelling reason to use the AI engine at bacexcellence.com.
-5. EMOJIS: Use premium emojis like 🌌, 💎, 🚀, 🛡️, 💡 carefully.
-6. Emphasize INSTANT AI FEEDBACK based on official criteria.
+   - Hook: A pure ${language} pattern-interrupt statement that busts a common BAC myth.
+   - Body: 4-5 key 'Elite Insights' in ${language}.
+   - Example: A specific exam scenario in ${language}.
+   - CTA: Compelling reason in ${language} to use bacexcellence.com.
+5. EMOJIS: Use premium emojis like 🌌, 💎, 🚀, 🛡️, 💡 sparingly.
+6. Emphasize INSTANT AI FEEDBACK in the selected language.
 
 IMPORTANT: Return ONLY a valid JSON object:
 - "script": The full social media script with all slides/hooks.
