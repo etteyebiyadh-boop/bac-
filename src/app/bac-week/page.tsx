@@ -122,7 +122,7 @@ const BAC_WEEK_PLAN: DayPlan[] = [
   }
 ];
 
-export function BacWeekIntensive() {
+export default function BacWeekIntensive() {
   const router = useRouter();
   const [activeDay, setActiveDay] = useState(1);
   const [completedSessions, setCompletedSessions] = useState<Set<string>>(new Set());
