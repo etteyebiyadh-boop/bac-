@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest, hasAdminAccess } from "@/lib/auth";
-import OpenAI from "openai";
+import { getAIClient } from "@/lib/ai-provider";
 
 export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
@@ -13,10 +13,7 @@ export async function POST(req: NextRequest) {
   try {
     const { topic, language, platform } = await req.json();
     
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey || apiKey === "replace_me") throw new Error("Missing valid OPENAI_API_KEY. Please update your .env file.");
-    const client = new OpenAI({ apiKey });
-    const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+    const { client, model } = getAIClient();
 
     const prompt = `You are a viral social media manager for 'Bac Excellence', the most elite and premium AI-first platform for Tunisian Baccalaureate students.
 Write a highly engaging, high-stakes and elite ${platform} post about: ${language} - ${topic}.

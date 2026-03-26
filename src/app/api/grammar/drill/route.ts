@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
-import OpenAI from "openai";
+import { getAIClient } from "@/lib/ai-provider";
 
 export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
@@ -10,10 +10,7 @@ export async function POST(req: NextRequest) {
     const { topic, subject, language } = await req.json();
     if (!topic || !subject) return NextResponse.json({ error: "Topic and subject are required" }, { status: 400 });
 
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey || apiKey === "replace_me") throw new Error("Missing valid OPENAI_API_KEY. Please update your .env file.");
-    const client = new OpenAI({ apiKey });
-    const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+    const { client, model } = getAIClient();
 
     const prompt = `You are a viral English teacher for the Tunisian Baccalaureate.
 Generate a quick-fire grammar drill for: ${subject} (${topic}).

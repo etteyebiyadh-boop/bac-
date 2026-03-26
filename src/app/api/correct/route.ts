@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
-import OpenAI from "openai";
+import { getAIClient } from "@/lib/ai-provider";
 
 export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
@@ -11,13 +11,7 @@ export async function POST(req: NextRequest) {
     const { examId, promptText, studentText, language } = await req.json();
     if (!studentText) return NextResponse.json({ error: "Essay is empty" }, { status: 400 });
 
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey || apiKey === "replace_me") {
-        return NextResponse.json({ error: "401 Incorrect API key provided: replace_me. Please update your .env file." }, { status: 401 });
-    }
-
-    const client = new OpenAI({ apiKey });
-    const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+    const { client, model } = getAIClient();
 
     const systemPrompt = `You are an elite Tunisian Baccalaureate examiner for ${language}.
 Your task is to grade the student essay based on official ministry criteria:
