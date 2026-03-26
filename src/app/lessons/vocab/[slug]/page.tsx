@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLanguageLabel } from "@/lib/learning";
 
-export default async function VocabDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function VocabVaultPage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
   const { slug } = await params;
 
@@ -17,65 +17,55 @@ export default async function VocabDetailPage({ params }: { params: Promise<{ sl
 
   return (
     <div className="page-stack">
-      <div className="row-between" style={{ alignItems: "center" }}>
-        <Link className="button-link button-secondary" href="/lessons" style={{ textDecoration: "none" }}>
-          Back to library
-        </Link>
+      <header className="row-between" style={{ alignItems: "center" }}>
+        <Link className="button-link button-secondary" href="/lessons">Back to Library</Link>
         <div className="row-between" style={{ gap: "8px" }}>
           <span className="pill">{getLanguageLabel(vocabSet.language)}</span>
-          <span className="pill" style={{ background: "rgba(10, 107, 73, 0.1)", color: "#065f46" }}>Vocabulary</span>
-          <span className={`pill ${vocabSet.difficulty === "HARD" ? "error-pill" : "success-pill"}`}>
-            {vocabSet.difficulty}
-          </span>
+          <span className="pill success-pill">{vocabSet.theme}</span>
         </div>
-      </div>
+      </header>
 
-      <section className="card stack hero-panel" style={{ padding: "48px 32px", position: "relative", overflow: "hidden" }}>
-        <span className="eyebrow" style={{ color: "#e7bf87" }}>Theme: {vocabSet.theme.replace(/_/g, " ")}</span>
-        <h1 className="section-title" style={{ fontSize: "2.5rem", color: "white" }}>{vocabSet.title}</h1>
-        <p className="muted" style={{ fontSize: "1.2rem", maxWidth: "800px", color: "rgba(255,255,255,0.85)" }}>
-          {vocabSet.description}
-        </p>
-        <p className="pill" style={{ alignSelf: "flex-start", marginTop: "16px", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.2)", color: "white" }}>
-          BAC Context: {vocabSet.bacContext}
-        </p>
-        <div style={{ position: "absolute", right: "-10%", top: "-30%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(231,191,135,0.1) 0%, transparent 70%)", borderRadius: "50%" }} />
+      <section className="card stack hero-panel" style={{ padding: "56px 40px", border: "1px solid var(--success-glow)", background: "radial-gradient(circle at top right, rgba(16, 185, 129, 0.1), transparent)" }}>
+        <div className="stack" style={{ zIndex: 1, position: "relative" }}>
+          <span className="eyebrow" style={{ color: "var(--success)" }}>Vocabulary Vault</span>
+          <h1 className="section-title" style={{ fontSize: "3rem" }}>{vocabSet.title}</h1>
+          <p className="muted" style={{ fontSize: "1.2rem", maxWidth: "800px" }}>{vocabSet.description}</p>
+          <div style={{ marginTop: "24px", padding: "16px", background: "rgba(255,255,255,0.02)", borderLeft: "4px solid var(--success)", borderRadius: "12px" }}>
+             <strong>BAC Context:</strong> {vocabSet.bacContext}
+          </div>
+        </div>
       </section>
 
-      <div className="recent-list" style={{ gap: "16px" }}>
+      <div className="grid grid-cols-2" style={{ gap: "24px" }}>
         {vocabSet.items.map((item) => (
-          <article key={item.id} className="card stack" style={{ padding: "24px" }}>
+          <article key={item.id} className="card stack" style={{ padding: "32px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--glass-border)", transition: "all 0.3s ease" }}>
             <div className="row-between">
-              <div className="stack">
-                <h3 className="section-title" style={{ fontSize: "1.5rem", margin: 0, fontWeight: 700 }}>{item.word}</h3>
-                <span className="pill eyebrow" style={{ padding: "2px 8px", fontSize: "0.75rem", alignSelf: "flex-start" }}>{item.partOfSpeech}</span>
-              </div>
-              <p className="muted" style={{ fontSize: "1.1rem", fontStyle: "italic", flex: 1, maxWidth: "60%" }}>
-                {item.definition}
-              </p>
+               <strong style={{ fontSize: "1.8rem", color: "var(--primary)" }}>{item.word}</strong>
+               <span className="pill" style={{ opacity: 0.5 }}>{item.partOfSpeech}</span>
+            </div>
+            
+            <p style={{ fontSize: "1.1rem", margin: "16px 0", color: "rgba(255,255,255,0.9)" }}>{item.definition}</p>
+            
+            <div className="stack" style={{ gap: "10px", marginTop: "16px" }}>
+               <div style={{ padding: "16px", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px solid var(--glass-border)" }}>
+                  <span className="eyebrow" style={{ fontSize: "10px" }}>COMMON USE</span>
+                  <p style={{ margin: "4px 0 0", fontStyle: "italic" }}>"{item.exampleSentence}"</p>
+               </div>
+               <div style={{ padding: "16px", background: "rgba(99, 102, 241, 0.05)", borderRadius: "12px", border: "1px solid var(--primary-glow)" }}>
+                  <span className="eyebrow" style={{ fontSize: "10px", color: "var(--primary)" }}>BAC EXAM EXAMPLE</span>
+                  <p style={{ margin: "4px 0 0", fontWeight: 700 }}>"{item.bacExample}"</p>
+               </div>
             </div>
 
-            <div className="stack" style={{ marginTop: "16px", background: "var(--bg-muted)", padding: "16px", borderRadius: "8px" }}>
-              <div className="stack">
-                <span className="eyebrow">Example usage</span>
-                <p style={{ fontSize: "1rem", margin: 0 }}>"{item.exampleSentence}"</p>
+            {item.synonyms && (Array.isArray(item.synonyms) ? item.synonyms.length > 0 : Object.keys(item.synonyms).length > 0) && (
+              <div style={{ marginTop: "20px", display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                 <span className="muted" style={{ fontSize: "11px", alignSelf: "center", marginRight: "8px" }}>Synonyms:</span>
+                 {(item.synonyms as string[]).map(s => <span key={s} className="pill" style={{ fontSize: "10px", borderColor: "var(--accent)", color: "var(--accent)" }}>{s}</span>)}
               </div>
-              <div className="stack" style={{ marginTop: "12px", borderTop: "1px solid var(--border)", paddingTop: "12px" }}>
-                <span className="eyebrow" style={{ color: "var(--primary-strong)" }}>Tunisian BAC Contextual usage</span>
-                <p style={{ fontSize: "1rem", margin: 0, fontWeight: 500 }}>"{item.bacExample}"</p>
-              </div>
-            </div>
+            )}
           </article>
         ))}
       </div>
-
-      <section className="card stack" style={{ textAlign: "center", padding: "40px", marginTop: "16px" }}>
-        <h3 className="section-title">Ready to test these words?</h3>
-        <p className="muted">Write a practice essay and see if the AI detects your usage of these key terms.</p>
-        <Link className="button-link" href="/write" style={{ alignSelf: "center", marginTop: "16px", padding: "12px 32px" }}>
-          Start practice essay
-        </Link>
-      </section>
     </div>
   );
 }
