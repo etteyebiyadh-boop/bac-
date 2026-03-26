@@ -2,58 +2,99 @@ import OpenAI from "openai";
 
 export type AIProvider = "openai" | "google" | "groq";
 
-export function getAIClient() {
+export interface AIConfig {
+   client: OpenAI;
+   model: string;
+   provider: AIProvider;
+}
+
+/**
+ * Returns the primary AI configuration based on .env
+ * Also provides a list of backup providers for senior fallback logic.
+ */
+export function getAIClient(requestedProvider?: AIProvider): AIConfig {
   const rawProvider = process.env.AI_PROVIDER?.trim().replace(/^["']|["']$/g, "");
   const groqKey = process.env.GROQ_API_KEY?.trim().replace(/^["']|["']$/g, "");
   const googleKey = process.env.GOOGLE_API_KEY?.trim().replace(/^["']|["']$/g, "");
   const openaiKey = process.env.OPENAI_API_KEY?.trim().replace(/^["']|["']$/g, "");
 
-  console.log(`[AI DIAGNOSTIC] Provider: ${rawProvider || 'NONE'}, GroqKey: ${!!groqKey}, GoogleKey: ${!!googleKey}, OpenAIKey: ${!!openaiKey}`);
-
-  // Auto-detect provider if AI_PROVIDER is blank
-  let provider = (rawProvider || "openai") as AIProvider;
-  if (!rawProvider) {
-    if (groqKey && (groqKey !== "replace_me_free_groq_key" && groqKey.length > 5)) provider = "groq";
-    else if (googleKey && (googleKey !== "replace_me_free_gemini_key" && googleKey.length > 5)) provider = "google";
-  }
+  // Priority: 1. Requested | 2. Configured | 3. Auto-detected
+  let provider: AIProvider = (requestedProvider || rawProvider || "openai") as AIProvider;
   
-  // 1. Google Gemini (FREE via AI Studio)
+  // Auto-detection logic if blank
+  if (!requestedProvider && !rawProvider) {
+    if (groqKey && groqKey.length > 10) provider = "groq";
+    else if (googleKey && googleKey.length > 10) provider = "google";
+  }
+
+  // 1. Google Gemini (Tier 2 / Reliable Fallback)
   if (provider === "google") {
-    if (!googleKey || googleKey === "replace_me_free_gemini_key" || googleKey.length < 5) {
-       throw new Error(`Missing or invalid GOOGLE_API_KEY. Detected provider: ${provider}. Get one for FREE at: https://aistudio.google.com/app/apikey`);
-    }
+    if (!googleKey || googleKey.length < 5) throw new Error("Missing GOOGLE_API_KEY");
     return {
       client: new OpenAI({
         apiKey: googleKey,
         baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
       }),
       model: "gemini-1.5-flash",
+      provider: "google"
     };
   }
 
-  // 2. Groq (FAST & FREE Tier)
+  // 2. Groq (Tier 1 / Performance)
   if (provider === "groq") {
-     if (!groqKey || groqKey === "replace_me_free_groq_key" || groqKey.length < 5) {
-        throw new Error(`Missing or invalid GROQ_API_KEY. Detected provider: ${provider}. Get one for FREE at: https://console.groq.com/keys`);
-     }
+     if (!groqKey || groqKey.length < 5) throw new Error("Missing GROQ_API_KEY");
      return {
         client: new OpenAI({
            apiKey: groqKey,
            baseURL: "https://api.groq.com/openai/v1",
         }),
         model: "llama-3.3-70b-versatile",
+        provider: "groq"
      };
   }
 
-  // 3. Original OpenAI
-  if (!openaiKey || openaiKey === "replace_me" || openaiKey.length < 5) {
-     throw new Error(`AI Config Error. 
-     Detected Settings: Provider=${rawProvider || 'none'}, GroqSet=${!!groqKey}, GoogleSet=${!!googleKey}, OpenAISet=${!!openaiKey}. 
-     Missing OPENAI_API_KEY. Update your .env or switch AI_PROVIDER to 'google' or 'groq'.`);
+  // 3. OpenAI (Tier 3 / Premium)
+  if (!openaiKey || openaiKey.length < 5) {
+     // If OpenAI is missing but we have others, try falling back immediately
+     if (groqKey) return getAIClient("groq");
+     if (googleKey) return getAIClient("google");
+     
+     throw new Error("No AI Provider configured. Please set GROQ_API_KEY, GOOGLE_API_KEY, or OPENAI_API_KEY.");
   }
 
   return {
     client: new OpenAI({ apiKey: openaiKey }),
     model: (process.env.OPENAI_MODEL?.trim().replace(/^["']|["']$/g, "") || "gpt-4o-mini"),
+    provider: "openai"
   };
 }
+
+/**
+ * Senior Helper: Executes a completion with automatic fallback if the primary fails (e.g. 429 Rate Limit)
+ */
+export async function getReliableCompletion(payload: any) {
+   const primary = getAIClient();
+   const order: AIProvider[] = ["groq", "google", "openai"];
+   
+   // Move primary to the front
+   const sequence = [primary.provider, ...order.filter(p => p !== primary.provider)];
+   
+   let lastError: any = null;
+   
+   for (const provider of sequence) {
+      try {
+         const config = getAIClient(provider as AIProvider);
+         return await config.client.chat.completions.create({
+            model: config.model,
+            ...payload
+         });
+      } catch (err: any) {
+         console.warn(`[AI FALLBACK] ${provider} failed. Trying next... Error: ${err.message}`);
+         lastError = err;
+         // Continue to next provider...
+      }
+   }
+   
+   throw lastError || new Error("All AI providers failed.");
+}
+

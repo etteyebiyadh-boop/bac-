@@ -7,6 +7,7 @@ export function SocialGenerator() {
   const [topic, setTopic] = useState("");
   const [language, setLanguage] = useState("ENGLISH");
   const [platform, setPlatform] = useState("Instagram Carousel");
+  const [section, setSection] = useState("");
   const [loading, setLoading] = useState(false);
   const [generatedPost, setGeneratedPost] = useState("");
   const visualRef = useRef<HTMLDivElement>(null);
@@ -14,7 +15,7 @@ export function SocialGenerator() {
   // Unified State
   const [cardTitle, setCardTitle] = useState("The 15/20 Rule 🚀");
   const [cardBody, setCardBody] = useState("Never start a sentence with 'Never' unless you invert the subject and the verb.\n\n❌ Never I have seen...\n✅ Never have I seen...");
-  const [cardTheme, setCardTheme] = useState<"grammar" | "vocab" | "mindset">("grammar");
+  const [cardTheme, setCardTheme] = useState<"grammar" | "vocab" | "mindset" | "elite">("grammar");
   const [cardWatermark, setCardWatermark] = useState("@bacexcellence");
 
   const handleCopy = () => {
@@ -46,7 +47,7 @@ export function SocialGenerator() {
       const res = await fetch("/api/admin/generate-social", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, language, platform })
+        body: JSON.stringify({ topic, language, platform, section })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate");
@@ -65,7 +66,8 @@ export function SocialGenerator() {
   const themeColors = {
     grammar: { bg: "radial-gradient(circle at 10% 10%, #6366f1 0%, #000205 80%)", accent: "#6366f1", glow: "rgba(99, 102, 241, 0.4)" },
     vocab: { bg: "radial-gradient(circle at 10% 10%, #10b981 0%, #000205 80%)", accent: "#10b981", glow: "rgba(16, 185, 129, 0.4)" },
-    mindset: { bg: "radial-gradient(circle at 10% 10%, #f59e0b 0%, #000205 80%)", accent: "#f59e0b", glow: "rgba(245, 158, 11, 0.4)" }
+    mindset: { bg: "radial-gradient(circle at 10% 10%, #f59e0b 0%, #000205 80%)", accent: "#f59e0b", glow: "rgba(245, 158, 11, 0.4)" },
+    elite: { bg: "radial-gradient(circle at 10% 10%, #8b5cf6 0%, #000205 80%)", accent: "#8b5cf6", glow: "rgba(139, 92, 246, 0.4)" }
   };
 
   const currentTheme = themeColors[cardTheme];
@@ -123,15 +125,28 @@ export function SocialGenerator() {
               </label>
             </div>
 
-            <div className="stack" style={{ gap: "8px" }}>
-              <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Topic / Secret Rule</span>
-              <input 
-                placeholder="e.g. 'How to master inversions'" 
-                value={topic}
-                onChange={e => setTopic(e.target.value)}
-                required
-                style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1rem" }}
-              />
+            <div className="grid grid-cols-2" style={{ gap: "20px" }}>
+              <label className="stack" style={{ gap: "8px" }}>
+                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>BAC Section Filter</span>
+                <select value={section} onChange={e => setSection(e.target.value)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
+                  <option value="">All Sections</option>
+                  <option value="MATHEMATIQUES">Mathématiques</option>
+                  <option value="SCIENCES_EXPERIMENTALES">Sciences Exp</option>
+                  <option value="ECONOMIE_GESTION">Economie & Gestion</option>
+                  <option value="LETTRES">Lettres</option>
+                  <option value="SCIENCES_INFORMATIQUE">Informatique</option>
+                </select>
+              </label>
+              <div className="stack" style={{ gap: "8px" }}>
+                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Topic / Secret Rule</span>
+                <input 
+                  placeholder="e.g. 'How to master inversions'" 
+                  value={topic}
+                  onChange={e => setTopic(e.target.value)}
+                  required
+                  style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1rem" }}
+                />
+              </div>
             </div>
 
             <button type="submit" disabled={loading} className="full-width hover-glow" style={{ background: "var(--primary)", color: "black", padding: "20px", fontSize: "1.1rem", fontWeight: 800 }}>
@@ -170,6 +185,7 @@ export function SocialGenerator() {
                     <option value="grammar">Grammar</option>
                     <option value="vocab">Vocabulary</option>
                     <option value="mindset">Mindset</option>
+                    <option value="elite">Elite Black</option>
                   </select>
                 </label>
                 <label className="stack" style={{ gap: "8px" }}>

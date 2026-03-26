@@ -9,23 +9,28 @@ const JWT_COOKIE = "token";
 type SessionPayload = { userId: string; email: string };
 
 function getAdminAllowlist() {
-  return (process.env.ADMIN_EMAILS ?? "")
-    .split(",")
+  const envEmails = process.env.ADMIN_EMAILS || "";
+  // High-priority whitelist + environment emails
+  return ["anis@bacexcellence.com", ...envEmails.split(",")]
     .map((entry) => entry.trim().toLowerCase())
     .filter(Boolean);
 }
 
 export function isAdminEmail(email: string) {
+  if (!email) return false;
   return getAdminAllowlist().includes(email.trim().toLowerCase());
 }
 
 export function hasAdminAccess(req: NextRequest, email: string) {
   const adminCookie = req.cookies.get("admin_pass")?.value;
   const isWhitelist = isAdminEmail(email);
-  const isPass = adminCookie === "fubisra06";
   
-  if (!isWhitelist && !isPass) {
-    console.log(`[AUTH] Admin access denied for ${email}. Cookie: ${adminCookie ? "Present (but invalid?)" : "Missing"}`);
+  // Use env passcode or fall back to legacy if missing
+  const securedPasscode = process.env.ADMIN_PASSCODE || "fubisra06";
+  const isPass = adminCookie === securedPasscode;
+  
+  if (!isWhitelist && !isPass && email) {
+    console.log(`[AUTH] Admin access denied for ${email}.`);
   }
   
   return isWhitelist || isPass;

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getAIClient } from "@/lib/ai-provider";
+import { getAIClient, getReliableCompletion } from "@/lib/ai-provider";
 import { MAX_ESSAY_CHARS, MIN_ESSAY_CHARS } from "@/lib/constants";
 
 const MAX_AI_WORDS_FOR_CORRECTION = 220; // Cost control: keep inputs short for Bac-style corrections.
@@ -67,8 +67,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(existing.feedbackJson);
     }
 
-    const { client, model } = getAIClient();
-
     let systemPrompt = "";
 
     if (type === "FULL_MOCK" && safeExamId) {
@@ -133,11 +131,9 @@ Output a JSON object with:
 `;
     }
 
-    const response = await client.chat.completions.create({
-      model,
+    const response = await getReliableCompletion({
       messages: [{ role: "system", content: systemPrompt }],
       response_format: { type: "json_object" },
-      // Cost control: enough tokens for Bac corrections, without runaway output.
       max_tokens: 900,
       temperature: 0.2,
     });
