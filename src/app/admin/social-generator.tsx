@@ -11,6 +11,7 @@ export function SocialGenerator() {
   const [loading, setLoading] = useState(false);
   const [generatedPost, setGeneratedPost] = useState("");
   const visualRef = useRef<HTMLDivElement>(null);
+  const [videoPlan, setVideoPlan] = useState("");
 
   // Unified State
   const [cardTitle, setCardTitle] = useState("The 15/20 Rule 🚀");
@@ -56,6 +57,7 @@ export function SocialGenerator() {
       // Auto-populate Visual card from AI
       if (data.visualTitle) setCardTitle(data.visualTitle);
       if (data.visualBody) setCardBody(data.visualBody);
+      if (data.videoProduction) setVideoPlan(data.videoProduction);
     } catch (err: any) {
       alert(err.message);
     } finally {
@@ -175,6 +177,43 @@ export function SocialGenerator() {
                 value={generatedPost} 
                 style={{ minHeight: "500px", background: "transparent", color: "white", border: "none", resize: "none", fontSize: "15px", lineHeight: "1.8", fontFamily: "inherit", marginTop: "24px", outline: "none" }} 
               />
+            </div>
+          )}
+
+          {videoPlan && platform === "TikTok/Reels Script" && (
+            <div className="card stack" style={{ background: "rgba(0, 0, 0, 0.3)", border: "1px solid var(--accent)", padding: "40px", animation: "slideUp 0.6s ease" }}>
+              <div className="row-between" style={{ borderBottom: "1px solid rgba(245, 158, 11, 0.2)", paddingBottom: "24px", marginBottom: "32px" }}>
+                 <div className="stack" style={{ gap: "4px" }}>
+                    <span className="eyebrow" style={{ color: "var(--accent)" }}>📽️ PRODUCTION STORYBOARD</span>
+                    <span className="muted" style={{ fontSize: "10px" }}>Elite Viral Engineering for @bacexcellence</span>
+                 </div>
+                 <div className="pill" style={{ background: "var(--accent-glow)", borderColor: "var(--accent)", color: "var(--accent)" }}>VIDEO READY ➔</div>
+              </div>
+              
+              <div className="stack" style={{ gap: "24px" }}>
+                {videoPlan.split("\n\n").map((scene, idx) => (
+                  <div key={idx} className="card row-between" style={{ padding: "24px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "16px", position: "relative", overflow: "hidden" }}>
+                     <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "4px", background: "var(--accent)" }} />
+                     <div className="stack" style={{ gap: "12px", width: "100%" }}>
+                        <div className="row-between">
+                           <span className="eyebrow" style={{ color: "var(--accent)", fontSize: "12px" }}>SCENE {idx + 1}</span>
+                           <span style={{ fontSize: "10px", opacity: 0.5 }}>00:{String(idx * 10).padStart(2, '0')}</span>
+                        </div>
+                        <div style={{ color: "white", fontSize: "1rem", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
+                           {scene}
+                        </div>
+                     </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="stack" style={{ marginTop: "40px", padding: "24px", background: "rgba(245, 158, 11, 0.05)", borderRadius: "12px", border: "1px dashed var(--accent)" }}>
+                 <span className="eyebrow" style={{ color: "var(--accent)" }}>SOUND & VIBE CHECK 🎧</span>
+                 <p className="muted" style={{ fontSize: "0.9rem", margin: "8px 0 0" }}>
+                    Ensure the music matches the <strong>Tunisian High-Energy</strong> persona of Bac Excellence. 
+                    Aim for high-impact transitions every 3-5 seconds.
+                 </p>
+              </div>
             </div>
           )}
         </div>

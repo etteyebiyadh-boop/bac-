@@ -36,16 +36,22 @@ Guidelines:
 5. STYLE: Professional, bold, outcome-focused. Use words like 'Excellence', 'Top Tier', 'Bac Score', 'Precision'.
 6. NO MIXING: Do not mix English/French into the Tunisian script unless it's extremely common slang. Do not use English in the visual fields if the target language is NOT English.
 7. STRUCTURE for ${platform}:
-   - Hook: A pattern-interrupt statement in Tunisian Derja that busts a common BAC myth and introduces 'Bac Excellence'.
-   - Body: 4-5 key 'Elite Insights' or slides described with high energy in Tunisian.
+   - Hook: A pattern-interrupt statement in Tunisian Derja that busts a common BAC myth and introduces 'Bac Excellence'. If it's a video, make it a 3-second 'Visual & Verbal Hook'.
+   - Body: 4-5 key 'Elite Insights' or slides described with high energy in Tunisian. If it's a video, provide scene-by-scene descriptions.
    - Example: A specific exam scenario in ${language} (embedded within the Tunisian script for context).
    - CTA: Compelling reason in Tunisian Derja to join 'Bac Excellence' at bacexcellence.com ('Bech tadhmen mostaqblek', 'Ma daiaach el waqt').
 8. EMOJIS: Use premium emojis like 🌌, 💎, 🚀, 🛡️, 💡 sparingly.
 
+ADDITIONAL FOR VIDEOS (if ${platform} is TikTok/Reels Script):
+9. Provide detailed camera movements (e.g., 'Zoom in', 'Fast Cut', 'Transition', 'Overlay').
+10. Suggest a 'Tunisian Vibe' music style (e.g., 'Trap Tunisian Remix', 'Cinematic Orchestral', 'High-Tempo Phonk').
+11. Provide text overlays to appear on screen in ${language}.
+
 IMPORTANT: Return ONLY a valid JSON object:
-- "script": The full social media script in Tunisian Derja.
-- "visualTitle": A viral hook title in ${language} for the graphic card.
-- "visualBody": A pedagogical masterclass breakdown in ${language} for the visual card. (Mistakes ❌ vs Mastery ✅, Examiner's Secret, etc.).`;
+- "script": The full social media script/voiceover in Tunisian Derja.
+- "visualTitle": A viral hook title in ${language} for the graphic card or video thumbnail.
+- "visualBody": A pedagogical masterclass breakdown in ${language} for the visual card or text overlays.
+- "videoProduction": (Only for TikTok/Reels) A structured breakdown of scenes, camera movements, and music vibes (in Tunisian/English mix).`;
 
     const response = await getReliableCompletion({
         messages: [{ role: "user", content: prompt }],
@@ -68,6 +74,7 @@ IMPORTANT: Return ONLY a valid JSON object:
       script: typeof body.script === 'object' ? JSON.stringify(body.script, null, 2) : (body.script || ""),
       visualTitle: typeof body.visualTitle === 'object' ? JSON.stringify(body.visualTitle) : (body.visualTitle || "Hook Title"),
       visualBody: typeof body.visualBody === 'object' ? JSON.stringify(body.visualBody, null, 2) : (body.visualBody || ""),
+      videoProduction: typeof body.videoProduction === 'object' ? JSON.stringify(body.videoProduction, null, 2) : (body.videoProduction || ""),
     };
 
     return NextResponse.json({ ok: true, ...sanitized });

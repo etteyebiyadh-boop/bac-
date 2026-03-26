@@ -110,6 +110,7 @@ model Lesson {
   skillFocus       String
   difficulty       Difficulty     @default(MEDIUM)
   estimatedMinutes Int            @default(5)
+  videoUrl         String?
   takeawayJson     Json
   createdAt        DateTime       @default(now())
   dailyMissions    DailyMission[]
@@ -190,6 +191,7 @@ model GrammarRule {
   difficulty   Difficulty      @default(MEDIUM)
   isEssential  Boolean         @default(false)
   relatedRules Json?
+  videoUrl     String?
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   bacModule    BacModule?
