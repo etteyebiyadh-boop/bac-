@@ -7,7 +7,26 @@ export function VideoGenerator() {
   const [language, setLanguage] = useState("ENGLISH");
   const [duration, setDuration] = useState("3"); // Minutes
   const [loading, setLoading] = useState(false);
+  const [suggesting, setSuggesting] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [blueprint, setBlueprint] = useState<any>(null);
+
+  async function handleSuggest() {
+    setSuggesting(true);
+    setSuggestions([]);
+    try {
+      const res = await fetch("/api/admin/suggest-topics");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      const list = Array.isArray(data.suggestions) ? data.suggestions : (Object.values(data.suggestions || {})[0] as string[]);
+      setSuggestions(Array.isArray(list) ? list : []);
+    } catch(e) {
+      console.error(e);
+      alert("Failed to suggest topics. Ensure you have content in the library.");
+    } finally {
+      setSuggesting(false);
+    }
+  }
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
@@ -35,11 +54,41 @@ export function VideoGenerator() {
   return (
     <section className="stack" style={{ gap: "40px", padding: "40px 0" }}>
       <header className="card stack" style={{ padding: "40px", background: "radial-gradient(circle at top right, rgba(239, 68, 68, 0.05), transparent)", border: "1px solid rgba(239, 68, 68, 0.2)" }}>
-        <span className="eyebrow" style={{ color: "#ef4444" }}>🎬 Production Master Studio</span>
-        <h2 className="section-title" style={{ fontSize: "2.5rem" }}>Elite Video Architect.</h2>
-        <p className="muted" style={{ fontSize: "1.1rem" }}>
-          Generate cinematic lesson blueprints, high-energy Tunisian voiceovers, and frame-by-frame storyboards for <strong>Bac Excellence</strong>. 
-        </p>
+        <div className="row-between">
+           <div className="stack">
+              <span className="eyebrow" style={{ color: "#ef4444" }}>🎬 Production Master Studio</span>
+              <h2 className="section-title" style={{ fontSize: "2.5rem" }}>Elite Video Architect.</h2>
+              <p className="muted" style={{ fontSize: "1.1rem" }}>
+                Generate cinematic lesson blueprints, high-energy Tunisian voiceovers, and frame-by-frame storyboards for <strong>Bac Excellence</strong>. 
+              </p>
+           </div>
+           <button 
+             type="button" 
+             onClick={handleSuggest} 
+             disabled={suggesting}
+             style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--accent-glow)", color: "var(--accent)", padding: "16px 24px", borderRadius: "100px", cursor: "pointer", fontWeight: 800 }}
+           >
+              {suggesting ? "Analyzing Viral Potential..." : "💡 SUGGEST VIRAL TOPICS"}
+           </button>
+        </div>
+
+        {suggestions.length > 0 && (
+          <div className="stack" style={{ marginTop: "24px", gap: "10px", padding: "20px", background: "rgba(245, 158, 11, 0.05)", border: "1px solid var(--accent-glow)", borderRadius: "20px" }}>
+             <span className="eyebrow" style={{ color: "var(--accent)", fontSize: "10px" }}>ADAPTED TO YOUR CONTENT:</span>
+             <div className="row-between" style={{ flexWrap: "wrap", gap: "10px", justifyContent: "flex-start" }}>
+                {suggestions.map((s, i) => (
+                  <button 
+                    key={i} 
+                    type="button" 
+                    onClick={() => { setTopic(s); setSuggestions([]); }} 
+                    style={{ background: "white", color: "black", padding: "8px 16px", borderRadius: "100px", fontSize: "12px", border: "none", cursor: "pointer", fontWeight: 700 }}
+                  >
+                    🔥 {s}
+                  </button>
+                ))}
+             </div>
+          </div>
+        )}
       </header>
 
       <form className="card stack" onSubmit={handleGenerate} style={{ gap: "32px", padding: "40px", border: "1px solid var(--glass-border)", background: "rgba(0,0,0,0.2)" }}>
