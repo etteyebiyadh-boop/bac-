@@ -49,27 +49,35 @@ export default async function DashboardPage() {
         </div>
 
         <nav className="stack" style={{ gap: "10px", flex: 1 }}>
-           <Link href="/dashboard" className="nav-link active" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px" }}>
-              <span style={{ fontSize: "1.2rem" }}>📊</span>
-              <span>{t.nav_dashboard}</span>
-           </Link>
-           <Link href="/lessons" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
-              <span style={{ fontSize: "1.2rem" }}>📚</span>
-              <span>{t.nav_library}</span>
-           </Link>
-           <Link href="/calculator" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
-              <span style={{ fontSize: "1.2rem" }}>🖩</span>
-              <span>{t.nav_calc}</span>
-           </Link>
-           <Link href="/write" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
-              <span style={{ fontSize: "1.2rem" }}>✍️</span>
-              <span>{t.nav_writing}</span>
-           </Link>
-           <Link href="/exams" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
-              <span style={{ fontSize: "1.2rem" }}>📝</span>
-              <span>{t.nav_exams}</span>
-           </Link>
-           <AdminAccessButton />
+            <Link href="/dashboard" className="nav-link active" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px" }}>
+               <span style={{ fontSize: "1.2rem" }}>📊</span>
+               <span>{t.nav_dashboard}</span>
+            </Link>
+            <Link href="/lessons" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
+               <span style={{ fontSize: "1.2rem" }}>📚</span>
+               <span>{t.nav_library}</span>
+            </Link>
+            <Link href="/calculator" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
+               <span style={{ fontSize: "1.2rem" }}>🖩</span>
+               <span>{t.nav_calc}</span>
+            </Link>
+            <Link href="/write" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
+               <span style={{ fontSize: "1.2rem" }}>✍️</span>
+               <span>{t.nav_writing}</span>
+            </Link>
+            <Link href="/exams" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
+               <span style={{ fontSize: "1.2rem" }}>📝</span>
+               <span>{t.nav_exams}</span>
+            </Link>
+            <Link href="/challenges" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
+               <span style={{ fontSize: "1.2rem" }}>🏆</span>
+               <span>Challenges</span>
+            </Link>
+            <Link href="/certificates" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
+               <span style={{ fontSize: "1.2rem" }}>🎓</span>
+               <span>Certificates</span>
+            </Link>
+            <AdminAccessButton />
         </nav>
 
         <div className="stack" style={{ gap: "20px" }}>

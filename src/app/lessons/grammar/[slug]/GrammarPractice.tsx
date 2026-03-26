@@ -1,11 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { AIHighlightDiff } from "@/components/ai-correction-view";
 
 export function GrammarPractice({ title, description }: { title: string; description: string }) {
   const [sentence, setSentence] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<{ isCorrect: boolean; feedback: string } | null>(null);
+  const [result, setResult] = useState<{ 
+    isCorrect: boolean; 
+    feedback: string; 
+    explanation?: string; 
+    correctedSentence?: string; 
+  } | null>(null);
 
   async function handleCheck() {
     if (!sentence.trim()) return;
@@ -42,11 +48,30 @@ export function GrammarPractice({ title, description }: { title: string; descrip
       </div>
 
       {result && (
-        <div style={{ padding: "16px", borderRadius: "12px", background: result.isCorrect ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)", border: `1px solid ${result.isCorrect ? "var(--success)" : "var(--error)"}`, animation: "reveal-up 0.4s ease" }}>
-           <strong style={{ color: result.isCorrect ? "var(--success)" : "var(--error)" }}>
-              {result.isCorrect ? "✅ Excellent!" : "❌ Not quite right."}
-           </strong>
-           <p style={{ marginTop: "8px", color: "white" }}>{result.feedback}</p>
+        <div className="stack" style={{ padding: "24px", borderRadius: "16px", background: result.isCorrect ? "rgba(16, 185, 129, 0.05)" : "rgba(239, 68, 68, 0.05)", border: `1px solid ${result.isCorrect ? "var(--success-glow)" : "var(--error-glow)"}`, animation: "reveal-up 0.4s ease", gap: "16px" }}>
+           <div className="row-between">
+              <strong style={{ color: result.isCorrect ? "var(--success)" : "var(--error)", fontSize: "1.2rem" }}>
+                 {result.isCorrect ? "✅ Perfect Application!" : "❌ Error Detected"}
+              </strong>
+              <span className="eyebrow" style={{ opacity: 0.5 }}>{result.isCorrect ? "Mastered" : "Learning Point"}</span>
+           </div>
+           
+           <p style={{ color: "white", fontSize: "1.1rem" }}>{result.feedback}</p>
+           
+           {result.explanation && (
+             <div style={{ padding: "16px", background: "rgba(255,255,255,0.02)", borderRadius: "8px", borderLeft: "4px solid var(--primary)", fontSize: "0.95rem", opacity: 0.9 }}>
+               {result.explanation}
+             </div>
+           )}
+
+           {!result.isCorrect && result.correctedSentence && (
+             <div className="stack" style={{ gap: "8px", marginTop: "8px" }}>
+               <span className="eyebrow" style={{ color: "var(--success)" }}>Smarter Alternative:</span>
+               <div style={{ padding: "16px", background: "rgba(0,0,0,0.3)", borderRadius: "12px", border: "1px dashed var(--success-glow)" }}>
+                 <AIHighlightDiff original={sentence} corrected={result.correctedSentence} />
+               </div>
+             </div>
+           )}
         </div>
       )}
     </div>

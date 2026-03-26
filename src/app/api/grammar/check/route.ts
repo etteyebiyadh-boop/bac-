@@ -29,7 +29,9 @@ Sentence to check: "${sentence}"
 Determine if the sentence correctly applies the rule.
 Output in JSON format with two fields:
 - "isCorrect": true or false.
-- "feedback": If correct, give a "Well done!" and a brief explanation why. If incorrect, explain the exact error and provide the corrected version.`;
+- "correctedSentence": If incorrect, provide the fully corrected version. If correct, null.
+- "explanation": A clear, pedagogical explanation of the rule application or the error.
+- "feedback": A short summary (e.g. "Well done!" or "Watch out for...").`;
 
     const response = await client.chat.completions.create({
       model,

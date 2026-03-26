@@ -62,7 +62,16 @@ export function MockSimulatorUI({ exam, lang }: MockSimulatorUIProps) {
           examId: exam.id,
           studentText: essayText,
           language: exam.language,
-          readingAnswers: answers, // For specialized AI review of parts I & II
+          readingAnswers: exam.readingQuestions?.reduce((acc: Record<string, string>, q: any, i: number) => {
+            const key = q?.id ?? String(i);
+            acc[key] = answers[key] || "";
+            return acc;
+          }, {}) ?? {},
+          languageAnswers: exam.languageQuestions?.reduce((acc: Record<string, string>, q: any, i: number) => {
+            const key = q?.id ?? String(i);
+            acc[key] = answers[key] || "";
+            return acc;
+          }, {}) ?? {},
           type: "FULL_MOCK"
         })
       });

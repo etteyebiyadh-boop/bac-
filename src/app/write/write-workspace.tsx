@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FREE_CORRECTIONS_PER_WEEK, MAX_ESSAY_CHARS, MIN_ESSAY_CHARS } from "@/lib/constants";
 import { profileLanguageOptions } from "@/lib/learning";
 import { SiteLanguage, translations } from "@/lib/translations";
+import { AIHighlightDiff, AIExplanationCard } from "@/components/ai-correction-view";
 
 type ExamOption = {
   id: string;
@@ -25,6 +26,7 @@ type CorrectionResult = {
   structureScore: number;
   summary: string;
   correctedText: string;
+  explanations: { original: string; fixed: string; reason: string }[];
   strengths: string[];
   improvements: string[];
   recommendedLesson: {
@@ -424,11 +426,17 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
             </div>
           </div>
 
-          <div className="card stack" style={{ padding: "40px" }}>
-            <h3 className="section-title">{t.wr_corrected_version}</h3>
-            <div style={{ padding: "24px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", fontSize: "1.1rem", lineHeight: "1.8", whiteSpace: "pre-wrap" }}>
-              {result.correctedText}
+          <div className="card stack" style={{ padding: "40px", border: "1px solid var(--primary-glow)" }}>
+            <div className="row-between">
+              <h3 className="section-title">{t.wr_corrected_version}</h3>
+              <span className="eyebrow" style={{ color: "var(--success)" }}>✨ AI Precision Edit</span>
             </div>
+            
+            <div style={{ marginTop: "24px", padding: "30px", background: "rgba(0,0,0,0.4)", borderRadius: "16px", border: "1px solid var(--glass-border)", fontSize: "1.15rem" }}>
+              <AIHighlightDiff original={studentText} corrected={result.correctedText} />
+            </div>
+
+            <AIExplanationCard explanations={result.explanations} />
           </div>
 
           {result.recommendedLesson ? (

@@ -406,3 +406,34 @@ enum MissionStatus {
   READY
   COMPLETED
 }
+
+model Challenge {
+  id              String           @id @default(uuid())
+  challengerId    String
+  challengedId    String?
+  challengerName  String
+  challengedEmail String?
+  examSlug        String
+  examTitle       String
+  language        Language         @default(ENGLISH)
+  status          ChallengeStatus  @default(PENDING)
+  challengerScore Float?
+  challengedScore Float?
+  winnerId        String?
+  xpReward        Int              @default(100)
+  createdAt       DateTime         @default(now())
+  expiresAt       DateTime
+  completedAt     DateTime?
+
+  @@index([challengerId])
+  @@index([challengedId])
+  @@index([status])
+}
+
+enum ChallengeStatus {
+  PENDING
+  ACCEPTED
+  COMPLETED
+  EXPIRED
+  DECLINED
+}

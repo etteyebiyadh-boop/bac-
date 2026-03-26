@@ -39,11 +39,17 @@ Guidelines:
    - Slide 5: CTA (Call to Action) to visit bacexcellence.com for unlimited AI corrections.
 5. EMOJIS: Use premium-feeling emojis like 🌌, 💎, 🚀, 🛡️, 💡.
 6. Emphasize that on Bac Excellence, you don't just study, you get instant AI-powered feedback on your specific section's criteria.
+7. PSYCHOLOGY: Use 'Pattern Interrupt' hooks. Start the script with a truth-bomb or a myth-busting statement about the Bac tracks to stop the scroll.
+8. ENGAGEMENT: At the end of slide 3/4, include a 'Micro-Conversion' question (e.g., 'Comment "RULE" if you want the PDF cheat sheet').
 
 IMPORTANT: You MUST return your response ONLY as a valid JSON object with the following fields:
-- "script": The full social media script including all slides and emojis.
-- "visualTitle": A ultra-short viral title to be used on a visual card (e.g. "Rule: Subject-Verb Inversion").
-- "visualBody": The absolute core rule or punchy takeaway to be displayed on the card (max 120 chars).`;
+- "script": A high-value, multi-part social media script including all slides, emojis, and specific engagement hooks (like poll questions or controversial takes to drive comments).
+- "visualTitle": A viral, punchy title for the visual card (e.g., "The 'Never' Inversion Hack 🛡️").
+- "visualBody": A comprehensive but concise pedagogical breakdown for the visual card. Include:
+  - The "Rule" (explained as an elite secret).
+  - A "Mistake vs Master" comparison (❌ vs ✅).
+  - An "Examiner's Note" on how this scores 18+/20.
+  - Keep it readable but don't limit it to 120 chars—let it be as beneficial as possible.`;
 
     const response = await client.chat.completions.create({
         model,

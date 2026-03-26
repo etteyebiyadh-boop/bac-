@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SiteLanguage, translations } from "@/lib/translations";
+import { AIHighlightDiff, AIExplanationCard } from "@/components/ai-correction-view";
 
 type MockSimulatorClientProps = {
   exam: {
@@ -75,28 +76,55 @@ export function MockSimulatorClient({ exam, lang }: MockSimulatorClientProps) {
 
   if (showResult && finalFeedback) {
      return (
-        <div style={{ position: "fixed", inset: 0, zIndex: 10000, background: "#05070a", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px" }}>
-            <div className="card stack" style={{ maxWidth: "800px", width: "100%", padding: "60px", textAlign: "center", border: "1px solid var(--success-glow)", background: "rgba(10,10,20,0.9)" }}>
-                <span className="eyebrow" style={{ color: "var(--success)" }}>Exam Outcome Simulated</span>
-                <h1 className="section-title" style={{ fontSize: "4rem" }}>{finalFeedback.overallScore} / 20</h1>
+        <div style={{ position: "fixed", inset: 0, zIndex: 10000, background: "#05070a", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px", overflowY: "auto" }}>
+            <div className="card stack" style={{ maxWidth: "1000px", width: "100%", padding: "60px", textAlign: "left", border: "1px solid var(--success-glow)", background: "rgba(10,10,20,0.95)", margin: "auto" }}>
+                <div style={{ textAlign: "center", marginBottom: "40px" }}>
+                  <span className="eyebrow" style={{ color: "var(--success)" }}>Exam Outcome Simulated</span>
+                  <h1 className="section-title" style={{ fontSize: "4.5rem", marginBottom: "10px" }}>{finalFeedback.overallScore} / 20</h1>
+                  <p style={{ fontStyle: "italic", opacity: 0.8, fontSize: "1.2rem" }}>{finalFeedback.summary}</p>
+                </div>
                 
                 <div className="grid grid-cols-3" style={{ margin: "40px 0", gap: "20px" }}>
-                   <div style={{ padding: "20px", background: "rgba(255,255,255,0.02)", borderRadius: "12px" }}>
+                   <div style={{ padding: "20px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.05)" }}>
                       <span className="muted" style={{ fontSize: "10px" }}>READING</span>
-                      <div style={{ fontWeight: 900 }}>{finalFeedback.readingScore} / 12</div>
+                      <div style={{ fontWeight: 900, fontSize: "1.5rem" }}>{finalFeedback.readingScore} / 12</div>
                    </div>
-                   <div style={{ padding: "20px", background: "rgba(255,255,255,0.02)", borderRadius: "12px" }}>
+                   <div style={{ padding: "20px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.05)" }}>
                       <span className="muted" style={{ fontSize: "10px" }}>LANGUAGE</span>
-                      <div style={{ fontWeight: 900 }}>{finalFeedback.languageScore} / 8</div>
+                      <div style={{ fontWeight: 900, fontSize: "1.5rem" }}>{finalFeedback.languageScore} / 8</div>
                    </div>
-                   <div style={{ padding: "20px", background: "rgba(255,255,255,0.02)", borderRadius: "12px" }}>
+                   <div style={{ padding: "20px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.05)" }}>
                       <span className="muted" style={{ fontSize: "10px" }}>WRITING</span>
-                      <div style={{ fontWeight: 900 }}>{finalFeedback.writingScore} / 10</div>
+                      <div style={{ fontWeight: 900, fontSize: "1.5rem" }}>{finalFeedback.writingScore} / 10</div>
                    </div>
                 </div>
 
-                <p style={{ fontStyle: "italic", opacity: 0.8 }}>{finalFeedback.summary}</p>
-                <button className="button-link hover-glow" style={{ marginTop: "40px", background: "white", color: "black" }} onClick={() => router.push("/exams")}>Exit Simulator</button>
+                <div className="grid grid-cols-2" style={{ gap: "32px", marginBottom: "40px" }}>
+                  <div className="stack" style={{ gap: "12px" }}>
+                    <h3 className="eyebrow" style={{ color: "var(--success)" }}>Strengths ✅</h3>
+                    <ul className="bullet-list stack" style={{ gap: "8px" }}>
+                      {finalFeedback.strengths?.map((s: string) => <li key={s} style={{ fontSize: "0.95rem" }}>{s}</li>)}
+                    </ul>
+                  </div>
+                  <div className="stack" style={{ gap: "12px" }}>
+                    <h3 className="eyebrow" style={{ color: "var(--error)" }}>Areas for Improvement 🚀</h3>
+                    <ul className="bullet-list stack" style={{ gap: "8px" }}>
+                      {finalFeedback.improvements?.map((i: string) => <li key={i} style={{ fontSize: "0.95rem" }}>{i}</li>)}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="stack card" style={{ padding: "40px", background: "rgba(0,0,0,0.5)", border: "1px solid var(--primary-glow)" }}>
+                  <h3 className="section-title" style={{ fontSize: "1.8rem" }}>Essay: AI Revision</h3>
+                  <div style={{ marginTop: "24px", fontSize: "1.1rem" }}>
+                    <AIHighlightDiff original={essayText} corrected={finalFeedback.correctedText} />
+                  </div>
+                  <AIExplanationCard explanations={finalFeedback.explanations} />
+                </div>
+
+                <div style={{ textAlign: "center", marginTop: "60px" }}>
+                  <button className="button-link hover-glow" style={{ background: "white", color: "black", padding: "16px 40px", fontSize: "1.1rem", fontWeight: 800 }} onClick={() => router.push("/exams")}>Exit Simulator & Save Progress</button>
+                </div>
             </div>
         </div>
      );

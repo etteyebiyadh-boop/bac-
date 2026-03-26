@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { examId, promptText, studentText, language = "ENGLISH", type, readingAnswers } = await req.json();
+    const { examId, promptText, studentText, language = "ENGLISH", type, readingAnswers, languageAnswers } = await req.json();
     if (!studentText && type !== "FULL_MOCK") return NextResponse.json({ error: "Essay is empty" }, { status: 400 });
 
     const normalizedStudentText = String(studentText).trim().replace(/\s+/g, " ");
@@ -82,7 +82,7 @@ Student Answers: ${JSON.stringify(readingAnswers)}
 
 Section II: Language (8 pts)
 Official Questions: ${JSON.stringify(exam?.languageQuestions)}
-Student Answers: ${JSON.stringify(readingAnswers)}
+Student Answers: ${JSON.stringify(languageAnswers)}
 
 Section III: Writing (10 pts)
 Prompt: ${exam?.prompt}
@@ -101,6 +101,7 @@ Output a JSON object with:
 - "writingScore": Mark out of 10.
 - "summary": 2-sentence feedback.
 - "correctedText": Improved version of the student's essay (max 200 words).
+- "explanations": Array of objects { "original": "text", "fixed": "text", "reason": "why" } for writing improvements.
 - "strengths": Array of 3 points.
 - "improvements": Array of 3 points.
 - "recommendedLesson": { "slug": "link", "title": "Title", "summary": "Summary", "skillFocus": "focus" }
@@ -125,6 +126,7 @@ Output a JSON object with:
   - same meaning
   - do not add new ideas
   - NOT longer than ${MAX_AI_WORDS_FOR_CORRECTION} words (and keep similar length to the original).
+- "explanations": Array of objects { "original": "text", "fixed": "text", "reason": "why" } explaining the 3-5 most important changes made.
 - "strengths": Array of 3 bullet points.
 - "improvements": Array of 3 bullet points.
 - "recommendedLesson": { "slug": "link-to-best-matching-lesson", "title": "Lesson Title", "summary": "Why this lesson?", "skillFocus": "grammar/vocab/structure" }

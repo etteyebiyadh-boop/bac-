@@ -29,6 +29,8 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
     { href: "/calculator", label: t.nav_calc },
     { href: "/write", label: t.nav_writing },
     { href: "/exams", label: t.nav_exams },
+    { href: "/challenges", label: "🏆 Challenges" },
+    { href: "/certificates", label: "🎓 Certificates" },
   ];
 
   return (
