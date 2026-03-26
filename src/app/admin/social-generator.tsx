@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { toPng } from 'html-to-image';
 
 export function SocialGenerator() {
   const [topic, setTopic] = useState("");
@@ -8,6 +9,7 @@ export function SocialGenerator() {
   const [platform, setPlatform] = useState("Instagram Carousel");
   const [loading, setLoading] = useState(false);
   const [generatedPost, setGeneratedPost] = useState("");
+  const visualRef = useRef<HTMLDivElement>(null);
 
   // Visual Studio States
   const [activeTab, setActiveTab] = useState<"SCRIPT" | "VISUAL">("VISUAL");
@@ -18,6 +20,20 @@ export function SocialGenerator() {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(generatedPost);
+  };
+
+  const handleDownload = async () => {
+    if (visualRef.current === null) return;
+    try {
+      const dataUrl = await toPng(visualRef.current, { cacheBust: true, pixelRatio: 2 });
+      const link = document.createElement("a");
+      link.download = `bac-excellence-${cardTheme}-post.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error("Failed to download image", err);
+      alert("Failed to download image.");
+    }
   };
 
   async function handleGenerate(e: React.FormEvent) {
@@ -111,8 +127,13 @@ export function SocialGenerator() {
                 />
               </label>
 
-              <div className="pill" style={{ background: "rgba(99, 102, 241, 0.1)", color: "var(--primary)", border: "1px solid var(--primary)", textAlign: "center" }}>
-                💡 Tip: Screenshot the preview on the right to post to Instagram.
+              <div className="stack" style={{ gap: "12px", marginTop: "16px" }}>
+                <button onClick={handleDownload} className="pill hover-glow" style={{ background: "var(--primary)", color: "black", border: "none", cursor: "pointer", fontWeight: 800, padding: "16px", textAlign: "center", fontSize: "1.1rem" }}>
+                  ⬇️ Download High-Res Image
+                </button>
+                <div className="pill" style={{ background: "rgba(99, 102, 241, 0.1)", color: "var(--primary)", border: "1px solid var(--primary)", textAlign: "center" }}>
+                  💡 Tip: The downloaded image is perfectly sized for Instagram (1080x1080).
+                </div>
               </div>
             </div>
           </div>
@@ -121,6 +142,7 @@ export function SocialGenerator() {
           <div className="stack" style={{ alignItems: "center" }}>
             <span className="eyebrow" style={{ marginBottom: "16px" }}>1080x1080 Instagram Canvas Preview</span>
             <div 
+              ref={visualRef}
               style={{
                 width: "400px",
                 height: "400px",
