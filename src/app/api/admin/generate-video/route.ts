@@ -3,9 +3,9 @@ import { getUserFromRequest, hasAdminAccess } from "@/lib/auth";
 import { getReliableCompletion } from "@/lib/ai-provider";
 
 /**
- * ELITE AI DIRECTOR v3 (The "Engine-in-a-Box")
+ * ELITE AI DIRECTOR v3 (International Edition)
  * Generates a full cinematic configuration for our local Video Canvas.
- * No HeyGen or paid video APIs required.
+ * Supports English, French, and Arabic.
  */
 export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { topic, language, duration, vibe = "ELITE BROTHER" } = await req.json();
+    const { topic, language, duration, vibe = "ELITE MASTER" } = await req.json();
     
     // THE DIRECTORIAL PROMPT
     const prompt = `You are an elite AI Content Director for 'Bac Excellence'.
@@ -24,7 +24,11 @@ export async function POST(req: NextRequest) {
     Vibe: ${vibe}.
     
     REQUIREMENTS:
-    1. TUNISIAN SCRIPT: The voiceover must be 100% authentic Tunisian Derja senior authority.
+    1. SCRIPT LANGUAGE: The voiceover and script MUST be in professional ${language}. 
+       - If English: Use elite academic English.
+       - If French: Use formal pedagogical French.
+       - If Arabic: Use Modern Standard Arabic (Fusha).
+       DO NOT USE DIALECTS OR SLANG.
     2. SCENE BREAKDOWN: Create at least 10 scenes for a 1-minute video.
     3. LAYOUTS: For each scene, specify a 'layout' (TitleSlide, RuleDefinition, ExampleCode, WarningCard, ViralQuote).
     4. ANIMATIONS: Suggest an 'entrance' animation for text elements (FadeUp, SlideRight, ZoomIn).
@@ -33,16 +37,16 @@ export async function POST(req: NextRequest) {
     RETURN ONLY A VALID JSON OBJECT:
     {
       "title": "Mastery Video",
-      "voiceover_full": "The full script in Tunisian",
+      "voiceover_full": "The full script in ${language}",
       "theme": { "primary": "#ef4444", "secondary": "#22c55e", "bg": "#000" },
       "scenes": [
         {
           "duration_ms": 5000,
           "layout": "TitleSlide",
           "title": "Scene Heading",
-          "subtitle": "Tunisian Hook Text",
+          "subtitle": "Professional Explainer Text",
           "animation": "FadeUp",
-          "voiceover_chunk": "Script for this 5-second scene in Tunisian"
+          "voiceover_chunk": "Script for this 5-second scene in ${language}"
         },
         ...
       ]

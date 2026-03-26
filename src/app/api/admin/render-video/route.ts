@@ -3,7 +3,7 @@ import { getUserFromRequest, hasAdminAccess } from "@/lib/auth";
 import { generateHeyGenVideo, checkHeyGenStatus } from "@/lib/video-ai";
 
 /**
- * CINEMATIC VIDEO RENDER ENGINE
+ * PROFESSIONAL VIDEO RENDER ENGINE
  * Handles synthesis of Digital Teacher AI into MP4.
  */
 
@@ -21,25 +21,24 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { script, action, videoId, vibe, title } = await req.json();
+    const { script, action, videoId, vibe } = await req.json();
 
     // 1. MOCK SIMULATION MODE (When no HEYGEN_API_KEY)
     if (!process.env.HEYGEN_API_KEY) {
-       console.log("No HeyGen Key - Running Cinematic Simulation for Vibe:", vibe);
+       console.log("No HeyGen Key - Running Professional Simulation for Vibe:", vibe);
        
        if (action === "check") {
-          // Simulate a 5-second processing time
           return NextResponse.json({ 
             ok: true, 
             status: "completed", 
-            url: ELITE_MOCK_VIDEOS[0] // Return our high-value pedagogical sample
+            url: ELITE_MOCK_VIDEOS[0] 
           });
        }
        
        return NextResponse.json({ 
          ok: true, 
-         videoId: "elite-master-" + Date.now(),
-         message: "Synthesizing Cinematic Scene..." 
+         videoId: "professional-master-" + Date.now(),
+         message: "Synthesizing Professional Scene..." 
        });
     }
 
@@ -53,8 +52,8 @@ export async function POST(req: NextRequest) {
     
     // Choose Avatar based on Production Vibe
     let avatarId = "josh_lite_20220901_talking_photo";
-    if (vibe === "THE MASTER") avatarId = "old_professor_legacy_001";
-    if (vibe === "VIRAL REBEL") avatarId = "urban_creator_vibe_002";
+    if (vibe === "THE MASTER") avatarId = "academic_professor_legacy_001";
+    if (vibe === "VIRAL REBEL") avatarId = "tech_creator_vibe_002";
 
     const newVideoId = await generateHeyGenVideo(script, avatarId);
     
@@ -62,6 +61,6 @@ export async function POST(req: NextRequest) {
 
   } catch (error: any) {
     console.error("PRODUCTION ERROR:", error);
-    return NextResponse.json({ error: error.message || "Failed to initiate cinematic production." }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to initiate professional production." }, { status: 500 });
   }
 }

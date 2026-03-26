@@ -7,7 +7,7 @@ export function VideoGenerator() {
   const [topic, setTopic] = useState("");
   const [language, setLanguage] = useState("ENGLISH");
   const [duration, setDuration] = useState("1"); // Default to 1min for Viral format
-  const [vibe, setVibe] = useState("ELITE BROTHER");
+  const [vibe, setVibe] = useState("PEER MENTOR");
   const [loading, setLoading] = useState(false);
   const [suggesting, setSuggesting] = useState(false);
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -47,6 +47,10 @@ export function VideoGenerator() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to direct cinematic production");
+      
+      // Inject the current language for the Canvas to use
+      data.language = language;
+      
       setBlueprint(data);
       setProductionStep("PREVIEW");
     } catch (err: any) {
@@ -58,17 +62,17 @@ export function VideoGenerator() {
 
   return (
     <div className="video-studio-container stack-center" style={{ gap: "40px", padding: "40px 0" }}>
-      {/* Studio Header: Free Elite Tech */}
+      {/* Studio Header: International AI */}
       <header className="card studio-header stack" style={{ width: "100%", maxWidth: "1200px" }}>
         <div className="row-between studio-nav">
            <div className="stack" style={{ gap: "8px" }}>
-              <div className="live-pill" style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "10px", color: "#10b981", fontWeight: 800 }}>
-                  <span className="dot" style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 10px #10b981" }} />
-                  SPECIAL AI PRODUCTION (FREE LOCAL ENGINE)
+              <div className="live-pill" style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "10px", color: "#6366f1", fontWeight: 800 }}>
+                  <span className="dot" style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#6366f1", boxShadow: "0 0 10px #6366f1" }} />
+                  ELITE AI PRODUCTION HUB
               </div>
-              <h1 className="studio-title">Elite Video Architect.</h1>
+              <h1 className="studio-title">Video Architect.</h1>
               <p className="muted" style={{ fontSize: "1.1rem", maxWidth: "600px" }}>
-                Generating cinematic MP4 pedagogical experiences with **locally synthesis** (No paid API keys needed).
+                Generating cinematic pedagogical experiences for **international tracks** (English, French, Arabic).
               </p>
            </div>
            
@@ -113,23 +117,23 @@ export function VideoGenerator() {
                 <select value={language} onChange={e => setLanguage(e.target.value)} className="studio-select">
                    <option value="ENGLISH">English (Elite)</option>
                    <option value="FRENCH">French (Elite)</option>
-                   <option value="ARABIC">Arabic (Core)</option>
+                   <option value="ARABIC">Arabic (Modern Standard)</option>
                 </select>
              </label>
 
              <label className="stack" style={{ gap: "8px" }}>
                 <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Directorial Vibe</span>
                 <select value={vibe} onChange={e => setVibe(e.target.value)} className="studio-select">
-                   <option value="ELITE BROTHER">Elite Brother (Tunisian Senior)</option>
-                   <option value="THE MASTER">The Master Mentor</option>
-                   <option value="VIRAL REBEL">Social Viral Rebel</option>
+                   <option value="PEER MENTOR">The Peer Mentor (Empathetic / Clear)</option>
+                   <option value="THE MASTER">The Master Mentor (Deep / Academic)</option>
+                   <option value="VIRAL REBEL">Social Viral Rebel (High Energy)</option>
                 </select>
              </label>
 
              <label className="stack" style={{ gap: "12px" }}>
-                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Lesson Focus / Myth</span>
+                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Lesson Focus / Objective</span>
                 <textarea 
-                  placeholder="e.g. 'Why everyone fails the Reading Section'" 
+                  placeholder="e.g. 'Advanced Tense Synthesis'" 
                   value={topic}
                   onChange={e => setTopic(e.target.value)}
                   required
@@ -144,8 +148,8 @@ export function VideoGenerator() {
           </form>
 
           {blueprint && (
-            <div className="card stack" style={{ padding: "24px", background: "rgba(16, 185, 129, 0.05)", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
-               <h4 style={{ fontSize: "0.9rem", color: "#10b981", fontWeight: 800 }}>Master Script Generated</h4>
+            <div className="card stack" style={{ padding: "24px", background: "rgba(99, 102, 241, 0.05)", border: "1px solid rgba(99, 102, 241, 0.2)" }}>
+               <h4 style={{ fontSize: "0.9rem", color: "#6366f1", fontWeight: 800 }}>Professional Script Ready</h4>
                <p className="muted" style={{ fontSize: "0.8rem", marginTop: "8px", fontStyle: "italic" }}>
                  "{blueprint.voiceover_full.substring(0, 100)}..."
                </p>
@@ -159,7 +163,7 @@ export function VideoGenerator() {
              <div className="page-stack reveal" style={{ gap: "32px" }}>
                 <div className="row-between">
                    <h2 className="section-title">Cinematic Canvas Preview</h2>
-                   <button className="pill" onClick={() => setProductionStep("CONFIG")} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "white", cursor: "pointer" }}>EDIT PRODUCTION CONFIG</button>
+                   <button className="pill" onClick={() => setProductionStep("CONFIG")} style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "white", cursor: "pointer" }}>EDIT CONFIG</button>
                 </div>
                 
                 <VideoCanvas 
@@ -169,7 +173,7 @@ export function VideoGenerator() {
 
                 <div className="card stack" style={{ padding: "24px", background: "rgba(0,0,0,0.3)", border: "1px dashed rgba(255,255,255,0.1)" }}>
                    <p className="muted" style={{ fontSize: "0.9rem" }}>
-                     💡 <strong>Free Local Hack:</strong> This video uses your browser's native hardware to render animations and text-to-speech. To share it, click <strong>EXPORT .MP4</strong> and we will initiate the local capture sequence.
+                     💡 <strong>Free Local Rendering:</strong> This studio uses professional Modern Standard Arabic, high-end pedagogical French, and academic English for all script generation.
                    </p>
                 </div>
              </div>
@@ -177,15 +181,15 @@ export function VideoGenerator() {
              <div className="studio-empty-state card stack" style={{ height: "100%", minHeight: "700px", justifyContent: "center", alignItems: "center", gap: "24px", border: "2px dashed rgba(255,255,255,0.05)", background: "rgba(255,255,255,0.01)" }}>
                 {loading ? (
                    <div className="stack" style={{ alignItems: "center", gap: "20px" }}>
-                      <div className="spinner" style={{ width: "50px", height: "50px", border: "4px solid rgba(255,255,255,0.1)", borderTopColor: "#ef4444", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
-                      <p className="muted">The AI Director is designing scene layouts and syncing Tunisian script...</p>
+                      <div className="spinner" style={{ width: "50px", height: "50px", border: "4px solid rgba(255,255,255,0.1)", borderTopColor: "#6366f1", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+                      <p className="muted">The AI Director is designing scene layouts and professional scripts...</p>
                    </div>
                 ) : (
                   <div className="stack" style={{ alignItems: "center", gap: "24px", textAlign: "center" }}>
                     <div className="cinema-icon" style={{ fontSize: "4rem", opacity: 0.1 }}>🎬</div>
                     <div className="stack" style={{ gap: "8px" }}>
                        <h2 className="section-title" style={{ opacity: 0.3 }}>Production Studio Idle</h2>
-                       <p className="muted" style={{ maxWidth: "400px" }}>Configure your viral pedagogical mission on the left to start the local AI Cinema engine.</p>
+                       <p className="muted" style={{ maxWidth: "400px" }}>Configure your lesson objective to start the Professional Cinematic engine.</p>
                     </div>
                   </div>
                 )}
@@ -197,7 +201,7 @@ export function VideoGenerator() {
       <style jsx>{`
         .studio-header {
            padding: 48px;
-           background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.05), transparent);
+           background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent);
            border-radius: 32px;
         }
         .studio-title {
@@ -234,7 +238,7 @@ export function VideoGenerator() {
            outline: none;
         }
         .studio-generate-btn {
-           background: linear-gradient(135deg, #10b981, #059669);
+           background: linear-gradient(135deg, #6366f1, #4f46e5);
            color: white;
            padding: 24px;
            border-radius: 20px;

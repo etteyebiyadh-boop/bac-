@@ -14,6 +14,7 @@ interface Scene {
 interface VideoConfig {
   title: string;
   theme: { primary: string; secondary: string; bg: string };
+  language: string;
   scenes: Scene[];
   voiceover_full: string;
 }
@@ -32,8 +33,17 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
   function speak(text: string) {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ar-TN"; // Tunisian!
-    utterance.rate = 1.1; 
+    
+    // Auto-detect language for Synthesis
+    if (config.language === "FRENCH") {
+        utterance.lang = "fr-FR";
+    } else if (config.language === "ARABIC") {
+        utterance.lang = "ar-SA"; // Fusha Arabic (Saudi)
+    } else {
+        utterance.lang = "en-US";
+    }
+    
+    utterance.rate = 1.0; 
     window.speechSynthesis.speak(utterance);
   }
 
@@ -99,7 +109,7 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
             style={{ gap: "24px", width: "100%" }}
           >
             {currentScene.layout === "TitleSlide" && (
-              <div className="stack slide-reveal" style={{ gap: "12px" }}>
+              <div className="stack" style={{ gap: "12px" }}>
                 <span className="eyebrow" style={{ color: config.theme.primary, fontSize: "12px", fontWeight: 800, letterSpacing: "2px" }}>BAC EXCELLENCE MASTERCLASS</span>
                 <h1 style={{ fontSize: "2.8rem", fontWeight: 900, lineHeight: "1.1", textTransform: "uppercase" }}>{currentScene.title}</h1>
                 <p style={{ fontSize: "1.4rem", color: "#fcd34d", fontWeight: 700 }}>{currentScene.subtitle}</p>
@@ -148,14 +158,14 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
                <div className="stack reveal-ZoomIn" style={{ alignItems: "center", gap: "16px" }}>
                   <div style={{ fontSize: "5rem" }}>✅</div>
                   <h2 style={{ fontSize: "2rem", fontWeight: 900 }}>Cinematic Export Ready!</h2>
-                  <p className="muted">Your .MP4 master has been synthesized locally.</p>
+                  <p className="muted">Static MP4 synthesized locally.</p>
                   <button onClick={() => setShowSuccess(false)} className="pill" style={{ background: "rgba(255,255,255,0.1)", color: "white", cursor: "pointer" }}>Back to Cinema</button>
                </div>
             ) : (
                <div className="stack" style={{ alignItems: "center", gap: "32px", opacity: 0.5 }}>
                   <div className="pulse-icon" style={{ fontSize: "5rem" }}>🎬</div>
                   <div className="stack" style={{ gap: "8px" }}>
-                    <h2 style={{ fontSize: "1.8rem", fontWeight: 900 }}>Elite Studio Ready</h2>
+                    <h2 style={{ fontSize: "1.8rem", fontWeight: 900 }}>International AI Studio</h2>
                     <p>Director Config Loaded ({config.scenes.length} Scenes)</p>
                   </div>
                </div>
@@ -182,7 +192,7 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
               disabled={isPlaying || isExporting}
               style={{ background: isPlaying ? "rgba(255,255,255,0.05)" : "white", color: isPlaying ? "white" : "black", padding: "12px 32px" }}
             >
-               {isPlaying ? "🎬 PLAYING PREVIEW" : "▶️ PREVIEW LESSON"}
+               {isPlaying ? "🎬 PLAYING" : "▶️ PREVIEW"}
             </button>
             <button 
               className="studio-tool-btn" 
@@ -203,19 +213,9 @@ export function VideoCanvas({ config, onComplete }: { config: VideoConfig, onCom
         .reveal-FadeUp { animation: fade-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
         .reveal-ZoomIn { animation: zoom-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
         .reveal-SlideRight { animation: slide-right 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
-
-        @keyframes fade-up {
-          from { opacity: 0; transform: translateY(40px) scale(0.95); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes zoom-in {
-          from { opacity: 0; transform: scale(1.5); filter: blur(10px); }
-          to { opacity: 1; transform: scale(1); filter: blur(0); }
-        }
-        @keyframes slide-right {
-          from { opacity: 0; transform: translateX(-100px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
+        @keyframes fade-up { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes zoom-in { from { opacity: 0; transform: scale(1.5); filter: blur(10px); } to { opacity: 1; transform: scale(1); filter: blur(0); } }
+        @keyframes slide-right { from { opacity: 0; transform: translateX(-100px); } to { opacity: 1; transform: translateX(0); } }
         .pulse-icon { animation: pulse 2s infinite ease-in-out; }
         @keyframes pulse { 0% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.1); } 100% { opacity: 0.3; transform: scale(1); } }
         .spinner-large { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #10b981; borderRadius: 50%; animation: spin 1s linear infinite; }
