@@ -32,10 +32,15 @@ export default async function ExamPracticePage({ params }: { params: Promise<{ s
              <Link 
                href={`/exams/${exam.slug}/mock`} 
                className="button-link hover-glow" 
-               style={{ background: "var(--primary)", color: "black", padding: "20px 40px", fontSize: "1.2rem", fontWeight: 800, textDecoration: "none", display: "inline-block" }}
+               style={{ background: "var(--primary)", color: "black", padding: "20px 48px", fontSize: "1.2rem", fontWeight: 900, textDecoration: "none", display: "inline-block" }}
              >
-                🎯 START FULL 3-HOUR MOCK EXAM
+                {langCookie === "ar" ? "🎯 ابدا الـ MOCK EXAM توا (3 سوايع تركيز)" : "🎯 START FULL 3-HOUR MOCK EXAM"}
              </Link>
+             <p className="muted" style={{ marginTop: "16px", fontSize: "0.9rem" }}>
+                {langCookie === "ar" 
+                  ? "ما تنساش تبارتاجي السكور متاعك باش تشجع صحابك! 🔥" 
+                  : "Don't forget to share your score to challenge your friends! 🔥"}
+             </p>
           </div>
         </div>
       </section>

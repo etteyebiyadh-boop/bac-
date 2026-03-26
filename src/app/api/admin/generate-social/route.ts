@@ -30,20 +30,22 @@ ${sectionContext}
 
 Guidelines:
 1. TARGET: Tunisian BAC students who want to go from a 12 to a 17/20 in their language tracks.
-2. STYLE: Professional, bold, outcome-focused. Use words like 'Excellence', 'Top Tier', 'Bac Score', 'Precision'.
-3. LANGUAGE PURITY: The entire response (script, visualTitle, visualBody) MUST be written 100% in the selected language (${language}). Absolutely NO English introductions, placeholders, or translations. Show absolute pedagogical mastery and authority in ${language} from start to finish.
-4. STRUCTURE for ${platform}:
-   - Hook: A pure ${language} pattern-interrupt statement that busts a common BAC myth.
-   - Body: 4-5 key 'Elite Insights' in ${language}.
-   - Example: A specific exam scenario in ${language}.
-   - CTA: Compelling reason in ${language} to use bacexcellence.com.
-5. EMOJIS: Use premium emojis like 🌌, 💎, 🚀, 🛡️, 💡 sparingly.
-6. Emphasize INSTANT AI FEEDBACK in the selected language.
+2. THE "TUNISIAN VIBE": The 'script' field MUST be written in 100% authentic Tunisian Derja. Use "vibes" and local slang that resonates with BAC students (e.g., 'ya m3allem', 'taayer', 'focus', 'discipline', 'score tayari', 'jib l\\'excellence', 'kassas', 'revision 9asba'). Mention the target section (${section || 'all sections'}) using its local student nickname if applicable.
+3. BRAND RECALL: Always refer to the platform as 'Bac Excellence' in the script, as the most powerful way to guarantee a high score.
+4. PEDAGOGICAL MASTERY: While the script is in Tunisian, the 'visualTitle' and 'visualBody' MUST be in ${language} to show absolute authority and mastery of the subject matter.
+5. STYLE: Professional, bold, outcome-focused. Use words like 'Excellence', 'Top Tier', 'Bac Score', 'Precision'.
+6. NO MIXING: Do not mix English/French into the Tunisian script unless it's extremely common slang. Do not use English in the visual fields if the target language is NOT English.
+7. STRUCTURE for ${platform}:
+   - Hook: A pattern-interrupt statement in Tunisian Derja that busts a common BAC myth and introduces 'Bac Excellence'.
+   - Body: 4-5 key 'Elite Insights' or slides described with high energy in Tunisian.
+   - Example: A specific exam scenario in ${language} (embedded within the Tunisian script for context).
+   - CTA: Compelling reason in Tunisian Derja to join 'Bac Excellence' at bacexcellence.com ('Bech tadhmen mostaqblek', 'Ma daiaach el waqt').
+8. EMOJIS: Use premium emojis like 🌌, 💎, 🚀, 🛡️, 💡 sparingly.
 
 IMPORTANT: Return ONLY a valid JSON object:
-- "script": The full social media script with all slides/hooks.
-- "visualTitle": A viral hook title for the graphic card.
-- "visualBody": A pedagogical masterclass breakdown FOR the visual card. (Mistakes ❌ vs Mastery ✅, Examiner's Secret, etc.).`;
+- "script": The full social media script in Tunisian Derja.
+- "visualTitle": A viral hook title in ${language} for the graphic card.
+- "visualBody": A pedagogical masterclass breakdown in ${language} for the visual card. (Mistakes ❌ vs Mastery ✅, Examiner's Secret, etc.).`;
 
     const response = await getReliableCompletion({
         messages: [{ role: "user", content: prompt }],

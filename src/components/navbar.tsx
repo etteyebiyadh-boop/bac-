@@ -25,7 +25,7 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
   const navLinks = [
     { href: "/dashboard", label: t.nav_dashboard },
     { href: "/lessons", label: t.nav_library },
-    { href: "/diagnostic", label: lang === "ar" ? "Diagnostic" : (lang === "fr" ? "Diagnostic" : "Diagnostic") },
+    { href: "/diagnostic", label: lang === "ar" ? "🚀 تشخيص المستوى" : (lang === "fr" ? "Diagnostic" : "Diagnostic") },
     { href: "/calculator", label: t.nav_calc },
     { href: "/write", label: t.nav_writing },
     { href: "/exams", label: t.nav_exams },
@@ -38,7 +38,9 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
       <div className="topbar-inner">
         <Link className="brand" href="/" style={{ gap: "12px", flexDirection: lang === "ar" ? "row-reverse" : "row" }}>
           <div className="brand-mark">B</div>
-          <strong style={{ fontSize: '1rem', fontWeight: 800 }}>{APP_NAME}</strong>
+          <strong style={{ fontSize: '1.1rem', fontWeight: 900, letterSpacing: "-0.5px" }}>
+            {lang === "ar" ? "🇹🇳 " : ""}{APP_NAME}
+          </strong>
         </Link>
 
         {/* Desktop Nav */}

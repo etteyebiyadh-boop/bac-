@@ -82,12 +82,12 @@ export function SocialGenerator() {
           <span className="eyebrow" style={{ color: "var(--primary)" }}>Viral Content Engine</span>
           <h2 className="section-title" style={{ fontSize: "2.5rem" }}>Elite Social Studio.</h2>
           <p className="muted" style={{ fontSize: "1.1rem" }}>
-            Generate viral social media scripts and beautifully branded visual cards for "Bac Excellence" instantly. 
+            Generate viral social media scripts in <strong>Tunisian Derja</strong> and beautifully branded visual cards for "Bac Excellence" instantly. 
           </p>
         </div>
         <div className="stack" style={{ gap: "8px", textAlign: "right" }}>
-            <span className="pill success-pill">AI Engine: Enabled</span>
-            <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.5 }}>Branding: Active</span>
+            <span className="pill success-pill">Tunisian Vibes: ACTIVE 🇹🇳</span>
+            <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.5 }}>Branding: VIP Elite</span>
         </div>
       </div>
 
@@ -100,7 +100,7 @@ export function SocialGenerator() {
               <button 
                 type="button" 
                 onClick={() => {
-                   const suggestions = ["Score 20/20 Mastery", "Inversion Hacks", "Vocab Explosions", "Grammar Secrets"];
+                   const suggestions = ["Master the 20/20 Score", "Grammar Inversion Hacks", "Vocab Explosions", "The Examiner's Mindset", "Elite Writing Tips", "How to stop losing points"];
                    setTopic(suggestions[Math.floor(Math.random() * suggestions.length)]);
                 }} 
                 style={{ background: "transparent", border: "none", color: "var(--primary)", fontSize: "10px", cursor: "pointer", fontWeight: 800 }}

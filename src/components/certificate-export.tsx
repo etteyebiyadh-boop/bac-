@@ -94,7 +94,7 @@ export function CertificateExport({
         : await toJpeg(cardRef.current, { ...options, quality: 0.95 });
       
       const link = document.createElement("a");
-      link.download = `baclang-${type}-${userName.toLowerCase().replace(/\s+/g, "-")}.${format}`;
+      link.download = `bac-excellence-${type}-${userName.toLowerCase().replace(/\s+/g, "-")}.${format}`;
       link.href = dataUrl;
       link.click();
     } catch (error) {
@@ -105,12 +105,16 @@ export function CertificateExport({
   }, [cardRef, format, type, userName]);
 
   const handleShare = useCallback(async () => {
-    const shareText = `🎓 I just earned a ${title} certificate on BacLang!\n\n${t.achieved} ${subtitle || title}\n\n${t.score}: ${score}/${maxScore}\n\nCheck it out!`;
+    const isTunisian = lang === "ar";
+    const statusEmoji = score && score >= 15 ? "🔥" : "🎓";
+    const shareText = isTunisian 
+      ? `🎯 خذيت شهادة ${title} في Bac Excellence! ${statusEmoji}\n\n${t.achieved} ${subtitle || title}\n\nالسكور: ${score}/${maxScore}\n\nشوفوه هنا: bacexcellence.com`
+      : `🎓 I just earned a ${title} certificate on Bac Excellence! ${statusEmoji}\n\n${t.achieved} ${subtitle || title}\n\n${t.score}: ${score}/${maxScore}\n\nCheck it out!`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "BacLang Certificate",
+          title: "Bac Excellence Certificate",
           text: shareText,
           url: window.location.origin,
         });
@@ -119,9 +123,10 @@ export function CertificateExport({
       }
     } else {
       await navigator.clipboard.writeText(shareText);
-      alert("Certificate shared! (Copied to clipboard)");
+      const alertText = isTunisian ? "بارتاجينا الشهادة متاعك! (تكوبات)" : "Certificate shared! (Copied to clipboard)";
+      alert(alertText);
     }
-  }, [title, subtitle, score, maxScore, t]);
+  }, [title, subtitle, score, maxScore, t, lang]);
 
   return (
     <div className="stack" style={{ gap: "16px", alignItems: "center" }}>
@@ -342,7 +347,7 @@ export function CertificateExport({
               fontWeight: "800",
               color: "rgba(255, 255, 255, 0.7)",
             }}>
-              BacLang
+              Bac Excellence
             </span>
           </div>
 

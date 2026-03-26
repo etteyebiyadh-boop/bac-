@@ -50,10 +50,10 @@ export default async function HomePage() {
       {/* 🛤️ THE PATH SELECTOR */}
       <section id="selector" className="section-padding" style={{ background: 'rgba(99, 102, 241, 0.02)' }}>
         <div className="container" style={{ textAlign: "center" }}>
-          <span className="eyebrow reveal">{langCookie === "ar" ? "محرك التخصيص" : (langCookie === "fr" ? "Moteur de Personnalisation" : "Personalization Engine")}</span>
-          <h2 className="section-title-large reveal delay-1">{langCookie === "ar" ? "من أين ستبدأ؟" : (langCookie === "fr" ? "Par où commencer ?" : "Where do you start?")}</h2>
+          <span className="eyebrow reveal">{langCookie === "ar" ? "خارطة الطريق متاعك" : (langCookie === "fr" ? "Moteur de Personnalisation" : "Personalization Engine")}</span>
+          <h2 className="section-title-large reveal delay-1">{langCookie === "ar" ? "منين تحب تبدا؟" : (langCookie === "fr" ? "Par où commencer ?" : "Where do you start?")}</h2>
           <p className="muted reveal delay-2" style={{ marginBottom: '60px', fontSize: '1.2rem' }}>
-             {langCookie === "ar" ? "اختر شعبتك واللغات المناسبة لإنشاء خارطة الطريق الخاصة بك." : (langCookie === "fr" ? "Choisissez votre section et langue optionnelle pour générer votre roadmap personnalisée." : "Select your section and optional language to generate your custom 17/20 roadmap.")}
+             {langCookie === "ar" ? "اختار شعبتك واللغات اللي تقراهم باش نطلعولك الـ Roadmap اللي توصلك للـ 17/20." : (langCookie === "fr" ? "Choisissez votre section et langue optionnelle pour générer votre roadmap personnalisée." : "Select your section and optional language to generate your custom 17/20 roadmap.")}
           </p>
           <div className="reveal delay-3">
              <HeroPathSelector lang={langCookie} />
@@ -65,16 +65,16 @@ export default async function HomePage() {
       <section className="section-padding container">
         <div className="grid grid-cols-2" style={{ gap: '40px', alignItems: 'center' }}>
            <div className="reveal">
-              <span className="eyebrow">{langCookie === "ar" ? "جميع الشعب مشمولة" : (langCookie === "fr" ? "Toutes les séries incluses" : "All Series Included")}</span>
-              <h2 className="section-title-large">{langCookie === "ar" ? "مصممة لكل شعبة على حدة." : (langCookie === "fr" ? "Adapté à chaque section." : "Tailored for every single section.")}</h2>
+               <span className="eyebrow">{langCookie === "ar" ? "جميع الشعب موجودة" : (langCookie === "fr" ? "Toutes les séries incluses" : "All Series Included")}</span>
+              <h2 className="section-title-large">{langCookie === "ar" ? "مصممة لكل شعبة بالتدقيق." : (langCookie === "fr" ? "Adapté à chaque section." : "Tailored for every single section.")}</h2>
               <p className="muted" style={{ fontSize: '1.2rem', marginBottom: '32px' }}>
-                 {langCookie === "ar" ? "من الرياضيات إلى الاقتصاد، قمنا برسم كل متطلبات المنهج والمعاملات وأنماط الامتحانات الفريدة لكل مسار." : (langCookie === "fr" ? "Des mathématiques à l'économie, nous avons cartographié chaque exigence du programme, coefficient et modèle d'examen unique à votre parcours." : "From Mathematics to Economy, we've mapped every syllabus requirement, coefficient, and exam pattern unique to your track.")}
+                 {langCookie === "ar" ? "من الماط للاقتصاد، خدمنا على كل كبيرة وصغيرة في المنهج التونسي باش تضمن أحسن الأعداد." : (langCookie === "fr" ? "Des mathématiques à l'économie, nous avons cartographié chaque exigence du programme, coefficient et modèle d'examen unique à votre parcours." : "From Mathematics to Economy, we've mapped every syllabus requirement, coefficient, and exam pattern unique to your track.")}
               </p>
               <div className="stack" style={{ gap: '16px' }}>
                  {['Maths', 'Sciences', 'Technique', 'Econ', 'Lettres', 'Info', 'Sport'].map((s) => (
                     <div key={s} className="row-between" style={{ padding: '12px 20px', background: 'rgba(255,255,255,0.02)', borderRadius: '100px', border: '1px solid var(--glass-border)' }}>
                        <span style={{ fontWeight: 700 }}>{s}</span>
-                       <span style={{ color: 'var(--success)', fontSize: '12px', fontWeight: 800 }}>✓ {langCookie === "ar" ? "جاهز" : (langCookie === "fr" ? "PRÊT" : "READY")}</span>
+                       <span style={{ color: 'var(--success)', fontSize: '12px', fontWeight: 800 }}>✓ {langCookie === "ar" ? "موجود" : (langCookie === "fr" ? "PRÊT" : "READY")}</span>
                     </div>
                  ))}
               </div>

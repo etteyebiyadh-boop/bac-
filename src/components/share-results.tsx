@@ -38,7 +38,7 @@ export function ShareResults({
       copied: "Copied!",
       myScore: "My Score",
       on: "on",
-      tryIt: "Try it yourself on BacLang!",
+      tryIt: "Try it yourself on Bac Excellence!",
       grade: score >= 15 ? "Excellent!" : score >= 12 ? "Good!" : "Keep practicing!",
     },
     fr: {
@@ -48,7 +48,7 @@ export function ShareResults({
       copied: "Copié!",
       myScore: "Mon Score",
       on: "sur",
-      tryIt: "Essaie toi-même sur BacLang!",
+      tryIt: "Essaie toi-même sur Bac Excellence!",
       grade: score >= 15 ? "Excellent!" : score >= 12 ? "Bien!" : "Continue à pratiquer!",
     },
     ar: {
@@ -58,8 +58,18 @@ export function ShareResults({
       copied: "تم النسخ!",
       myScore: "درجتي",
       on: "في",
-      tryIt: "جرب بنفسك على BacLang!",
+      tryIt: "جرب بنفسك على Bac Excellence!",
       grade: score >= 15 ? "ممتاز!" : score >= 12 ? "جيد!" : "استمر في التمرين!",
+    },
+    tn: {
+      share: "بارتاجي",
+      download: "تهبّط",
+      copy: "كوبي ليان",
+      copied: "تكوبا!",
+      myScore: "سكوري",
+      on: "في",
+      tryIt: "جرب وحدك في Bac Excellence!",
+      grade: score >= 17 ? "طيّارة برشا! 🔥" : score >= 15 ? "برافو يا معلم! 🚀" : score >= 12 ? "مزيان، زيد اخدم! 💪" : "ما تسلمش، عاود جرب! 🛡️",
     }
   };
 
@@ -88,7 +98,11 @@ export function ShareResults({
   }, [cardRef, examTitle]);
 
   const handleCopyLink = useCallback(async () => {
-    const shareText = `🎯 I scored ${score}/20 on ${examTitle} (${language})!\n\n${t.grade}\n\n${t.tryIt}`;
+    const isTunisian = lang === "tn" || lang === "ar";
+    const statusEmoji = score >= 15 ? "🔥" : "🚀";
+    const shareText = isTunisian 
+      ? `🎯 جبت ${score}/20 في ${examTitle} (${language})! ${statusEmoji}\n\n${t.grade}\n\nجرب وحدك هنا: bacexcellence.com`
+      : `🎯 I scored ${score}/20 on ${examTitle} (${language})! ${statusEmoji}\n\n${t.grade}\n\nTry it yourself: bacexcellence.com`;
     
     try {
       await navigator.clipboard.writeText(shareText);
@@ -100,7 +114,11 @@ export function ShareResults({
   }, [score, examTitle, language, t]);
 
   const handleNativeShare = useCallback(async () => {
-    const shareText = `🎯 I scored ${score}/20 on ${examTitle} (${language})!\n\n${t.grade}\n\n${t.tryIt}`;
+    const isTunisian = lang === "tn" || lang === "ar";
+    const statusEmoji = score >= 15 ? "🔥" : "🚀";
+    const shareText = isTunisian 
+      ? `🎯 جبت ${score}/20 في ${examTitle} (${language})! ${statusEmoji}\n\n${t.grade}\n\nجرب وحدك هنا: bacexcellence.com`
+      : `🎯 I scored ${score}/20 on ${examTitle} (${language})! ${statusEmoji}\n\n${t.grade}\n\nTry it yourself: bacexcellence.com`;
     
     if (navigator.share) {
       try {
@@ -170,7 +188,7 @@ export function ShareResults({
             }}>
               B
             </div>
-            <span style={{ fontSize: "20px", fontWeight: "bold", color: "white" }}>BacLang</span>
+            <span style={{ fontSize: "20px", fontWeight: "bold", color: "white" }}>Bac Excellence</span>
           </div>
           <div style={{
             padding: "8px 16px",
@@ -225,7 +243,7 @@ export function ShareResults({
             {examTitle}
           </div>
           <div style={{ fontSize: "16px", color: "rgba(255, 255, 255, 0.6)" }}>
-            {language} • {t.on} BacLang
+            {language} • {t.on} Bac Excellence
           </div>
         </div>
 

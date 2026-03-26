@@ -64,7 +64,7 @@ export function HeroPathSelector({ lang }: HeroPathSelectorProps) {
         <div className="stack" style={{ gap: "32px", animation: "reveal-up 0.5s ease" }}>
           <div className="row-between" style={{ justifyContent: "flex-start", gap: "12px" }}>
             <button type="button" onClick={() => setStep(1)} className="pill" style={{ cursor: "pointer", background: "transparent" }}>
-              {lang === "ar" ? "Back" : (lang === "fr" ? "Retour" : "Back")}
+              {lang === "ar" ? "رجوع" : (lang === "fr" ? "Retour" : "Back")}
             </button>
             <span className="pill" style={{ background: "var(--primary)", color: "white" }}>{section.replaceAll("_", " ")}</span>
           </div>
@@ -94,7 +94,7 @@ export function HeroPathSelector({ lang }: HeroPathSelectorProps) {
         <div className="stack" style={{ gap: "40px", animation: "reveal-up 0.5s ease" }}>
           <div className="row-between" style={{ justifyContent: "flex-start", gap: "12px", flexWrap: "wrap" }}>
             <button type="button" onClick={() => setStep(2)} className="pill" style={{ cursor: "pointer", background: "transparent" }}>
-              {lang === "ar" ? "Back" : (lang === "fr" ? "Retour" : "Back")}
+              {lang === "ar" ? "رجوع" : (lang === "fr" ? "Retour" : "Back")}
             </button>
             <span className="pill" style={{ background: "var(--primary)", color: "white" }}>{section.replaceAll("_", " ")}</span>
             <span className="pill" style={{ background: "var(--accent)", color: "black" }}>{optionalLang}</span>
@@ -102,7 +102,7 @@ export function HeroPathSelector({ lang }: HeroPathSelectorProps) {
 
           <div className="card stack" style={{ padding: "60px", background: "radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent)", border: "1px solid var(--primary)" }}>
             <span className="eyebrow" style={{ color: "var(--primary)" }}>
-              {lang === "ar" ? "Roadmap Engine" : (lang === "fr" ? "Moteur de Roadmap" : "Roadmap Engine")}
+              {lang === "ar" ? "محرك خارطة الطريق" : (lang === "fr" ? "Moteur de Roadmap" : "Roadmap Engine")}
             </span>
             <h2 className="section-title">{t.sel_roadmap_ready}.</h2>
             <p className="muted" style={{ fontSize: "1.2rem", maxWidth: "640px" }}>
@@ -118,7 +118,7 @@ export function HeroPathSelector({ lang }: HeroPathSelectorProps) {
                 <div className="row-between" style={{ gap: "16px" }}>
                   <span className="pill" style={{ minWidth: "40px", textAlign: "center" }}>1</span>
                   <strong style={{ fontSize: "1rem" }}>
-                    {lang === "ar" ? "English: diagnostic + writing + reading" : (lang === "fr" ? "Anglais : diagnostic + ecriture + lecture" : "English: diagnostic + writing + reading")}
+                    {lang === "ar" ? "الإنجليزية: اختبار مستوى + كتابة + نصوص" : (lang === "fr" ? "Anglais : diagnostic + ecriture + lecture" : "English: diagnostic + writing + reading")}
                   </strong>
                 </div>
                 <span>5 min</span>
@@ -128,7 +128,7 @@ export function HeroPathSelector({ lang }: HeroPathSelectorProps) {
                 <div className="row-between" style={{ gap: "16px" }}>
                   <span className="pill" style={{ minWidth: "40px", textAlign: "center" }}>2</span>
                   <strong style={{ fontSize: "1rem" }}>
-                    {lang === "ar" ? "Francais: diagnostic + methodologie Bac" : (lang === "fr" ? "Francais : diagnostic + methodologie Bac" : "French: diagnostic + Bac methodology")}
+                    {lang === "ar" ? "الفرنسية: اختبار مستوى + منهجية الباك" : (lang === "fr" ? "Francais : diagnostic + methodologie Bac" : "French: diagnostic + Bac methodology")}
                   </strong>
                 </div>
                 <span>5 min</span>
@@ -138,7 +138,7 @@ export function HeroPathSelector({ lang }: HeroPathSelectorProps) {
                 <div className="row-between" style={{ gap: "16px" }}>
                   <span className="pill" style={{ minWidth: "40px", textAlign: "center" }}>3</span>
                   <strong style={{ fontSize: "1rem" }}>
-                    {optionalLang}: {lang === "ar" ? "communication diagnostic + A1 to B1 roadmap" : (lang === "fr" ? "diagnostic communicatif + roadmap A1 vers B1" : "communication diagnostic + A1 to B1 roadmap")}
+                    {optionalLang}: {lang === "ar" ? "اختبار تواصل + خارطة طريق A1 إلى B1" : (lang === "fr" ? "diagnostic communicatif + roadmap A1 vers B1" : "communication diagnostic + A1 to B1 roadmap")}
                   </strong>
                 </div>
                 <span>4 min</span>
@@ -147,7 +147,7 @@ export function HeroPathSelector({ lang }: HeroPathSelectorProps) {
 
             <div className="row-between" style={{ marginTop: "60px", gap: "24px", flexWrap: "wrap" }}>
               <Link className="button-link hover-glow" href={`/diagnostic?section=${section}&optionalLang=${optionalLang}`} style={{ flex: 1, justifyContent: "center", padding: "24px", minWidth: "240px" }}>
-                {lang === "ar" ? "Start diagnostic now" : (lang === "fr" ? "Lancer le diagnostic" : "Start diagnostic now")}
+                {lang === "ar" ? "ابدا الاختبار توا" : (lang === "fr" ? "Lancer le diagnostic" : "Start diagnostic now")}
               </Link>
               <Link className="button-link button-secondary" href={`/auth/signup?section=${section}&lang=${optionalLang}`} style={{ padding: "24px" }}>
                 {t.sel_secure_path}
