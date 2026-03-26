@@ -15,7 +15,7 @@ export function SocialGenerator() {
   // Unified State
   const [cardTitle, setCardTitle] = useState("The 15/20 Rule 🚀");
   const [cardBody, setCardBody] = useState("Never start a sentence with 'Never' unless you invert the subject and the verb.\n\n❌ Never I have seen...\n✅ Never have I seen...");
-  const [cardTheme, setCardTheme] = useState<"grammar" | "vocab" | "mindset" | "elite">("grammar");
+  const [cardTheme, setCardTheme] = useState<"grammar" | "vocab" | "mindset" | "elite" | "cyber" | "retro" | "gold">("grammar");
   const [cardWatermark, setCardWatermark] = useState("@bacexcellence");
 
   const handleCopy = () => {
@@ -67,7 +67,10 @@ export function SocialGenerator() {
     grammar: { bg: "radial-gradient(circle at 10% 10%, #6366f1 0%, #000205 80%)", accent: "#6366f1", glow: "rgba(99, 102, 241, 0.4)" },
     vocab: { bg: "radial-gradient(circle at 10% 10%, #10b981 0%, #000205 80%)", accent: "#10b981", glow: "rgba(16, 185, 129, 0.4)" },
     mindset: { bg: "radial-gradient(circle at 10% 10%, #f59e0b 0%, #000205 80%)", accent: "#f59e0b", glow: "rgba(245, 158, 11, 0.4)" },
-    elite: { bg: "radial-gradient(circle at 10% 10%, #8b5cf6 0%, #000205 80%)", accent: "#8b5cf6", glow: "rgba(139, 92, 246, 0.4)" }
+    elite: { bg: "radial-gradient(circle at 10% 10%, #333 0%, #000 80%)", accent: "#fff", glow: "rgba(255, 255, 255, 0.2)" },
+    cyber: { bg: "radial-gradient(circle at 10% 10%, #ff00ff 0%, #000000 80%)", accent: "#00ffff", glow: "rgba(0, 255, 255, 0.5)" },
+    retro: { bg: "radial-gradient(circle at 10% 10%, #ff4d4d 0%, #2b0000 80%)", accent: "#ffcc00", glow: "rgba(255, 204, 0, 0.4)" },
+    gold: { bg: "radial-gradient(circle at 10% 10%, #d4af37 0%, #000 80%)", accent: "#ffd700", glow: "rgba(212, 175, 55, 0.5)" }
   };
 
   const currentTheme = themeColors[cardTheme];
@@ -111,8 +114,12 @@ export function SocialGenerator() {
                 <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Language Track</span>
                 <select value={language} onChange={e => setLanguage(e.target.value)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
                   <option value="ENGLISH">English (Live)</option>
-                  <option value="FRENCH">French (Expansion)</option>
-                  <option value="ARABIC">Arabic (Expansion)</option>
+                  <option value="FRENCH">French (Live)</option>
+                  <option value="ARABIC">Arabic (Live)</option>
+                  <option value="SPANISH">Spanish (Optional)</option>
+                  <option value="GERMAN">German (Optional)</option>
+                  <option value="ITALIAN">Italian (Optional)</option>
+                  <option value="PORTUGUESE">Portuguese (Optional)</option>
                 </select>
               </label>
               <label className="stack" style={{ gap: "8px" }}>
@@ -182,10 +189,13 @@ export function SocialGenerator() {
                 <label className="stack" style={{ gap: "8px" }}>
                   <span className="eyebrow" style={{ fontSize: "10px" }}>Vibe</span>
                   <select value={cardTheme} onChange={e => setCardTheme(e.target.value as any)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
-                    <option value="grammar">Grammar</option>
-                    <option value="vocab">Vocabulary</option>
-                    <option value="mindset">Mindset</option>
-                    <option value="elite">Elite Black</option>
+                    <option value="grammar">Grammar Blue</option>
+                    <option value="vocab">Vocab Green</option>
+                    <option value="mindset">Mindset Gold</option>
+                    <option value="elite">Elite White</option>
+                    <option value="cyber">Neon Cyber</option>
+                    <option value="retro">Vintage Red</option>
+                    <option value="gold">Royal Gold</option>
                   </select>
                 </label>
                 <label className="stack" style={{ gap: "8px" }}>
