@@ -42,8 +42,8 @@ export default async function ExamPracticePage({ params }: { params: Promise<{ s
 
       <WriteWorkspace 
         lang={langCookie} 
-        exams={[exam as any]} 
-        selectedExam={exam as any} 
+        exams={[JSON.parse(JSON.stringify(exam))]} 
+        selectedExam={JSON.parse(JSON.stringify(exam))} 
       />
     </div>
   );

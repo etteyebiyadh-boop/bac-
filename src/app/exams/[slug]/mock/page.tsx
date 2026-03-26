@@ -23,7 +23,7 @@ export default async function MockExamPage({ params }: { params: Promise<{ slug:
 
   return (
     <MockSimulatorClient 
-      exam={exam as any} 
+      exam={JSON.parse(JSON.stringify(exam))} 
       lang={langCookie} 
     />
   );

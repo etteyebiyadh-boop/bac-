@@ -37,7 +37,7 @@ export default async function WritingLabPage() {
 
       <WriteWorkspace 
         lang={langCookie} 
-        exams={exams as any} 
+        exams={JSON.parse(JSON.stringify(exams))}
         selectedExam={null} 
       />
     </div>

@@ -6,21 +6,12 @@ const BAC_EXAMS = [
   {
     slug: 'bac-2025-principale-english',
     year: 2025,
-    title: 'BAC 2025 - Session Principale',
-    subtitle: 'English Full Paper - All Sections',
+    title: 'BAC 2025 - Session Principale - English',
     language: Language.ENGLISH,
     difficulty: Difficulty.HARD,
     estimatedMinutes: 180,
     prompt: 'BAC English Exam - Session Principale 2025: Reading Comprehension + Language Study + Writing (Opinion Essay)',
     modelAnswer: 'Model answer includes: (1) Reading comprehension answers based on social media text, (2) Grammar corrections including third conditional, reported speech, connectors, (3) 200-250 word opinion essay on social media regulation with clear position, supporting arguments, counter-argument, and conclusion.',
-    isOfficial: true,
-    section: 'ALL_SECTIONS',
-    readingPassage: `Teenagers and Social Media: A Double-Edged Sword
-
-In today's digital age, social media has become an integral part of teenagers' lives. Platforms like Instagram, TikTok, and Snapchat offer young people unprecedented opportunities for self-expression, creativity, and connection. However, this constant connectivity comes with significant challenges that parents, educators, and policymakers cannot ignore.
-
-Recent studies have shown that the average teenager spends approximately 7-8 hours per day on social media platforms. While these platforms can foster friendships and provide access to educational content, they also expose young users to cyberbullying, unrealistic beauty standards, and misinformation.
-
 Dr. Sarah Chen, a child psychologist, notes: "We're seeing a generation that's always 'on.' The fear of missing out (FOMO) drives compulsive checking of notifications, which disrupts sleep patterns and reduces face-to-face social skills."
 
 Despite these concerns, social media isn't inherently harmful. Many teenagers use these platforms to organize social causes, learn new skills, and stay connected with family members across the globe. The key lies in teaching digital literacy and promoting healthy online habits.
@@ -54,8 +45,7 @@ Schools across Tunisia have begun implementing digital wellness programs. The de
   {
     slug: 'bac-2024-principale-english',
     year: 2024,
-    title: 'BAC 2024 - Session Principale',
-    subtitle: 'English Full Paper - All Sections',
+    title: 'BAC 2024 - Session Principale - English',
     language: Language.ENGLISH,
     difficulty: Difficulty.HARD,
     estimatedMinutes: 180,
@@ -100,8 +90,7 @@ Critics worry about long-term societal impacts. The challenge now is designing w
   {
     slug: 'bac-2024-controle-english',
     year: 2024,
-    title: 'BAC 2024 - Session Contrôle',
-    subtitle: 'English Full Paper - All Sections',
+    title: 'BAC 2024 - Session Contrôle - English',
     language: Language.ENGLISH,
     difficulty: Difficulty.HARD,
     estimatedMinutes: 180,
@@ -148,8 +137,7 @@ The digital transformation of education is not merely about technology—it's ab
   {
     slug: 'bac-2023-principale-english',
     year: 2023,
-    title: 'BAC 2023 - Session Principale',
-    subtitle: 'English Full Paper - All Sections',
+    title: 'BAC 2023 - Session Principale - English',
     language: Language.ENGLISH,
     difficulty: Difficulty.HARD,
     estimatedMinutes: 180,
@@ -196,8 +184,7 @@ Despite these obstacles, youth volunteerism continues to grow. As Tunisia naviga
   {
     slug: 'bac-2022-principale-english',
     year: 2022,
-    title: 'BAC 2022 - Session Principale',
-    subtitle: 'English Full Paper - All Sections',
+    title: 'BAC 2022 - Session Principale - English',
     language: Language.ENGLISH,
     difficulty: Difficulty.HARD,
     estimatedMinutes: 180,
@@ -244,8 +231,7 @@ The future of Tunisian tourism will look different from its past—smaller, more
   {
     slug: 'bac-2021-principale-english',
     year: 2021,
-    title: 'BAC 2021 - Session Principale',
-    subtitle: 'English Full Paper - All Sections',
+    title: 'BAC 2021 - Session Principale - English',
     language: Language.ENGLISH,
     difficulty: Difficulty.HARD,
     estimatedMinutes: 180,
@@ -292,8 +278,7 @@ Government initiatives now support women researchers through dedicated funding p
   {
     slug: 'bac-2020-principale-english',
     year: 2020,
-    title: 'BAC 2020 - Session Principale',
-    subtitle: 'English Full Paper - All Sections',
+    title: 'BAC 2020 - Session Principale - English',
     language: Language.ENGLISH,
     difficulty: Difficulty.HARD,
     estimatedMinutes: 180,

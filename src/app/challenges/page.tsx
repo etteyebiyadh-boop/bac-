@@ -21,11 +21,7 @@ interface Challenge {
   expiresAt: string;
 }
 
-interface ChallengePageProps {
-  searchParams: Promise<{ exam?: string; title?: string }>;
-}
-
-export default function ChallengesPage({ searchParams }: ChallengePageProps) {
+export default function ChallengesPage() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
   const [creatingChallenge, setCreatingChallenge] = useState(false);

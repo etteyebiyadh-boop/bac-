@@ -31,7 +31,7 @@ export default async function AdminPage() {
         </div>
       </section>
 
-      <TabbedAdmin recentUsers={recentUsers} />
+      <TabbedAdmin recentUsers={JSON.parse(JSON.stringify(recentUsers))} />
     </div>
   );
 }

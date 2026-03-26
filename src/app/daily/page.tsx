@@ -29,7 +29,7 @@ export default async function DailyPage() {
         </p>
       </section>
 
-      <DailyMissionClient mission={mission} />
+      <DailyMissionClient mission={JSON.parse(JSON.stringify(mission))} />
     </div>
   );
 }

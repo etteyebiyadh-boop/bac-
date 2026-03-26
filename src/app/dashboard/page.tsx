@@ -27,12 +27,15 @@ export default async function DashboardPage() {
 
   const activeLanguages = [profile.primaryLanguage, ...secondaryLanguages];
 
-  if (!profile.bacSection) {
+  const serializedUser = JSON.parse(JSON.stringify(user));
+  const serializedProfile = JSON.parse(JSON.stringify(profile));
+
+  if (!serializedProfile.bacSection) {
     return (
       <div className="dashboard-layout" style={{ position: "fixed", inset: 0, overflow: "hidden", background: "#000205", direction: langCookie === "ar" ? "rtl" : "ltr" }}>
         <main style={{ padding: "40px 60px", overflowY: "auto", flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ maxWidth: "600px", width: "100%" }}>
-            <ProfileSetupForm initialProfile={profile as any} />
+            <ProfileSetupForm initialProfile={serializedProfile as any} />
           </div>
         </main>
       </div>
@@ -83,7 +86,7 @@ export default async function DashboardPage() {
         <div className="stack" style={{ gap: "20px" }}>
            <Link href="/" className="nav-link" style={{ fontSize: "1.2rem", opacity: 0.6 }}>🏠</Link>
            <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "var(--primary)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "white" }}>
-              {user.fullName?.charAt(0) || "U"}
+              {serializedUser.fullName?.charAt(0) || "U"}
            </div>
         </div>
       </aside>
@@ -105,9 +108,9 @@ export default async function DashboardPage() {
                </div>
                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                   <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "2px solid var(--primary-glow)", overflow: "hidden" }}>
-                     <img src={`https://ui-avatars.com/api/?name=${user.fullName}&background=6366f1&color=fff`} alt={user.fullName || "User"} width="40" height="40" />
+                     <img src={`https://ui-avatars.com/api/?name=${serializedUser.fullName}&background=6366f1&color=fff`} alt={serializedUser.fullName || "User"} width="40" height="40" />
                   </div>
-                  <span style={{ fontWeight: 800, fontSize: "14px" }}>{user.fullName}</span>
+                  <span style={{ fontWeight: 800, fontSize: "14px" }}>{serializedUser.fullName}</span>
                </div>
             </div>
          </header>
@@ -139,8 +142,8 @@ export default async function DashboardPage() {
             <h2 className="eyebrow" style={{ color: "var(--ink-dim)", fontSize: "12px" }}>LANGUAGE MODULES</h2>
             <LanguageModules
               activeLanguages={activeLanguages}
-              sectionLabel={profile.bacSection}
-              targetScore={profile.targetScore}
+              sectionLabel={serializedProfile.bacSection}
+              targetScore={serializedProfile.targetScore}
             />
          </div>
       </main>
