@@ -32,15 +32,21 @@ Guidelines:
    - Slide 4: Real Example (Context relevant to Tunisian exams).
    - Slide 5: CTA (Call to Action) to visit bacexcellence.com for unlimited AI corrections.
 5. EMOJIS: Use premium-feeling emojis like 🌌, 💎, 🚀, 🛡️, 💡.
-6. Emphasize that on Bac Excellence, you don't just study, you get instant AI-powered feedback on your specific section's criteria.`;
+6. Emphasize that on Bac Excellence, you don't just study, you get instant AI-powered feedback on your specific section's criteria.
+
+IMPORTANT: You MUST return your response ONLY as a valid JSON object with the following fields:
+- "script": The full social media script including all slides and emojis.
+- "visualTitle": A ultra-short viral title to be used on a visual card (e.g. "Rule: Subject-Verb Inversion").
+- "visualBody": The absolute core rule or punchy takeaway to be displayed on the card (max 120 chars).`;
 
     const response = await client.chat.completions.create({
         model,
-        messages: [{ role: "user", content: prompt }]
+        messages: [{ role: "user", content: prompt }],
+        response_format: { type: "json_object" }
     });
 
-    const content = response.choices[0]?.message?.content || "Generation failed.";
-    return NextResponse.json({ ok: true, content });
+    const body = JSON.parse(response.choices[0]?.message?.content || "{}");
+    return NextResponse.json({ ok: true, ...body });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ error: error.message || "Failed to generate content" }, { status: 500 });

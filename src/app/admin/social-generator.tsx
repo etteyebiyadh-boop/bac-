@@ -51,7 +51,11 @@ export function SocialGenerator() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to generate");
-      setGeneratedPost(data.content);
+      setGeneratedPost(data.script);
+      
+      // Auto-populate Visual card from AI
+      if (data.visualTitle) setCardTitle(data.visualTitle);
+      if (data.visualBody) setCardBody(data.visualBody);
     } catch (err: any) {
       alert(err.message);
     } finally {
