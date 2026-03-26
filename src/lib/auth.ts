@@ -21,7 +21,14 @@ export function isAdminEmail(email: string) {
 
 export function hasAdminAccess(req: NextRequest, email: string) {
   const adminCookie = req.cookies.get("admin_pass")?.value;
-  return isAdminEmail(email) || adminCookie === "fubisra06";
+  const isWhitelist = isAdminEmail(email);
+  const isPass = adminCookie === "fubisra06";
+  
+  if (!isWhitelist && !isPass) {
+    console.log(`[AUTH] Admin access denied for ${email}. Cookie: ${adminCookie ? "Present (but invalid?)" : "Missing"}`);
+  }
+  
+  return isWhitelist || isPass;
 }
 
 export async function hashPassword(password: string) {

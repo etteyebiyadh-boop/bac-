@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
   if (!hasAdminAccess(req, auth.email)) {
-    return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
+    return NextResponse.json({ error: `Forbidden: Access denied for ${auth.email}. Use the Admin Passcode if needed.` }, { status: 403 });
   }
 
   try {
