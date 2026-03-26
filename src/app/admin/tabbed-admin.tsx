@@ -4,8 +4,9 @@ import { useState } from "react";
 import { PlanToggleForm } from "./plan-toggle-form";
 import { LessonForm } from "./lesson-form";
 import { SocialGenerator } from "./social-generator";
+import { VideoGenerator } from "./video-generator";
 
-type AdminTab = "USERS" | "CONTENT" | "MARKETING";
+type AdminTab = "USERS" | "CONTENT" | "MARKETING" | "VIDEO";
 
 export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
   const [activeTab, setActiveTab] = useState<AdminTab>("USERS");
@@ -17,7 +18,8 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
         {[
           { id: "USERS", label: "User Management", icon: "💎" },
           { id: "CONTENT", label: "Content Library", icon: "📚" },
-          { id: "MARKETING", label: "Media Engine", icon: "🚀" }
+          { id: "MARKETING", label: "Media Engine", icon: "🚀" },
+          { id: "VIDEO", label: "Video Architect", icon: "🎬" }
         ].map(tab => (
           <button 
             key={tab.id}
@@ -94,6 +96,12 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
       {activeTab === "MARKETING" && (
         <div className="page-stack fadeIn">
           <SocialGenerator />
+        </div>
+      )}
+
+      {activeTab === "VIDEO" && (
+        <div className="page-stack fadeIn">
+          <VideoGenerator />
         </div>
       )}
 

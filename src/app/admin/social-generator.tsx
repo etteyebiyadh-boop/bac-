@@ -129,6 +129,8 @@ export function SocialGenerator() {
                 <select value={platform} onChange={e => setPlatform(e.target.value)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
                   <option value="Instagram Carousel">Instagram Carousel</option>
                   <option value="TikTok/Reels Script">TikTok Script</option>
+                  <option value="Youtube Shorts">Youtube Shorts</option>
+                  <option value="HD Lesson Tutorial">HD Lesson Tutorial Storyboard</option>
                   <option value="High-Impact Twitter thread">Thread Pack</option>
                 </select>
               </label>
@@ -180,7 +182,7 @@ export function SocialGenerator() {
             </div>
           )}
 
-          {videoPlan && platform === "TikTok/Reels Script" && (
+          {videoPlan && (platform.includes("TikTok") || platform.includes("Shorts") || platform.includes("Video") || platform.includes("Tutorial")) && (
             <div className="card stack" style={{ background: "rgba(0, 0, 0, 0.3)", border: "1px solid var(--accent)", padding: "40px", animation: "slideUp 0.6s ease" }}>
               <div className="row-between" style={{ borderBottom: "1px solid rgba(245, 158, 11, 0.2)", paddingBottom: "24px", marginBottom: "32px" }}>
                  <div className="stack" style={{ gap: "4px" }}>

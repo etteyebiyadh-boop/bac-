@@ -7,6 +7,7 @@ import { getLanguageLabel } from "@/lib/learning";
 import { isStructuredLessonMeta, skillLabels } from "@/lib/language-system";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { GrammarDrill } from "@/components/GrammarDrill";
+import { VideoPlayer } from "@/components/video-player";
 
 export default async function LessonPage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
@@ -65,6 +66,16 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
         </p>
         <div style={{ position: "absolute", right: "-10%", top: "-30%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)", borderRadius: "50%" }} />
       </section>
+
+      {lesson.videoUrl && (
+        <section className="stack" style={{ gap: "20px" }}>
+           <div className="row-between">
+              <span className="eyebrow" style={{ color: "var(--primary)" }}>{langCookie === "ar" ? "درس بالفيديو" : (langCookie === "fr" ? "Tutoriel Vidéo" : "Video Tutorial")}</span>
+              <span className="pill success-pill">LIVE 🎬</span>
+           </div>
+           <VideoPlayer url={lesson.videoUrl} title={lesson.title} />
+        </section>
+      )}
 
       <div className="feature-grid" style={{ gridTemplateColumns: "1fr", gap: "24px" }}>
         <article className="card stack" style={{ padding: "40px", fontSize: "1.1rem", lineHeight: "1.8", color: "var(--ink)", background: "rgba(255,255,255,0.02)" }}>
