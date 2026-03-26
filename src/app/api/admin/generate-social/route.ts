@@ -6,8 +6,8 @@ export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   
-  const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(",") : [];
-  if (!adminEmails.includes(auth.email)) {
+  const { isAdminEmail } = await import("@/lib/auth");
+  if (!isAdminEmail(auth.email)) {
     return NextResponse.json({ error: "Forbidden: Admins only" }, { status: 403 });
   }
 

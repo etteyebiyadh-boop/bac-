@@ -55,7 +55,7 @@ export function SmartStudyPlanner({ lang }: { lang: SiteLanguage }) {
           Based on your latest exam, you struggled with "skimming and inference". We recommend a focused 15-minute review session.
         </p>
       </div>
-      <Link href="/lessons/reading-comprehension" className="button-link" style={{ marginTop: "24px", justifyContent: "center", background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--success)", color: "white" }}>
+      <Link href="/strategy" className="button-link" style={{ marginTop: "24px", justifyContent: "center", background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--success)", color: "white" }}>
         Start 15 Min Review
       </Link>
     </div>
