@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     if (!topic || !subject) return NextResponse.json({ error: "Topic and subject are required" }, { status: 400 });
 
     const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) throw new Error("Missing OPENAI_API_KEY");
+    if (!apiKey || apiKey === "replace_me") throw new Error("Missing valid OPENAI_API_KEY. Please update your .env file.");
     const client = new OpenAI({ apiKey });
     const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
