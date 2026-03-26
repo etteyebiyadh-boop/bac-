@@ -59,8 +59,23 @@ IMPORTANT: You MUST return your response ONLY as a valid JSON object with the fo
         temperature: 0.4,
     });
 
-    const body = JSON.parse(response.choices[0]?.message?.content || "{}");
-    return NextResponse.json({ ok: true, ...body });
+    const content = response.choices[0]?.message?.content || "{}";
+    let body: any = {};
+    try {
+      body = JSON.parse(content);
+    } catch (e) {
+      console.error("AI JSON Parse Error:", e);
+      throw new Error("AI returned invalid JSON format.");
+    }
+
+    // Sanitize specifically for React rendering safety
+    const sanitized = {
+      script: typeof body.script === 'object' ? JSON.stringify(body.script, null, 2) : (body.script || ""),
+      visualTitle: typeof body.visualTitle === 'object' ? JSON.stringify(body.visualTitle) : (body.visualTitle || "Hook Title"),
+      visualBody: typeof body.visualBody === 'object' ? JSON.stringify(body.visualBody, null, 2) : (body.visualBody || ""),
+    };
+
+    return NextResponse.json({ ok: true, ...sanitized });
   } catch (error: any) {
     console.error(error);
     const status = getErrorStatus(error);

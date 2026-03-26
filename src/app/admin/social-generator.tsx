@@ -238,7 +238,7 @@ export function SocialGenerator() {
                   {cardTitle}
                 </h1>
                 <div style={{ 
-                  fontSize: cardBody.length > 200 ? "0.85rem" : (cardBody.length > 120 ? "0.9rem" : "1.05rem"), 
+                  fontSize: (cardBody?.length || 0) > 200 ? "0.85rem" : ((cardBody?.length || 0) > 120 ? "0.9rem" : "1.05rem"), 
                   lineHeight: 1.5, 
                   opacity: 0.9,
                   whiteSpace: "pre-wrap",
@@ -246,7 +246,7 @@ export function SocialGenerator() {
                   borderLeft: `4px solid ${currentTheme.accent}`,
                   transition: "all 0.3s ease"
                 }}>
-                  {cardBody}
+                  {String(cardBody || "")}
                 </div>
                 <div style={{ marginTop: "10px", padding: "8px 12px", background: "rgba(255,255,255,0.05)", borderRadius: "8px", border: `1px solid ${currentTheme.accent}`, display: "inline-flex", alignItems: "center", gap: "6px" }}>
                    <span style={{ color: currentTheme.accent, fontWeight: 900, fontSize: "10px" }}>🛡️ ELITE GRADE FACTOR: +3 PTS</span>
