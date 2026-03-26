@@ -1,154 +1,73 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Language, SubmissionType } from "@prisma/client";
-import { z } from "zod";
-import { db } from "@/lib/db";
-import { correctEssay } from "@/lib/ai";
 import { getUserFromRequest } from "@/lib/auth";
-import {
-  CORRECTION_RATE_LIMIT_PER_MINUTE,
-  CORRECTION_RATE_LIMIT_WINDOW_MS,
-  FREE_CORRECTIONS_PER_WEEK,
-  MAX_ESSAY_CHARS,
-  MIN_ESSAY_CHARS
-} from "@/lib/constants";
-import { getWeakestSkill } from "@/lib/learning";
-import { checkRateLimit } from "@/lib/rate-limit";
-
-const schema = z.object({
-  promptText: z.string().trim().max(600).optional(),
-  studentText: z.string().trim().min(MIN_ESSAY_CHARS).max(MAX_ESSAY_CHARS),
-  examId: z.string().optional(),
-  language: z.nativeEnum(Language).optional()
-});
+import { db } from "@/lib/db";
+import OpenAI from "openai";
 
 export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown-ip";
-  const rateKey = `${auth.userId}:${ip}`;
-  const rateCheck = checkRateLimit(
-    rateKey,
-    CORRECTION_RATE_LIMIT_PER_MINUTE,
-    CORRECTION_RATE_LIMIT_WINDOW_MS
-  );
-  if (!rateCheck.allowed) {
-    return NextResponse.json(
-      {
-        error: "Too many correction requests. Please wait a minute and try again."
-      },
-      { status: 429 }
-    );
-  }
 
   try {
-    const body = schema.parse(await req.json());
-    const [user, exam, weeklyCorrections] = await Promise.all([
-      db.user.findUnique({
-        where: { id: auth.userId },
-        select: { id: true, isPremium: true }
-      }),
-      body.examId
-        ? db.exam.findUnique({
-            where: { id: body.examId },
-            select: { id: true, prompt: true, language: true }
-          })
-        : Promise.resolve(null),
-      db.submission.count({
-        where: {
-          userId: auth.userId,
-          createdAt: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-          }
-        }
-      })
-    ]);
+    const { examId, promptText, studentText, language } = await req.json();
+    if (!studentText) return NextResponse.json({ error: "Essay is empty" }, { status: 400 });
 
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey || apiKey === "replace_me") {
+        return NextResponse.json({ error: "401 Incorrect API key provided: replace_me. Please update your .env file." }, { status: 401 });
     }
 
-    if (!user.isPremium && weeklyCorrections >= FREE_CORRECTIONS_PER_WEEK) {
-      return NextResponse.json(
-        {
-          error: `Free plan limit reached. Upgrade for unlimited corrections or wait for next week.`
-        },
-        { status: 403 }
-      );
-    }
+    const client = new OpenAI({ apiKey });
+    const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
-    if (body.examId && !exam) {
-      return NextResponse.json({ error: "Exam not found" }, { status: 404 });
-    }
+    const systemPrompt = `You are an elite Tunisian Baccalaureate examiner for ${language}.
+Your task is to grade the student essay based on official ministry criteria:
+1. Grammar & Syntax (5 pts)
+2. Vocabulary range & accuracy (5 pts)
+3. Structure, Coherence & Flow (10 pts)
 
-    const promptText =
-      (exam?.prompt ?? body.promptText?.trim()) || `General bac-style writing`;
-    const language = exam?.language ?? body.language ?? Language.ENGLISH;
-    
-    if (!user.isPremium && language !== Language.ENGLISH) {
-      return NextResponse.json(
-        {
-          error: `The Free plan only supports English corrections. Upgrade to Premium to practice ${language.toLowerCase()}.`
-        },
-        { status: 403 }
-      );
-    }
-    
-    const wordCount = body.studentText.split(/\s+/).filter(Boolean).length;
-    const result = await correctEssay(body.studentText, promptText, language);
-    const weakestSkill = getWeakestSkill({
-      grammar: result.grammarScore,
-      vocabulary: result.vocabularyScore,
-      structure: result.structureScore
-    });
-    const recommendedLesson = await db.lesson.findFirst({
-      where: {
-        language,
-        skillFocus: weakestSkill
-      },
-      orderBy: [{ difficulty: "asc" }, { estimatedMinutes: "asc" }]
+Exam Prompt: ${promptText || "Free writing topic"}
+Student Essay: "${studentText}"
+
+Output a JSON object with:
+- "overallScore": Final mark out of 20.
+- "grammarScore": Mark out of 20 for grammar.
+- "vocabularyScore": Mark out of 20 for vocab.
+- "structureScore": Mark out of 20 for structure.
+- "summary": A brief encouraging 2-sentence overview.
+- "correctedText": The full essay with grammar and lexical improvements.
+- "strengths": Array of 3 bullet points.
+- "improvements": Array of 3 bullet points.
+- "recommendedLesson": { "slug": "link-to-best-matching-lesson", "title": "Lesson Title", "summary": "Why this lesson?", "skillFocus": "grammar/vocab/structure" }
+`;
+
+    const response = await client.chat.completions.create({
+      model,
+      messages: [{ role: "system", content: systemPrompt }],
+      response_format: { type: "json_object" }
     });
 
+    const result = JSON.parse(response.choices[0]?.message?.content || "{}");
+
+    // Persist submission
     await db.submission.create({
       data: {
         userId: auth.userId,
-        examId: exam?.id,
-        language,
-        submissionType: exam ? SubmissionType.EXAM_PRACTICE : SubmissionType.FREE_WRITE,
-        promptText,
-        originalText: body.studentText,
-        correctedText: result.correctedText,
-        overallScore: result.overallScore,
-        grammarScore: result.grammarScore,
-        vocabularyScore: result.vocabularyScore,
-        structureScore: result.structureScore,
-        feedbackJson: {
-          summary: result.summary,
-          strengths: result.strengths,
-          improvements: result.improvements
-        },
-        wordCount,
+        examId: examId || null,
+        language: language as any,
+        originalText: studentText,
+        correctedText: result.correctedText || studentText,
+        overallScore: result.overallScore || 0,
+        grammarScore: result.grammarScore || 0,
+        vocabularyScore: result.vocabularyScore || 0,
+        structureScore: result.structureScore || 0,
+        feedbackJson: result,
+        wordCount: studentText.split(/\s+/).length,
       }
     });
 
-    return NextResponse.json({
-      ...result,
-      recommendedLesson: recommendedLesson
-        ? {
-            slug: recommendedLesson.slug,
-            title: recommendedLesson.title,
-            summary: recommendedLesson.summary,
-            skillFocus: recommendedLesson.skillFocus
-          }
-        : null,
-      remainingFreeCorrections: user.isPremium
-        ? null
-        : Math.max(0, FREE_CORRECTIONS_PER_WEEK - weeklyCorrections - 1)
-    });
-  } catch (error) {
-    console.error("Correction endpoint failed", error);
-    return NextResponse.json(
-      { error: "Correction is temporarily unavailable. Please retry in a few seconds." },
-      { status: 503 }
-    );
+    return NextResponse.json(result);
+  } catch (error: any) {
+    console.error(error);
+    return NextResponse.json({ error: "AI Correction failed. Please check your connection." }, { status: 500 });
   }
 }
