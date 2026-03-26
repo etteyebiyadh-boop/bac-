@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { WriteWorkspace } from "@/app/write/write-workspace";
+import Link from "next/link";
 
 export default async function ExamPracticePage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();

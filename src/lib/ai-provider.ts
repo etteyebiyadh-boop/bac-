@@ -3,7 +3,7 @@ import OpenAI from "openai";
 export type AIProvider = "openai" | "google" | "groq";
 
 export function getAIClient() {
-  const provider = (process.env.AI_PROVIDER || "openai") as AIProvider;
+  const provider = (process.env.AI_PROVIDER?.trim() || "openai") as AIProvider;
   
   // 1. Google Gemini (FREE via AI Studio)
   if (provider === "google") {
