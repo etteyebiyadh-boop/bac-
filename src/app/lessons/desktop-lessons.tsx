@@ -17,7 +17,7 @@ interface DesktopLessonsProps {
   t: any;
   getLanguageLabel: (lang: Language) => string;
   moduleLabels: Record<string, string>;
-  profile: any;
+  bacSection: string | null;
 }
 
 function CollapsibleSection({ title, subtitle, count, icon: Icon, children, color = "var(--primary)", defaultOpen = false }: {
@@ -77,7 +77,7 @@ function CollapsibleSection({ title, subtitle, count, icon: Icon, children, colo
   );
 }
 
-export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, getLanguageLabel, moduleLabels, profile }: DesktopLessonsProps) {
+export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, getLanguageLabel, moduleLabels, bacSection }: DesktopLessonsProps) {
   const [activeTab, setActiveTab] = useState<"curriculum" | "reading" | "grammar" | "vocab">("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
 
@@ -99,7 +99,7 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
       <section className="card" style={{ padding: "40px", borderRadius: "24px", background: "radial-gradient(circle at top right, rgba(99, 102, 241, 0.08), transparent)" }}>
         <span className="eyebrow" style={{ color: "var(--primary)" }}>{t.lib_title}</span>
         <h1 className="section-title" style={{ fontSize: "clamp(2rem, 5vw, 3rem)", marginTop: "12px" }}>
-          {lang === "ar" ? "الدراسة المعمقة" : "Deep Study"} <span className="text-gradient">Bac {profile.bacSection}</span>
+          {lang === "ar" ? "الدراسة المعمقة" : "Deep Study"} <span className="text-gradient">Bac {bacSection}</span>
         </h1>
 
         {/* Language Selector */}

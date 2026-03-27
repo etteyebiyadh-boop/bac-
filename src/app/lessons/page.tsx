@@ -114,7 +114,7 @@ export default async function LibraryHubPage() {
         t={t}
         getLanguageLabel={getLanguageLabel}
         moduleLabels={MODULE_LABELS}
-        profile={profile}
+        bacSection={profile.bacSection}
       />
     </ResponsiveLessons>
   );
