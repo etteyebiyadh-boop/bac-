@@ -24,33 +24,52 @@ export async function POST(req: NextRequest) {
     
     const sectionContext = section ? `Target Section: ${section}.` : "Target: All BAC sections.";
 
-    const prompt = `You are a viral content strategist for 'Bac Excellence', the elite AI-first platform for Tunisian Baccalaureate students.
-Create a ${platform} content pack about: ${language} - ${topic}. ${sectionContext}
+    const prompt = `You are a world-class BAC exam language coach and viral content strategist for 'Bac Excellence', the elite AI-first platform for Tunisian Baccalaureate students.
 
-STRICTLY FOLLOW THIS OUTPUT FORMAT (valid JSON only):
+Create a COMPLETE, RICH mastery content pack about: ${language} - "${topic}". ${sectionContext}
+
+Return ONLY a valid JSON object with these EXACT keys:
+
 {
-  "script": "<full social media caption in Tunisian Derja, energetic, with CTA to Bac Excellence>",
-  "visualTitle": "<VERY SHORT viral hook title in ${language}, max 6 words>",
-  "visualBody": "<EXACTLY 2 SHORT LINES in ${language}, max 80 chars total — this appears on a graphic card, NO long paragraphs>",
-  "synonyms": [{ "word": "...", "synonym": "..." }, ...],
-  "antonyms": [{ "word": "...", "antonym": "..." }, ...],
-  "vocabulary": [{ "word": "...", "definition": "...", "example": "..." }, ...],
-  "phrases": ["exam-ready phrase 1", "phrase 2", ...]
+  "script": "<full viral caption in Tunisian Derja with slang (ya m3allem, taayer, revision 9asba, jib l'excellence) + CTA to Bac Excellence>",
+  "visualTitle": "<viral hook title in ${language}, MAX 6 words>",
+  "visualBody": "<EXACTLY 2 SHORT LINES in ${language}, 80 chars max — for a graphic card, NO paragraphs>",
+
+  "synonyms": [{ "word": "...", "synonym": "...", "usage": "short usage tip" }],
+  "antonyms": [{ "word": "...", "antonym": "...", "contrast": "one-line contrast note" }],
+  "vocabulary": [{ "word": "...", "definition": "...", "example": "...", "register": "formal/neutral/informal" }],
+  "phrases": ["high-scoring exam phrase 1", "phrase 2", "..."],
+
+  "collocations": [{ "collocation": "verb + noun pair", "example": "used in a sentence" }],
+  "idioms": [{ "idiom": "...", "meaning": "...", "example": "..." }],
+  "connectors": [{ "connector": "Furthermore / However / etc.", "use": "adding/contrasting/cause-effect/example/conclusion", "example": "..." }],
+  "wordFamily": [{ "root": "...", "noun": "...", "verb": "...", "adjective": "...", "adverb": "..." }],
+  "paraphrases": [{ "original": "a sentence to rephrase", "paraphrase": "rephrased version using different structure" }],
+  "commonMistakes": [{ "mistake": "wrong usage", "correction": "correct usage", "rule": "why it's wrong" }],
+  "grammarPatterns": [{ "pattern": "Subject + V + Object structure", "example": "...", "tip": "when to use it" }],
+  "writingTips": ["concise actionable tip 1 for ${language} writing at the BAC level", "tip 2", "..."]
 }
 
-RULES:
-- script: Tunisian Derja slang (ya m3allem, taayer, revision 9asba, jib l'excellence). Energetic. Brand 'Bac Excellence'.
-- visualTitle: 4-6 words max. Pattern-interrupt. In ${language}.
-- visualBody: MAXIMUM 2 lines, 80 chars total. Punchy. In ${language}. For a graphic card — no long sentences.
-- synonyms: 5 items. Key vocabulary for ${topic} in ${language}.
-- antonyms: 5 items. Contrasting words for ${topic} in ${language}.
-- vocabulary: 4 items. High-value words for ${topic} in ${language}.
-- phrases: 5 items. Exam-ready, high-scoring phrases in ${language}.`;
+QUANTITY:
+- synonyms: 5 items
+- antonyms: 5 items
+- vocabulary: 4 items
+- phrases: 6 items
+- collocations: 5 items
+- idioms: 4 items
+- connectors: 6 items (mix of types)
+- wordFamily: 3 items
+- paraphrases: 3 items
+- commonMistakes: 4 items
+- grammarPatterns: 3 items
+- writingTips: 5 tips
+
+All content MUST be in ${language} and DIRECTLY relevant to "${topic}". High-scoring, exam-ready. Elite quality only.`;
 
     const response = await getReliableCompletion({
         messages: [{ role: "user", content: prompt }],
         response_format: { type: "json_object" },
-        max_tokens: 1400,
+        max_tokens: 2400,
         temperature: 0.6,
     });
 
@@ -68,10 +87,18 @@ RULES:
       script: typeof body.script === 'object' ? JSON.stringify(body.script, null, 2) : (body.script || ""),
       visualTitle: typeof body.visualTitle === 'object' ? JSON.stringify(body.visualTitle) : (body.visualTitle || "Hook Title"),
       visualBody: typeof body.visualBody === 'object' ? JSON.stringify(body.visualBody, null, 2) : (body.visualBody || ""),
-      synonyms: Array.isArray(body.synonyms) ? body.synonyms : [],
-      antonyms: Array.isArray(body.antonyms) ? body.antonyms : [],
-      vocabulary: Array.isArray(body.vocabulary) ? body.vocabulary : [],
-      phrases: Array.isArray(body.phrases) ? body.phrases : [],
+      synonyms:       Array.isArray(body.synonyms)       ? body.synonyms       : [],
+      antonyms:       Array.isArray(body.antonyms)       ? body.antonyms       : [],
+      vocabulary:     Array.isArray(body.vocabulary)     ? body.vocabulary     : [],
+      phrases:        Array.isArray(body.phrases)        ? body.phrases        : [],
+      collocations:   Array.isArray(body.collocations)   ? body.collocations   : [],
+      idioms:         Array.isArray(body.idioms)         ? body.idioms         : [],
+      connectors:     Array.isArray(body.connectors)     ? body.connectors     : [],
+      wordFamily:     Array.isArray(body.wordFamily)     ? body.wordFamily     : [],
+      paraphrases:    Array.isArray(body.paraphrases)    ? body.paraphrases    : [],
+      commonMistakes: Array.isArray(body.commonMistakes) ? body.commonMistakes : [],
+      grammarPatterns:Array.isArray(body.grammarPatterns)? body.grammarPatterns: [],
+      writingTips:    Array.isArray(body.writingTips)    ? body.writingTips    : [],
     };
 
     return NextResponse.json({ ok: true, ...sanitized });
