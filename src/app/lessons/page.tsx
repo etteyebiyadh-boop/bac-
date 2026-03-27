@@ -87,35 +87,18 @@ export default async function LibraryHubPage() {
 
   return (
     <ResponsiveLessons
-      mobileComponent={
-        <MobileLessons
-          modules={modules}
-          grammarRules={grammarRules}
-          vocabSets={vocabSets}
-          readingPassages={readingPassages}
-          curriculumTracks={curriculumTracks}
-          availableSlugs={availableCurriculumSlugs}
-          activeLanguages={activeLanguages}
-          lang={langCookie}
-          t={t}
-          getLanguageLabel={getLanguageLabel}
-        />
-      }
-    >
-      <DesktopLessons
-        modules={modules}
-        grammarRules={grammarRules}
-        vocabSets={vocabSets}
-        readingPassages={readingPassages}
-        curriculumTracks={curriculumTracks}
-        availableSlugs={availableCurriculumSlugs}
-        activeLanguages={activeLanguages}
-        lang={langCookie}
-        t={t}
-        getLanguageLabel={getLanguageLabel}
-        moduleLabels={MODULE_LABELS}
-        bacSection={profile.bacSection}
-      />
-    </ResponsiveLessons>
+      modules={modules}
+      grammarRules={grammarRules}
+      vocabSets={vocabSets}
+      readingPassages={readingPassages}
+      curriculumTracks={curriculumTracks}
+      availableSlugs={availableCurriculumSlugs}
+      activeLanguages={activeLanguages}
+      lang={langCookie}
+      t={t}
+      getLanguageLabel={getLanguageLabel}
+      moduleLabels={MODULE_LABELS}
+      bacSection={profile.bacSection}
+    />
   );
 }

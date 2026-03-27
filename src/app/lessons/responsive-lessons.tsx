@@ -2,13 +2,37 @@
 
 import { useEffect, useState } from "react";
 import { MobileLessons } from "./mobile-lessons";
+import { DesktopLessons } from "./desktop-lessons";
 
 interface ResponsiveLessonsProps {
-  children: React.ReactNode;
-  mobileComponent: React.ReactNode;
+  modules: any[];
+  grammarRules: any[];
+  vocabSets: any[];
+  readingPassages: any[];
+  curriculumTracks: Record<string, any>;
+  availableSlugs: string[];
+  activeLanguages: any[];
+  lang: string;
+  t: any;
+  getLanguageLabel: (lang: any) => string;
+  moduleLabels: Record<string, string>;
+  bacSection: string | null;
 }
 
-export function ResponsiveLessons({ children, mobileComponent }: ResponsiveLessonsProps) {
+export function ResponsiveLessons({
+  modules,
+  grammarRules,
+  vocabSets,
+  readingPassages,
+  curriculumTracks,
+  availableSlugs,
+  activeLanguages,
+  lang,
+  t,
+  getLanguageLabel,
+  moduleLabels,
+  bacSection,
+}: ResponsiveLessonsProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -22,11 +46,54 @@ export function ResponsiveLessons({ children, mobileComponent }: ResponsiveLesso
 
   if (!mounted) {
     return (
-      <div style={{ padding: "20px" }}>
-        <div className="card skeleton" style={{ height: "200px", borderRadius: "16px" }} />
-      </div>
+      <DesktopLessons
+        modules={modules}
+        grammarRules={grammarRules}
+        vocabSets={vocabSets}
+        readingPassages={readingPassages}
+        curriculumTracks={curriculumTracks}
+        availableSlugs={availableSlugs}
+        activeLanguages={activeLanguages}
+        lang={lang}
+        t={t}
+        getLanguageLabel={getLanguageLabel}
+        moduleLabels={moduleLabels}
+        bacSection={bacSection}
+      />
     );
   }
 
-  return isMobile ? <>{mobileComponent}</> : <>{children}</>;
+  if (isMobile) {
+    return (
+      <MobileLessons
+        modules={modules}
+        grammarRules={grammarRules}
+        vocabSets={vocabSets}
+        readingPassages={readingPassages}
+        curriculumTracks={curriculumTracks}
+        availableSlugs={availableSlugs}
+        activeLanguages={activeLanguages}
+        lang={lang}
+        t={t}
+        getLanguageLabel={getLanguageLabel}
+      />
+    );
+  }
+
+  return (
+    <DesktopLessons
+      modules={modules}
+      grammarRules={grammarRules}
+      vocabSets={vocabSets}
+      readingPassages={readingPassages}
+      curriculumTracks={curriculumTracks}
+      availableSlugs={availableSlugs}
+      activeLanguages={activeLanguages}
+      lang={lang}
+      t={t}
+      getLanguageLabel={getLanguageLabel}
+      moduleLabels={moduleLabels}
+      bacSection={bacSection}
+    />
+  );
 }
