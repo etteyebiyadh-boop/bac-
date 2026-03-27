@@ -1,75 +1,146 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { toPng } from 'html-to-image';
+import { toPng } from "html-to-image";
+
+type Theme = "grammar" | "vocab" | "mindset" | "elite" | "cyber" | "retro" | "gold" | "vibrant" | "midnight" | "glass";
+
+const THEMES: Record<Theme, { bg: string; accent: string; glow: string; text: string }> = {
+  grammar:  { bg: "radial-gradient(circle at 10% 10%, #6366f1 0%, #000205 80%)", accent: "#818cf8", glow: "rgba(99,102,241,0.5)", text: "#fff" },
+  vocab:    { bg: "radial-gradient(circle at 10% 10%, #059669 0%, #000a05 80%)", accent: "#34d399", glow: "rgba(16,185,129,0.5)", text: "#fff" },
+  mindset:  { bg: "radial-gradient(circle at 10% 10%, #b45309 0%, #0a0500 80%)", accent: "#fbbf24", glow: "rgba(245,158,11,0.5)", text: "#fff" },
+  elite:    { bg: "linear-gradient(135deg, #111 0%, #000 100%)",                  accent: "#e5e7eb", glow: "rgba(255,255,255,0.15)", text: "#fff" },
+  cyber:    { bg: "radial-gradient(circle at 10% 10%, #7c3aed 0%, #000 80%)",     accent: "#00ffff", glow: "rgba(0,255,255,0.5)", text: "#fff" },
+  retro:    { bg: "radial-gradient(circle at 10% 10%, #991b1b 0%, #2b0000 80%)",  accent: "#fcd34d", glow: "rgba(252,211,77,0.4)", text: "#fff" },
+  gold:     { bg: "radial-gradient(circle at 10% 10%, #92400e 0%, #000 80%)",     accent: "#ffd700", glow: "rgba(212,175,55,0.6)", text: "#fff" },
+  vibrant:  { bg: "linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)", accent: "#fff", glow: "rgba(236,72,153,0.5)", text: "#fff" },
+  midnight: { bg: "linear-gradient(135deg, #0f172a 0%, #020617 100%)",             accent: "#38bdf8", glow: "rgba(56,189,248,0.35)", text: "#fff" },
+  glass:    { bg: "rgba(15,23,42,0.7)",                                            accent: "#e2e8f0", glow: "rgba(255,255,255,0.1)", text: "#fff" },
+};
+
+async function downloadRef(ref: React.RefObject<HTMLDivElement | null>, filename: string) {
+  if (!ref.current) return;
+  try {
+    const url = await toPng(ref.current, { cacheBust: true, pixelRatio: 3 });
+    const a = document.createElement("a");
+    a.download = filename;
+    a.href = url;
+    a.click();
+  } catch (e) {
+    console.error(e);
+    alert("Export failed. Try again.");
+  }
+}
+
+/** A single 1080×1080 shareable card - fixed size with overflow hidden */
+function MasteryCard({
+  cardRef,
+  theme,
+  watermark,
+  children,
+}: {
+  cardRef: React.RefObject<HTMLDivElement | null>;
+  theme: Theme;
+  watermark: string;
+  children: React.ReactNode;
+}) {
+  const t = THEMES[theme];
+  return (
+    <div
+      ref={cardRef}
+      style={{
+        width: 400,
+        height: 400,
+        flexShrink: 0,
+        background: t.bg,
+        border: `1px solid ${t.glow}`,
+        backdropFilter: theme === "glass" ? "blur(20px)" : "none",
+        boxShadow: `0 0 40px ${t.glow}`,
+        borderRadius: 24,
+        padding: 30,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      {/* blurred orb accent */}
+      <div style={{ position: "absolute", top: "-15%", right: "-15%", width: 180, height: 180, background: t.accent, filter: "blur(90px)", opacity: 0.18, borderRadius: "50%", zIndex: 0 }} />
+
+      {/* header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, zIndex: 2 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ width: 26, height: 26, background: t.accent, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", color: "#000", fontWeight: 900, fontSize: 15 }}>B</div>
+          <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: "1.5px", color: t.text }}>BAC EXCELLENCE</span>
+        </div>
+        <span style={{ fontSize: 11, fontWeight: 800, color: t.accent, letterSpacing: 1 }}>bac-gilt.vercel.app</span>
+      </div>
+
+      {/* main content */}
+      <div style={{ flex: 1, zIndex: 2, overflow: "hidden" }}>
+        {children}
+      </div>
+
+      {/* watermark */}
+      <div style={{ textAlign: "center", marginTop: 12, zIndex: 2 }}>
+        <span style={{ fontSize: 11, letterSpacing: "3px", fontWeight: 800, color: t.text, opacity: 0.5 }}>{watermark.toUpperCase()}</span>
+      </div>
+    </div>
+  );
+}
 
 export function SocialGenerator() {
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic]     = useState("");
   const [language, setLanguage] = useState("ENGLISH");
   const [platform, setPlatform] = useState("Instagram Carousel");
-  const [section, setSection] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [generatedPost, setGeneratedPost] = useState("");
-  const visualRef = useRef<HTMLDivElement>(null);
-  
-  // Pedagogical State
-  const [synonyms, setSynonyms] = useState<any[]>([]);
-  const [antonyms, setAntonyms] = useState<any[]>([]);
-  const [vocabulary, setVocabulary] = useState<any[]>([]);
-  const [phrases, setPhrases] = useState<string[]>([]);
+  const [section, setSection]   = useState("");
+  const [loading, setLoading]   = useState(false);
+  const [script, setScript]     = useState("");
 
-  // Unified State
-  const [cardTitle, setCardTitle] = useState("The 15/20 Rule 🚀");
-  const [cardBody, setCardBody] = useState("Never start a sentence with 'Never' unless you invert the subject and the verb.\n\n❌ Never I have seen...\n✅ Never have I seen...");
-  const [cardTheme, setCardTheme] = useState<"grammar" | "vocab" | "mindset" | "elite" | "cyber" | "retro" | "gold" | "vibrant" | "midnight" | "glass">("grammar");
-  const [cardWatermark, setCardWatermark] = useState("@bacexcellence");
+  // Pedagogical state
+  const [synonyms, setSynonyms]   = useState<{ word: string; synonym: string }[]>([]);
+  const [antonyms, setAntonyms]   = useState<{ word: string; antonym: string }[]>([]);
+  const [vocabulary, setVocabulary] = useState<{ word: string; definition: string; example: string }[]>([]);
+  const [phrases, setPhrases]     = useState<string[]>([]);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(generatedPost);
-  };
+  // Card state
+  const [cardTheme, setCardTheme]   = useState<Theme>("grammar");
+  const [cardTitle, setCardTitle]   = useState("The 15/20 Rule 🚀");
+  const [cardBody, setCardBody]     = useState("Never start with 'Never'—invert!\n❌ Never I have seen…\n✅ Never have I seen…");
+  const [watermark, setWatermark]   = useState("@bacexcellence");
 
-  const handleDownload = async () => {
-    if (visualRef.current === null) return;
-    try {
-      const dataUrl = await toPng(visualRef.current, { cacheBust: true, pixelRatio: 2 });
-      const link = document.createElement("a");
-      link.download = `bac-excellence-${cardTheme}-post.png`;
-      link.href = dataUrl;
-      link.click();
-    } catch (err) {
-      console.error("Failed to download image", err);
-      alert("Failed to download image.");
-    }
-  };
+  // Refs for downloadable cards
+  const hookCardRef   = useRef<HTMLDivElement>(null);
+  const synCardRef    = useRef<HTMLDivElement>(null);
+  const antCardRef    = useRef<HTMLDivElement>(null);
+  const vocabCardRef  = useRef<HTMLDivElement>(null);
+  const phraseCardRef = useRef<HTMLDivElement>(null);
+
+  const t = THEMES[cardTheme];
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
-    if (!topic) return;
-    
     setLoading(true);
-    setGeneratedPost("");
-    setSynonyms([]);
-    setAntonyms([]);
-    setVocabulary([]);
-    setPhrases([]);
-
+    setScript(""); setSynonyms([]); setAntonyms([]); setVocabulary([]); setPhrases([]);
     try {
-      const res = await fetch("/api/admin/generate-social", {
+      const res  = await fetch("/api/admin/generate-social", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, language, platform, section })
+        body: JSON.stringify({ topic, language, platform, section }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to generate");
-      setGeneratedPost(data.script);
-      
-      // Auto-populate from AI
+      if (!res.ok) throw new Error(data.error || "Failed");
+      setScript(data.script || "");
       if (data.visualTitle) setCardTitle(data.visualTitle);
-      if (data.visualBody) setCardBody(data.visualBody);
-      if (data.synonyms) setSynonyms(data.synonyms);
-      if (data.antonyms) setAntonyms(data.antonyms);
+      // Keep visualBody super short for the card
+      if (data.visualBody) {
+        const lines = String(data.visualBody).split("\n").slice(0, 3).join("\n");
+        setCardBody(lines.length > 120 ? lines.slice(0, 117) + "…" : lines);
+      }
+      if (data.synonyms)   setSynonyms(data.synonyms);
+      if (data.antonyms)   setAntonyms(data.antonyms);
       if (data.vocabulary) setVocabulary(data.vocabulary);
-      if (data.phrases) setPhrases(data.phrases);
+      if (data.phrases)    setPhrases(data.phrases);
     } catch (err: any) {
       alert(err.message);
     } finally {
@@ -77,83 +148,54 @@ export function SocialGenerator() {
     }
   }
 
-  const themeColors = {
-    grammar: { bg: "radial-gradient(circle at 10% 10%, #6366f1 0%, #000205 80%)", accent: "#6366f1", glow: "rgba(99, 102, 241, 0.4)" },
-    vocab: { bg: "radial-gradient(circle at 10% 10%, #10b981 0%, #000205 80%)", accent: "#10b981", glow: "rgba(16, 185, 129, 0.4)" },
-    mindset: { bg: "radial-gradient(circle at 10% 10%, #f59e0b 0%, #000205 80%)", accent: "#f59e0b", glow: "rgba(245, 158, 11, 0.4)" },
-    elite: { bg: "radial-gradient(circle at 10% 10%, #333 0%, #000 80%)", accent: "#fff", glow: "rgba(255, 255, 255, 0.2)" },
-    cyber: { bg: "radial-gradient(circle at 10% 10%, #ff00ff 0%, #000000 80%)", accent: "#00ffff", glow: "rgba(0, 255, 255, 0.5)" },
-    retro: { bg: "radial-gradient(circle at 10% 10%, #ff4d4d 0%, #2b0000 80%)", accent: "#ffcc00", glow: "rgba(255, 204, 0, 0.4)" },
-    gold: { bg: "radial-gradient(circle at 10% 10%, #d4af37 0%, #000 80%)", accent: "#ffd700", glow: "rgba(212, 175, 55, 0.5)" },
-    vibrant: { bg: "linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)", accent: "#fff", glow: "rgba(236, 72, 153, 0.5)" },
-    midnight: { bg: "linear-gradient(135deg, #0f172a 0%, #020617 100%)", accent: "#38bdf8", glow: "rgba(56, 189, 248, 0.3)" },
-    glass: { bg: "rgba(255, 255, 255, 0.05)", accent: "#fff", glow: "rgba(255, 255, 255, 0.1)" }
-  };
-
-  const currentTheme = themeColors[cardTheme];
-
   return (
-    <section className="stack" style={{ gap: "32px", padding: "40px 0" }}>
-      <div className="card row-between" style={{ padding: "40px", border: "1px solid var(--primary)", background: "radial-gradient(circle at right, rgba(99, 102, 241, 0.1), transparent)" }}>
-        <div className="stack" style={{ maxWidth: "800px" }}>
+    <section className="stack" style={{ gap: 32, padding: "40px 0" }}>
+
+      {/* ─── Hero Banner ─── */}
+      <div className="card row-between" style={{ padding: 40, border: "1px solid var(--primary)", background: "radial-gradient(circle at right, rgba(99,102,241,0.12), transparent)" }}>
+        <div className="stack" style={{ maxWidth: 720 }}>
           <span className="eyebrow" style={{ color: "var(--primary)" }}>Elite Media Forge</span>
-          <h2 className="section-title" style={{ fontSize: "2.5rem" }}>Social Studio & Mastery Hub.</h2>
-          <p className="muted" style={{ fontSize: "1.1rem" }}>
-            Generate viral scripts in <strong>Tunisian Derja</strong> and pedagogical mastery assets for "Bac Excellence" instantly. 
-          </p>
+          <h2 className="section-title" style={{ fontSize: "2.4rem" }}>Social Studio & Mastery Hub.</h2>
+          <p className="muted">Generate viral Tunisian scripts + shareable, branded <strong>mastery cards</strong> for Instagram — all in one click.</p>
         </div>
-        <div className="stack" style={{ gap: "8px", textAlign: "right" }}>
-            <span className="pill success-pill">Pedagogic Mode: ELITE 💎</span>
-            <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.5 }}>Branding: VIP Mastery</span>
-        </div>
+        <span className="pill success-pill">Mastery Mode 💎</span>
       </div>
 
-      <div className="grid grid-cols-2" style={{ gap: "40px", alignItems: "start" }}>
-        {/* Left Column: Script Writer & Configuration */}
-        <div className="stack" style={{ gap: "32px" }}>
-          <form className="card stack" onSubmit={handleGenerate} style={{ gap: "24px", border: "1px solid var(--glass-border)", background: "rgba(0,0,0,0.2)", padding: "32px" }}>
+      {/* ─── Two-column layout ─── */}
+      <div className="grid grid-cols-2" style={{ gap: 40, alignItems: "start" }}>
+
+        {/* ══ LEFT: Config + Script ══ */}
+        <div className="stack" style={{ gap: 32 }}>
+          <form className="card stack" onSubmit={handleGenerate} style={{ gap: 24, border: "1px solid var(--glass-border)", background: "rgba(0,0,0,0.2)", padding: 32 }}>
             <div className="row-between">
               <h3 className="section-title" style={{ fontSize: "1.5rem" }}>1. Content Config 🤖</h3>
-              <button 
-                type="button" 
-                onClick={() => {
-                   const suggestions = ["Master the 20/20 Score", "Grammar Inversion Hacks", "Vocab Explosions", "The Examiner's Mindset", "Elite Writing Tips", "How to stop losing points"];
-                   setTopic(suggestions[Math.floor(Math.random() * suggestions.length)]);
-                }} 
-                style={{ background: "transparent", border: "none", color: "var(--primary)", fontSize: "10px", cursor: "pointer", fontWeight: 800 }}
-              >
-                🎲 SURPRISE ME
-              </button>
+              <button type="button" onClick={() => {
+                const s = ["Advanced Connectors for Writing", "Mastering Conditional Type 3", "Top 5 Exam Synonyms", "Subjunctive Masterclass", "The Inversion Hack"];
+                setTopic(s[Math.floor(Math.random() * s.length)]);
+              }} style={{ background: "transparent", border: "none", color: "var(--primary)", fontSize: 10, cursor: "pointer", fontWeight: 800 }}>🎲 SURPRISE ME</button>
             </div>
-            
-            <div className="grid grid-cols-2" style={{ gap: "20px" }}>
-              <label className="stack" style={{ gap: "8px" }}>
-                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Language Track</span>
-                <select value={language} onChange={e => setLanguage(e.target.value)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
-                  <option value="ENGLISH">English (Live)</option>
-                  <option value="FRENCH">French (Live)</option>
-                  <option value="ARABIC">Arabic (Live)</option>
-                  <option value="SPANISH">Spanish (Optional)</option>
-                  <option value="GERMAN">German (Optional)</option>
-                  <option value="ITALIAN">Italian (Optional)</option>
-                  <option value="PORTUGUESE">Portuguese (Optional)</option>
+
+            <div className="grid grid-cols-2" style={{ gap: 16 }}>
+              <label className="stack" style={{ gap: 8 }}>
+                <span className="eyebrow" style={{ fontSize: 10, opacity: 0.6 }}>Language Track</span>
+                <select value={language} onChange={e => setLanguage(e.target.value)} style={{ padding: 14, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
+                  <option value="ENGLISH">English (Elite)</option>
+                  <option value="FRENCH">French (Elite)</option>
+                  <option value="ARABIC">Arabic (Elite)</option>
                 </select>
               </label>
-              <label className="stack" style={{ gap: "8px" }}>
-                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Format</span>
-                <select value={platform} onChange={e => setPlatform(e.target.value)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
+              <label className="stack" style={{ gap: 8 }}>
+                <span className="eyebrow" style={{ fontSize: 10, opacity: 0.6 }}>Format</span>
+                <select value={platform} onChange={e => setPlatform(e.target.value)} style={{ padding: 14, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
                   <option value="Instagram Carousel">Instagram Carousel</option>
                   <option value="Cheat Sheet Story">Viral Cheat Sheet Story</option>
                   <option value="High-Impact Thread">Mastery Thread Pack</option>
                   <option value="Educational Post">Premium Educational Post</option>
                 </select>
               </label>
-            </div>
-
-            <div className="grid grid-cols-2" style={{ gap: "20px" }}>
-              <label className="stack" style={{ gap: "8px" }}>
-                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>BAC Section Filter</span>
-                <select value={section} onChange={e => setSection(e.target.value)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
+              <label className="stack" style={{ gap: 8 }}>
+                <span className="eyebrow" style={{ fontSize: 10, opacity: 0.6 }}>BAC Section</span>
+                <select value={section} onChange={e => setSection(e.target.value)} style={{ padding: 14, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
                   <option value="">All Sections</option>
                   <option value="MATHEMATIQUES">Mathématiques</option>
                   <option value="SCIENCES_EXPERIMENTALES">Sciences Exp</option>
@@ -162,116 +204,53 @@ export function SocialGenerator() {
                   <option value="SCIENCES_INFORMATIQUE">Informatique</option>
                 </select>
               </label>
-              <div className="stack" style={{ gap: "8px" }}>
-                <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Topic / Secret Rule</span>
-                <input 
-                  placeholder="e.g. 'How to master inversions'" 
-                  value={topic}
-                  onChange={e => setTopic(e.target.value)}
-                  required
-                  style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1rem" }}
-                />
-              </div>
+              <label className="stack" style={{ gap: 8 }}>
+                <span className="eyebrow" style={{ fontSize: 10, opacity: 0.6 }}>Topic / Skill</span>
+                <input placeholder='e.g. "Advanced Connectors"' value={topic} onChange={e => setTopic(e.target.value)} required
+                  style={{ padding: 14, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1rem" }} />
+              </label>
             </div>
 
-            <button type="submit" disabled={loading} className="full-width hover-glow" style={{ background: "var(--primary)", color: "black", padding: "20px", fontSize: "1.1rem", fontWeight: 800 }}>
-              {loading ? "Optimizing Viral Strategy..." : "Generate Social Content 🌌"}
+            <button type="submit" disabled={loading} className="full-width hover-glow"
+              style={{ background: "var(--primary)", color: "black", padding: 20, fontSize: "1.1rem", fontWeight: 800 }}>
+              {loading ? "⚙️ Forging Mastery Content…" : "Generate Full Mastery Pack 💎"}
             </button>
           </form>
 
-          {generatedPost && (
-            <div className="card stack" style={{ background: "rgba(10, 15, 25, 0.4)", border: "1px solid var(--primary-glow)", padding: "32px", animation: "slideUp 0.5s ease" }}>
-              <div className="row-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "16px" }}>
-                 <div className="stack" style={{ gap: "4px" }}>
-                    <span className="eyebrow" style={{ color: "var(--primary)" }}>The Viral Script</span>
-                    <span className="muted" style={{ fontSize: "10px" }}>Ready for @bacexcellence</span>
-                 </div>
-                 <button type="button" onClick={handleCopy} className="button-link hover-glow" style={{ cursor: "pointer", background: "var(--primary)", color: "black", padding: "10px 24px", fontSize: "12px", fontWeight: 800 }}>COPY SCRIPT</button>
-              </div>
-              <textarea 
-                readOnly 
-                value={generatedPost} 
-                style={{ minHeight: "500px", background: "transparent", color: "white", border: "none", resize: "none", fontSize: "15px", lineHeight: "1.8", fontFamily: "inherit", marginTop: "24px", outline: "none" }} 
-              />
-            </div>
-          )}
-
-          {/* New Pedagogical Assets Display */}
-          {(synonyms.length > 0 || vocabulary.length > 0 || antonyms.length > 0 || phrases.length > 0) && (
-            <div className="card stack" style={{ background: "rgba(0, 0, 0, 0.3)", border: "1px solid var(--accent)", padding: "40px", animation: "slideUp 0.6s ease" }}>
-              <div className="row-between" style={{ borderBottom: "1px solid rgba(245, 158, 11, 0.2)", paddingBottom: "24px", marginBottom: "32px" }}>
-                 <div className="stack" style={{ gap: "4px" }}>
-                    <span className="eyebrow" style={{ color: "var(--accent)" }}>💎 PEDAGOGICAL MASTERCLASS</span>
-                    <span className="muted" style={{ fontSize: "10px" }}>Elite Content Assets for @bacexcellence</span>
-                 </div>
-                 <div className="pill" style={{ background: "var(--accent-glow)", borderColor: "var(--accent)", color: "var(--accent)" }}>MASTERED ➔</div>
-              </div>
-              
-              <div className="grid grid-cols-2" style={{ gap: "24px" }}>
-                {synonyms.length > 0 && (
-                  <div className="stack" style={{ gap: "12px" }}>
-                    <span className="eyebrow" style={{ fontSize: "10px", color: "var(--primary)" }}>Synonyms</span>
-                    {synonyms.map((s, idx) => (
-                      <div key={idx} className="card" style={{ padding: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                        <span style={{ fontWeight: 800 }}>{s.word}</span> <span className="muted">➔</span> <span style={{ color: "var(--primary)" }}>{s.synonym}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {antonyms.length > 0 && (
-                  <div className="stack" style={{ gap: "12px" }}>
-                    <span className="eyebrow" style={{ fontSize: "10px", color: "#ff4d4d" }}>Antonyms</span>
-                    {antonyms.map((a, idx) => (
-                      <div key={idx} className="card" style={{ padding: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                        <span style={{ fontWeight: 800 }}>{a.word}</span> <span className="muted">➔</span> <span style={{ color: "#ff4d4d" }}>{a.antonym}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {vocabulary.length > 0 && (
-                <div className="stack" style={{ gap: "16px", marginTop: "32px" }}>
-                  <span className="eyebrow" style={{ fontSize: "10px", color: "#10b981" }}>Vocabulary Explosion</span>
-                  {vocabulary.map((v, idx) => (
-                    <div key={idx} className="card stack" style={{ padding: "16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
-                      <span style={{ fontWeight: 900, fontSize: "1.1rem", color: "#10b981" }}>{v.word}</span>
-                      <p className="muted" style={{ fontSize: "14px", margin: "4px 0" }}>{v.definition}</p>
-                      <q style={{ fontSize: "12px", borderLeft: "2px solid #10b981", paddingLeft: "8px", fontStyle: "italic", opacity: 0.8 }}>{v.example}</q>
-                    </div>
-                  ))}
+          {/* ── Generated script ── */}
+          {script && (
+            <div className="card stack" style={{ background: "rgba(10,15,25,0.4)", border: "1px solid var(--primary-glow)", padding: 32, animation: "slideUp 0.5s ease" }}>
+              <div className="row-between" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: 16 }}>
+                <div className="stack" style={{ gap: 4 }}>
+                  <span className="eyebrow" style={{ color: "var(--primary)" }}>Viral Script (Tunisian)</span>
+                  <span className="muted" style={{ fontSize: 10 }}>Copy → paste to Instagram / TikTok caption</span>
                 </div>
-              )}
-
-              {phrases.length > 0 && (
-                <div className="stack" style={{ gap: "16px", marginTop: "32px" }}>
-                  <span className="eyebrow" style={{ fontSize: "10px", color: "#00ffff" }}>Exam-Ready High-Scoring Phrases</span>
-                  {phrases.map((p, idx) => (
-                    <div key={idx} className="card" style={{ padding: "16px", background: "rgba(0,0,0,0.5)", border: "1px solid #00ffff", borderStyle: "dashed", display: "flex", alignItems: "center", gap: "12px" }}>
-                      <span style={{ fontSize: "20px" }}>⚡</span>
-                      <span style={{ fontSize: "1rem", fontWeight: 700, color: "#00ffff" }}>{p}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
+                <button onClick={() => navigator.clipboard.writeText(script)}
+                  style={{ background: "var(--primary)", color: "black", border: "none", padding: "10px 22px", borderRadius: 10, fontWeight: 800, fontSize: 12, cursor: "pointer" }}>
+                  COPY
+                </button>
+              </div>
+              <textarea readOnly value={script}
+                style={{ minHeight: 280, background: "transparent", color: "white", border: "none", resize: "none", fontSize: 15, lineHeight: 1.8, fontFamily: "inherit", marginTop: 20, outline: "none" }} />
             </div>
           )}
         </div>
 
-        {/* Right Column: Branded Designer */}
-        <div className="stack" style={{ gap: "32px" }}>
-          <div className="card stack" style={{ padding: "32px", background: "rgba(0,0,0,0.2)", border: "1px solid var(--glass-border)" }}>
-            <h3 className="section-title" style={{ fontSize: "1.5rem" }}>2. Card Designer 🎨</h3>
-            
-            <div className="stack" style={{ gap: "24px", marginTop: "24px" }}>
-              <div className="grid grid-cols-2" style={{ gap: "20px" }}>
-                <label className="stack" style={{ gap: "8px" }}>
-                  <span className="eyebrow" style={{ fontSize: "10px" }}>Vibe</span>
-                  <select value={cardTheme} onChange={e => setCardTheme(e.target.value as any)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
+        {/* ══ RIGHT: Card Designer + Preview ══ */}
+        <div className="stack" style={{ gap: 32 }}>
+          <div className="card stack" style={{ padding: 32, background: "rgba(0,0,0,0.2)", border: "1px solid var(--glass-border)" }}>
+            <h3 className="section-title" style={{ fontSize: "1.5rem" }}>2. Hook Card Designer 🎨</h3>
+
+            <div className="stack" style={{ gap: 20, marginTop: 20 }}>
+              <div className="grid grid-cols-2" style={{ gap: 16 }}>
+                <label className="stack" style={{ gap: 8 }}>
+                  <span className="eyebrow" style={{ fontSize: 10 }}>Vibe</span>
+                  <select value={cardTheme} onChange={e => setCardTheme(e.target.value as Theme)}
+                    style={{ padding: 14, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
                     <option value="grammar">Grammar Blue</option>
                     <option value="vocab">Vocab Green</option>
                     <option value="mindset">Mindset Gold</option>
-                    <option value="elite">Elite White</option>
+                    <option value="elite">Elite Black</option>
                     <option value="cyber">Neon Cyber</option>
                     <option value="retro">Vintage Red</option>
                     <option value="gold">Royal Gold</option>
@@ -280,136 +259,182 @@ export function SocialGenerator() {
                     <option value="glass">Pure Glass</option>
                   </select>
                 </label>
-                <label className="stack" style={{ gap: "8px" }}>
-                  <span className="eyebrow" style={{ fontSize: "10px" }}>Branding</span>
-                  <input 
-                    value={cardWatermark}
-                    onChange={e => setCardWatermark(e.target.value)}
-                    style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1rem" }}
-                  />
+                <label className="stack" style={{ gap: 8 }}>
+                  <span className="eyebrow" style={{ fontSize: 10 }}>Watermark</span>
+                  <input value={watermark} onChange={e => setWatermark(e.target.value)}
+                    style={{ padding: 14, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1rem" }} />
                 </label>
               </div>
 
-              <label className="stack" style={{ gap: "8px" }}>
-                <span className="eyebrow" style={{ fontSize: "10px" }}>Hook Title</span>
-                <input 
-                  value={cardTitle}
-                  onChange={e => setCardTitle(e.target.value)}
-                  style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1.1rem", fontWeight: 800 }}
-                />
+              <label className="stack" style={{ gap: 8 }}>
+                <span className="eyebrow" style={{ fontSize: 10 }}>Hook Title (keep short!)</span>
+                <input value={cardTitle} onChange={e => setCardTitle(e.target.value)}
+                  style={{ padding: 14, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1.05rem", fontWeight: 800 }} />
               </label>
 
-              <label className="stack" style={{ gap: "8px" }}>
-                <span className="eyebrow" style={{ fontSize: "10px" }}>Card Content</span>
-                <textarea 
-                  rows={4}
-                  value={cardBody}
-                  onChange={e => setCardBody(e.target.value)}
-                  style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1.1rem", fontFamily: "monospace", resize: "vertical" }}
-                />
+              <label className="stack" style={{ gap: 8 }}>
+                <span className="eyebrow" style={{ fontSize: 10 }}>Card Body (max 3 short lines)</span>
+                <textarea rows={3} value={cardBody} onChange={e => setCardBody(e.target.value)}
+                  style={{ padding: 14, borderRadius: 12, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "1rem", fontFamily: "monospace", resize: "vertical" }} />
               </label>
 
-              <button onClick={handleDownload} className="pill hover-glow" style={{ background: "var(--primary)", color: "black", border: "none", cursor: "pointer", fontWeight: 800, padding: "16px", textAlign: "center", fontSize: "1.1rem" }}>
-                ⬇️ Export Branded Card (.png)
+              <button onClick={() => downloadRef(hookCardRef, `bac-hook-${cardTheme}.png`)}
+                style={{ background: "var(--primary)", color: "black", border: "none", borderRadius: 14, padding: "16px 0", fontWeight: 900, fontSize: "1rem", cursor: "pointer", textAlign: "center" }}>
+                ⬇️ Export Hook Card (.png)
               </button>
             </div>
           </div>
 
-          <div className="stack" style={{ alignItems: "center" }}>
-            <span className="eyebrow" style={{ marginBottom: "16px" }}>Elite Canvas Preview (1080x1080)</span>
-            <div 
-              ref={visualRef}
-              style={{
-                width: "400px",
-                height: "400px",
-                background: currentTheme.bg,
-                border: cardTheme === 'glass' ? "1px solid rgba(255,255,255,0.2)" : `1px solid ${currentTheme.glow}`,
-                backdropFilter: cardTheme === 'glass' ? "blur(20px)" : "none",
-                boxShadow: cardTheme === 'glass' ? "0 8px 32px 0 rgba(31, 38, 135, 0.37)" : `0 0 40px ${currentTheme.glow}, inset 0 0 100px rgba(0,0,0,0.8)`,
-                position: "relative",
-                display: "flex",
-                flexDirection: "column",
-                padding: "35px",
-                overflow: "hidden",
-                borderRadius: "24px"
-              }}
-            >
-              {/* Animated background elements */}
-              <div 
-                style={{ 
-                  position: "absolute", 
-                  top: "-10%", 
-                  right: "-10%", 
-                  width: "150px", 
-                  height: "150px", 
-                  background: currentTheme.accent, 
-                  filter: "blur(80px)", 
-                  opacity: 0.2,
-                  borderRadius: "50%" 
-                }} 
-              />
-
-              <div className="row-between" style={{ opacity: 0.8, marginBottom: "24px", zIndex: 2 }}>
-                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                    <div style={{ width: "28px", height: "28px", background: currentTheme.accent, borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "black", fontWeight: 950, fontSize: "16px" }}>B</div>
-                    <span style={{ fontSize: "13px", fontWeight: 900, letterSpacing: "1.5px" }}>BAC EXCELLENCE</span>
-                 </div>
-                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontSize: "11px", fontWeight: 800, color: currentTheme.accent }}>SWIPE</span>
-                    <div style={{ width: "20px", height: "2px", background: currentTheme.accent, opacity: 0.5 }} />
-                 </div>
+          {/* ── Hook Card Preview ── */}
+          <div className="stack" style={{ alignItems: "center", gap: 12 }}>
+            <span className="eyebrow">Preview (exports at 3×)</span>
+            <MasteryCard cardRef={hookCardRef} theme={cardTheme} watermark={watermark}>
+              <h1 style={{ fontSize: "1.9rem", fontWeight: 950, lineHeight: 1.08, margin: "0 0 16px", color: t.text, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
+                {cardTitle}
+              </h1>
+              <div style={{ fontSize: "0.95rem", lineHeight: 1.6, opacity: 0.92, whiteSpace: "pre-wrap", paddingLeft: 16, borderLeft: `4px solid ${t.accent}`, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 5, WebkitBoxOrient: "vertical" }}>
+                {cardBody}
               </div>
-
-              <div className="stack" style={{ flex: 1, justifyContent: "center", gap: "20px", zIndex: 2 }}>
-                <h1 style={{ 
-                  fontSize: "2.2rem", 
-                  fontWeight: 950, 
-                  lineHeight: 1.05, 
-                  textShadow: cardTheme === 'glass' ? "none" : `0 0 30px ${currentTheme.accent}44`,
-                  background: cardTheme === 'vibrant' ? "linear-gradient(to bottom, #fff, #ddd)" : "none",
-                  WebkitBackgroundClip: cardTheme === 'vibrant' ? "text" : "none",
-                  WebkitTextFillColor: cardTheme === 'vibrant' ? "transparent" : "inherit"
-                }}>
-                  {cardTitle}
-                </h1>
-                
-                <div style={{ 
-                  fontSize: (cardBody?.length || 0) > 200 ? "0.9rem" : ((cardBody?.length || 0) > 120 ? "1rem" : "1.15rem"), 
-                  lineHeight: 1.6, 
-                  opacity: 0.95,
-                  fontWeight: 500,
-                  whiteSpace: "pre-wrap",
-                  paddingLeft: "20px",
-                  borderLeft: `5px solid ${currentTheme.accent}`,
-                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-                }}>
-                  {String(cardBody || "")}
-                </div>
-
-                <div style={{ 
-                  marginTop: "12px", 
-                  padding: "10px 16px", 
-                  background: cardTheme === 'glass' ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)", 
-                  borderRadius: "12px", 
-                  border: `1px solid ${currentTheme.accent}44`, 
-                  display: "inline-flex", 
-                  alignItems: "center", 
-                  gap: "8px",
-                  alignSelf: "flex-start",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
-                }}>
-                   <span style={{ fontSize: "14px" }}>🛡️</span>
-                   <span style={{ color: currentTheme.accent, fontWeight: 900, fontSize: "11px", letterSpacing: "1px" }}>ELITE GRADE BOOSTER</span>
-                </div>
+              <div style={{ marginTop: 16, display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 14px", background: `${t.accent}18`, border: `1px solid ${t.accent}44`, borderRadius: 10 }}>
+                <span>🛡️</span>
+                <span style={{ color: t.accent, fontWeight: 900, fontSize: 10, letterSpacing: 1 }}>ELITE GRADE BOOSTER</span>
               </div>
-
-              <div style={{ textAlign: "center", marginTop: "24px", zIndex: 2 }}>
-                <span style={{ fontSize: "13px", opacity: 0.6, letterSpacing: "3px", fontWeight: 800 }}>{cardWatermark.toUpperCase()}</span>
-              </div>
-            </div>
+            </MasteryCard>
           </div>
         </div>
       </div>
+
+      {/* ══ PEDAGOGICAL MASTERY — shareable cards below ══ */}
+      {(synonyms.length > 0 || antonyms.length > 0 || vocabulary.length > 0 || phrases.length > 0) && (
+        <div className="stack" style={{ gap: 48, marginTop: 16 }}>
+
+          <div className="row-between" style={{ borderBottom: "1px solid rgba(245,158,11,0.3)", paddingBottom: 20 }}>
+            <div className="stack" style={{ gap: 4 }}>
+              <span className="eyebrow" style={{ color: "var(--accent)" }}>💎 SHAREABLE MASTERY CARDS</span>
+              <p className="muted" style={{ fontSize: 13 }}>Each section is a <strong>branded card</strong> you can export as PNG and post directly.</p>
+            </div>
+          </div>
+
+          {/* Synonyms card */}
+          {synonyms.length > 0 && (
+            <div className="stack" style={{ gap: 20 }}>
+              <div className="row-between">
+                <span className="eyebrow" style={{ color: "#818cf8" }}>Synonyms Card</span>
+                <button onClick={() => downloadRef(synCardRef, "bac-synonyms.png")}
+                  style={{ background: "#818cf8", color: "#000", border: "none", borderRadius: 10, padding: "10px 22px", fontWeight: 900, fontSize: 12, cursor: "pointer" }}>
+                  ⬇️ Export (.png)
+                </button>
+              </div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <MasteryCard cardRef={synCardRef} theme="grammar" watermark={watermark}>
+                  <div style={{ marginBottom: 10 }}>
+                    <span style={{ fontSize: 11, fontWeight: 900, color: "#818cf8", letterSpacing: 2, textTransform: "uppercase" }}>Synonyms Masterclass</span>
+                    <h2 style={{ fontSize: "1.3rem", fontWeight: 900, margin: "6px 0 14px", color: "#fff" }}>{topic}</h2>
+                  </div>
+                  <div className="stack" style={{ gap: 8 }}>
+                    {synonyms.slice(0, 5).map((s, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "rgba(255,255,255,0.04)", borderRadius: 10, border: "1px solid rgba(129,140,248,0.2)" }}>
+                        <span style={{ fontWeight: 800, color: "#fff", minWidth: 80, fontSize: "0.85rem" }}>{s.word}</span>
+                        <span style={{ color: "#818cf8", fontSize: 14 }}>→</span>
+                        <span style={{ color: "#818cf8", fontWeight: 700, fontSize: "0.9rem" }}>{s.synonym}</span>
+                      </div>
+                    ))}
+                  </div>
+                </MasteryCard>
+              </div>
+            </div>
+          )}
+
+          {/* Antonyms card */}
+          {antonyms.length > 0 && (
+            <div className="stack" style={{ gap: 20 }}>
+              <div className="row-between">
+                <span className="eyebrow" style={{ color: "#f87171" }}>Antonyms Card</span>
+                <button onClick={() => downloadRef(antCardRef, "bac-antonyms.png")}
+                  style={{ background: "#f87171", color: "#000", border: "none", borderRadius: 10, padding: "10px 22px", fontWeight: 900, fontSize: 12, cursor: "pointer" }}>
+                  ⬇️ Export (.png)
+                </button>
+              </div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <MasteryCard cardRef={antCardRef} theme="retro" watermark={watermark}>
+                  <div style={{ marginBottom: 10 }}>
+                    <span style={{ fontSize: 11, fontWeight: 900, color: "#fcd34d", letterSpacing: 2, textTransform: "uppercase" }}>Antonyms Masterclass</span>
+                    <h2 style={{ fontSize: "1.3rem", fontWeight: 900, margin: "6px 0 14px", color: "#fff" }}>{topic}</h2>
+                  </div>
+                  <div className="stack" style={{ gap: 8 }}>
+                    {antonyms.slice(0, 5).map((a, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", background: "rgba(255,255,255,0.04)", borderRadius: 10, border: "1px solid rgba(252,211,77,0.2)" }}>
+                        <span style={{ fontWeight: 800, color: "#fff", minWidth: 80, fontSize: "0.85rem" }}>{a.word}</span>
+                        <span style={{ color: "#fcd34d", fontSize: 14 }}>≠</span>
+                        <span style={{ color: "#fcd34d", fontWeight: 700, fontSize: "0.9rem" }}>{a.antonym}</span>
+                      </div>
+                    ))}
+                  </div>
+                </MasteryCard>
+              </div>
+            </div>
+          )}
+
+          {/* Vocabulary cards (one per word) */}
+          {vocabulary.length > 0 && (
+            <div className="stack" style={{ gap: 20 }}>
+              <div className="row-between">
+                <span className="eyebrow" style={{ color: "#34d399" }}>Vocabulary Card</span>
+                <button onClick={() => downloadRef(vocabCardRef, "bac-vocab.png")}
+                  style={{ background: "#34d399", color: "#000", border: "none", borderRadius: 10, padding: "10px 22px", fontWeight: 900, fontSize: 12, cursor: "pointer" }}>
+                  ⬇️ Export (.png)
+                </button>
+              </div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <MasteryCard cardRef={vocabCardRef} theme="vocab" watermark={watermark}>
+                  <div style={{ marginBottom: 10 }}>
+                    <span style={{ fontSize: 11, fontWeight: 900, color: "#34d399", letterSpacing: 2, textTransform: "uppercase" }}>Vocabulary Explosion</span>
+                    <h2 style={{ fontSize: "1.3rem", fontWeight: 900, margin: "6px 0 14px", color: "#fff" }}>{topic}</h2>
+                  </div>
+                  <div className="stack" style={{ gap: 10 }}>
+                    {vocabulary.slice(0, 3).map((v, i) => (
+                      <div key={i} style={{ padding: "10px 12px", background: "rgba(255,255,255,0.04)", borderRadius: 10, border: "1px solid rgba(52,211,153,0.2)" }}>
+                        <div style={{ fontWeight: 900, color: "#34d399", fontSize: "0.95rem", marginBottom: 2 }}>{v.word}</div>
+                        <div style={{ fontSize: "0.8rem", opacity: 0.8, color: "#fff" }}>{v.definition}</div>
+                        <div style={{ fontSize: "0.75rem", fontStyle: "italic", color: "#34d399", opacity: 0.75, marginTop: 3, borderLeft: "2px solid #34d399", paddingLeft: 8 }}>&ldquo;{v.example}&rdquo;</div>
+                      </div>
+                    ))}
+                  </div>
+                </MasteryCard>
+              </div>
+            </div>
+          )}
+
+          {/* Phrases card */}
+          {phrases.length > 0 && (
+            <div className="stack" style={{ gap: 20 }}>
+              <div className="row-between">
+                <span className="eyebrow" style={{ color: "#38bdf8" }}>Exam Phrases Card</span>
+                <button onClick={() => downloadRef(phraseCardRef, "bac-phrases.png")}
+                  style={{ background: "#38bdf8", color: "#000", border: "none", borderRadius: 10, padding: "10px 22px", fontWeight: 900, fontSize: 12, cursor: "pointer" }}>
+                  ⬇️ Export (.png)
+                </button>
+              </div>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <MasteryCard cardRef={phraseCardRef} theme="midnight" watermark={watermark}>
+                  <div style={{ marginBottom: 10 }}>
+                    <span style={{ fontSize: 11, fontWeight: 900, color: "#38bdf8", letterSpacing: 2, textTransform: "uppercase" }}>Exam-Ready Phrases</span>
+                    <h2 style={{ fontSize: "1.3rem", fontWeight: 900, margin: "6px 0 14px", color: "#fff" }}>{topic}</h2>
+                  </div>
+                  <div className="stack" style={{ gap: 10 }}>
+                    {phrases.slice(0, 5).map((p, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "8px 12px", background: "rgba(56,189,248,0.07)", borderRadius: 10, border: "1px solid rgba(56,189,248,0.2)" }}>
+                        <span style={{ color: "#38bdf8", fontWeight: 900, fontSize: 14, flexShrink: 0 }}>⚡</span>
+                        <span style={{ color: "#fff", fontWeight: 600, fontSize: "0.85rem", lineHeight: 1.4 }}>{p}</span>
+                      </div>
+                    ))}
+                  </div>
+                </MasteryCard>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 }

@@ -24,33 +24,34 @@ export async function POST(req: NextRequest) {
     
     const sectionContext = section ? `Target Section: ${section}.` : "Target: All BAC sections.";
 
-    const prompt = `You are a viral social media manager for 'Bac Excellence', the most elite and premium AI-first platform for Tunisian Baccalaureate students.
-Write a highly engaging, high-stakes and elite ${platform} post about: ${language} - ${topic}.
-${sectionContext}
+    const prompt = `You are a viral content strategist for 'Bac Excellence', the elite AI-first platform for Tunisian Baccalaureate students.
+Create a ${platform} content pack about: ${language} - ${topic}. ${sectionContext}
 
-Guidelines:
-1. TARGET: Tunisian BAC students who want to go from a 12 to a 17/20 in their language tracks.
-2. THE "TUNISIAN VIBE": The 'script' field MUST be written in 100% authentic Tunisian Derja. Use "vibes" and local slang that resonates with BAC students (e.g., 'ya m3allem', 'taayer', 'focus', 'discipline', 'score tayari', 'jib l'excellence', 'kassas', 'revision 9asba').
-3. BRAND RECALL: Always refer to the platform as 'Bac Excellence' in the script.
-4. PEDAGOGICAL MASTERY: The 'visualTitle' and 'visualBody' MUST be in ${language}.
-5. ELITE CONTENT: Provide a masterclass set of synonyms, antonyms, vocabulary, and phrases in ${language} related to ${topic}.
+STRICTLY FOLLOW THIS OUTPUT FORMAT (valid JSON only):
+{
+  "script": "<full social media caption in Tunisian Derja, energetic, with CTA to Bac Excellence>",
+  "visualTitle": "<VERY SHORT viral hook title in ${language}, max 6 words>",
+  "visualBody": "<EXACTLY 2 SHORT LINES in ${language}, max 80 chars total — this appears on a graphic card, NO long paragraphs>",
+  "synonyms": [{ "word": "...", "synonym": "..." }, ...],
+  "antonyms": [{ "word": "...", "antonym": "..." }, ...],
+  "vocabulary": [{ "word": "...", "definition": "...", "example": "..." }, ...],
+  "phrases": ["exam-ready phrase 1", "phrase 2", ...]
+}
 
-STRUCTURE:
-- script: A pattern-interrupt hook and body in Tunisian Derja.
-- visualTitle: A viral hook title in ${language}.
-- visualBody: A pedagogical masterclass breakdown in ${language}.
-- synonyms: Array of { word: string, synonym: string } (at least 3).
-- antonyms: Array of { word: string, antonym: string } (at least 3).
-- vocabulary: Array of { word: string, definition: string, example: string } (at least 3).
-- phrases: Array of strings (at least 3 exam-ready high-scoring phrases).
-
-IMPORTANT: Return ONLY a valid JSON object with these exact keys.`;
+RULES:
+- script: Tunisian Derja slang (ya m3allem, taayer, revision 9asba, jib l'excellence). Energetic. Brand 'Bac Excellence'.
+- visualTitle: 4-6 words max. Pattern-interrupt. In ${language}.
+- visualBody: MAXIMUM 2 lines, 80 chars total. Punchy. In ${language}. For a graphic card — no long sentences.
+- synonyms: 5 items. Key vocabulary for ${topic} in ${language}.
+- antonyms: 5 items. Contrasting words for ${topic} in ${language}.
+- vocabulary: 4 items. High-value words for ${topic} in ${language}.
+- phrases: 5 items. Exam-ready, high-scoring phrases in ${language}.`;
 
     const response = await getReliableCompletion({
         messages: [{ role: "user", content: prompt }],
         response_format: { type: "json_object" },
-        max_tokens: 1000,
-        temperature: 0.5,
+        max_tokens: 1400,
+        temperature: 0.6,
     });
 
     const content = response.choices[0]?.message?.content || "{}";
