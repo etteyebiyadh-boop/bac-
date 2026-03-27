@@ -7,6 +7,8 @@ import { Language, BacSection, BacModule } from "@prisma/client";
 import { db } from "@/lib/db";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { getCurriculumSlugs, getCurriculumTrack, skillLabels } from "@/lib/language-system";
+import { ResponsiveLessons } from "./responsive-lessons";
+import { MobileLessons } from "./mobile-lessons";
 
 export const dynamic = "force-dynamic";
 
@@ -64,7 +66,33 @@ export default async function LibraryHubPage() {
 
   const availableCurriculumSlugs = new Set(curriculumLessons.map((lesson) => lesson.slug));
 
+  // Prepare modules array
+  let modules: BacModule[] = [
+    BacModule.MODULE_1_HOLIDAYING_ART_SHOWS,
+    BacModule.MODULE_2_EDUCATION_MATTERS,
+    BacModule.MODULE_3_CREATIVE_INVENTIVE_MINDS,
+    BacModule.MODULE_4_YOUTH_ISSUES,
+  ];
+  if (profile.bacSection === "LETTRES") {
+    modules.push(BacModule.MODULE_5_WOMEN_POWER);
+    modules.push(BacModule.MODULE_6_SUSTAINABLE_DEVELOPMENT);
+  }
+
   return (
+    <ResponsiveLessons
+      mobileComponent={
+        <MobileLessons
+          modules={modules}
+          grammarRules={grammarRules}
+          vocabSets={vocabSets}
+          readingPassages={readingPassages}
+          curriculumTrack={getCurriculumTrack(activeLanguages[0])}
+          availableSlugs={availableCurriculumSlugs}
+          lang={langCookie}
+          t={t}
+        />
+      }
+    >
     <div className="page-stack library-overhaul" style={{ gap: "clamp(40px, 8vw, 80px)", direction: langCookie === "ar" ? "rtl" : "ltr" }}>
       {/* Dynamic Cinematic Header */}
       <section className="card stack hero-panel" style={{ padding: "clamp(32px, 8vw, 80px)", overflow: "hidden", border: "1px solid var(--primary)", background: "radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent)" }}>
@@ -328,5 +356,6 @@ export default async function LibraryHubPage() {
         );
       })}
     </div>
+    </ResponsiveLessons>
   );
 }
