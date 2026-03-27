@@ -12,7 +12,12 @@ interface NavbarProps {
   lang: string;
 }
 
-function AdminAccessLink({ t }: { t: any }) {
+function isAdminEmail(email: string): boolean {
+  const adminEmails = ["anis@bacexcellence.com", "admin@bacexcellence.com"];
+  return adminEmails.includes(email?.toLowerCase());
+}
+
+function AdminAccessLink({ t, email }: { t: any; email: string }) {
   const router = useRouter();
   
   function handleClick(e: React.MouseEvent) {
@@ -25,6 +30,9 @@ function AdminAccessLink({ t }: { t: any }) {
       alert("Unauthorized Access.");
     }
   }
+  
+  // Only show for admin emails
+  if (!isAdminEmail(email)) return null;
   
   return (
     <button 
@@ -80,7 +88,7 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
             </Link>
           ))}
           {session ? (
-            <AdminAccessLink t={t} />
+            <AdminAccessLink t={t} email={session.email} />
           ) : null}
         </nav>
 
@@ -129,7 +137,7 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
             <div className="row-between" style={{ padding: "0 16px" }}>
                <LanguageSwitcher />
                {session ? (
-                 <AdminAccessLink t={t} />
+                 <AdminAccessLink t={t} email={session.email} />
                ) : (
                  <Link className="pill" href="/auth/signup" style={{ background: "white", color: "black", border: "none" }}>{t.nav_join}</Link>
                )}

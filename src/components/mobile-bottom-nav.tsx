@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { DashboardIcon, LessonsIcon, WriteIcon, ExamsIcon, ProfileIcon } from "./icons";
 
 interface MobileBottomNavProps {
   session: any;
@@ -36,11 +37,11 @@ export function MobileBottomNav({ session, translations: t, lang }: MobileBottom
   }, [lastScrollY]);
 
   const navItems = [
-    { href: "/dashboard", icon: "📊", label: t.nav_dashboard || "Dashboard" },
-    { href: "/lessons", icon: "📚", label: t.nav_library || "Library" },
-    { href: "/write", icon: "✍️", label: t.nav_writing || "Write" },
-    { href: "/exams", icon: "📝", label: t.nav_exams || "Exams" },
-    { href: "/profile", icon: "👤", label: "Profile" },
+    { href: "/dashboard", icon: DashboardIcon, label: t.nav_dashboard || "Dashboard" },
+    { href: "/lessons", icon: LessonsIcon, label: t.nav_library || "Library" },
+    { href: "/write", icon: WriteIcon, label: t.nav_writing || "Write" },
+    { href: "/exams", icon: ExamsIcon, label: t.nav_exams || "Exams" },
+    { href: "/profile", icon: ProfileIcon, label: "Profile" },
   ];
 
   // Don't show bottom nav on desktop
@@ -79,12 +80,13 @@ export function MobileBottomNav({ session, translations: t, lang }: MobileBottom
         margin: "0 auto",
       }}>
         {navItems.map((item) => {
+          const IconComponent = item.icon;
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="mobile-nav-item"
+              className="mobile-nav-item micro-bounce"
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -94,20 +96,24 @@ export function MobileBottomNav({ session, translations: t, lang }: MobileBottom
                 borderRadius: "16px",
                 textDecoration: "none",
                 minWidth: "60px",
+                minHeight: "56px",
                 transition: "all 0.2s ease",
                 background: isActive ? "rgba(99, 102, 241, 0.2)" : "transparent",
+                color: isActive ? "#6366f1" : "rgba(255, 255, 255, 0.6)",
               }}
             >
-              <span style={{ 
-                fontSize: "24px",
-                filter: isActive ? "drop-shadow(0 0 8px rgba(99, 102, 241, 0.5))" : "none",
-              }}>
-                {item.icon}
-              </span>
+              <IconComponent 
+                className="w-6 h-6" 
+                style={{ 
+                  filter: isActive ? "drop-shadow(0 0 8px rgba(99, 102, 241, 0.5))" : "none",
+                  transition: "all 0.2s ease",
+                }} 
+              />
               <span style={{
                 fontSize: "11px",
                 fontWeight: 600,
-                color: isActive ? "#6366f1" : "rgba(255, 255, 255, 0.6)",
+                color: "inherit",
+                transition: "all 0.2s ease",
               }}>
                 {item.label}
               </span>
