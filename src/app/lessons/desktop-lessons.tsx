@@ -11,7 +11,7 @@ interface DesktopLessonsProps {
   vocabSets: any[];
   readingPassages: any[];
   curriculumTracks: Record<string, any>;
-  availableSlugs: Set<string>;
+  availableSlugs: string[];
   activeLanguages: Language[];
   lang: string;
   t: any;
@@ -186,7 +186,7 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
                 const populatedSkills = level.skills
                   .map((skill: any) => ({
                     ...skill,
-                    lessons: skill.lessons.filter((lesson: any) => availableSlugs.has(lesson.slug))
+                    lessons: skill.lessons.filter((lesson: any) => availableSlugs.includes(lesson.slug))
                   }))
                   .filter((skill: any) => skill.lessons.length > 0);
 

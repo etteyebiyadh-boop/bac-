@@ -65,7 +65,7 @@ export default async function LibraryHubPage() {
       : Promise.resolve([])
   ]);
 
-  const availableCurriculumSlugs = new Set(curriculumLessons.map((lesson) => lesson.slug));
+  const availableCurriculumSlugs = curriculumLessons.map((lesson) => lesson.slug);
 
   // Prepare modules array
   let modules: BacModule[] = [
