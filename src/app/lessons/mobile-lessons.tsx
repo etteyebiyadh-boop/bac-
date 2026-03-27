@@ -3,17 +3,19 @@
 import { useState } from "react";
 import Link from "next/link";
 import { LessonsIcon, BookIcon, TargetIcon, FireIcon } from "@/components/icons";
-import { SkeletonCard } from "@/components/skeletons";
+import { Language } from "@prisma/client";
 
 interface MobileLessonsProps {
   modules: any[];
   grammarRules: any[];
   vocabSets: any[];
   readingPassages: any[];
-  curriculumTrack: any;
+  curriculumTracks: Record<string, any>;
   availableSlugs: Set<string>;
+  activeLanguages: Language[];
   lang: string;
   t: any;
+  getLanguageLabel: (lang: Language) => string;
 }
 
 function CollapsibleSection({ title, count, icon: Icon, children, color = "var(--primary)", defaultOpen = false }: {
@@ -68,8 +70,14 @@ function CollapsibleSection({ title, count, icon: Icon, children, color = "var(-
   );
 }
 
-export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTrack, availableSlugs, lang, t }: MobileLessonsProps) {
+export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, getLanguageLabel }: MobileLessonsProps) {
   const [activeTab, setActiveTab] = useState("curriculum");
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
+
+  const currentTrack = curriculumTracks[selectedLanguage];
+  const langGrammar = grammarRules.filter((g: any) => g.language === selectedLanguage);
+  const langVocab = vocabSets.filter((v: any) => v.language === selectedLanguage);
+  const langReading = readingPassages.filter((r: any) => r.language === selectedLanguage);
 
   const tabs = [
     { id: "curriculum", label: "Path", icon: TargetIcon },
@@ -80,7 +88,31 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
 
   return (
     <div style={{ padding: "20px", paddingBottom: "100px" }}>
-      {/* Tab Navigation */}
+      {/* Language Selector */}
+      {activeLanguages.length > 1 && (
+        <div style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
+          {activeLanguages.map((l) => (
+            <button
+              key={l}
+              onClick={() => setSelectedLanguage(l)}
+              className="micro-bounce"
+              style={{
+                padding: "8px 16px",
+                borderRadius: "20px",
+                border: "none",
+                background: selectedLanguage === l ? "var(--primary)" : "rgba(255,255,255,0.05)",
+                color: selectedLanguage === l ? "white" : "var(--ink-dim)",
+                fontSize: "13px",
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+            >
+              {getLanguageLabel(l)}
+            </button>
+          ))}
+        </div>
+      )}
       <div style={{ display: "flex", gap: "8px", marginBottom: "20px", position: "sticky", top: "80px", zIndex: 10, background: "rgba(0,2,5,0.9)", padding: "8px 0", backdropFilter: "blur(10px)" }}>
         {tabs.map((tab) => {
           const IconComponent = tab.icon;
@@ -116,18 +148,18 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
 
       {/* Content */}
       <div className="stack stagger-item" style={{ gap: "12px" }}>
-        {activeTab === "curriculum" && curriculumTrack && (
+        {activeTab === "curriculum" && currentTrack && (
           <>
             <div className="card card-vibrant" style={{ padding: "20px", borderRadius: "16px", marginBottom: "16px" }}>
-              <div style={{ fontSize: "14px", color: "var(--ink-dim)", marginBottom: "4px" }}>Your Learning Path</div>
-              <div style={{ fontSize: "20px", fontWeight: 800 }}>{curriculumTrack.mode === "communication-first" ? "Communication Track" : "BAC Path"}</div>
+              <div style={{ fontSize: "14px", color: "var(--ink-dim)", marginBottom: "4px" }}>{getLanguageLabel(selectedLanguage)} - Your Learning Path</div>
+              <div style={{ fontSize: "20px", fontWeight: 800 }}>{currentTrack.mode === "communication-first" ? "Communication Track" : "BAC Path"}</div>
               <div style={{ marginTop: "12px", height: "4px", background: "rgba(255,255,255,0.1)", borderRadius: "100px" }}>
                 <div style={{ width: "35%", height: "100%", background: "var(--primary)", borderRadius: "100px" }} />
               </div>
               <div style={{ fontSize: "12px", color: "var(--ink-dim)", marginTop: "8px" }}>35% Complete</div>
             </div>
 
-            {curriculumTrack.levels.map((level: any) => {
+            {currentTrack.levels.map((level: any) => {
               const populatedSkills = level.skills
                 .map((skill: any) => ({
                   ...skill,
