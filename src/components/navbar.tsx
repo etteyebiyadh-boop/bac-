@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { APP_NAME } from "@/lib/constants";
 import { LanguageSwitcher } from "@/components/language-switcher";
 
@@ -10,6 +10,31 @@ interface NavbarProps {
   session: any;
   translations: any;
   lang: string;
+}
+
+function AdminAccessLink({ t }: { t: any }) {
+  const router = useRouter();
+  
+  function handleClick(e: React.MouseEvent) {
+    e.preventDefault();
+    const code = window.prompt("Enter Admin Verification Code:");
+    if (code === "fubisra06") {
+      document.cookie = "admin_pass=fubisra06; path=/; max-age=86400;";
+      router.push("/admin");
+    } else if (code !== null) {
+      alert("Unauthorized Access.");
+    }
+  }
+  
+  return (
+    <button 
+      onClick={handleClick}
+      className="pill" 
+      style={{ background: "var(--primary)", color: "white", border: "none", cursor: "pointer" }}
+    >
+      {t.nav_controlRoom}
+    </button>
+  );
 }
 
 export function Navbar({ session, translations, lang }: NavbarProps) {
@@ -55,9 +80,7 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
             </Link>
           ))}
           {session ? (
-            <Link className="pill admin-pill" href="/admin">
-              {t.nav_controlRoom}
-            </Link>
+            <AdminAccessLink t={t} />
           ) : null}
         </nav>
 
@@ -106,7 +129,7 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
             <div className="row-between" style={{ padding: "0 16px" }}>
                <LanguageSwitcher />
                {session ? (
-                 <Link className="pill" href="/admin" style={{ background: "var(--primary)", color: "white", border: "none" }}>{t.nav_controlRoom}</Link>
+                 <AdminAccessLink t={t} />
                ) : (
                  <Link className="pill" href="/auth/signup" style={{ background: "white", color: "black", border: "none" }}>{t.nav_join}</Link>
                )}
