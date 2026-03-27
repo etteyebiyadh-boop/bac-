@@ -7,7 +7,6 @@ import { getLanguageLabel } from "@/lib/learning";
 import { isStructuredLessonMeta, skillLabels } from "@/lib/language-system";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { GrammarDrill } from "@/components/GrammarDrill";
-import { VideoPlayer } from "@/components/video-player";
 
 export default async function LessonPage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
@@ -73,7 +72,15 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
               <span className="eyebrow" style={{ color: "var(--primary)" }}>{langCookie === "ar" ? "درس بالفيديو" : (langCookie === "fr" ? "Tutoriel Vidéo" : "Video Tutorial")}</span>
               <span className="pill success-pill">LIVE 🎬</span>
            </div>
-           <VideoPlayer url={lesson.videoUrl} title={lesson.title} />
+           <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, borderRadius: "16px", overflow: "hidden", background: "#000" }}>
+             <iframe
+               src={lesson.videoUrl}
+               title={lesson.title}
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+               allowFullScreen
+               style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+             />
+           </div>
         </section>
       )}
 

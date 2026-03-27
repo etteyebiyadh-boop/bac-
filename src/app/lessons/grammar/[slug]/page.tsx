@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLanguageLabel } from "@/lib/learning";
 import { GrammarPractice } from "./GrammarPractice";
-import { VideoPlayer } from "@/components/video-player";
 
 export default async function GrammarDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
@@ -50,7 +49,15 @@ export default async function GrammarDetailPage({ params }: { params: Promise<{ 
               <span className="eyebrow" style={{ color: "var(--primary)" }}>Grammar Masterclass 🎬</span>
               <span className="pill success-pill">VIDEO ACTIVE</span>
            </div>
-           <VideoPlayer url={rule.videoUrl} title={rule.title} />
+           <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, borderRadius: "16px", overflow: "hidden", background: "#000" }}>
+             <iframe
+               src={rule.videoUrl}
+               title={rule.title}
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+               allowFullScreen
+               style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+             />
+           </div>
         </section>
       )}
 
