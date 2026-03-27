@@ -25,20 +25,20 @@ export async function GET(req: NextRequest) {
       vocab: vocab.map(v => v.title)
     };
 
-    const prompt = `You are a viral content strategist for 'Bac Excellence'.
-    Based on the following pedagogical content currently in the platform, generate 8 VIRAL and MYTH-BUSTING video titles.
+    const prompt = `You are a viral content strategist for 'Bac Excellence', the elite AI-first platform for Tunisian Baccalaureate students.
+    Based on the following pedagogical content currently in the platform, generate 8 VIRAL mastery topics and social media hooks.
     Content Context:
     Lessons: ${context.lessons.join(", ")}
     Grammar: ${context.grammar.join(", ")}
     Vocab: ${context.vocab.join(", ")}
 
     GOALS:
-    1. Make them sound like Tunisian 'Bac Myths' (e.g. 'Why you lose points in writing', 'The inversion rule everyone gets wrong').
-    2. Ensure they are high-energy and attract student curiosity.
-    3. Blend pedagogical authority with social media hook style.
+    1. Make them sound like Elite BAC Secrets (e.g. 'The Inversion Masterclass', 'Stop losing points in Writing', 'The 17/20 Phrase Strategy').
+    2. Focus on Mastery Cheat Sheets, Viral Grammar Hacks, and High-Scoring Vocab.
+    3. Ensure high-energy and reflect the authority of Bac Excellence.
 
     RETURN ONLY A VALID JSON ARRAY OF STRINGS:
-    ["Title 1", "Title 2", ...]`;
+    ["Hook/Topic 1", "Hook/Topic 2", ...]`;
 
     const response = await getReliableCompletion({
         messages: [{ role: "user", content: prompt }],
