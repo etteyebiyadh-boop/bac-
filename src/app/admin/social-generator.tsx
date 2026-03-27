@@ -11,12 +11,17 @@ export function SocialGenerator() {
   const [loading, setLoading] = useState(false);
   const [generatedPost, setGeneratedPost] = useState("");
   const visualRef = useRef<HTMLDivElement>(null);
-  const [videoPlan, setVideoPlan] = useState("");
+  
+  // Pedagogical State
+  const [synonyms, setSynonyms] = useState<any[]>([]);
+  const [antonyms, setAntonyms] = useState<any[]>([]);
+  const [vocabulary, setVocabulary] = useState<any[]>([]);
+  const [phrases, setPhrases] = useState<string[]>([]);
 
   // Unified State
   const [cardTitle, setCardTitle] = useState("The 15/20 Rule 🚀");
   const [cardBody, setCardBody] = useState("Never start a sentence with 'Never' unless you invert the subject and the verb.\n\n❌ Never I have seen...\n✅ Never have I seen...");
-  const [cardTheme, setCardTheme] = useState<"grammar" | "vocab" | "mindset" | "elite" | "cyber" | "retro" | "gold">("grammar");
+  const [cardTheme, setCardTheme] = useState<"grammar" | "vocab" | "mindset" | "elite" | "cyber" | "retro" | "gold" | "vibrant" | "midnight" | "glass">("grammar");
   const [cardWatermark, setCardWatermark] = useState("@bacexcellence");
 
   const handleCopy = () => {
@@ -43,6 +48,10 @@ export function SocialGenerator() {
     
     setLoading(true);
     setGeneratedPost("");
+    setSynonyms([]);
+    setAntonyms([]);
+    setVocabulary([]);
+    setPhrases([]);
 
     try {
       const res = await fetch("/api/admin/generate-social", {
@@ -54,10 +63,13 @@ export function SocialGenerator() {
       if (!res.ok) throw new Error(data.error || "Failed to generate");
       setGeneratedPost(data.script);
       
-      // Auto-populate Visual card from AI
+      // Auto-populate from AI
       if (data.visualTitle) setCardTitle(data.visualTitle);
       if (data.visualBody) setCardBody(data.visualBody);
-      if (data.videoProduction) setVideoPlan(data.videoProduction);
+      if (data.synonyms) setSynonyms(data.synonyms);
+      if (data.antonyms) setAntonyms(data.antonyms);
+      if (data.vocabulary) setVocabulary(data.vocabulary);
+      if (data.phrases) setPhrases(data.phrases);
     } catch (err: any) {
       alert(err.message);
     } finally {
@@ -72,24 +84,27 @@ export function SocialGenerator() {
     elite: { bg: "radial-gradient(circle at 10% 10%, #333 0%, #000 80%)", accent: "#fff", glow: "rgba(255, 255, 255, 0.2)" },
     cyber: { bg: "radial-gradient(circle at 10% 10%, #ff00ff 0%, #000000 80%)", accent: "#00ffff", glow: "rgba(0, 255, 255, 0.5)" },
     retro: { bg: "radial-gradient(circle at 10% 10%, #ff4d4d 0%, #2b0000 80%)", accent: "#ffcc00", glow: "rgba(255, 204, 0, 0.4)" },
-    gold: { bg: "radial-gradient(circle at 10% 10%, #d4af37 0%, #000 80%)", accent: "#ffd700", glow: "rgba(212, 175, 55, 0.5)" }
+    gold: { bg: "radial-gradient(circle at 10% 10%, #d4af37 0%, #000 80%)", accent: "#ffd700", glow: "rgba(212, 175, 55, 0.5)" },
+    vibrant: { bg: "linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)", accent: "#fff", glow: "rgba(236, 72, 153, 0.5)" },
+    midnight: { bg: "linear-gradient(135deg, #0f172a 0%, #020617 100%)", accent: "#38bdf8", glow: "rgba(56, 189, 248, 0.3)" },
+    glass: { bg: "rgba(255, 255, 255, 0.05)", accent: "#fff", glow: "rgba(255, 255, 255, 0.1)" }
   };
 
   const currentTheme = themeColors[cardTheme];
 
   return (
     <section className="stack" style={{ gap: "32px", padding: "40px 0" }}>
-      <div className="card row-between" style={{ padding: "40px", border: "1px solid var(--primary)", background: "radial-gradient(circle at right, rgba(99, 102, 241, 0.05), transparent)" }}>
+      <div className="card row-between" style={{ padding: "40px", border: "1px solid var(--primary)", background: "radial-gradient(circle at right, rgba(99, 102, 241, 0.1), transparent)" }}>
         <div className="stack" style={{ maxWidth: "800px" }}>
-          <span className="eyebrow" style={{ color: "var(--primary)" }}>Viral Content Engine</span>
-          <h2 className="section-title" style={{ fontSize: "2.5rem" }}>Elite Social Studio.</h2>
+          <span className="eyebrow" style={{ color: "var(--primary)" }}>Elite Media Forge</span>
+          <h2 className="section-title" style={{ fontSize: "2.5rem" }}>Social Studio & Mastery Hub.</h2>
           <p className="muted" style={{ fontSize: "1.1rem" }}>
-            Generate viral social media scripts in <strong>Tunisian Derja</strong> and beautifully branded visual cards for "Bac Excellence" instantly. 
+            Generate viral scripts in <strong>Tunisian Derja</strong> and pedagogical mastery assets for "Bac Excellence" instantly. 
           </p>
         </div>
         <div className="stack" style={{ gap: "8px", textAlign: "right" }}>
-            <span className="pill success-pill">Tunisian Vibes: ACTIVE 🇹🇳</span>
-            <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.5 }}>Branding: VIP Elite</span>
+            <span className="pill success-pill">Pedagogic Mode: ELITE 💎</span>
+            <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.5 }}>Branding: VIP Mastery</span>
         </div>
       </div>
 
@@ -128,10 +143,9 @@ export function SocialGenerator() {
                 <span className="eyebrow" style={{ fontSize: "10px", opacity: 0.6 }}>Format</span>
                 <select value={platform} onChange={e => setPlatform(e.target.value)} style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)" }}>
                   <option value="Instagram Carousel">Instagram Carousel</option>
-                  <option value="TikTok/Reels Script">TikTok Script</option>
-                  <option value="Youtube Shorts">Youtube Shorts</option>
-                  <option value="HD Lesson Tutorial">HD Lesson Tutorial Storyboard</option>
-                  <option value="High-Impact Twitter thread">Thread Pack</option>
+                  <option value="Cheat Sheet Story">Viral Cheat Sheet Story</option>
+                  <option value="High-Impact Thread">Mastery Thread Pack</option>
+                  <option value="Educational Post">Premium Educational Post</option>
                 </select>
               </label>
             </div>
@@ -182,40 +196,64 @@ export function SocialGenerator() {
             </div>
           )}
 
-          {videoPlan && (platform.includes("TikTok") || platform.includes("Shorts") || platform.includes("Video") || platform.includes("Tutorial")) && (
+          {/* New Pedagogical Assets Display */}
+          {(synonyms.length > 0 || vocabulary.length > 0 || antonyms.length > 0 || phrases.length > 0) && (
             <div className="card stack" style={{ background: "rgba(0, 0, 0, 0.3)", border: "1px solid var(--accent)", padding: "40px", animation: "slideUp 0.6s ease" }}>
               <div className="row-between" style={{ borderBottom: "1px solid rgba(245, 158, 11, 0.2)", paddingBottom: "24px", marginBottom: "32px" }}>
                  <div className="stack" style={{ gap: "4px" }}>
-                    <span className="eyebrow" style={{ color: "var(--accent)" }}>📽️ PRODUCTION STORYBOARD</span>
-                    <span className="muted" style={{ fontSize: "10px" }}>Elite Viral Engineering for @bacexcellence</span>
+                    <span className="eyebrow" style={{ color: "var(--accent)" }}>💎 PEDAGOGICAL MASTERCLASS</span>
+                    <span className="muted" style={{ fontSize: "10px" }}>Elite Content Assets for @bacexcellence</span>
                  </div>
-                 <div className="pill" style={{ background: "var(--accent-glow)", borderColor: "var(--accent)", color: "var(--accent)" }}>VIDEO READY ➔</div>
+                 <div className="pill" style={{ background: "var(--accent-glow)", borderColor: "var(--accent)", color: "var(--accent)" }}>MASTERED ➔</div>
               </div>
               
-              <div className="stack" style={{ gap: "24px" }}>
-                {videoPlan.split("\n\n").map((scene, idx) => (
-                  <div key={idx} className="card row-between" style={{ padding: "24px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "16px", position: "relative", overflow: "hidden" }}>
-                     <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "4px", background: "var(--accent)" }} />
-                     <div className="stack" style={{ gap: "12px", width: "100%" }}>
-                        <div className="row-between">
-                           <span className="eyebrow" style={{ color: "var(--accent)", fontSize: "12px" }}>SCENE {idx + 1}</span>
-                           <span style={{ fontSize: "10px", opacity: 0.5 }}>00:{String(idx * 10).padStart(2, '0')}</span>
-                        </div>
-                        <div style={{ color: "white", fontSize: "1rem", lineHeight: "1.6", whiteSpace: "pre-wrap" }}>
-                           {scene}
-                        </div>
-                     </div>
+              <div className="grid grid-cols-2" style={{ gap: "24px" }}>
+                {synonyms.length > 0 && (
+                  <div className="stack" style={{ gap: "12px" }}>
+                    <span className="eyebrow" style={{ fontSize: "10px", color: "var(--primary)" }}>Synonyms</span>
+                    {synonyms.map((s, idx) => (
+                      <div key={idx} className="card" style={{ padding: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                        <span style={{ fontWeight: 800 }}>{s.word}</span> <span className="muted">➔</span> <span style={{ color: "var(--primary)" }}>{s.synonym}</span>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
+                {antonyms.length > 0 && (
+                  <div className="stack" style={{ gap: "12px" }}>
+                    <span className="eyebrow" style={{ fontSize: "10px", color: "#ff4d4d" }}>Antonyms</span>
+                    {antonyms.map((a, idx) => (
+                      <div key={idx} className="card" style={{ padding: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                        <span style={{ fontWeight: 800 }}>{a.word}</span> <span className="muted">➔</span> <span style={{ color: "#ff4d4d" }}>{a.antonym}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              <div className="stack" style={{ marginTop: "40px", padding: "24px", background: "rgba(245, 158, 11, 0.05)", borderRadius: "12px", border: "1px dashed var(--accent)" }}>
-                 <span className="eyebrow" style={{ color: "var(--accent)" }}>SOUND & VIBE CHECK 🎧</span>
-                 <p className="muted" style={{ fontSize: "0.9rem", margin: "8px 0 0" }}>
-                    Ensure the music matches the <strong>Tunisian High-Energy</strong> persona of Bac Excellence. 
-                    Aim for high-impact transitions every 3-5 seconds.
-                 </p>
-              </div>
+              {vocabulary.length > 0 && (
+                <div className="stack" style={{ gap: "16px", marginTop: "32px" }}>
+                  <span className="eyebrow" style={{ fontSize: "10px", color: "#10b981" }}>Vocabulary Explosion</span>
+                  {vocabulary.map((v, idx) => (
+                    <div key={idx} className="card stack" style={{ padding: "16px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
+                      <span style={{ fontWeight: 900, fontSize: "1.1rem", color: "#10b981" }}>{v.word}</span>
+                      <p className="muted" style={{ fontSize: "14px", margin: "4px 0" }}>{v.definition}</p>
+                      <q style={{ fontSize: "12px", borderLeft: "2px solid #10b981", paddingLeft: "8px", fontStyle: "italic", opacity: 0.8 }}>{v.example}</q>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {phrases.length > 0 && (
+                <div className="stack" style={{ gap: "16px", marginTop: "32px" }}>
+                  <span className="eyebrow" style={{ fontSize: "10px", color: "#00ffff" }}>Exam-Ready High-Scoring Phrases</span>
+                  {phrases.map((p, idx) => (
+                    <div key={idx} className="card" style={{ padding: "16px", background: "rgba(0,0,0,0.5)", border: "1px solid #00ffff", borderStyle: "dashed", display: "flex", alignItems: "center", gap: "12px" }}>
+                      <span style={{ fontSize: "20px" }}>⚡</span>
+                      <span style={{ fontSize: "1rem", fontWeight: 700, color: "#00ffff" }}>{p}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -237,6 +275,9 @@ export function SocialGenerator() {
                     <option value="cyber">Neon Cyber</option>
                     <option value="retro">Vintage Red</option>
                     <option value="gold">Royal Gold</option>
+                    <option value="vibrant">Vibrant Power</option>
+                    <option value="midnight">Midnight Pro</option>
+                    <option value="glass">Pure Glass</option>
                   </select>
                 </label>
                 <label className="stack" style={{ gap: "8px" }}>
@@ -282,50 +323,89 @@ export function SocialGenerator() {
                 width: "400px",
                 height: "400px",
                 background: currentTheme.bg,
-                border: `1px solid ${currentTheme.glow}`,
-                boxShadow: `0 0 40px ${currentTheme.glow}, inset 0 0 100px rgba(0,0,0,0.8)`,
+                border: cardTheme === 'glass' ? "1px solid rgba(255,255,255,0.2)" : `1px solid ${currentTheme.glow}`,
+                backdropFilter: cardTheme === 'glass' ? "blur(20px)" : "none",
+                boxShadow: cardTheme === 'glass' ? "0 8px 32px 0 rgba(31, 38, 135, 0.37)" : `0 0 40px ${currentTheme.glow}, inset 0 0 100px rgba(0,0,0,0.8)`,
                 position: "relative",
                 display: "flex",
                 flexDirection: "column",
-                padding: "30px",
+                padding: "35px",
                 overflow: "hidden",
-                borderRadius: "20px"
+                borderRadius: "24px"
               }}
             >
-              <div className="row-between" style={{ opacity: 0.8, marginBottom: "20px", zIndex: 2 }}>
-                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <div style={{ width: "24px", height: "24px", background: currentTheme.accent, borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center", color: "black", fontWeight: 900, fontSize: "14px" }}>B</div>
-                    <span style={{ fontSize: "12px", fontWeight: 800, letterSpacing: "1px" }}>BAC EXCELLENCE</span>
+              {/* Animated background elements */}
+              <div 
+                style={{ 
+                  position: "absolute", 
+                  top: "-10%", 
+                  right: "-10%", 
+                  width: "150px", 
+                  height: "150px", 
+                  background: currentTheme.accent, 
+                  filter: "blur(80px)", 
+                  opacity: 0.2,
+                  borderRadius: "50%" 
+                }} 
+              />
+
+              <div className="row-between" style={{ opacity: 0.8, marginBottom: "24px", zIndex: 2 }}>
+                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <div style={{ width: "28px", height: "28px", background: currentTheme.accent, borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "black", fontWeight: 950, fontSize: "16px" }}>B</div>
+                    <span style={{ fontSize: "13px", fontWeight: 900, letterSpacing: "1.5px" }}>BAC EXCELLENCE</span>
                  </div>
-                 <span style={{ fontSize: "12px", fontWeight: 800, color: currentTheme.accent }}>SWIPE ➔</span>
+                 <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span style={{ fontSize: "11px", fontWeight: 800, color: currentTheme.accent }}>SWIPE</span>
+                    <div style={{ width: "20px", height: "2px", background: currentTheme.accent, opacity: 0.5 }} />
+                 </div>
               </div>
 
-              <div className="stack" style={{ flex: 1, justifyContent: "center", gap: "16px", zIndex: 2 }}>
-                <h1 style={{ fontSize: "2rem", fontWeight: 900, lineHeight: 1.1, textShadow: `0 0 20px ${currentTheme.glow}` }}>
+              <div className="stack" style={{ flex: 1, justifyContent: "center", gap: "20px", zIndex: 2 }}>
+                <h1 style={{ 
+                  fontSize: "2.2rem", 
+                  fontWeight: 950, 
+                  lineHeight: 1.05, 
+                  textShadow: cardTheme === 'glass' ? "none" : `0 0 30px ${currentTheme.accent}44`,
+                  background: cardTheme === 'vibrant' ? "linear-gradient(to bottom, #fff, #ddd)" : "none",
+                  WebkitBackgroundClip: cardTheme === 'vibrant' ? "text" : "none",
+                  WebkitTextFillColor: cardTheme === 'vibrant' ? "transparent" : "inherit"
+                }}>
                   {cardTitle}
                 </h1>
+                
                 <div style={{ 
-                  fontSize: (cardBody?.length || 0) > 200 ? "0.85rem" : ((cardBody?.length || 0) > 120 ? "0.9rem" : "1.05rem"), 
-                  lineHeight: 1.5, 
-                  opacity: 0.9,
+                  fontSize: (cardBody?.length || 0) > 200 ? "0.9rem" : ((cardBody?.length || 0) > 120 ? "1rem" : "1.15rem"), 
+                  lineHeight: 1.6, 
+                  opacity: 0.95,
+                  fontWeight: 500,
                   whiteSpace: "pre-wrap",
-                  paddingLeft: "16px",
-                  borderLeft: `4px solid ${currentTheme.accent}`,
-                  transition: "all 0.3s ease"
+                  paddingLeft: "20px",
+                  borderLeft: `5px solid ${currentTheme.accent}`,
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                 }}>
                   {String(cardBody || "")}
                 </div>
-                <div style={{ marginTop: "10px", padding: "8px 12px", background: "rgba(255,255,255,0.05)", borderRadius: "8px", border: `1px solid ${currentTheme.accent}`, display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                   <span style={{ color: currentTheme.accent, fontWeight: 900, fontSize: "10px" }}>🛡️ ELITE GRADE FACTOR: +3 PTS</span>
+
+                <div style={{ 
+                  marginTop: "12px", 
+                  padding: "10px 16px", 
+                  background: cardTheme === 'glass' ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.05)", 
+                  borderRadius: "12px", 
+                  border: `1px solid ${currentTheme.accent}44`, 
+                  display: "inline-flex", 
+                  alignItems: "center", 
+                  gap: "8px",
+                  alignSelf: "flex-start",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
+                }}>
+                   <span style={{ fontSize: "14px" }}>🛡️</span>
+                   <span style={{ color: currentTheme.accent, fontWeight: 900, fontSize: "11px", letterSpacing: "1px" }}>ELITE GRADE BOOSTER</span>
                 </div>
               </div>
 
-              <div style={{ textAlign: "center", marginTop: "20px", zIndex: 2 }}>
-                <span style={{ fontSize: "12px", opacity: 0.5, letterSpacing: "2px", fontWeight: 700 }}>{cardWatermark}</span>
+              <div style={{ textAlign: "center", marginTop: "24px", zIndex: 2 }}>
+                <span style={{ fontSize: "13px", opacity: 0.6, letterSpacing: "3px", fontWeight: 800 }}>{cardWatermark.toUpperCase()}</span>
               </div>
-
-              <div style={{ position: "absolute", bottom: "-50px", right: "-50px", width: "200px", height: "200px", border: `2px solid ${currentTheme.accent}`, borderRadius: "50%", opacity: 0.1, zIndex: 1 }} />
-              <div style={{ position: "absolute", top: "100px", left: "-20px", width: "100px", height: "100px", border: `2px solid ${currentTheme.accent}`, borderRadius: "50%", opacity: 0.1, zIndex: 1 }} />
             </div>
           </div>
         </div>

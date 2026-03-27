@@ -4,9 +4,8 @@ import { useState } from "react";
 import { PlanToggleForm } from "./plan-toggle-form";
 import { LessonForm } from "./lesson-form";
 import { SocialGenerator } from "./social-generator";
-import { VideoGenerator } from "./video-generator";
 
-type AdminTab = "USERS" | "CONTENT" | "MARKETING" | "VIDEO";
+type AdminTab = "USERS" | "CONTENT" | "MARKETING";
 
 export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
   const [activeTab, setActiveTab] = useState<AdminTab>("USERS");
@@ -14,12 +13,11 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
   return (
     <div className="page-stack">
       {/* Tab Switcher */}
-      <nav className="row-between" style={{ justifyContent: "center", gap: "12px", background: "rgba(255,255,255,0.03)", padding: "8px", borderRadius: "100px", border: "1px solid var(--glass-border)", maxWidth: "500px", margin: "0 auto" }}>
+      <nav className="row-between" style={{ justifyContent: "center", gap: "12px", background: "rgba(255,255,255,0.03)", padding: "8px", borderRadius: "100px", border: "1px solid var(--glass-border)", maxWidth: "450px", margin: "0 auto" }}>
         {[
-          { id: "USERS", label: "User Management", icon: "💎" },
-          { id: "CONTENT", label: "Content Library", icon: "📚" },
-          { id: "MARKETING", label: "Media Engine", icon: "🚀" },
-          { id: "VIDEO", label: "Video Architect", icon: "🎬" }
+          { id: "USERS", label: "Students", icon: "💎" },
+          { id: "CONTENT", label: "Curriculum", icon: "📚" },
+          { id: "MARKETING", label: "Media Engine", icon: "🚀" }
         ].map(tab => (
           <button 
             key={tab.id}
@@ -96,12 +94,6 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
       {activeTab === "MARKETING" && (
         <div className="page-stack fadeIn">
           <SocialGenerator />
-        </div>
-      )}
-
-      {activeTab === "VIDEO" && (
-        <div className="page-stack fadeIn">
-          <VideoGenerator />
         </div>
       )}
 
