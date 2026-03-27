@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Navbar } from "@/components/navbar";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 
 export const metadata: Metadata = {
   title: `${APP_NAME} | All-in-one Tunisian Bac Prep`,
@@ -34,6 +35,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <Navbar session={session} translations={t} lang={langCookie} />
 
           <main className="container" style={{ paddingTop: '120px' }}>{children}</main>
+
+          <MobileBottomNav session={session} translations={t} lang={langCookie} />
 
           <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--glass-border)', marginTop: '100px' }}>
             <div className="container row-between" style={{ alignItems: 'flex-start' }}>
