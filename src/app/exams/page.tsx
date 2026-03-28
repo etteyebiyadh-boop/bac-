@@ -4,6 +4,8 @@ import { requireCurrentUser } from "@/lib/auth";
 import { SiteLanguage, translations } from "@/lib/translations";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function ExamsArchivePage() {
   await requireCurrentUser();
   const cookieStore = await cookies();

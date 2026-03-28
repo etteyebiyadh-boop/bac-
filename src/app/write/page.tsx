@@ -5,6 +5,8 @@ import { ensureStudentProfile } from "@/lib/missions";
 import { db } from "@/lib/db";
 import { WriteWorkspace } from "./write-workspace";
 
+export const dynamic = "force-dynamic";
+
 export default async function WritingLabPage() {
   const user = await requireCurrentUser();
   const profile = await ensureStudentProfile(user.id);
