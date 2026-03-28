@@ -5,6 +5,8 @@ import { FREE_CORRECTIONS_PER_WEEK } from "@/lib/constants";
 import { buildDashboardMetrics } from "@/lib/dashboard";
 import { ensureDailyMission, ensureStudentProfile, getXpTotal } from "@/lib/missions";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

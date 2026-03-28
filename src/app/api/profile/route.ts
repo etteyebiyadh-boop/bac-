@@ -13,6 +13,8 @@ const schema = z.object({
   secondaryLanguages: z.array(z.nativeEnum(Language)).optional()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
