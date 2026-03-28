@@ -382,8 +382,6 @@ export default function CertificatesPage() {
                 ))}
               </div>
             </div>
-          </div>
-        </div>
       </div>
     </div>
   );
