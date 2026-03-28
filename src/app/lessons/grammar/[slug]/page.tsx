@@ -5,6 +5,8 @@ import Link from "next/link";
 import { getLanguageLabel } from "@/lib/learning";
 import { GrammarPractice } from "./GrammarPractice";
 
+export const dynamic = 'force-dynamic';
+
 export default async function GrammarDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
   const { slug } = await params;

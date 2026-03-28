@@ -6,6 +6,8 @@ import { SiteLanguage, translations } from "@/lib/translations";
 import { WriteWorkspace } from "@/app/write/write-workspace";
 import Link from "next/link";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ExamPracticePage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
   const cookieStore = await cookies();

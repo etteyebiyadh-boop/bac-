@@ -8,6 +8,8 @@ import { isStructuredLessonMeta, skillLabels } from "@/lib/language-system";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { GrammarDrill } from "@/components/GrammarDrill";
 
+export const dynamic = 'force-dynamic';
+
 export default async function LessonPage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
   const cookieStore = await cookies();

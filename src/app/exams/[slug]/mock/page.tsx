@@ -9,6 +9,8 @@ import { cookies } from "next/headers";
 import { SiteLanguage } from "@/lib/translations";
 import { MockSimulatorClient } from "./mock-client";
 
+export const dynamic = 'force-dynamic';
+
 export default async function MockExamPage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
   const cookieStore = await cookies();

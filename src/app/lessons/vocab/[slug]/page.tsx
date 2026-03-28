@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getLanguageLabel } from "@/lib/learning";
 
+export const dynamic = 'force-dynamic';
+
 export default async function VocabVaultPage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
   const { slug } = await params;
