@@ -11,8 +11,9 @@ export const dynamic = 'force-dynamic';
 export default async function ExamPracticePage({ params }: { params: Promise<{ slug: string }> }) {
   await requireCurrentUser();
   const cookieStore = await cookies();
-  const langCookie = (cookieStore.get("site-lang")?.value as SiteLanguage) || "en";
-  const t = translations[langCookie];
+  const rawLang = cookieStore.get("site-lang")?.value;
+  const langCookie = (rawLang === "fr" || rawLang === "ar" ? rawLang : "en") as SiteLanguage;
+  const t = translations[langCookie] || translations.en;
 
   const { slug } = await params;
   const exam = await db.exam.findUnique({
