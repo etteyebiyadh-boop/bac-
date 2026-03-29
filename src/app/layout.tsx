@@ -9,7 +9,7 @@ import { SiteLanguage, translations } from "@/lib/translations";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Navbar } from "@/components/navbar";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
-import { AmbientOrbs, ParticleField } from "@/components/premium-animations";
+import { OptimizedParticles } from "@/components/premium-animations-optimized";
 
 export const dynamic = "force-dynamic";
 
@@ -28,10 +28,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang={langCookie} dir={langCookie === "ar" ? "rtl" : "ltr"}>
       <body className="bg-[#000205] text-white antialiased">
-        {/* Premium Ambient Background (Commented for debugging Vercel crash)
-        <AmbientOrbs />
-        <ParticleField count={30} />
-        */}
+        {/* Optimized Particles - CSS only, disabled on mobile */}
+        <OptimizedParticles count={15} />
         
         {/* Legacy magic background for compatibility */}
         <div className="magic-background">

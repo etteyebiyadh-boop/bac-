@@ -2,8 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { PremiumHero, PremiumFeatureCard, PremiumSectionTitle } from "@/components/premium-hero";
-import { ScrollReveal, StaggerContainer, StaggerItem, Parallax } from "@/components/premium-animations";
+import { LightweightHero, LightweightFeatureCard, OptimizedSectionTitle, OptimizedScrollReveal, OptimizedStagger, OptimizedStaggerItem, LightweightStatCard } from "@/components/premium-animations-optimized";
 import { HeroPathSelector } from "@/components/home-path-selector";
 import { BookOpen, PenTool, Library, Target, ArrowRight, Sparkles, Zap, Award } from "lucide-react";
 import { SiteLanguage } from "@/lib/translations";
@@ -17,8 +16,8 @@ interface HomeClientProps {
 export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
   return (
     <div className="relative overflow-hidden">
-      {/* Premium Hero Section with 3D */}
-      <PremiumHero
+      {/* Lightweight Hero - No Three.js, CSS 3D only */}
+      <LightweightHero
         badge={isRTL ? "✨ نسخة 2026 - مباشرة" : (lang === "fr" ? "✨ ÉDITION 2026 - EN DIRECT" : "✨ 2026 EDITION - LIVE")}
         title={t.hero_title}
         subtitle={t.hero_subtitle}
@@ -26,7 +25,6 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
         ctaHref="#selector"
         secondaryCtaText={t.hero_explore}
         secondaryCtaHref="/lessons"
-        show3D={true}
       />
 
       {/* Path Selector Section */}
@@ -34,7 +32,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/5 via-transparent to-transparent" />
         
         <div className="relative max-w-7xl mx-auto px-6">
-          <PremiumSectionTitle
+          <OptimizedSectionTitle
             eyebrow={isRTL ? "خارطة الطريق متاعك" : (lang === "fr" ? "Moteur de Personnalisation" : "Personalization Engine")}
             title={isRTL ? "منين تحب تبدا؟" : (lang === "fr" ? "Par où commencer ?" : "Where do you start?")}
             subtitle={isRTL 
@@ -44,23 +42,21 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
                 : "Select your section and optional language to generate your custom 17/20 roadmap.")}
           />
 
-          <ScrollReveal delay={0.3}>
+          <OptimizedScrollReveal delay={0.3}>
             <div className="mt-16">
               <HeroPathSelector lang={lang} />
             </div>
-          </ScrollReveal>
+          </OptimizedScrollReveal>
         </div>
       </section>
 
       {/* Bac Sections Showcase */}
       <section className="relative py-32 overflow-hidden">
-        <Parallax speed={0.3}>
-          <div className="absolute top-20 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl" />
-        </Parallax>
+        <div className="absolute top-20 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl" />
         
         <div className="relative max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <ScrollReveal direction="left">
+            <OptimizedScrollReveal direction="left">
               <span className="inline-block text-sm font-bold tracking-widest uppercase bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent mb-4">
                 {isRTL ? "جميع الشعب موجودة" : (lang === "fr" ? "Toutes les séries incluses" : "All Series Included")}
               </span>
@@ -75,9 +71,9 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
                     : "From Mathematics to Economy, we've mapped every syllabus requirement, coefficient, and exam pattern unique to your track.")}
               </p>
 
-              <StaggerContainer staggerDelay={0.1} className="space-y-3">
-                {['Maths', 'Sciences', 'Technique', 'Econ', 'Lettres', 'Info', 'Sport'].map((s, i) => (
-                  <StaggerItem key={s}>
+              <OptimizedStagger staggerDelay={0.05} className="space-y-3">
+                {['Maths', 'Sciences', 'Technique', 'Econ', 'Lettres', 'Info', 'Sport'].map((s) => (
+                  <OptimizedStaggerItem key={s}>
                     <motion.div 
                       className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors"
                       whileHover={{ x: 8, backgroundColor: "rgba(255,255,255,0.08)" }}
@@ -90,12 +86,12 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
                         </span>
                       </div>
                     </motion.div>
-                  </StaggerItem>
+                  </OptimizedStaggerItem>
                 ))}
-              </StaggerContainer>
-            </ScrollReveal>
+              </OptimizedStagger>
+            </OptimizedScrollReveal>
 
-            <ScrollReveal direction="right" delay={0.2}>
+            <OptimizedScrollReveal direction="right" delay={0.2}>
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-3xl blur-2xl" />
                 <Image 
@@ -106,48 +102,44 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
                   className="relative rounded-3xl shadow-2xl shadow-black/50"
                 />
               </div>
-            </ScrollReveal>
+            </OptimizedScrollReveal>
           </div>
         </div>
       </section>
 
-      {/* Features Section - Premium Cards */}
+      {/* Features Section - Lightweight Cards */}
       <section className="relative py-32">
         <div className="max-w-7xl mx-auto px-6">
-          <PremiumSectionTitle
+          <OptimizedSectionTitle
             eyebrow={t.feat_eyebrow}
             title={t.feat_title}
             subtitle={t.feat_subtitle}
           />
 
           <div className="grid md:grid-cols-2 gap-6 mt-16">
-            <PremiumFeatureCard
+            <LightweightFeatureCard
               icon={<PenTool className="w-7 h-7" />}
               title={t.feat_writing_title}
               description={t.feat_writing_desc}
               gradient="from-indigo-500/30 via-purple-500/20 to-pink-500/10"
-              delay={0}
             />
-            <PremiumFeatureCard
+            <LightweightFeatureCard
               icon={<BookOpen className="w-7 h-7" />}
               title={t.feat_reading_title}
               description={t.feat_reading_desc}
               gradient="from-emerald-500/30 via-teal-500/20 to-cyan-500/10"
-              delay={0.1}
             />
-            <PremiumFeatureCard
+            <LightweightFeatureCard
               icon={<Library className="w-7 h-7" />}
               title={t.feat_library_title}
               description={t.feat_library_desc}
               gradient="from-amber-500/30 via-orange-500/20 to-red-500/10"
-              delay={0.2}
             />
-            <PremiumFeatureCard
+            <LightweightFeatureCard
               icon={<Target className="w-7 h-7" />}
               title={t.feat_missions_title}
               description={t.feat_missions_desc}
               gradient="from-rose-500/30 via-pink-500/20 to-purple-500/10"
-              delay={0.3}
             />
           </div>
         </div>
@@ -165,18 +157,9 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
               { value: "98%", label: isRTL ? "نسبة النجاح" : (lang === "fr" ? "Réussite" : "Success"), icon: <Zap className="w-5 h-5" /> },
               { value: "24/7", label: isRTL ? "دعم AI" : (lang === "fr" ? "Support IA" : "AI Support"), icon: <ArrowRight className="w-5 h-5" /> },
             ].map((stat, i) => (
-              <ScrollReveal key={i} delay={i * 0.1}>
-                <motion.div 
-                  className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
-                  whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.08)" }}
-                >
-                  <div className="flex justify-center mb-3 text-indigo-400">{stat.icon}</div>
-                  <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-white/50 mt-1">{stat.label}</div>
-                </motion.div>
-              </ScrollReveal>
+              <OptimizedScrollReveal key={i} delay={i * 0.1}>
+                <LightweightStatCard {...stat} />
+              </OptimizedScrollReveal>
             ))}
           </div>
         </div>
@@ -185,7 +168,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
       {/* Final CTA Section */}
       <section className="relative py-32">
         <div className="max-w-7xl mx-auto px-6">
-          <ScrollReveal>
+          <OptimizedScrollReveal>
             <div className="relative p-12 md:p-20 rounded-3xl overflow-hidden">
               {/* Animated gradient background */}
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/30 via-purple-600/20 to-pink-600/30" />
@@ -253,7 +236,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
                 </motion.div>
               </div>
             </div>
-          </ScrollReveal>
+          </OptimizedScrollReveal>
         </div>
       </section>
     </div>
