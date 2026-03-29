@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import "./globals.css";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -11,6 +10,8 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { Navbar } from "@/components/navbar";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { AmbientOrbs, ParticleField } from "@/components/premium-animations";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: `${APP_NAME} | All-in-one Tunisian Bac Prep`,
@@ -27,9 +28,10 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang={langCookie} dir={langCookie === "ar" ? "rtl" : "ltr"}>
       <body className="bg-[#000205] text-white antialiased">
-        {/* Premium Ambient Background */}
+        {/* Premium Ambient Background (Commented for debugging Vercel crash)
         <AmbientOrbs />
         <ParticleField count={30} />
+        */}
         
         {/* Legacy magic background for compatibility */}
         <div className="magic-background">

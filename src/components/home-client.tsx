@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { PremiumHero, PremiumFeatureCard, PremiumSectionTitle } from "@/components/premium-hero";
 import { ScrollReveal, StaggerContainer, StaggerItem, Parallax } from "@/components/premium-animations";
-import { HeroPathSelector } from "@/app/home-path-selector";
+import { HeroPathSelector } from "@/components/home-path-selector";
 import { BookOpen, PenTool, Library, Target, ArrowRight, Sparkles, Zap, Award } from "lucide-react";
 import { SiteLanguage } from "@/lib/translations";
 
