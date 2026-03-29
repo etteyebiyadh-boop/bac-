@@ -10,6 +10,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { Navbar } from "@/components/navbar";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { OptimizedParticles } from "@/components/premium-animations-optimized";
+import { CustomCursor, FilmGrain, PageTransition } from "@/components/premium-micro-interactions";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang={langCookie} dir={langCookie === "ar" ? "rtl" : "ltr"}>
-      <body className="bg-[#000205] text-white antialiased">
+      <body className="bg-[#000205] text-white antialiased cursor-none">
+        {/* Ultimate Premium Effects */}
+        <CustomCursor color="#6366f1" size={20} trailLength={10} />
+        <FilmGrain />
+        
         {/* Optimized Particles - CSS only, disabled on mobile */}
         <OptimizedParticles count={15} />
         
@@ -37,8 +42,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <div className="glow-orb orb-amber" />
         </div>
         
-        <div className="site-shell">
-          <Navbar session={session} translations={t} lang={langCookie} />
+        <PageTransition>
+          <div className="site-shell">
+            <Navbar session={session} translations={t} lang={langCookie} />
 
           <main className="container relative z-10" style={{ paddingTop: '120px' }}>{children}</main>
 
@@ -63,6 +69,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             </div>
           </footer>
         </div>
+        </PageTransition>
       </body>
     </html>
   );

@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { LightweightHero, LightweightFeatureCard, OptimizedSectionTitle, OptimizedScrollReveal, OptimizedStagger, OptimizedStaggerItem, LightweightStatCard } from "@/components/premium-animations-optimized";
+import { LightweightHero, OptimizedSectionTitle, OptimizedScrollReveal, OptimizedStagger, OptimizedStaggerItem, LightweightStatCard } from "@/components/premium-animations-optimized";
+import { MagneticButton, UltraTiltCard, SparkleText, Breathing } from "@/components/premium-micro-interactions";
 import { HeroPathSelector } from "@/components/home-path-selector";
 import { BookOpen, PenTool, Library, Target, ArrowRight, Sparkles, Zap, Award } from "lucide-react";
 import { SiteLanguage } from "@/lib/translations";
@@ -107,7 +108,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
         </div>
       </section>
 
-      {/* Features Section - Lightweight Cards */}
+      {/* Features Section - Ultra 3D Cards */}
       <section className="relative py-32">
         <div className="max-w-7xl mx-auto px-6">
           <OptimizedSectionTitle
@@ -117,30 +118,24 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
           />
 
           <div className="grid md:grid-cols-2 gap-6 mt-16">
-            <LightweightFeatureCard
-              icon={<PenTool className="w-7 h-7" />}
-              title={t.feat_writing_title}
-              description={t.feat_writing_desc}
-              gradient="from-indigo-500/30 via-purple-500/20 to-pink-500/10"
-            />
-            <LightweightFeatureCard
-              icon={<BookOpen className="w-7 h-7" />}
-              title={t.feat_reading_title}
-              description={t.feat_reading_desc}
-              gradient="from-emerald-500/30 via-teal-500/20 to-cyan-500/10"
-            />
-            <LightweightFeatureCard
-              icon={<Library className="w-7 h-7" />}
-              title={t.feat_library_title}
-              description={t.feat_library_desc}
-              gradient="from-amber-500/30 via-orange-500/20 to-red-500/10"
-            />
-            <LightweightFeatureCard
-              icon={<Target className="w-7 h-7" />}
-              title={t.feat_missions_title}
-              description={t.feat_missions_desc}
-              gradient="from-rose-500/30 via-pink-500/20 to-purple-500/10"
-            />
+            {[
+              { icon: <PenTool className="w-7 h-7" />, title: t.feat_writing_title, desc: t.feat_writing_desc, gradient: "from-indigo-500/30 via-purple-500/20 to-pink-500/10" },
+              { icon: <BookOpen className="w-7 h-7" />, title: t.feat_reading_title, desc: t.feat_reading_desc, gradient: "from-emerald-500/30 via-teal-500/20 to-cyan-500/10" },
+              { icon: <Library className="w-7 h-7" />, title: t.feat_library_title, desc: t.feat_library_desc, gradient: "from-amber-500/30 via-orange-500/20 to-red-500/10" },
+              { icon: <Target className="w-7 h-7" />, title: t.feat_missions_title, desc: t.feat_missions_desc, gradient: "from-rose-500/30 via-pink-500/20 to-purple-500/10" },
+            ].map((feature, i) => (
+              <UltraTiltCard key={i} glareEnabled={true} maxTilt={15}>
+                <div className={`p-8 rounded-2xl bg-[#0a0a12]/80 backdrop-blur-xl h-full bg-gradient-to-br ${feature.gradient}`}>
+                  <div className="flex flex-col h-full">
+                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-4">
+                      <div className="text-indigo-400">{feature.icon}</div>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
+                    <p className="text-white/60 leading-relaxed">{feature.desc}</p>
+                  </div>
+                </div>
+              </UltraTiltCard>
+            ))}
           </div>
         </div>
       </section>
@@ -158,7 +153,9 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
               { value: "24/7", label: isRTL ? "دعم AI" : (lang === "fr" ? "Support IA" : "AI Support"), icon: <ArrowRight className="w-5 h-5" /> },
             ].map((stat, i) => (
               <OptimizedScrollReveal key={i} delay={i * 0.1}>
-                <LightweightStatCard {...stat} />
+                <Breathing intensity={0.5}>
+                  <LightweightStatCard {...stat} />
+                </Breathing>
               </OptimizedScrollReveal>
             ))}
           </div>
@@ -198,7 +195,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
                 </motion.div>
                 
                 <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
-                  {t.cta_title}
+                  <SparkleText text={t.cta_title} sparkles={true} />
                 </h2>
                 <p className="text-xl text-white/60 mb-10">
                   {t.cta_subtitle}
@@ -211,28 +208,16 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
                   viewport={{ once: true }}
                   transition={{ delay: 0.4 }}
                 >
-                  <motion.a
-                    href="/auth/signup"
-                    className="group relative px-8 py-4 bg-white text-black font-bold rounded-full overflow-hidden"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
+                  <MagneticButton 
+                    href="/auth/signup" 
+                    variant="primary" 
+                    size="lg"
+                    strength={0.3}
+                    className="w-full sm:w-auto justify-center"
                   >
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-black/10 to-transparent"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "100%" }}
-                      transition={{ duration: 0.5 }}
-                    />
-                    <span className="relative flex items-center gap-2">
-                      {t.cta_btn}
-                      <motion.span
-                        animate={{ x: [0, 4, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                      >
-                        <ArrowRight className="w-5 h-5" />
-                      </motion.span>
-                    </span>
-                  </motion.a>
+                    {t.cta_btn}
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </MagneticButton>
                 </motion.div>
               </div>
             </div>
