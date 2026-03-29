@@ -64,7 +64,7 @@ export default async function ReadingPassagePage({ params }: { params: Promise<{
           <div className="card stack" style={{ padding: "32px", background: "rgba(99, 102, 241, 0.05)", border: "1px dotted var(--primary)" }}>
              <span className="eyebrow" style={{ color: "var(--primary)" }}>Methodology Tip</span>
              <p style={{ marginTop: "12px", fontSize: "0.9rem", fontStyle: "italic" }}>
-                "In {passage.language} Bac exams, always look for synonyms in the text. Often the question uses a keyword that is paraphrased in the passage."
+                &quot;In {passage.language} Bac exams, always look for synonyms in the text. Often the question uses a keyword that is paraphrased in the passage.&quot;
              </p>
           </div>
         </aside>

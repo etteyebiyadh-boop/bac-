@@ -51,11 +51,11 @@ export default async function VocabVaultPage({ params }: { params: Promise<{ slu
             <div className="stack" style={{ gap: "10px", marginTop: "16px" }}>
                <div style={{ padding: "16px", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px solid var(--glass-border)" }}>
                   <span className="eyebrow" style={{ fontSize: "10px" }}>COMMON USE</span>
-                  <p style={{ margin: "4px 0 0", fontStyle: "italic" }}>"{item.exampleSentence}"</p>
+                  <p style={{ margin: "4px 0 0", fontStyle: "italic" }}>&quot;{item.exampleSentence}&quot;</p>
                </div>
                <div style={{ padding: "16px", background: "rgba(99, 102, 241, 0.05)", borderRadius: "12px", border: "1px solid var(--primary-glow)" }}>
                   <span className="eyebrow" style={{ fontSize: "10px", color: "var(--primary)" }}>BAC EXAM EXAMPLE</span>
-                  <p style={{ margin: "4px 0 0", fontWeight: 700 }}>"{item.bacExample}"</p>
+                  <p style={{ margin: "4px 0 0", fontWeight: 700 }}>&quot;{item.bacExample}&quot;</p>
                </div>
             </div>
 

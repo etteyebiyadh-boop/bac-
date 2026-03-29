@@ -52,7 +52,7 @@ export function SmartStudyPlanner({ lang }: { lang: SiteLanguage }) {
       <div className="stack" style={{ gap: "4px" }}>
         <h3 style={{ fontSize: "1.8rem", fontWeight: 900 }}>Review Inference Rules</h3>
         <p className="muted" style={{ fontSize: "12px", lineHeight: 1.5 }}>
-          Based on your latest exam, you struggled with "skimming and inference". We recommend a focused 15-minute review session.
+          Based on your latest exam, you struggled with &quot;skimming and inference&quot;. We recommend a focused 15-minute review session.
         </p>
       </div>
       <Link href="/strategy" className="button-link" style={{ marginTop: "24px", justifyContent: "center", background: "rgba(16, 185, 129, 0.1)", border: "1px solid var(--success)", color: "white" }}>
