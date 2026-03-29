@@ -52,31 +52,22 @@ export default async function LibraryHubPage() {
       modules.push(BacModule.MODULE_5_WOMEN_POWER, BacModule.MODULE_6_SUSTAINABLE_DEVELOPMENT);
     }
 
-    // Build curriculum tracks
-    const curriculumTracks: Record<string, any> = {};
-    activeLanguages.forEach(lang => {
-      curriculumTracks[lang] = getCurriculumTrack(lang);
-    });
-
-    const safeProps = JSON.parse(JSON.stringify({
-      modules,
-      grammarRules: [],
-      vocabSets: [],
-      readingPassages: [],
-      curriculumTracks,
-      availableSlugs: [], // Temporarily empty
-      activeLanguages,
-      lang: langCookie,
-      moduleLabels: MODULE_LABELS,
-      bacSection: profile.bacSection,
-    }));
+    // Build curriculum tracks (TESTING: Remove from props)
+    // const curriculumTracks: Record<string, any> = {};
+    // activeLanguages.forEach(lang => {
+    //   curriculumTracks[lang] = getCurriculumTrack(lang);
+    // });
 
     return (
-      <ResponsiveLessons
-        {...safeProps}
-        t={t}
-        getLanguageLabel={getLanguageLabel}
-      />
+      <div style={{ padding: "100px", color: "white", textAlign: "center", background: "#060606", minHeight: "100vh" }}>
+        <h1 style={{ color: "#6366f1" }}>Library Debug 1.1 (JSON Stripped)</h1>
+        <p>User: {user.email}</p>
+        <p>Active Languages: {activeLanguages.join(", ")}</p>
+        <p>Unit 1 Label (Translation Check): {t.unit_1_title || "None"}</p>
+        <div style={{ marginTop: "40px" }}>
+           <a href="/dashboard" style={{ color: "#6366f1" }}>Return Home</a>
+        </div>
+      </div>
     );
   } catch (err: any) {
     return (
