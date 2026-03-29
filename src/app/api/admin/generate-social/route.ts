@@ -31,7 +31,7 @@ Create a COMPLETE, RICH mastery content pack about: ${language} - "${topic}". ${
 Return ONLY a valid JSON object with these EXACT keys:
 
 {
-  "script": "<full viral caption in Tunisian Derja with slang (ya m3allem, taayer, revision 9asba, jib l'excellence) + CTA to Bac Excellence>",
+  "script": "<full viral caption in engaging, conversational style + CTA to Bac Excellence>",
   "visualTitle": "<viral hook title in ${language}, MAX 6 words>",
   "visualBody": "<EXACTLY 2 SHORT LINES in ${language}, 80 chars max — for a graphic card, NO paragraphs>",
 

@@ -1,0 +1,63 @@
+﻿Γû▓ Next.js 16.2.1 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 1488ms
+  Running TypeScript ...
+node.exe : Failed to type check.
+Au caractère Ligne:1 : 1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~
+    + CategoryInfo          : Not 
+   Specified: (Failed to type ch  
+  eck.:String) [], RemoteExcept   
+ ion
+    + FullyQualifiedErrorId : Nat 
+   iveCommandError
+ 
+
+./src/app/dashboard/excellence-com
+ponents.tsx:52:61
+Type error: Object literal may 
+only specify known properties, 
+but 'boarder' does not exist in 
+type 'Properties<string | number, 
+string & {}>'. Did you mean to 
+write 'border'?
+
+  [90m50 |[0m ...
+  [90m51 |[0m ...e=[32m"grid 
+grid-cols-2"[0m style={{ gap: 
+[32m"20px"[0m }}>
+[31m[1m>[0m [90m52 |[0m 
+...ame=[32m"card stack"[0m 
+style={{ padding: 
+[32m"32px"[0m, boarder: 
+[32m"1px solid 
+var(--accent-glow)"[0m }}>
+  [90m   |[0m                   
+                            
+[31m[1m^[0m
+  [90m53 |[0m 
+...ssName=[32m"eyebrow"[0m 
+style={{ color: 
+[32m"var(--accent)"[0m 
+}}>[33mPredicted[0m 
+[33mScore[0m</span>
+  [90m54 |[0m ...e={{ fontSize: 
+[32m"3rem"[0m, fontWeight: 
+[32m"900"[0m, fontFamily: 
+[32m"var(--font-display)"[0m 
+}}>[35m17.5[0m<spa...
+  [90m55 |[0m ...e={{ height: 
+[32m"4px"[0m, background: [32m"
+rgba(255,255,255,0.05)"[0m, 
+borderRadius: [32m"10px"[0m, 
+marginT...
+Next.js build worker exited with 
+code: 1 and signal: null

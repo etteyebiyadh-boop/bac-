@@ -251,7 +251,7 @@ export function SocialGenerator() {
         <div className="stack" style={{ maxWidth: 760 }}>
           <span className="eyebrow" style={{ color: "var(--primary)" }}>Elite Media Forge</span>
           <h2 className="section-title" style={{ fontSize: "2.4rem" }}>Social Studio & Mastery Hub.</h2>
-          <p className="muted">One click → Viral Tunisian script + <strong>12 branded shareable mastery cards</strong> (synonyms, collocations, idioms, connectors, paraphrases, grammar patterns & more).</p>
+          <p className="muted">One click → Viral script + <strong>12 branded shareable mastery cards</strong> (synonyms, collocations, idioms, connectors, paraphrases, grammar patterns & more).</p>
         </div>
         <span className="pill success-pill">12-Card Pack 💎</span>
       </div>
@@ -299,7 +299,7 @@ export function SocialGenerator() {
             <div className="card stack" style={{ background: "rgba(10,15,25,0.4)", border: "1px solid var(--primary)", padding: 28 }}>
               <div className="row-between" style={{ paddingBottom: 14, borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                 <div>
-                  <span className="eyebrow" style={{ color: "var(--primary)" }}>Viral Script (Tunisian Derja)</span>
+                  <span className="eyebrow" style={{ color: "var(--primary)" }}>Viral Script</span>
                   <p className="muted" style={{ fontSize: 11, marginTop: 3 }}>Copy → paste to Instagram / TikTok</p>
                 </div>
                 <button onClick={() => navigator.clipboard.writeText(script)} style={{ background: "var(--primary)", color: "#000", border: "none", padding: "9px 20px", borderRadius: 9, fontWeight: 800, fontSize: 11, cursor: "pointer" }}>COPY</button>
