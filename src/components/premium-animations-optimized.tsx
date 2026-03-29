@@ -100,11 +100,11 @@ export function LightweightHero({
         />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+      {/* Content - Always visible, animations are enhancements */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 text-center" style={{ opacity: 1 }}>
         {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8"
@@ -113,9 +113,9 @@ export function LightweightHero({
           <span className="text-sm font-medium text-white/80">{badge}</span>
         </motion.div>
 
-        {/* Title with split animation */}
+        {/* Title - Always visible */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 1, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
           className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[1.1]"
@@ -137,9 +137,9 @@ export function LightweightHero({
           ))}
         </motion.h1>
 
-        {/* Subtitle */}
+        {/* Subtitle - Always visible */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed"
@@ -147,9 +147,9 @@ export function LightweightHero({
           {subtitle}
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTAs - Always visible */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 1, y: 0 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
