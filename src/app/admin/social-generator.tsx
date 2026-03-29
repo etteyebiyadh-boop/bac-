@@ -499,7 +499,7 @@ export function SocialGenerator() {
                   <div className="stack" style={{ gap: 9 }}>
                     {idioms.slice(0, 4).map((id, i) => (
                       <div key={i} style={{ padding: "8px 11px", background: `${ac}0d`, borderRadius: 9, border: `1px solid ${ac}22` }}>
-                        <div style={{ fontWeight: 900, color: ac, fontSize: "0.85rem" }}>"{id.idiom}"</div>
+                        <div style={{ fontWeight: 900, color: ac, fontSize: "0.85rem" }}>&quot;{id.idiom}&quot;</div>
                         <div style={{ fontSize: "0.73rem", color: "#fff", opacity: 0.8, marginTop: 2 }}>💡 {id.meaning}</div>
                         <div style={{ fontSize: "0.7rem", fontStyle: "italic", color: "#fff", opacity: 0.5, marginTop: 2 }}>{id.example}</div>
                       </div>
@@ -565,9 +565,9 @@ export function SocialGenerator() {
                     {paraphrases.slice(0, 3).map((p, i) => (
                       <div key={i} style={{ padding: "9px 11px", background: `${ac}0a`, borderRadius: 9, border: `1px solid ${ac}22` }}>
                         <div style={{ fontSize: "0.72rem", color: "#fff", opacity: 0.5, marginBottom: 3 }}>ORIGINAL</div>
-                        <div style={{ fontSize: "0.78rem", color: "#fff", opacity: 0.85, fontStyle: "italic", marginBottom: 6 }}>"{p.original}"</div>
+                        <div style={{ fontSize: "0.78rem", color: "#fff", opacity: 0.85, fontStyle: "italic", marginBottom: 6 }}>&quot;{p.original}&quot;</div>
                         <div style={{ fontSize: "0.72rem", color: ac, marginBottom: 2 }}>PARAPHRASE ✅</div>
-                        <div style={{ fontSize: "0.78rem", color: ac, fontWeight: 700 }}>"{p.paraphrase}"</div>
+                        <div style={{ fontSize: "0.78rem", color: ac, fontWeight: 700 }}>&quot;{p.paraphrase}&quot;</div>
                       </div>
                     ))}
                   </div>

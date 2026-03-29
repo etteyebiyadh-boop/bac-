@@ -68,7 +68,7 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
           <section className="card stack" style={{ background: "rgba(99, 102, 241, 0.03)", border: "1px solid var(--primary)" }}>
              <span className="eyebrow" style={{ color: "var(--primary)" }}>Language Sections Hub</span>
              <h2 className="section-title">Organized Content Audit</h2>
-             <p className="muted">Use the "Library" page to filter your tracks and visualize the exact content your students see. Ensure each track (Arabic, French, English, and Optionals) has at least 3 high-quality starting modules.</p>
+             <p className="muted">Use the &quot;Library&quot; page to filter your tracks and visualize the exact content your students see. Ensure each track (Arabic, French, English, and Optionals) has at least 3 high-quality starting modules.</p>
              <div className="grid grid-cols-2">
                 <div className="card" style={{ padding: "24px" }}>
                    <strong>Mandatory Tracks</strong>
