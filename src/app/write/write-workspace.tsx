@@ -482,6 +482,7 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
                         onChange={(event) => {
                           const nextFile = event.target.files?.[0] ?? null;
                           setScanFile(nextFile);
+                          setScanText("");
                           setError("");
                           setResult(null);
                         }}
@@ -502,11 +503,7 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
                         <button
                           type="button"
                           className="pill"
-                          onClick={() => {
-                            setScanFile(null);
-                            setError("");
-                            setResult(null);
-                          }}
+                          onClick={clearScanDraft}
                           style={{ cursor: "pointer", border: "1px solid var(--glass-border)", background: "transparent", color: "var(--ink)" }}
                         >
                           {lang === "fr" ? "Retirer" : (lang === "ar" ? "إزالة" : "Remove")}
@@ -520,6 +517,64 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
                           style={{ width: "100%", maxHeight: "420px", objectFit: "contain", borderRadius: "14px", border: "1px solid var(--glass-border)", background: "rgba(0,0,0,0.28)" }}
                         />
                       ) : null}
+
+                      <div className="row-between" style={{ gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+                        <span className="muted" style={{ fontSize: "12px" }}>
+                          {scanText
+                            ? (lang === "fr"
+                                ? "Relisez le texte extrait avant de lancer la correction."
+                                : (lang === "ar"
+                                    ? "راجع النص المستخرج قبل تشغيل التصحيح."
+                                    : "Review the extracted text before running the correction."))
+                            : (lang === "fr"
+                                ? "Etape 1: laissez l'IA lire la photo."
+                                : (lang === "ar"
+                                    ? "الخطوة 1: دع الذكاء الاصطناعي يقرأ الصورة."
+                                    : "Step 1: let the AI read the photo."))}
+                        </span>
+                        <button
+                          type="button"
+                          className="pill hover-glow"
+                          onClick={extractScanText}
+                          disabled={isExtractingScan || !scanAvailable || !scanFile}
+                          style={{
+                            cursor: isExtractingScan || !scanAvailable || !scanFile ? "not-allowed" : "pointer",
+                            border: "1px solid var(--accent)",
+                            background: "rgba(245, 158, 11, 0.14)",
+                            color: "var(--ink)",
+                            opacity: isExtractingScan || !scanAvailable || !scanFile ? 0.6 : 1
+                          }}
+                        >
+                          {isExtractingScan
+                            ? (lang === "fr" ? "Lecture..." : (lang === "ar" ? "جاري القراءة..." : "Reading..."))
+                            : scanText
+                              ? (lang === "fr" ? "Relire la photo" : (lang === "ar" ? "إعادة قراءة الصورة" : "Re-read photo"))
+                              : (lang === "fr" ? "Lire la photo avec l'IA" : (lang === "ar" ? "اقرأ الصورة بالذكاء الاصطناعي" : "Read photo with AI"))}
+                        </button>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {scanText ? (
+                    <div className="stack" style={{ gap: "10px" }}>
+                      <div className="row-between" style={{ gap: "12px", flexWrap: "wrap" }}>
+                        <label className="field-label" htmlFor="scan-text-review">
+                          {lang === "fr" ? "Texte extrait a verifier" : (lang === "ar" ? "النص المستخرج للمراجعة" : "Extracted text to review")}
+                        </label>
+                        <span className="muted" style={{ fontSize: "12px" }}>
+                          {lang === "fr"
+                            ? "Etape 2: corrigez l'OCR si besoin"
+                            : (lang === "ar" ? "الخطوة 2: صحح أخطاء القراءة إذا وجدت" : "Step 2: fix OCR mistakes if needed")}
+                        </span>
+                      </div>
+                      <textarea
+                        id="scan-text-review"
+                        rows={12}
+                        value={scanText}
+                        onChange={(event) => setScanText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
+                        placeholder={lang === "fr" ? "Le texte lu depuis la photo apparaitra ici." : (lang === "ar" ? "سيظهر هنا النص المقروء من الصورة." : "The text read from the photo will appear here.")}
+                        style={{ padding: "24px", borderRadius: "16px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--accent-glow)", fontSize: "1.05rem", lineHeight: "1.6", resize: "vertical", textAlign: currentLanguage === "ARABIC" ? "right" : "left" }}
+                      />
                     </div>
                   ) : null}
                 </div>
@@ -577,14 +632,14 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
                            {group.words.map(w => (
                               <button 
                                 key={w} 
-                                type="button" 
-                                className="pill hover-glow" 
-                                style={{ fontSize: "12px", cursor: "pointer", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--ink)" }} 
-                                onClick={(e) => { 
-                                  e.preventDefault(); 
-                                  setStudentText(prev => prev + (prev.endsWith(" ") || prev === "" ? "" : " ") + w + " "); 
-                                }}
-                              >
+                                 type="button" 
+                                 className="pill hover-glow" 
+                                 style={{ fontSize: "12px", cursor: "pointer", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--ink)" }} 
+                                 onClick={(e) => { 
+                                   e.preventDefault(); 
+                                   appendConnector(w); 
+                                 }}
+                               >
                                 {w}
                               </button>
                            ))}
