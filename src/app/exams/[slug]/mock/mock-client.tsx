@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { AIHighlightDiff, AIExplanationCard } from "@/components/ai-correction-view";
@@ -34,19 +34,13 @@ export function MockSimulatorClient({ exam, lang }: MockSimulatorClientProps) {
   const [showResult, setShowResult] = useState(false);
   const [finalFeedback, setFinalFeedback] = useState<any>(null);
 
-  useEffect(() => {
-    if (timeLeft <= 0) { submitExam(); return; }
-    const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-    return () => clearInterval(interval);
-  }, [timeLeft]);
-
   const wordCount = essayText.trim().length === 0 ? 0 : essayText.trim().split(/\s+/).length;
 
   const handleAnswerChange = (qId: string, val: string) => {
     setAnswers(prev => ({ ...prev, [qId]: val }));
   };
 
-  async function submitExam() {
+  const submitExam = useCallback(async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
@@ -69,7 +63,13 @@ export function MockSimulatorClient({ exam, lang }: MockSimulatorClientProps) {
     } finally {
       setIsSubmitting(false);
     }
-  }
+  }, [isSubmitting, exam.id, exam.language, essayText, answers]);
+
+  useEffect(() => {
+    if (timeLeft <= 0) { submitExam(); return; }
+    const interval = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+    return () => clearInterval(interval);
+  }, [timeLeft, submitExam]);
 
   const mins = Math.floor(timeLeft / 60).toString().padStart(2, "0");
   const secs = Math.floor(timeLeft % 60).toString().padStart(2, "0");

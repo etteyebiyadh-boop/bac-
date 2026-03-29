@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Sphere, MeshDistortMaterial, Float } from "@react-three/drei";
 import * as THREE from "three";
+import Image from "next/image";
 
 // ==========================================
 // 3D FLOATING SPHERE - Hero centerpiece
@@ -489,10 +490,11 @@ export function PathwayCard({
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.6 }}
       >
-        <img 
+        <Image 
           src={image} 
           alt={title}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
       </motion.div>
