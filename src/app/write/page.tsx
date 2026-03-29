@@ -3,6 +3,7 @@ import { SiteLanguage, translations } from "@/lib/translations";
 import { requireCurrentUser } from "@/lib/auth";
 import { ensureStudentProfile } from "@/lib/missions";
 import { db } from "@/lib/db";
+import { getVisionAvailability } from "@/lib/ai-provider";
 import { WriteWorkspace } from "./write-workspace";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function WritingLabPage() {
     where: { language: profile.primaryLanguage },
     orderBy: { year: "desc" }
   });
+  const visionAvailability = getVisionAvailability();
 
   return (
     <div className="page-stack" style={{ direction: langCookie === "ar" ? "rtl" : "ltr" }}>
@@ -41,6 +43,8 @@ export default async function WritingLabPage() {
         lang={langCookie} 
         exams={JSON.parse(JSON.stringify(exams))}
         selectedExam={null} 
+        scanAvailable={visionAvailability.available}
+        scanProviderLabel={visionAvailability.providerLabel}
       />
     </div>
   );

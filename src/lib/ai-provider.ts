@@ -8,6 +8,11 @@ export interface AIConfig {
    provider: AIProvider;
 }
 
+export interface VisionAvailability {
+  available: boolean;
+  providerLabel: string | null;
+}
+
 function hasConfiguredKey(provider: AIProvider) {
   if (provider === "openai") {
     return Boolean(process.env.OPENAI_API_KEY?.trim().replace(/^["']|["']$/g, ""));
@@ -90,6 +95,18 @@ export function getVisionAIClient(): AIConfig {
   }
 
   throw new Error("Image scanning requires OPENAI_API_KEY or GOOGLE_API_KEY.");
+}
+
+export function getVisionAvailability(): VisionAvailability {
+  const labels: string[] = [];
+
+  if (hasConfiguredKey("openai")) labels.push("OpenAI");
+  if (hasConfiguredKey("google")) labels.push("Google Gemini");
+
+  return {
+    available: labels.length > 0,
+    providerLabel: labels.length > 0 ? labels.join(" / ") : null,
+  };
 }
 
 export async function extractTextFromWorkImage(imageFile: File, language: string) {

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { WriteWorkspace } from "@/app/write/write-workspace";
+import { getVisionAvailability } from "@/lib/ai-provider";
 import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
@@ -21,6 +22,7 @@ export default async function ExamPracticePage({ params }: { params: Promise<{ s
   });
 
   if (!exam) notFound();
+  const visionAvailability = getVisionAvailability();
 
   return (
     <div className="page-stack" style={{ direction: langCookie === "ar" ? "rtl" : "ltr" }}>
@@ -52,6 +54,8 @@ export default async function ExamPracticePage({ params }: { params: Promise<{ s
         lang={langCookie} 
         exams={[JSON.parse(JSON.stringify(exam))]} 
         selectedExam={JSON.parse(JSON.stringify(exam))} 
+        scanAvailable={visionAvailability.available}
+        scanProviderLabel={visionAvailability.providerLabel}
       />
     </div>
   );

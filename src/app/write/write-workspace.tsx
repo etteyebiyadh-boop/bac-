@@ -44,6 +44,8 @@ type WriteWorkspaceProps = {
   exams: ExamOption[];
   selectedExam: ExamOption | null;
   lang: SiteLanguage;
+  scanAvailable: boolean;
+  scanProviderLabel: string | null;
 };
 
 function difficultyLabel(value: ExamOption["difficulty"]) {
@@ -64,7 +66,7 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
   );
 }
 
-export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProps) {
+export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanProviderLabel }: WriteWorkspaceProps) {
   const router = useRouter();
   const t = translations[lang];
   const [selectedExamId, setSelectedExamId] = useState(selectedExam?.id ?? "");
@@ -73,7 +75,9 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
   const [studentText, setStudentText] = useState("");
   const [submissionMode, setSubmissionMode] = useState<"text" | "scan">("text");
   const [scanFile, setScanFile] = useState<File | null>(null);
+  const [scanText, setScanText] = useState("");
   const [scanPreviewUrl, setScanPreviewUrl] = useState("");
+  const [isExtractingScan, setIsExtractingScan] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<CorrectionResult | null>(null);
@@ -109,17 +113,78 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
   const activeExam = exams.find((exam) => exam.id === selectedExamId) ?? null;
 
   const wordCount = studentText.trim().length === 0 ? 0 : studentText.trim().split(/\s+/).length;
-  const sourceTextForResult = result?.sourceText ?? studentText;
+  const scanWordCount = scanText.trim().length === 0 ? 0 : scanText.trim().split(/\s+/).length;
+  const sourceTextForResult = result?.sourceText ?? (result?.sourceMode === "scan" ? scanText : studentText);
   const isScanMode = submissionMode === "scan";
   const currentPromptText = activeExam ? activeExam.prompt : customPrompt;
   const currentLanguage = activeExam ? activeExam.language : freeLanguage;
-  const canSubmit = isScanMode ? Boolean(scanFile) : studentText.trim().length >= MIN_ESSAY_CHARS;
+  const canSubmit = isScanMode ? scanText.trim().length >= MIN_ESSAY_CHARS : studentText.trim().length >= MIN_ESSAY_CHARS;
+
+  function clearScanDraft() {
+    setScanFile(null);
+    setScanText("");
+    setError("");
+    setResult(null);
+  }
+
+  function appendConnector(value: string) {
+    if (isScanMode) {
+      setScanText((prev) => prev + (prev.endsWith(" ") || prev === "" ? "" : " ") + value + " ");
+      return;
+    }
+
+    setStudentText((prev) => prev + (prev.endsWith(" ") || prev === "" ? "" : " ") + value + " ");
+  }
 
   function handleExamChange(examId: string) {
     setSelectedExamId(examId);
     setResult(null);
     setError("");
     router.replace(examId ? `/write?examId=${examId}` : "/write");
+  }
+
+  async function extractScanText() {
+    if (!scanAvailable) {
+      setError(
+        lang === "fr"
+          ? "Le scan photo n'est pas disponible sur cette configuration."
+          : (lang === "ar" ? "مسح الصور غير متاح في هذا الإعداد." : "Photo scanning is not available in this setup.")
+      );
+      return;
+    }
+
+    if (!scanFile) {
+      setError(
+        lang === "fr"
+          ? "Ajoutez une photo avant de lancer la lecture IA."
+          : (lang === "ar" ? "أضف صورة قبل قراءة النص بالذكاء الاصطناعي." : "Add a photo before asking the AI to read it.")
+      );
+      return;
+    }
+
+    setIsExtractingScan(true);
+    setError("");
+    setResult(null);
+
+    const formData = new FormData();
+    formData.set("action", "extract_text");
+    formData.set("language", currentLanguage);
+    formData.set("workImage", scanFile);
+
+    const response = await fetch("/api/correct", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    setIsExtractingScan(false);
+
+    if (!response.ok) {
+      setError(data.error || "Photo scan failed. Try again.");
+      return;
+    }
+
+    setScanText(String(data.extractedText || ""));
   }
 
   async function submitEssay() {
@@ -132,35 +197,30 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
       return;
     }
 
+    if (isScanMode && scanText.trim().length < MIN_ESSAY_CHARS) {
+      setError(
+        lang === "fr"
+          ? "Lisez d'abord la photo puis corrigez le texte extrait si besoin."
+          : (lang === "ar" ? "اقرأ الصورة أولاً ثم راجع النص المستخرج إذا لزم الأمر." : "Read the photo first, then review the extracted text if needed.")
+      );
+      return;
+    }
+
     setIsLoading(true);
     setError("");
     setResult(null);
 
-    const response = await (async () => {
-      if (!isScanMode) {
-        return fetch("/api/correct", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            examId: activeExam?.id,
-            promptText: currentPromptText,
-            studentText,
-            language: currentLanguage
-          })
-        });
-      }
-
-      const formData = new FormData();
-      if (activeExam?.id) formData.set("examId", activeExam.id);
-      formData.set("promptText", currentPromptText || "");
-      formData.set("language", currentLanguage);
-      formData.set("workImage", scanFile as File);
-
-      return fetch("/api/correct", {
-        method: "POST",
-        body: formData,
-      });
-    })();
+    const response = await fetch("/api/correct", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        examId: activeExam?.id,
+        promptText: currentPromptText,
+        studentText: isScanMode ? scanText : studentText,
+        language: currentLanguage,
+        sourceMode: isScanMode ? "scan" : "text"
+      })
+    });
 
     const data = await response.json();
     setIsLoading(false);
@@ -292,17 +352,20 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
               <button
                 type="button"
                 className="pill hover-glow"
+                disabled={!scanAvailable}
                 onClick={() => {
+                  if (!scanAvailable) return;
                   setSubmissionMode("scan");
                   setError("");
                   setResult(null);
                 }}
                 style={{
-                  cursor: "pointer",
+                  cursor: scanAvailable ? "pointer" : "not-allowed",
                   padding: "14px 18px",
                   border: submissionMode === "scan" ? "1px solid var(--accent)" : "1px solid var(--glass-border)",
                   background: submissionMode === "scan" ? "rgba(245, 158, 11, 0.14)" : "rgba(255,255,255,0.03)",
-                  color: "var(--ink)"
+                  color: "var(--ink)",
+                  opacity: scanAvailable ? 1 : 0.45
                 }}
               >
                 {lang === "fr" ? "Scanner une photo" : (lang === "ar" ? "مسح صورة" : "Scan a photo")}
@@ -321,6 +384,15 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
                         ? "يبقى الوضع العادي متاحا إذا أراد الطالب الكتابة مباشرة."
                         : "The classic writing flow stays available for students who want to type directly."))}
             </p>
+            {!scanAvailable ? (
+              <p className="muted" style={{ fontSize: "12px", color: "var(--accent)" }}>
+                {lang === "fr"
+                  ? `Le scan photo est desactive tant qu'un provider vision n'est pas configure${scanProviderLabel ? ` (${scanProviderLabel})` : ""}.`
+                  : (lang === "ar"
+                      ? "تم تعطيل مسح الصور حتى يتم إعداد مزود يدعم الرؤية."
+                      : "Photo scan stays disabled until a vision-capable provider is configured.")}
+              </p>
+            ) : null}
           </div>
 
           {activeExam ? (
