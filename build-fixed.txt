@@ -1,0 +1,99 @@
+﻿
+> bac-language-mvp@0.1.0 build
+> prisma generate && next build
+
+node.exe : Environment 
+variables loaded from .env
+Au caractère Ligne:1 : 1
++ & "C:\Program 
+Files\nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (Environ  
+  ment variables loaded fr   
+ om .env:String) [], Remo    
+teException
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+Prisma schema loaded from prisma\schema.prisma
+
+Γ£ö Generated Prisma Client (v6.19.2) to .\node_modules\@prisma\client in 124ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
+
+Γû▓ Next.js 16.2.1 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 3.7s
+  Running TypeScript ...
+  Finished TypeScript in 7.2s ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/37) ...
+  Generating static pages using 15 workers (9/37) 
+  Generating static pages using 15 workers (18/37) 
+  Generating static pages using 15 workers (27/37) 
+Γ£ô Generating static pages using 15 workers (37/37) in 353ms
+  Finalizing page optimization ...
+
+Route (app)
+Γöî ╞Æ /
+Γö£ ╞Æ /_not-found
+Γö£ ╞Æ /admin
+Γö£ ╞Æ /api/admin/content/grammar
+Γö£ ╞Æ /api/admin/content/verbs
+Γö£ ╞Æ /api/admin/content/vocabulary
+Γö£ ╞Æ /api/admin/generate-social
+Γö£ ╞Æ /api/admin/lessons
+Γö£ ╞Æ /api/admin/suggest-topics
+Γö£ ╞Æ /api/admin/users/plan
+Γö£ ╞Æ /api/auth/login
+Γö£ ╞Æ /api/auth/logout
+Γö£ ╞Æ /api/auth/signup
+Γö£ ╞Æ /api/challenges
+Γö£ ╞Æ /api/challenges/[id]
+Γö£ ╞Æ /api/correct
+Γö£ ╞Æ /api/dashboard
+Γö£ ╞Æ /api/exams
+Γö£ ╞Æ /api/exercises/attempt
+Γö£ ╞Æ /api/grammar
+Γö£ ╞Æ /api/grammar/check
+Γö£ ╞Æ /api/grammar/drill
+Γö£ ╞Æ /api/lessons
+Γö£ ╞Æ /api/profile
+Γö£ ╞Æ /api/verbs
+Γö£ ╞Æ /api/vocabulary
+Γö£ ╞Æ /auth/login
+Γö£ ╞Æ /auth/signup
+Γö£ ╞Æ /bac-week
+Γö£ ╞Æ /calculator
+Γö£ ╞Æ /certificates
+Γö£ ╞Æ /challenges
+Γö£ ╞Æ /daily
+Γö£ ╞Æ /dashboard
+Γö£ ╞Æ /diagnostic
+Γö£ ╞Æ /exams
+Γö£ ╞Æ /exams/[slug]
+Γö£ ╞Æ /exams/[slug]/mock
+Γö£ ╞Æ /lessons
+Γö£ ╞Æ /lessons/[slug]
+Γö£ ╞Æ /lessons/grammar/[slug]
+Γö£ ╞Æ /lessons/reading/[slug]
+Γö£ ╞Æ /lessons/vocab/[slug]
+Γö£ ╞Æ /pricing
+Γö£ ╞Æ /privacy
+Γö£ ╞Æ /profile
+Γö£ ╞Æ /strategy
+Γö£ ╞Æ /terms
+Γöö ╞Æ /write
+
+
+╞Æ  (Dynamic)  server-rendered on demand
+

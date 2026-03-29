@@ -76,6 +76,7 @@ export function ResponsiveLessons({
         lang={lang}
         t={t}
         getLanguageLabel={getLanguageLabel}
+        moduleLabels={moduleLabels}
       />
     );
   }

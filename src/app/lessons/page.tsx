@@ -41,7 +41,8 @@ export default async function LibraryHubPage() {
     }
   } catch(e) {}
 
-  const activeLanguages = [profile.primaryLanguage, ...secondaryLanguages];
+  const rawLanguages = [profile.primaryLanguage, ...secondaryLanguages].filter(Boolean);
+  const activeLanguages = [...new Set(rawLanguages)];
   const curriculumSlugs = [...new Set(activeLanguages.flatMap((language) => getCurriculumSlugs(language)))];
 
   const [grammarRules, vocabSets, readingPassages, curriculumLessons] = await Promise.all([
@@ -85,15 +86,24 @@ export default async function LibraryHubPage() {
     curriculumTracks[lang] = getCurriculumTrack(lang);
   });
 
+  // Safety: Serialize all database results to avoid Date serialization issues in Server -> Client boundary
+  const safeData = JSON.parse(JSON.stringify({
+    grammarRules,
+    vocabSets,
+    readingPassages,
+    curriculumTracks,
+    activeLanguages,
+  }));
+
   return (
     <ResponsiveLessons
       modules={modules}
-      grammarRules={grammarRules}
-      vocabSets={vocabSets}
-      readingPassages={readingPassages}
-      curriculumTracks={curriculumTracks}
+      grammarRules={safeData.grammarRules}
+      vocabSets={safeData.vocabSets}
+      readingPassages={safeData.readingPassages}
+      curriculumTracks={safeData.curriculumTracks}
       availableSlugs={availableCurriculumSlugs}
-      activeLanguages={activeLanguages}
+      activeLanguages={safeData.activeLanguages}
       lang={langCookie}
       t={t}
       getLanguageLabel={getLanguageLabel}

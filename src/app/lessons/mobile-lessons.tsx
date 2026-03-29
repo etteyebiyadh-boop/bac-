@@ -16,6 +16,7 @@ interface MobileLessonsProps {
   lang: string;
   t: any;
   getLanguageLabel: (lang: Language) => string;
+  moduleLabels: Record<string, string>;
 }
 
 function CollapsibleSection({ title, count, icon: Icon, children, color = "var(--primary)", defaultOpen = false }: {
@@ -70,7 +71,7 @@ function CollapsibleSection({ title, count, icon: Icon, children, color = "var(-
   );
 }
 
-export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, getLanguageLabel }: MobileLessonsProps) {
+export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, getLanguageLabel, moduleLabels }: MobileLessonsProps) {
   const [activeTab, setActiveTab] = useState("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
 
@@ -220,7 +221,7 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
                   count={modReading.length}
                   icon={BookIcon}
                   color="#f59e0b"
@@ -260,7 +261,7 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
                   count={modGrammar.length}
                   icon={LessonsIcon}
                   color="#6366f1"
@@ -304,7 +305,7 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
                   count={modVocab.length}
                   icon={FireIcon}
                   color="#10b981"
