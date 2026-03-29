@@ -14,7 +14,6 @@ interface ResponsiveLessonsProps {
   activeLanguages: any[];
   lang: string;
   t: any;
-  getLanguageLabel: (lang: any) => string;
   moduleLabels: Record<string, string>;
   bacSection: string | null;
 }
@@ -29,7 +28,6 @@ export function ResponsiveLessons({
   activeLanguages,
   lang,
   t,
-  getLanguageLabel,
   moduleLabels,
   bacSection,
 }: ResponsiveLessonsProps) {
@@ -56,7 +54,6 @@ export function ResponsiveLessons({
         activeLanguages={activeLanguages}
         lang={lang}
         t={t}
-        getLanguageLabel={getLanguageLabel}
         moduleLabels={moduleLabels}
         bacSection={bacSection}
       />
@@ -75,7 +72,6 @@ export function ResponsiveLessons({
         activeLanguages={activeLanguages}
         lang={lang}
         t={t}
-        getLanguageLabel={getLanguageLabel}
         moduleLabels={moduleLabels}
       />
     );
@@ -92,7 +88,6 @@ export function ResponsiveLessons({
       activeLanguages={activeLanguages}
       lang={lang}
       t={t}
-      getLanguageLabel={getLanguageLabel}
       moduleLabels={moduleLabels}
       bacSection={bacSection}
     />

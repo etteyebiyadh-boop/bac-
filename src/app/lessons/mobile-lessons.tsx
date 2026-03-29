@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { LessonsIcon, BookIcon, TargetIcon, FireIcon } from "@/components/icons";
 import { Language } from "@prisma/client";
+import { getLanguageLabel } from "@/lib/learning";
 
 interface MobileLessonsProps {
   modules: any[];
@@ -15,7 +16,6 @@ interface MobileLessonsProps {
   activeLanguages: Language[];
   lang: string;
   t: any;
-  getLanguageLabel: (lang: Language) => string;
   moduleLabels: Record<string, string>;
 }
 
@@ -71,7 +71,7 @@ function CollapsibleSection({ title, count, icon: Icon, children, color = "var(-
   );
 }
 
-export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, getLanguageLabel, moduleLabels }: MobileLessonsProps) {
+export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels }: MobileLessonsProps) {
   const [activeTab, setActiveTab] = useState("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
 

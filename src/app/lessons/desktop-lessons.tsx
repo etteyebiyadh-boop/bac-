@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { LessonsIcon, BookIcon, TargetIcon, FireIcon } from "@/components/icons";
 import { Language } from "@prisma/client";
+import { getLanguageLabel } from "@/lib/learning";
 
 interface DesktopLessonsProps {
   modules: any[];
@@ -15,7 +16,6 @@ interface DesktopLessonsProps {
   activeLanguages: Language[];
   lang: string;
   t: any;
-  getLanguageLabel: (lang: Language) => string;
   moduleLabels: Record<string, string>;
   bacSection: string | null;
 }
@@ -77,7 +77,7 @@ function CollapsibleSection({ title, subtitle, count, icon: Icon, children, colo
   );
 }
 
-export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, getLanguageLabel, moduleLabels, bacSection }: DesktopLessonsProps) {
+export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels, bacSection }: DesktopLessonsProps) {
   const [activeTab, setActiveTab] = useState<"curriculum" | "reading" | "grammar" | "vocab">("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
 
