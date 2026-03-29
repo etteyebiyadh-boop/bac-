@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getAIClient, getReliableCompletion } from "@/lib/ai-provider";
-import { MAX_ESSAY_CHARS, MIN_ESSAY_CHARS } from "@/lib/constants";
+import { extractTextFromWorkImage, getReliableCompletion } from "@/lib/ai-provider";
+import { MAX_ESSAY_CHARS, MAX_SCAN_IMAGE_BYTES, MIN_ESSAY_CHARS } from "@/lib/constants";
 
 const MAX_AI_WORDS_FOR_CORRECTION = 220; // Cost control: keep inputs short for Bac-style corrections.
 const MAX_PROMPT_CHARS = 600; // Prevent unusually large prompts from burning tokens.
+
+type CorrectionRequestPayload = {
+  examId?: string | null;
+  promptText?: string | null;
+  studentText?: string;
+  language?: string;
+  type?: string;
+  readingAnswers?: unknown;
+  languageAnswers?: unknown;
+  imageFile?: File | null;
+};
 
 function getErrorStatus(error: any): number | undefined {
   return (
@@ -16,22 +27,101 @@ function getErrorStatus(error: any): number | undefined {
   );
 }
 
+function getFormValueAsString(value: FormDataEntryValue | null) {
+  return typeof value === "string" ? value : "";
+}
+
+function getOptionalFormValue(value: FormDataEntryValue | null) {
+  const parsed = getFormValueAsString(value).trim();
+  return parsed.length > 0 ? parsed : null;
+}
+
+function parseOptionalJsonField(value: FormDataEntryValue | null) {
+  const raw = getFormValueAsString(value).trim();
+  if (!raw) return undefined;
+
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return undefined;
+  }
+}
+
+function isUploadedFile(value: FormDataEntryValue | null): value is File {
+  return typeof value === "object" && value !== null && "arrayBuffer" in value;
+}
+
+async function parseCorrectionRequest(req: NextRequest): Promise<CorrectionRequestPayload> {
+  const contentType = req.headers.get("content-type") || "";
+
+  if (!contentType.includes("multipart/form-data")) {
+    return await req.json();
+  }
+
+  const formData = await req.formData();
+  const uploadedImage = formData.get("workImage");
+
+  return {
+    examId: getOptionalFormValue(formData.get("examId")),
+    promptText: getOptionalFormValue(formData.get("promptText")),
+    studentText: getFormValueAsString(formData.get("studentText")),
+    language: getOptionalFormValue(formData.get("language")) || "ENGLISH",
+    type: getOptionalFormValue(formData.get("type")) || undefined,
+    readingAnswers: parseOptionalJsonField(formData.get("readingAnswers")),
+    languageAnswers: parseOptionalJsonField(formData.get("languageAnswers")),
+    imageFile: isUploadedFile(uploadedImage) ? uploadedImage : null,
+  };
+}
+
 export async function POST(req: NextRequest) {
   const auth = await getUserFromRequest(req);
   if (!auth) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { examId, promptText, studentText, language = "ENGLISH", type, readingAnswers, languageAnswers } = await req.json();
-    if (!studentText && type !== "FULL_MOCK") return NextResponse.json({ error: "Essay is empty" }, { status: 400 });
+    const { examId, promptText, studentText, language = "ENGLISH", type, readingAnswers, languageAnswers, imageFile } =
+      await parseCorrectionRequest(req);
 
-    const normalizedStudentText = String(studentText).trim().replace(/\s+/g, " ");
+    if (!studentText && !imageFile && type !== "FULL_MOCK") {
+      return NextResponse.json({ error: "Essay is empty" }, { status: 400 });
+    }
+
+    const sourceMode = imageFile ? "scan" : "text";
+
+    if (imageFile) {
+      if (!imageFile.type.startsWith("image/")) {
+        return NextResponse.json({ error: "Please upload a valid image file." }, { status: 400 });
+      }
+
+      if (imageFile.size > MAX_SCAN_IMAGE_BYTES) {
+        return NextResponse.json(
+          { error: `Image is too large. Maximum upload size is ${Math.round(MAX_SCAN_IMAGE_BYTES / (1024 * 1024))} MB.` },
+          { status: 400 }
+        );
+      }
+    }
+
+    const sourceText =
+      imageFile && type !== "FULL_MOCK"
+        ? await extractTextFromWorkImage(imageFile, language)
+        : String(studentText ?? "");
+
+    const sanitizedStudentText = sourceText.replace(/\r\n/g, "\n").trim();
+    const normalizedStudentText = sanitizedStudentText.replace(/\s+/g, " ");
     const normalizedPromptText = promptText ? String(promptText).trim() : null;
     const promptTextForDb = normalizedPromptText && normalizedPromptText.length > 0 ? normalizedPromptText : null;
 
-    if (normalizedStudentText.length < MIN_ESSAY_CHARS) {
-      return NextResponse.json({ error: `Essay is too short. Minimum is ${MIN_ESSAY_CHARS} chars.` }, { status: 400 });
+    if (!sanitizedStudentText && type !== "FULL_MOCK") {
+      return NextResponse.json({ error: "We could not read any text from the photo. Try a clearer image." }, { status: 400 });
     }
-    if (normalizedStudentText.length > MAX_ESSAY_CHARS) {
+
+    if (sanitizedStudentText.length < MIN_ESSAY_CHARS) {
+      const scanHint = sourceMode === "scan" ? " Try a closer, brighter photo with only the answer in frame." : "";
+      return NextResponse.json(
+        { error: `Essay is too short. Minimum is ${MIN_ESSAY_CHARS} chars.${scanHint}` },
+        { status: 400 }
+      );
+    }
+    if (sanitizedStudentText.length > MAX_ESSAY_CHARS) {
       return NextResponse.json({ error: `Essay is too long. Maximum is ${MAX_ESSAY_CHARS} chars.` }, { status: 400 });
     }
 
@@ -64,7 +154,12 @@ export async function POST(req: NextRequest) {
     });
 
     if (existing?.feedbackJson && type !== "FULL_MOCK") {
-      return NextResponse.json(existing.feedbackJson);
+      const cachedFeedback = existing.feedbackJson as Record<string, unknown>;
+      return NextResponse.json({
+        ...cachedFeedback,
+        sourceText: typeof cachedFeedback?.sourceText === "string" ? cachedFeedback.sourceText : sanitizedStudentText,
+        sourceMode: typeof cachedFeedback?.sourceMode === "string" ? cachedFeedback.sourceMode : sourceMode,
+      });
     }
 
     let systemPrompt = "";
@@ -84,7 +179,7 @@ Student Answers: ${JSON.stringify(languageAnswers)}
 
 Section III: Writing (10 pts)
 Prompt: ${exam?.prompt}
-Student Essay: "${studentText}"
+Student Essay: "${sanitizedStudentText}"
 
 Grading Protocol:
 - Calculate Reading score (out of 12) strictly.
@@ -112,7 +207,7 @@ Your task is to grade the student essay based on official ministry criteria:
 3. Structure, Coherence & Flow (10 pts)
 
 Exam Prompt: ${promptText || "Free writing topic"}
-Student Essay: "${studentText}"
+Student Essay: "${sanitizedStudentText}"
 
 Output a JSON object with:
 - "overallScore": Final mark out of 20.
@@ -139,6 +234,11 @@ Output a JSON object with:
     });
 
     const result = JSON.parse(response.choices[0]?.message?.content || "{}");
+    const responsePayload = {
+      ...result,
+      sourceText: sanitizedStudentText,
+      sourceMode,
+    };
 
     // Persist submission
     await db.submission.create({
@@ -148,17 +248,17 @@ Output a JSON object with:
         language: language as any,
         promptText: safePromptText,
         originalText: normalizedStudentText,
-        correctedText: result.correctedText || studentText,
+        correctedText: result.correctedText || sanitizedStudentText,
         overallScore: result.overallScore || 0,
         grammarScore: result.grammarScore || 0,
         vocabularyScore: result.vocabularyScore || 0,
         structureScore: result.structureScore || 0,
-        feedbackJson: result,
+        feedbackJson: responsePayload,
         wordCount,
       }
     });
 
-    return NextResponse.json(result);
+    return NextResponse.json(responsePayload);
   } catch (error: any) {
     const status = getErrorStatus(error);
     console.error(error);
@@ -174,6 +274,9 @@ Output a JSON object with:
 
     const msg = String(error?.message || "");
     if (msg.includes("Missing OPENAI_API_KEY")) {
+      return NextResponse.json({ error: msg }, { status: 500 });
+    }
+    if (msg.includes("Image scanning requires")) {
       return NextResponse.json({ error: msg }, { status: 500 });
     }
 

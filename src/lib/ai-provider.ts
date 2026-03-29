@@ -8,6 +8,18 @@ export interface AIConfig {
    provider: AIProvider;
 }
 
+function hasConfiguredKey(provider: AIProvider) {
+  if (provider === "openai") {
+    return Boolean(process.env.OPENAI_API_KEY?.trim().replace(/^["']|["']$/g, ""));
+  }
+
+  if (provider === "google") {
+    return Boolean(process.env.GOOGLE_API_KEY?.trim().replace(/^["']|["']$/g, ""));
+  }
+
+  return Boolean(process.env.GROQ_API_KEY?.trim().replace(/^["']|["']$/g, ""));
+}
+
 /**
  * Returns the primary AI configuration based on .env
  * Also provides a list of backup providers for senior fallback logic.
@@ -69,6 +81,71 @@ export function getAIClient(requestedProvider?: AIProvider): AIConfig {
   };
 }
 
+export function getVisionAIClient(): AIConfig {
+  const supportedVisionProviders: AIProvider[] = ["openai", "google"];
+
+  for (const provider of supportedVisionProviders) {
+    if (!hasConfiguredKey(provider)) continue;
+    return getAIClient(provider);
+  }
+
+  throw new Error("Image scanning requires OPENAI_API_KEY or GOOGLE_API_KEY.");
+}
+
+export async function extractTextFromWorkImage(imageFile: File, language: string) {
+  const config = getVisionAIClient();
+  const mimeType = imageFile.type || "image/jpeg";
+  const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
+  const imageUrl = `data:${mimeType};base64,${imageBuffer.toString("base64")}`;
+
+  const response = await config.client.chat.completions.create({
+    model: config.model,
+    messages: [
+      {
+        role: "system",
+        content:
+          `You extract a student's answer from a photo of schoolwork. ` +
+          `Preserve the original language (${language}). ` +
+          `Return plain text only. Do not explain. Do not solve the exercise. ` +
+          `Ignore printed instructions, notebook lines, watermarks, and page decorations unless they are part of the student's answer. ` +
+          `Keep paragraph breaks when they are visible.`
+      },
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text:
+              "Read this photo and extract only the student's written answer. " +
+              "If part of the answer is unreadable, make the best possible plain-text transcription."
+          },
+          {
+            type: "image_url",
+            image_url: {
+              url: imageUrl,
+              detail: "high"
+            }
+          }
+        ]
+      }
+    ],
+    max_tokens: 900,
+    temperature: 0.1,
+  });
+
+  const extractedText = response.choices[0]?.message?.content?.trim() || "";
+  const cleanedText = extractedText
+    .replace(/^```(?:text)?\s*/i, "")
+    .replace(/\s*```$/, "")
+    .trim();
+
+  if (!cleanedText) {
+    throw new Error("Image scan returned no text.");
+  }
+
+  return cleanedText;
+}
+
 /**
  * Senior Helper: Executes a completion with automatic fallback if the primary fails (e.g. 429 Rate Limit)
  */
@@ -97,4 +174,3 @@ export async function getReliableCompletion(payload: any) {
    
    throw lastError || new Error("All AI providers failed.");
 }
-

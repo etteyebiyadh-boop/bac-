@@ -9,6 +9,7 @@ export const FREE_CORRECTIONS_PER_WEEK = Number.isFinite(parsedFreeCorrectionLim
   : 3;
 export const MIN_ESSAY_CHARS = 80;
 export const MAX_ESSAY_CHARS = 5000;
+export const MAX_SCAN_IMAGE_BYTES = 8 * 1024 * 1024;
 export const CORRECTION_RATE_LIMIT_WINDOW_MS = 60 * 1000;
 export const CORRECTION_RATE_LIMIT_PER_MINUTE = Number.isFinite(parsedCorrectionRateLimitPerMinute)
   ? parsedCorrectionRateLimitPerMinute

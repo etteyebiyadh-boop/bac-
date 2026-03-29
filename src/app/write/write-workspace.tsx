@@ -26,6 +26,8 @@ type CorrectionResult = {
   structureScore: number;
   summary: string;
   correctedText: string;
+  sourceText?: string;
+  sourceMode?: "text" | "scan";
   explanations: { original: string; fixed: string; reason: string }[];
   strengths: string[];
   improvements: string[];
@@ -69,6 +71,9 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
   const [customPrompt, setCustomPrompt] = useState("");
   const [freeLanguage, setFreeLanguage] = useState("ENGLISH");
   const [studentText, setStudentText] = useState("");
+  const [submissionMode, setSubmissionMode] = useState<"text" | "scan">("text");
+  const [scanFile, setScanFile] = useState<File | null>(null);
+  const [scanPreviewUrl, setScanPreviewUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState<CorrectionResult | null>(null);
@@ -82,6 +87,18 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
     return () => clearInterval(interval);
   }, [isFocusMode, timeLeft]);
 
+  useEffect(() => {
+    if (!scanFile) {
+      setScanPreviewUrl("");
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(scanFile);
+    setScanPreviewUrl(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [scanFile]);
+
   function startFocusMode() {
     if (!activeExam) return;
     setTimeLeft(activeExam.estimatedMinutes * 60);
@@ -92,6 +109,11 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
   const activeExam = exams.find((exam) => exam.id === selectedExamId) ?? null;
 
   const wordCount = studentText.trim().length === 0 ? 0 : studentText.trim().split(/\s+/).length;
+  const sourceTextForResult = result?.sourceText ?? studentText;
+  const isScanMode = submissionMode === "scan";
+  const currentPromptText = activeExam ? activeExam.prompt : customPrompt;
+  const currentLanguage = activeExam ? activeExam.language : freeLanguage;
+  const canSubmit = isScanMode ? Boolean(scanFile) : studentText.trim().length >= MIN_ESSAY_CHARS;
 
   function handleExamChange(examId: string) {
     setSelectedExamId(examId);
@@ -101,20 +123,44 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
   }
 
   async function submitEssay() {
+    if (isScanMode && !scanFile) {
+      setError(
+        lang === "fr"
+          ? "Ajoutez une photo avant de lancer la correction."
+          : (lang === "ar" ? "أضف صورة قبل تشغيل التصحيح." : "Add a photo before starting the correction.")
+      );
+      return;
+    }
+
     setIsLoading(true);
     setError("");
     setResult(null);
 
-    const response = await fetch("/api/correct", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        examId: activeExam?.id,
-        promptText: activeExam ? activeExam.prompt : customPrompt,
-        studentText,
-        language: activeExam ? activeExam.language : freeLanguage
-      })
-    });
+    const response = await (async () => {
+      if (!isScanMode) {
+        return fetch("/api/correct", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            examId: activeExam?.id,
+            promptText: currentPromptText,
+            studentText,
+            language: currentLanguage
+          })
+        });
+      }
+
+      const formData = new FormData();
+      if (activeExam?.id) formData.set("examId", activeExam.id);
+      formData.set("promptText", currentPromptText || "");
+      formData.set("language", currentLanguage);
+      formData.set("workImage", scanFile as File);
+
+      return fetch("/api/correct", {
+        method: "POST",
+        body: formData,
+      });
+    })();
 
     const data = await response.json();
     setIsLoading(false);
@@ -220,6 +266,63 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
             </select>
           </div>
 
+          <div className="stack" style={{ gap: "12px" }}>
+            <span className="field-label">
+              {lang === "fr" ? "Mode d'envoi" : (lang === "ar" ? "طريقة الإرسال" : "Submission mode")}
+            </span>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
+              <button
+                type="button"
+                className="pill hover-glow"
+                onClick={() => {
+                  setSubmissionMode("text");
+                  setError("");
+                  setResult(null);
+                }}
+                style={{
+                  cursor: "pointer",
+                  padding: "14px 18px",
+                  border: submissionMode === "text" ? "1px solid var(--primary)" : "1px solid var(--glass-border)",
+                  background: submissionMode === "text" ? "rgba(99, 102, 241, 0.14)" : "rgba(255,255,255,0.03)",
+                  color: "var(--ink)"
+                }}
+              >
+                {lang === "fr" ? "Ecrire la reponse" : (lang === "ar" ? "كتابة الإجابة" : "Write the answer")}
+              </button>
+              <button
+                type="button"
+                className="pill hover-glow"
+                onClick={() => {
+                  setSubmissionMode("scan");
+                  setError("");
+                  setResult(null);
+                }}
+                style={{
+                  cursor: "pointer",
+                  padding: "14px 18px",
+                  border: submissionMode === "scan" ? "1px solid var(--accent)" : "1px solid var(--glass-border)",
+                  background: submissionMode === "scan" ? "rgba(245, 158, 11, 0.14)" : "rgba(255,255,255,0.03)",
+                  color: "var(--ink)"
+                }}
+              >
+                {lang === "fr" ? "Scanner une photo" : (lang === "ar" ? "مسح صورة" : "Scan a photo")}
+              </button>
+            </div>
+            <p className="muted" style={{ fontSize: "13px" }}>
+              {isScanMode
+                ? (lang === "fr"
+                    ? "Prenez une photo claire de votre copie et l'IA lira le texte avant de le corriger."
+                    : (lang === "ar"
+                        ? "التقط صورة واضحة لورقتك وسيقرأ الذكاء الاصطناعي النص قبل تصحيحه."
+                        : "Take a clear photo of the work and the AI will read it before grading it."))
+                : (lang === "fr"
+                    ? "Le mode classique reste disponible si l'etudiant prefere ecrire directement."
+                    : (lang === "ar"
+                        ? "يبقى الوضع العادي متاحا إذا أراد الطالب الكتابة مباشرة."
+                        : "The classic writing flow stays available for students who want to type directly."))}
+            </p>
+          </div>
+
           {activeExam ? (
             <div className="prompt-box stack" style={{ padding: "24px", background: "rgba(0,0,0,0.2)", borderRadius: "16px", border: "1px solid var(--primary-glow)" }}>
               <div className="row-between">
@@ -271,19 +374,84 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
           <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
             <div className="stack" style={{ gap: "12px" }}>
               <div className="row-between">
-                <label className="field-label" htmlFor="student-text">
-                  {t.wr_essay}
+                <label className="field-label" htmlFor={isScanMode ? "work-image" : "student-text"}>
+                  {isScanMode
+                    ? (lang === "fr" ? "Photo du devoir" : (lang === "ar" ? "صورة العمل" : "Work photo"))
+                    : t.wr_essay}
                 </label>
-                <span className="muted">{wordCount} {lang === "ar" ? "كلمة" : "words"}</span>
+                {!isScanMode ? <span className="muted">{wordCount} {lang === "ar" ? "كلمة" : "words"}</span> : null}
               </div>
-              <textarea
-                id="student-text"
-                rows={16}
-                placeholder={lang === "ar" ? "اكتب مقالك هنا. ابدأ بتوطئة، ثم طور أفكارك، وانته بخاتمة موجزة." : (lang === "fr" ? "Écrivez votre texte ici. Prévoyez une introduction, un développement et une conclusion." : "Write your essay here. Aim for a clear introduction, developed ideas, and a short conclusion.")}
-                value={studentText}
-                onChange={(event) => setStudentText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
-                style={{ padding: "24px", borderRadius: "16px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--glass-border)", fontSize: "1.1rem", lineHeight: "1.6", resize: "vertical", textAlign: (activeExam?.language === "ARABIC" || freeLanguage === "ARABIC") ? "right" : "left" }}
-              />
+              {!isScanMode ? (
+                <textarea
+                  id="student-text"
+                  rows={16}
+                  placeholder={lang === "ar" ? "اكتب مقالك هنا. ابدأ بتوطئة، ثم طور أفكارك، وانته بخاتمة موجزة." : (lang === "fr" ? "Écrivez votre texte ici. Prévoyez une introduction, un développement et une conclusion." : "Write your essay here. Aim for a clear introduction, developed ideas, and a short conclusion.")}
+                  value={studentText}
+                  onChange={(event) => setStudentText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
+                  style={{ padding: "24px", borderRadius: "16px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--glass-border)", fontSize: "1.1rem", lineHeight: "1.6", resize: "vertical", textAlign: (activeExam?.language === "ARABIC" || freeLanguage === "ARABIC") ? "right" : "left" }}
+                />
+              ) : (
+                <div className="stack" style={{ gap: "16px" }}>
+                  <div style={{ padding: "24px", borderRadius: "16px", border: "1px dashed var(--accent-glow)", background: "rgba(245, 158, 11, 0.05)" }}>
+                    <div className="stack" style={{ gap: "10px" }}>
+                      <strong>{lang === "fr" ? "Importer une photo de la copie" : (lang === "ar" ? "ارفع صورة لورقة الإجابة" : "Upload a photo of the answer")}</strong>
+                      <p className="muted" style={{ fontSize: "13px", lineHeight: 1.6 }}>
+                        {lang === "fr"
+                          ? "Meilleur resultat : cadre serre, bonne lumiere, feuille a plat, une seule reponse par image."
+                          : (lang === "ar"
+                              ? "أفضل نتيجة: صورة قريبة، إضاءة جيدة، الورقة مستقيمة، وإجابة واحدة في كل صورة."
+                              : "Best result: close crop, strong light, flat page, and one answer per photo.")}
+                      </p>
+                      <input
+                        id="work-image"
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        onChange={(event) => {
+                          const nextFile = event.target.files?.[0] ?? null;
+                          setScanFile(nextFile);
+                          setError("");
+                          setResult(null);
+                        }}
+                        style={{ color: "var(--ink)" }}
+                      />
+                    </div>
+                  </div>
+
+                  {scanFile ? (
+                    <div className="card stack" style={{ padding: "18px", gap: "16px", background: "rgba(255,255,255,0.02)" }}>
+                      <div className="row-between" style={{ gap: "12px" }}>
+                        <div className="stack" style={{ gap: "4px" }}>
+                          <strong style={{ wordBreak: "break-word" }}>{scanFile.name}</strong>
+                          <span className="muted" style={{ fontSize: "12px" }}>
+                            {(scanFile.size / (1024 * 1024)).toFixed(2)} MB
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          className="pill"
+                          onClick={() => {
+                            setScanFile(null);
+                            setError("");
+                            setResult(null);
+                          }}
+                          style={{ cursor: "pointer", border: "1px solid var(--glass-border)", background: "transparent", color: "var(--ink)" }}
+                        >
+                          {lang === "fr" ? "Retirer" : (lang === "ar" ? "إزالة" : "Remove")}
+                        </button>
+                      </div>
+
+                      {scanPreviewUrl ? (
+                        <img
+                          src={scanPreviewUrl}
+                          alt="Work preview"
+                          style={{ width: "100%", maxHeight: "420px", objectFit: "contain", borderRadius: "14px", border: "1px solid var(--glass-border)", background: "rgba(0,0,0,0.28)" }}
+                        />
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </div>
 
             <div className="card stack" style={{ padding: "28px", background: "rgba(245, 158, 11, 0.05)", border: "1px solid var(--accent-glow)" }}>
@@ -359,13 +527,19 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
           <button
             className="full-width hover-glow"
             onClick={submitEssay}
-            disabled={isLoading || studentText.trim().length < MIN_ESSAY_CHARS}
+            disabled={isLoading || !canSubmit}
             style={{ padding: "20px", fontSize: "1.1rem", fontWeight: 800 }}
           >
-            {isLoading ? t.wr_correcting : t.wr_submit}
+            {isLoading
+              ? (isScanMode
+                  ? (lang === "fr" ? "Lecture de la photo + correction..." : (lang === "ar" ? "جاري قراءة الصورة ثم التصحيح..." : "Reading the photo and correcting..."))
+                  : t.wr_correcting)
+              : (isScanMode
+                  ? (lang === "fr" ? "Scanner et corriger avec l'IA" : (lang === "ar" ? "امسح الصورة وصحح بالذكاء الاصطناعي" : "Scan and correct with AI"))
+                  : t.wr_submit)}
           </button>
 
-          {activeExam && !result ? (
+          {activeExam && !result && !isScanMode ? (
             <button 
               type="button" 
               onClick={startFocusMode} 
@@ -429,11 +603,24 @@ export function WriteWorkspace({ exams, selectedExam, lang }: WriteWorkspaceProp
           <div className="card stack" style={{ padding: "40px", border: "1px solid var(--primary-glow)" }}>
             <div className="row-between">
               <h3 className="section-title">{t.wr_corrected_version}</h3>
-              <span className="eyebrow" style={{ color: "var(--success)" }}>✨ AI Precision Edit</span>
+              <span className="eyebrow" style={{ color: "var(--success)" }}>
+                {result.sourceMode === "scan" ? "Photo -> AI Precision Edit" : "AI Precision Edit"}
+              </span>
             </div>
+
+            {result.sourceMode === "scan" ? (
+              <div className="stack" style={{ marginTop: "24px", gap: "10px" }}>
+                <span className="eyebrow" style={{ color: "var(--accent)" }}>
+                  {lang === "fr" ? "Texte lu depuis la photo" : (lang === "ar" ? "النص المقروء من الصورة" : "Text read from the photo")}
+                </span>
+                <div style={{ padding: "22px", background: "rgba(245, 158, 11, 0.05)", border: "1px solid var(--accent-glow)", borderRadius: "16px", whiteSpace: "pre-wrap", lineHeight: 1.7 }}>
+                  {sourceTextForResult}
+                </div>
+              </div>
+            ) : null}
             
             <div style={{ marginTop: "24px", padding: "30px", background: "rgba(0,0,0,0.4)", borderRadius: "16px", border: "1px solid var(--glass-border)", fontSize: "1.15rem" }}>
-              <AIHighlightDiff original={studentText} corrected={result.correctedText} />
+              <AIHighlightDiff original={sourceTextForResult} corrected={result.correctedText} />
             </div>
 
             <AIExplanationCard explanations={result.explanations} />
