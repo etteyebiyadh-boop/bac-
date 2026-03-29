@@ -155,6 +155,12 @@ export function SocialGenerator() {
   const [grammarPatterns, setGrammarPatterns] = useState<any[]>([]);
   const [writingTips,     setWritingTips]     = useState<string[]>([]);
 
+  // Computed property to check if any content exists
+  const hasContent = synonyms.length > 0 || antonyms.length > 0 || vocabulary.length > 0 || 
+                     phrases.length > 0 || collocations.length > 0 || idioms.length > 0 ||
+                     connectors.length > 0 || wordFamily.length > 0 || paraphrases.length > 0 ||
+                     commonMistakes.length > 0 || grammarPatterns.length > 0 || writingTips.length > 0;
+
   // Card refs
   const hookRef        = useRef<HTMLDivElement>(null);
   const synRef         = useRef<HTMLDivElement>(null);

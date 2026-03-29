@@ -18,18 +18,28 @@
     "prisma:seed:sections": "node prisma/seed-sections.js"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@prisma/client": "^6.6.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
     "bcryptjs": "^2.4.3",
+    "file-saver": "^2.0.5",
+    "framer-motion": "^12.38.0",
+    "gsap": "^3.14.2",
     "html-to-image": "^1.11.13",
     "jsonwebtoken": "^9.0.2",
+    "jszip": "^3.10.1",
+    "lucide-react": "^1.7.0",
     "next": "^15.1.0",
     "openai": "^5.12.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "three": "^0.183.2",
     "zod": "^3.25.42"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
+    "@types/file-saver": "^2.0.7",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "25.5.0",
     "@types/react": "19.2.14",

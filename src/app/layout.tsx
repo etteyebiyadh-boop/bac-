@@ -4,12 +4,12 @@ import type { Metadata } from "next";
 import { ReactNode } from "react";
 import { getSession } from "@/lib/auth";
 import { APP_NAME } from "@/lib/constants";
-import { LogoutButton } from "@/components/logout-button";
 import { cookies } from "next/headers";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Navbar } from "@/components/navbar";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { AmbientOrbs, ParticleField } from "@/components/premium-animations";
 
 export const metadata: Metadata = {
   title: `${APP_NAME} | All-in-one Tunisian Bac Prep`,
@@ -25,7 +25,12 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang={langCookie} dir={langCookie === "ar" ? "rtl" : "ltr"}>
-      <body>
+      <body className="bg-[#000205] text-white antialiased">
+        {/* Premium Ambient Background */}
+        <AmbientOrbs />
+        <ParticleField count={30} />
+        
+        {/* Legacy magic background for compatibility */}
         <div className="magic-background">
           <div className="glow-orb orb-indigo" />
           <div className="glow-orb orb-amber" />
@@ -34,11 +39,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <div className="site-shell">
           <Navbar session={session} translations={t} lang={langCookie} />
 
-          <main className="container" style={{ paddingTop: '120px' }}>{children}</main>
+          <main className="container relative z-10" style={{ paddingTop: '120px' }}>{children}</main>
 
           <MobileBottomNav session={session} translations={t} lang={langCookie} />
 
-          <footer style={{ padding: '80px 0 40px', borderTop: '1px solid var(--glass-border)', marginTop: '100px' }}>
+          <footer className="relative z-10" style={{ padding: '80px 0 40px', borderTop: '1px solid var(--glass-border)', marginTop: '100px' }}>
             <div className="container row-between" style={{ alignItems: 'flex-start' }}>
               <div className="stack" style={{ maxWidth: '400px' }}>
                 <strong style={{ fontSize: '1.5rem', fontFamily: 'var(--font-display)' }}>{APP_NAME}</strong>
