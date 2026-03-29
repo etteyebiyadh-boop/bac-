@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { LightweightHero, OptimizedSectionTitle, OptimizedScrollReveal, OptimizedStagger, OptimizedStaggerItem, LightweightStatCard } from "@/components/premium-animations-optimized";
 import { MagneticButton, UltraTiltCard, SparkleText, Breathing } from "@/components/premium-micro-interactions";
+import { TextScramble, AnimatedGradientText, FloatingElements, PulseRing } from "@/components/premium-ultimate";
 import { HeroPathSelector } from "@/components/home-path-selector";
 import { BookOpen, PenTool, Library, Target, ArrowRight, Sparkles, Zap, Award } from "lucide-react";
 import { SiteLanguage } from "@/lib/translations";

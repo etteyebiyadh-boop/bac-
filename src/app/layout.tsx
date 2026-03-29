@@ -11,6 +11,7 @@ import { Navbar } from "@/components/navbar";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { OptimizedParticles } from "@/components/premium-animations-optimized";
 import { CustomCursor, FilmGrain, PageTransition } from "@/components/premium-micro-interactions";
+import { Spotlight, MorphingBlob } from "@/components/premium-ultimate";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html lang={langCookie} dir={langCookie === "ar" ? "rtl" : "ltr"}>
       <body className="bg-[#000205] text-white antialiased cursor-none">
         {/* Ultimate Premium Effects */}
+        <Spotlight color="rgba(99, 102, 241, 0.12)" size={500} />
+        <MorphingBlob colors={["#6366f1", "#a855f7", "#ec4899"]} />
         <CustomCursor color="#6366f1" size={20} trailLength={10} />
         <FilmGrain />
         
