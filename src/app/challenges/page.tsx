@@ -325,7 +325,7 @@ export default function ChallengesPage() {
             {loading ? (
               <p className="muted">Loading...</p>
             ) : myChallenges.length === 0 ? (
-              <p className="muted">You haven't challenged anyone yet. Create one above!</p>
+              <p className="muted">You haven&apos;t challenged anyone yet. Create one above!</p>
             ) : (
               <div className="stack" style={{ gap: "12px" }}>
                 {myChallenges.slice(0, 5).map((challenge) => (

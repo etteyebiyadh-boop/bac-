@@ -13,8 +13,8 @@ export default function StrategyPage() {
           </p>
           
           <div className="card bg-black/20 p-6 border border-glass">
-            <h3 className="text-xl font-bold text-accent mb-2">1. The 'Skim & Scan' Method</h3>
-            <p className="opacity-70">Don't read word-for-word on your first pass. Instead, quickly scan the first and last sentence of each paragraph to grasp the main idea before looking at the questions.</p>
+            <h3 className="text-xl font-bold text-accent mb-2">1. The &apos;Skim &amp; Scan&apos; Method</h3>
+            <p className="opacity-70">Don&apos;t read word-for-word on your first pass. Instead, quickly scan the first and last sentence of each paragraph to grasp the main idea before looking at the questions.</p>
           </div>
           
           <div className="card bg-black/20 p-6 border border-glass">
@@ -24,7 +24,7 @@ export default function StrategyPage() {
           
           <div className="card bg-black/20 p-6 border border-glass">
             <h3 className="text-xl font-bold text-success mb-2">3. The 15/20 Rule for Justifications</h3>
-            <p className="opacity-70">If a question asks you to "Justify from the text", do NOT try to explain it in your own words. Write the EXACT snippet from the text between quotes.</p>
+            <p className="opacity-70">If a question asks you to &quot;Justify from the text&quot;, do NOT try to explain it in your own words. Write the EXACT snippet from the text between quotes.</p>
           </div>
           
           <div className="row-between mt-8">

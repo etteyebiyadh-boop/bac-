@@ -162,9 +162,9 @@ export default function BacWeekIntensive() {
           <span className="eyebrow" style={{ color: "var(--primary)", fontSize: "1rem" }}>PROGRAMME INTENSIF</span>
           <h1 className="section-title" style={{ fontSize: "2.5rem", marginTop: "20px" }}>BAC WEEK</h1>
           <p className="muted" style={{ fontSize: "1.2rem", marginTop: "20px", maxWidth: "600px", margin: "20px auto" }}>
-            7 jours d'entraînement intensif pour maximiser vos chances au BAC. 
+            7 jours d&apos;entraînement intensif pour maximiser vos chances au BAC. 
             4 heures par jour de pratique ciblée avec examens blancs, 
-            révisions grammaticales et ateliers d'écriture.
+            révisions grammaticales et ateliers d&apos;écriture.
           </p>
           
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px", marginTop: "40px", textAlign: "center" }}>
@@ -198,7 +198,7 @@ export default function BacWeekIntensive() {
           </button>
           
           <p className="muted" style={{ fontSize: "0.9rem", marginTop: "30px" }}>
-            Recommandé 2-3 semaines avant l'examen officiel du BAC
+            Recommandé 2-3 semaines avant l&apos;examen officiel du BAC
           </p>
         </div>
       </div>
@@ -331,7 +331,7 @@ export default function BacWeekIntensive() {
       {/* Motivation Footer */}
       <div style={{ marginTop: "30px", textAlign: "center", padding: "30px" }}>
         <p className="muted" style={{ fontSize: "1.1rem", fontStyle: "italic" }}>
-          "Le succès n'est pas final, l'échec n'est pas fatal: c'est le courage de continuer qui compte."
+          &quot;Le succès n&apos;est pas final, l&apos;échec n&apos;est pas fatal: c&apos;est le courage de continuer qui compte.&quot;
         </p>
         <p className="muted" style={{ fontSize: "0.9rem", marginTop: "10px" }}>
           — Winston Churchill

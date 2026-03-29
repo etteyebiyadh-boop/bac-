@@ -259,7 +259,7 @@ export function MobileDashboard({ user, profile, translations: t, lang }: Mobile
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <span style={{ fontSize: "24px" }}>💡</span>
           <div>
-            <div style={{ fontSize: "12px", color: "var(--primary)", fontWeight: 700, marginBottom: "2px" }}>TODAY'S TIP</div>
+            <div style={{ fontSize: "12px", color: "var(--primary)", fontWeight: 700, marginBottom: "2px" }}>TODAY&apos;S TIP</div>
             <div style={{ fontSize: "13px", color: "var(--ink-dim)" }}>
               {lang === "fr" ? "Faites 20 min de lecture active pour améliorer votre compréhension." : 
                lang === "ar" ? "اقرأ لمدة 20 دقيقة بنشاط لتحسين فهمك." : 
