@@ -318,7 +318,7 @@ export function WordOfTheDay({ lang }: { lang: SiteLanguage }) {
         <p className="muted" style={{ fontSize: "12px" }}>{data.meaning}</p>
       </div>
       <div style={{ padding: "12px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", fontStyle: "italic", fontSize: "14px", borderLeft: "4px solid var(--accent)" }}>
-        "{data.example}"
+        &quot;{data.example}&quot;
       </div>
     </div>
   );

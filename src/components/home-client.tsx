@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { PremiumHero, PremiumFeatureCard, PremiumSectionTitle } from "@/components/premium-hero";
 import { ScrollReveal, StaggerContainer, StaggerItem, Parallax } from "@/components/premium-animations";
 import { HeroPathSelector } from "@/components/home-path-selector";
@@ -97,12 +98,12 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
             <ScrollReveal direction="right" delay={0.2}>
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-3xl blur-2xl" />
-                <motion.img 
+                <Image 
                   src="/sections.png" 
                   alt="Bac Sections"
+                  width={600}
+                  height={400}
                   className="relative rounded-3xl shadow-2xl shadow-black/50"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.4 }}
                 />
               </div>
             </ScrollReveal>
