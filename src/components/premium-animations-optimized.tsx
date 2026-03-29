@@ -53,107 +53,31 @@ export function LightweightHero({
   secondaryCtaText,
   secondaryCtaHref,
 }: LightweightHeroProps) {
-  const prefersReducedMotion = useReducedMotion();
-  const { isMobile } = useDeviceCapabilities();
-  
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* CSS-Only Animated Background - No WebGL */}
+      {/* CSS-Only Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Gradient orbs - pure CSS */}
-        <div 
-          className="absolute w-[600px] h-[600px] rounded-full opacity-30"
-          style={{
-            background: 'radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%)',
-            top: '-10%',
-            left: '-10%',
-            animation: prefersReducedMotion ? 'none' : 'float-slow 20s ease-in-out infinite',
-          }}
-        />
-        <div 
-          className="absolute w-[500px] h-[500px] rounded-full opacity-20"
-          style={{
-            background: 'radial-gradient(circle, rgba(168,85,247,0.4) 0%, transparent 70%)',
-            bottom: '-5%',
-            right: '-5%',
-            animation: prefersReducedMotion ? 'none' : 'float-slow 25s ease-in-out infinite reverse',
-          }}
-        />
-        <div 
-          className="absolute w-[300px] h-[300px] rounded-full opacity-25"
-          style={{
-            background: 'radial-gradient(circle, rgba(245,158,11,0.4) 0%, transparent 70%)',
-            top: '40%',
-            right: '20%',
-            animation: prefersReducedMotion ? 'none' : 'float 15s ease-in-out infinite',
-          }}
-        />
-        
-        {/* Grid pattern overlay */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
-          }}
-        />
+        <div className="absolute w-[600px] h-[600px] rounded-full opacity-30 bg-gradient-radial from-indigo-500/40 to-transparent -top-[10%] -left-[10%] animate-float-slow" />
+        <div className="absolute w-[500px] h-[500px] rounded-full opacity-20 bg-gradient-radial from-purple-500/40 to-transparent -bottom-[5%] -right-[5%] animate-float-slow-reverse" />
+        <div className="absolute w-[300px] h-[300px] rounded-full opacity-25 bg-gradient-radial from-amber-500/40 to-transparent top-[40%] right-[20%] animate-float" />
       </div>
 
-      {/* Content - Always visible, animations are enhancements */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 text-center" style={{ opacity: 1 }}>
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 1, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8"
-        >
+      {/* Content */}
+      <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-sm font-medium text-white/80">{badge}</span>
-        </motion.div>
+        </div>
 
-        {/* Title - Always visible */}
-        <motion.h1
-          initial={{ opacity: 1, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.23, 1, 0.32, 1] }}
-          className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[1.1]"
-        >
-          {title.split(' ').map((word, i) => (
-            <span 
-              key={i} 
-              className="inline-block"
-              style={{
-                background: i === title.split(' ').length - 1 
-                  ? 'linear-gradient(135deg, #6366f1, #a855f7, #ec4899)' 
-                  : 'none',
-                WebkitBackgroundClip: i === title.split(' ').length - 1 ? 'text' : 'initial',
-                WebkitTextFillColor: i === title.split(' ').length - 1 ? 'transparent' : 'white',
-              }}
-            >
-              {word}&nbsp;
-            </span>
-          ))}
-        </motion.h1>
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-6 leading-[1.1]">
+          {title}
+        </h1>
 
-        {/* Subtitle - Always visible */}
-        <motion.p
-          initial={{ opacity: 1, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed"
-        >
+        <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
           {subtitle}
-        </motion.p>
+        </p>
 
-        {/* CTAs - Always visible */}
-        <motion.div
-          initial={{ opacity: 1, y: 0 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
             href={ctaHref}
             className="group relative px-8 py-4 bg-white text-black font-bold rounded-full overflow-hidden transition-transform hover:scale-105"
@@ -170,35 +94,14 @@ export function LightweightHero({
               {secondaryCtaText}
             </a>
           )}
-        </motion.div>
-      </div>
-
-      {/* Scroll indicator - CSS only */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div 
-          className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2"
-          style={{ animation: prefersReducedMotion ? 'none' : 'bounce 2s infinite' }}
-        >
-          <div className="w-1.5 h-1.5 rounded-full bg-white/60" />
         </div>
       </div>
 
-      {/* Add CSS animations */}
-      <style jsx>{`
-        @keyframes float-slow {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -30px) scale(1.05); }
-          66% { transform: translate(-20px, 20px) scale(0.95); }
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
-        }
-        @keyframes bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(8px); }
-        }
-      `}</style>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+        <div className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2 animate-bounce-slow">
+          <div className="w-1.5 h-1.5 rounded-full bg-white/60" />
+        </div>
+      </div>
     </section>
   );
 }
