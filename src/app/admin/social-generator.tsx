@@ -2,6 +2,8 @@
 
 import { useState, useRef } from "react";
 import { toPng } from "html-to-image";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 type Theme = "grammar" | "vocab" | "mindset" | "elite" | "cyber" | "retro" | "gold" | "vibrant" | "midnight" | "glass";
 
@@ -33,18 +35,36 @@ const CARD_THEMES: Record<string, Theme> = {
   writingTips:    "glass",
 };
 
-async function exportCard(ref: React.RefObject<HTMLDivElement | null>, name: string) {
-  if (!ref.current) return;
+async function exportCard(ref: React.RefObject<HTMLDivElement | null>, name: string): Promise<Blob | null> {
+  if (!ref.current) return null;
   try {
     const url = await toPng(ref.current, { cacheBust: true, pixelRatio: 3 });
-    const a = document.createElement("a");
-    a.download = `bac-${name}.png`;
-    a.href = url;
-    a.click();
+    const response = await fetch(url);
+    return await response.blob();
   } catch (e) {
     console.error(e);
-    alert("Export failed.");
+    return null;
   }
+}
+
+async function exportAllCards(
+  refs: { name: string; ref: React.RefObject<HTMLDivElement | null> }[],
+  topic: string
+) {
+  const zip = new JSZip();
+  const folder = zip.folder(`bac-excellence-${topic.toLowerCase().replace(/\s+/g, "-")}`);
+  
+  if (!folder) return;
+  
+  for (const { name, ref } of refs) {
+    const blob = await exportCard(ref, name);
+    if (blob) {
+      folder.file(`${name}.png`, blob);
+    }
+  }
+  
+  const content = await zip.generateAsync({ type: "blob" });
+  saveAs(content, `bac-excellence-${topic.toLowerCase().replace(/\s+/g, "-")}-pack.zip`);
 }
 
 function CardShell({
@@ -96,6 +116,16 @@ function ExportRow({ label, color, onExport }: { label: string; color: string; o
   );
 }
 
+function downloadBlob(blob: Blob | null, name: string) {
+  if (!blob) return;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.download = `bac-${name}.png`;
+  a.href = url;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ─── MAIN COMPONENT ─────────────────────────────────────────────────────────
 export function SocialGenerator() {
   const [topic, setTopic]       = useState("");
@@ -108,6 +138,8 @@ export function SocialGenerator() {
   const [cardTitle, setCardTitle] = useState("The 15/20 Rule 🚀");
   const [cardBody, setCardBody]   = useState("Invert after Never / Seldom / Rarely.\n✅ Never have I seen such mastery.");
   const [watermark, setWatermark] = useState("@bacexcellence");
+
+  const [isExporting, setIsExporting] = useState(false);
 
   // Content state
   const [synonyms,        setSynonyms]        = useState<any[]>([]);
@@ -183,7 +215,27 @@ export function SocialGenerator() {
     }
   }
 
-  const hasContent = synonyms.length > 0 || collocations.length > 0 || idioms.length > 0;
+  async function handleBatchExport() {
+    setIsExporting(true);
+    const cardRefs = [
+      { name: "hook", ref: hookRef },
+      ...(synonyms.length ? [{ name: "01-synonyms", ref: synRef }] : []),
+      ...(antonyms.length ? [{ name: "02-antonyms", ref: antRef }] : []),
+      ...(vocabulary.length ? [{ name: "03-vocabulary", ref: vocabRef }] : []),
+      ...(phrases.length ? [{ name: "04-phrases", ref: phraseRef }] : []),
+      ...(collocations.length ? [{ name: "05-collocations", ref: collocRef }] : []),
+      ...(idioms.length ? [{ name: "06-idioms", ref: idiomRef }] : []),
+      ...(connectors.length ? [{ name: "07-connectors", ref: connRef }] : []),
+      ...(wordFamily.length ? [{ name: "08-word-family", ref: wfRef }] : []),
+      ...(paraphrases.length ? [{ name: "09-paraphrases", ref: paraRef }] : []),
+      ...(commonMistakes.length ? [{ name: "10-mistakes", ref: mistakeRef }] : []),
+      ...(grammarPatterns.length ? [{ name: "11-grammar", ref: grammarRef }] : []),
+      ...(writingTips.length ? [{ name: "12-tips", ref: tipsRef }] : []),
+    ];
+    
+    await exportAllCards(cardRefs, topic || "mastery-pack");
+    setIsExporting(false);
+  }
 
   return (
     <section className="stack" style={{ gap: 32, padding: "40px 0" }}>
@@ -297,9 +349,31 @@ export function SocialGenerator() {
       {/* ══════════ 12 MASTERY CARDS ══════════ */}
       {hasContent && (
         <div className="stack" style={{ gap: 48, marginTop: 8 }}>
-          <div style={{ borderBottom: "1px solid rgba(245,158,11,0.25)", paddingBottom: 18 }}>
-            <span className="eyebrow" style={{ color: "var(--accent)", fontSize: 13 }}>💎 12 SHAREABLE MASTERY CARDS — Each exports as a branded PNG</span>
-            <p className="muted" style={{ fontSize: 12, marginTop: 6 }}>Download and post directly to Instagram, TikTok, or Facebook. All cards are 1200×1200 at 3× resolution.</p>
+          <div style={{ borderBottom: "1px solid rgba(245,158,11,0.25)", paddingBottom: 18, display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <span className="eyebrow" style={{ color: "var(--accent)", fontSize: 13 }}>💎 12 SHAREABLE MASTERY CARDS — Each exports as a branded PNG</span>
+              <p className="muted" style={{ fontSize: 12, marginTop: 6 }}>Download and post directly to Instagram, TikTok, or Facebook. All cards are 1200×1200 at 3× resolution.</p>
+            </div>
+            <button 
+              onClick={handleBatchExport} 
+              disabled={isExporting}
+              style={{ 
+                background: "var(--accent)", 
+                color: "#000", 
+                border: "none", 
+                borderRadius: 12, 
+                padding: "12px 24px", 
+                fontWeight: 900, 
+                fontSize: 13, 
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+                display: "flex",
+                alignItems: "center",
+                gap: 8
+              }}
+            >
+              {isExporting ? "⏳ Creating ZIP..." : "📦 Download All (.zip)"}
+            </button>
           </div>
 
           {/* ── 1. Synonyms ── */}
