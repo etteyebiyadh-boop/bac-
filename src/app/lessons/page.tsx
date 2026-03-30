@@ -53,18 +53,38 @@ export default async function LibraryHubPage() {
       modules.push(BacModule.MODULE_5_WOMEN_POWER, BacModule.MODULE_6_SUSTAINABLE_DEVELOPMENT);
     }
 
-    // Parallel fetch for speed
+    // Parallel fetch for speed - filter by Bac section
     const [grammarRules, vocabSets, readingPassages] = await Promise.all([
       db.grammarRule.findMany({
-        where: { language: { in: activeLanguages } },
+        where: { 
+          language: { in: activeLanguages },
+          OR: [
+            { bacSections: { has: profile.bacSection } },
+            { bacSections: { isEmpty: true } },
+            { bacSections: { equals: null } }
+          ]
+        },
         orderBy: { title: "asc" }
       }),
       db.vocabularySet.findMany({
-        where: { language: { in: activeLanguages } },
+        where: { 
+          language: { in: activeLanguages },
+          OR: [
+            { bacSections: { has: profile.bacSection } },
+            { bacSections: { isEmpty: true } },
+            { bacSections: { equals: null } }
+          ]
+        },
         orderBy: { title: "asc" }
       }),
       db.readingPassage.findMany({
-        where: { language: { in: activeLanguages } },
+        where: { 
+          language: { in: activeLanguages },
+          OR: [
+            { bacModule: { in: modules } },
+            { bacModule: { equals: null } }
+          ]
+        },
         orderBy: { title: "asc" }
       })
     ]);
