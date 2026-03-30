@@ -1,6 +1,7 @@
 import { requireCurrentUser } from "@/lib/auth";
 import { ensureStudentProfile } from "@/lib/missions";
 import { OverallProgress, GradePredictions, HighYieldTopics, LanguageModules, WordOfTheDay, DailyStreakWidget, SmartStudyPlanner, AdminAccessButton, NextBestActionCard } from "./excellence-components";
+import { SkillProgressHeatmap } from "./skill-heatmap";
 import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
@@ -148,6 +149,7 @@ export default async function DashboardPage() {
            <div className="grid" style={{ gridTemplateColumns: "1fr 1fr 1.2fr", gap: "24px", alignItems: "stretch" }}>
               <div className="stack" style={{ gap: "24px" }}>
                  <OverallProgress />
+                 <SkillProgressHeatmap />
               </div>
               <div className="stack" style={{ gap: "24px" }}>
                  <GradePredictions />
