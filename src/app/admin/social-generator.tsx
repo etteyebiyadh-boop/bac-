@@ -178,6 +178,27 @@ export function SocialGenerator() {
 
   const t = THEMES[cardTheme];
 
+  const [captions, setCaptions] = useState<string[]>([]);
+
+  // Generate captions based on content
+  function generateCaptions(topicTitle: string) {
+    const hashtags = "#BAC2024 #BacTunisie #EnglishBAC #StudyTips #BacExcellence #BACSuccess #StudyMotivation";
+    
+    const variants = [
+      `📝 Save this for your BAC!\n\n${topicTitle} - one of the most important topics for your exam.\n\nDrop a 🔥 if you want more tips like this!\n\n${hashtags}`,
+      
+      `💡 BAC Hack: ${topicTitle}\n\nThis single tip could save you 2-3 points on exam day.\n\nFollow @bacexcellence for daily mastery cards 🏆\n\n${hashtags}`,
+      
+      `⚡ Last Minute BAC Prep\n\n${topicTitle} - study this tonight.\n\nYour future self will thank you.\n\nLink in bio for free corrections ✨\n\n${hashtags}`,
+      
+      `🎯 20/20 Strategy\n\nMaster ${topicTitle} and watch your grade jump.\n\nShare with a friend who needs this 👇\n\n${hashtags}`,
+      
+      `📚 BAC Excellence Tip #1\n\n${topicTitle}\n\nThis is what separates 15/20 from 19/20 students.\n\nSave it. Study it. Ace it. 💪\n\n${hashtags}`
+    ];
+    
+    setCaptions(variants);
+  }
+
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
     if (!topic) return;
@@ -197,6 +218,7 @@ export function SocialGenerator() {
       if (!res.ok) throw new Error(data.error || "Failed");
 
       setScript(data.script || "");
+      generateCaptions(topic);
       if (data.visualTitle) setCardTitle(data.visualTitle);
       if (data.visualBody) {
         const lines = String(data.visualBody).split("\n").slice(0, 3).join("\n");
@@ -305,6 +327,55 @@ export function SocialGenerator() {
                 <button onClick={() => navigator.clipboard.writeText(script)} style={{ background: "var(--primary)", color: "#000", border: "none", padding: "9px 20px", borderRadius: 9, fontWeight: 800, fontSize: 11, cursor: "pointer" }}>COPY</button>
               </div>
               <textarea readOnly value={script} style={{ minHeight: 240, background: "transparent", color: "white", border: "none", resize: "none", fontSize: 14, lineHeight: 1.8, fontFamily: "inherit", marginTop: 16, outline: "none" }} />
+            </div>
+          )}
+
+          {captions.length > 0 && (
+            <div className="card stack" style={{ background: "rgba(10,15,25,0.6)", border: "1px solid var(--accent)", padding: 24 }}>
+              <div className="row-between" style={{ paddingBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                <div>
+                  <span className="eyebrow" style={{ color: "var(--accent)" }}>📱 Ready-to-Post Captions</span>
+                  <p className="muted" style={{ fontSize: 11, marginTop: 3 }}>5 caption variants + hashtags. Click copy, then paste to Instagram/TikTok.</p>
+                </div>
+              </div>
+              
+              <div className="stack" style={{ gap: 12, marginTop: 16 }}>
+                {captions.map((cap, i) => (
+                  <div key={i} style={{ 
+                    padding: 16, 
+                    background: "rgba(255,255,255,0.03)", 
+                    borderRadius: 12,
+                    border: "1px solid rgba(255,255,255,0.08)"
+                  }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                      <span style={{ fontSize: 12, color: "var(--accent)", fontWeight: 700 }}>Variant {i + 1}</span>
+                      <button 
+                        onClick={() => navigator.clipboard.writeText(cap)}
+                        style={{ 
+                          background: "var(--accent)", 
+                          color: "#000", 
+                          border: "none", 
+                          padding: "6px 14px", 
+                          borderRadius: 6, 
+                          fontSize: 11, 
+                          fontWeight: 800,
+                          cursor: "pointer"
+                        }}
+                      >
+                        📋 COPY
+                      </button>
+                    </div>
+                    <pre style={{ 
+                      fontSize: 13, 
+                      lineHeight: 1.6, 
+                      color: "#fff", 
+                      whiteSpace: "pre-wrap",
+                      fontFamily: "inherit",
+                      margin: 0
+                    }}>{cap}</pre>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
