@@ -2,6 +2,26 @@ import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest, hasAdminAccess } from "@/lib/auth";
 import { getAIClient, getReliableCompletion } from "@/lib/ai-provider";
 
+// BAC Social Media AI Specialist - System Configuration
+const BAC_AI_PERSONA = `You are "BacSocial AI" — a specialized artificial intelligence trained exclusively for Tunisian Baccalaureate social media marketing.
+
+YOUR EXPERTISE:
+- Deep knowledge of BAC exam structure (Math, Sciences, Eco, Lettres, Info)
+- Understanding of Tunisian student culture, stress points, study habits
+- Mastery of viral educational content patterns on Instagram/TikTok/Facebook
+- Proven formula: Hook (0-3s) → Value (10-15s) → CTA (3s)
+
+VIRAL CONTENT RULES:
+1. Lead with a "pattern interrupt" (shocking stat, relatable pain point, or curiosity gap)
+2. Use line breaks strategically — max 2 lines per "beat"
+3. Emojis as visual anchors (not decoration)
+4. Always include specific, actionable advice (not generic "study hard")
+5. End with engagement CTA that sparks comments
+
+TONE: Energetic, empathetic, slightly irreverent but always helpful. Like a cool older sibling who's already aced the BAC.
+
+HASHTAG STRATEGY: Mix 2 popular (#BAC2024, #StudyTips) + 2 niche (#BacTunisie, #EnglishBAC) + 1 branded (#BacExcellence)`;
+
 function getErrorStatus(error: any): number | undefined {
   return (
     error?.status ??
@@ -24,16 +44,18 @@ export async function POST(req: NextRequest) {
     
     const sectionContext = section ? `Target Section: ${section}.` : "Target: All BAC sections.";
 
-    const prompt = `You are a world-class BAC exam language coach and viral content strategist for 'Bac Excellence', the elite AI-first platform for Tunisian Baccalaureate students.
+    const prompt = `${BAC_AI_PERSONA}
 
-Create a COMPLETE, RICH mastery content pack about: ${language} - "${topic}". ${sectionContext}
+Create a COMPLETE viral content pack for: ${language} - "${topic}". ${sectionContext}
+
+PLATFORM: ${platform}
 
 Return ONLY a valid JSON object with these EXACT keys:
 
 {
-  "script": "<full viral caption in engaging, conversational style + CTA to Bac Excellence>",
-  "visualTitle": "<viral hook title in ${language}, MAX 6 words>",
-  "visualBody": "<EXACTLY 2 SHORT LINES in ${language}, 80 chars max — for a graphic card, NO paragraphs>",
+  "script": "<hook (1 line)\\n\\nvalue (2-3 lines)\\n\\nCTA (1 line) + emojis + hashtags>",
+  "visualTitle": "<viral hook, MAX 6 words, pattern interrupt style>",
+  "visualBody": "<EXACTLY 2 SHORT LINES in ${language}, 80 chars max — curiosity gap or value bomb>",
 
   "synonyms": [{ "word": "...", "synonym": "...", "usage": "short usage tip" }],
   "antonyms": [{ "word": "...", "antonym": "...", "contrast": "one-line contrast note" }],
@@ -47,7 +69,13 @@ Return ONLY a valid JSON object with these EXACT keys:
   "paraphrases": [{ "original": "a sentence to rephrase", "paraphrase": "rephrased version using different structure" }],
   "commonMistakes": [{ "mistake": "wrong usage", "correction": "correct usage", "rule": "why it's wrong" }],
   "grammarPatterns": [{ "pattern": "Subject + V + Object structure", "example": "...", "tip": "when to use it" }],
-  "writingTips": ["concise actionable tip 1 for ${language} writing at the BAC level", "tip 2", "..."]
+  "writingTips": ["concise actionable tip 1 for ${language} writing at the BAC level", "tip 2", "..."],
+
+  "captions": {
+    "instagram": "<optimized for Instagram feed — visual storytelling, carousel-ready>",
+    "tiktok": "<optimized for TikTok — fast hook, trend potential, sound-friendly>",
+    "facebook": "<optimized for Facebook — longer form, parent-friendly, detailed>"
+  }
 }
 
 QUANTITY:
@@ -87,6 +115,7 @@ All content MUST be in ${language} and DIRECTLY relevant to "${topic}". High-sco
       script: typeof body.script === 'object' ? JSON.stringify(body.script, null, 2) : (body.script || ""),
       visualTitle: typeof body.visualTitle === 'object' ? JSON.stringify(body.visualTitle) : (body.visualTitle || "Hook Title"),
       visualBody: typeof body.visualBody === 'object' ? JSON.stringify(body.visualBody, null, 2) : (body.visualBody || ""),
+      captions: typeof body.captions === 'object' ? body.captions : {},
       synonyms:       Array.isArray(body.synonyms)       ? body.synonyms       : [],
       antonyms:       Array.isArray(body.antonyms)       ? body.antonyms       : [],
       vocabulary:     Array.isArray(body.vocabulary)     ? body.vocabulary     : [],
