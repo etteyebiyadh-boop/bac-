@@ -343,6 +343,11 @@ export function SocialGenerator() {
   const checklistRef     = useRef<HTMLDivElement>(null);
   const motivationRef    = useRef<HTMLDivElement>(null);
   const essayCompareRef  = useRef<HTMLDivElement>(null);
+  const didYouKnowRef    = useRef<HTMLDivElement>(null);
+  const thisOrThatRef    = useRef<HTMLDivElement>(null);
+  const fillBlankRef     = useRef<HTMLDivElement>(null);
+  const mythFactRef      = useRef<HTMLDivElement>(null);
+  const studyScheduleRef = useRef<HTMLDivElement>(null);
 
   // Best Posting Times for Tunisian Students
   const postingSchedule = [
@@ -1039,6 +1044,206 @@ export function SocialGenerator() {
                     border: `1px solid ${ac}40`
                   }}>
                     🚀 +6 points with better vocabulary
+                  </div>
+                </div>
+              </CardShell>
+            </div>
+          </div>
+        ); })()}
+
+        {/* ── Did You Know Card ── */}
+        {(() => { const ac = "#8b5cf6"; return (
+          <div className="stack" style={{ gap: 16 }}>
+            <ExportRow label="🧠 Did You Know Card" color={ac} onExport={() => exportCard(didYouKnowRef, "did-you-know")} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CardShell refProp={didYouKnowRef} theme="cyber" watermark={watermark} label="BAC FACTS" accent={ac}>
+                <div style={{ textAlign: "center", padding: "15px 0" }}>
+                  <div style={{ fontSize: 48, marginBottom: 10 }}>🧠</div>
+                  <div style={{ fontSize: 11, color: ac, marginBottom: 8, letterSpacing: 2, fontWeight: 800 }}>DID YOU KNOW?</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", lineHeight: 1.5, marginBottom: 12 }}>
+                    Students who use "Moreover" and "Furthermore" in their essays score 15% higher on average
+                  </div>
+                  <div style={{ 
+                    padding: "8px 16px",
+                    background: `linear-gradient(135deg, ${ac}20 0%, ${ac}08 100%)`,
+                    border: `1px solid ${ac}40`,
+                    borderRadius: 20,
+                    fontSize: 10,
+                    color: "#fff",
+                    fontWeight: 700,
+                    display: "inline-block"
+                  }}>
+                    Share with a friend 👇
+                  </div>
+                </div>
+              </CardShell>
+            </div>
+          </div>
+        ); })()}
+
+        {/* ── This or That Card ── */}
+        {(() => { const ac = "#f43f5e"; return (
+          <div className="stack" style={{ gap: 16 }}>
+            <ExportRow label="⚡ This or That Card" color={ac} onExport={() => exportCard(thisOrThatRef, "this-or-that")} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CardShell refProp={thisOrThatRef} theme="retro" watermark={watermark} label="CHOOSE ONE" accent={ac}>
+                <div style={{ textAlign: "center", padding: "12px 0" }}>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 12, letterSpacing: 1 }}>WHICH DO YOU PREFER?</div>
+                  <div style={{ display: "flex", gap: 12, marginBottom: 14 }}>
+                    <div style={{ 
+                      flex: 1,
+                      padding: "16px 12px", 
+                      background: `linear-gradient(135deg, ${ac}30 0%, ${ac}10 100%)`,
+                      border: `2px solid ${ac}60`,
+                      borderRadius: 12,
+                      textAlign: "center"
+                    }}>
+                      <div style={{ fontSize: 24, marginBottom: 6 }}>📚</div>
+                      <div style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>Study Solo</div>
+                      <div style={{ fontSize: 9, color: ac, marginTop: 3 }}>Focus mode</div>
+                    </div>
+                    <div style={{ 
+                      flex: 1,
+                      padding: "16px 12px", 
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                      borderRadius: 12,
+                      textAlign: "center"
+                    }}>
+                      <div style={{ fontSize: 24, marginBottom: 6 }}>👥</div>
+                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 700 }}>Study Group</div>
+                      <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", marginTop: 3 }}>Team power</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 10, color: ac, background: `${ac}15`, padding: "6px 12px", borderRadius: 6, display: "inline-block" }}>
+                    💬 Comment: Solo or Group?
+                  </div>
+                </div>
+              </CardShell>
+            </div>
+          </div>
+        ); })()}
+
+        {/* ── Fill in the Blank Card ── */}
+        {(() => { const ac = "#10b981"; return (
+          <div className="stack" style={{ gap: 16 }}>
+            <ExportRow label="✏️ Fill in the Blank Card" color={ac} onExport={() => exportCard(fillBlankRef, "fill-blank")} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CardShell refProp={fillBlankRef} theme="vocab" watermark={watermark} label="TEST YOURSELF" accent={ac}>
+                <div style={{ textAlign: "center", padding: "12px 0" }}>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10, letterSpacing: 1 }}>COMPLETE THE SENTENCE</div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", lineHeight: 1.6, marginBottom: 14 }}>
+                    "The government should <span style={{ color: ac, fontWeight: 800, textDecoration: "underline" }}>__________</span> stricter laws to protect the environment."
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 12 }}>
+                    {["implement", "enforce", "establish", "introduce"].map((word, i) => (
+                      <div key={i} style={{ 
+                        padding: "6px 12px", 
+                        background: `linear-gradient(135deg, ${ac}25 0%, ${ac}08 100%)`,
+                        border: `1px solid ${ac}50`,
+                        borderRadius: 16,
+                        fontSize: 11,
+                        color: "#fff",
+                        fontWeight: 700
+                      }}>{word}</div>
+                    ))}
+                  </div>
+                  <div style={{ fontSize: 10, color: ac, background: `${ac}15`, padding: "6px 12px", borderRadius: 6, display: "inline-block" }}>
+                    💬 Write your answer below!
+                  </div>
+                </div>
+              </CardShell>
+            </div>
+          </div>
+        ); })()}
+
+        {/* ── Myth vs Fact Card ── */}
+        {(() => { const ac = "#f59e0b"; return (
+          <div className="stack" style={{ gap: 16 }}>
+            <ExportRow label="🔍 Myth vs Fact Card" color={ac} onExport={() => exportCard(mythFactRef, "myth-fact")} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CardShell refProp={mythFactRef} theme="mindset" watermark={watermark} label="TRUE OR FALSE" accent={ac}>
+                <div style={{ padding: "12px 0" }}>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 12, textAlign: "center", letterSpacing: 1 }}>BUSTING BAC MYTHS</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <div style={{ 
+                      padding: "12px", 
+                      background: "rgba(251,113,133,0.1)",
+                      border: "1px solid rgba(251,113,133,0.3)",
+                      borderRadius: 10,
+                      borderLeft: "3px solid #fb7185"
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                        <span style={{ fontSize: 14 }}>❌</span>
+                        <span style={{ fontSize: 10, color: "#fb7185", fontWeight: 800 }}>MYTH</span>
+                      </div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>"Longer essays always get higher scores"</div>
+                    </div>
+                    <div style={{ 
+                      padding: "12px", 
+                      background: `${ac}15`,
+                      border: `1px solid ${ac}40`,
+                      borderRadius: 10,
+                      borderLeft: `3px solid ${ac}`
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                        <span style={{ fontSize: 14 }}>✅</span>
+                        <span style={{ fontSize: 10, color: ac, fontWeight: 800 }}>FACT</span>
+                      </div>
+                      <div style={{ fontSize: 12, color: "#fff" }}>"Quality and structure matter more than word count"</div>
+                    </div>
+                  </div>
+                </div>
+              </CardShell>
+            </div>
+          </div>
+        ); })()}
+
+        {/* ── Study Schedule Template Card ── */}
+        {(() => { const ac = "#6366f1"; return (
+          <div className="stack" style={{ gap: 16 }}>
+            <ExportRow label="📅 Study Schedule Template" color={ac} onExport={() => exportCard(studyScheduleRef, "study-schedule")} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CardShell refProp={studyScheduleRef} theme="grammar" watermark={watermark} label="WEEKLY PLAN" accent={ac}>
+                <div style={{ padding: "8px 0" }}>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10, textAlign: "center" }}>MY BAC STUDY PLAN</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {[
+                      { day: "Mon", task: "Grammar connectors", done: true },
+                      { day: "Tue", task: "Vocabulary list", done: true },
+                      { day: "Wed", task: "Essay writing", done: false },
+                      { day: "Thu", task: "Practice exam", done: false },
+                      { day: "Fri", task: "Review mistakes", done: false },
+                    ].map((item, i) => (
+                      <div key={i} style={{ 
+                        display: "flex", 
+                        alignItems: "center", 
+                        gap: 10,
+                        padding: "6px 10px",
+                        background: item.done ? `${ac}12` : "rgba(255,255,255,0.03)",
+                        border: `1px solid ${item.done ? ac : "rgba(255,255,255,0.1)"}`,
+                        borderRadius: 6
+                      }}>
+                        <div style={{ 
+                          width: 28, height: 28, 
+                          borderRadius: "50%", 
+                          background: item.done ? ac : "rgba(255,255,255,0.1)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 10,
+                          fontWeight: 800,
+                          color: item.done ? "#fff" : "rgba(255,255,255,0.5)"
+                        }}>{item.day}</div>
+                        <span style={{ 
+                          fontSize: 11, 
+                          color: item.done ? "#fff" : "rgba(255,255,255,0.6)",
+                          fontWeight: item.done ? 600 : 400,
+                          flex: 1
+                        }}>{item.task}</span>
+                        {item.done && <span style={{ fontSize: 12 }}>✓</span>}
+                      </div>
+                    ))}
                   </div>
                 </div>
               </CardShell>
