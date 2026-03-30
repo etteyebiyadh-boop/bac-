@@ -24,8 +24,8 @@ function AnimatedTitle({ text, className }: { text: string; className?: string }
           initial={{ opacity: 0, y: 50, rotateX: -90 }}
           animate={{ opacity: 1, y: 0, rotateX: 0 }}
           transition={{ duration: 0.8, delay: i * 0.1, ease: [0.215, 0.61, 0.355, 1] }}
-          className="inline-block mr-[0.25em]"
-          style={{ transformOrigin: 'bottom' }}
+          className="inline-block"
+          style={{ transformOrigin: 'bottom', marginRight: '0.3em' }}
         >
           {word}
         </motion.span>
@@ -53,15 +53,16 @@ function TrustBadge({ icon, text }: { icon: React.ReactNode; text: string }) {
 function FloatingCard({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 100, scale: 0.8 }}
+      initial={{ opacity: 0, y: 60, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ delay, duration: 0.8, ease: [0.215, 0.61, 0.355, 1] }}
+      transition={{ delay, duration: 0.6, ease: [0.215, 0.61, 0.355, 1] }}
       className={`absolute ${className}`}
+      style={{ willChange: 'transform' }}
     >
       <motion.div
-        animate={{ y: [0, -15, 0], rotate: [0, 2, -2, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="bg-white rounded-2xl shadow-2xl p-6 border border-slate-100"
+        animate={{ y: [0, -12, 0], rotate: [0, 1.5, -1.5, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        className="bg-white rounded-2xl shadow-2xl shadow-black/20 p-5 border border-slate-100/50"
       >
         {children}
       </motion.div>
@@ -147,59 +148,64 @@ function CinematicHero({ badge, title, subtitle, ctaText, ctaHref, secondaryCtaT
           </div>
 
           {/* Visual Side - Floating Cards */}
-          <div className="relative hidden lg:block h-[600px]">
-            <FloatingCard delay={0.5} className="top-0 left-0 z-30">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg">
-                  <Award className="w-7 h-7 text-white" />
+          <div className="relative hidden lg:block h-[500px] w-full">
+            <FloatingCard delay={0.5} className="top-0 left-[5%] z-30">
+              <div className="flex items-center gap-3 w-52">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                  <Award className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-sm text-slate-500 font-medium">{isRTL ? "المعدل المتوقع" : (lang === "fr" ? "Score Prévu" : "Predicted Score")}</div>
-                  <div className="text-3xl font-bold bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">17.5/20</div>
+                  <div className="text-xs text-slate-500 font-medium uppercase tracking-wide">{isRTL ? "المعدل المتوقع" : (lang === "fr" ? "Score Prévu" : "Predicted")}</div>
+                  <div className="text-2xl font-bold text-slate-900">17.5/20</div>
                 </div>
               </div>
             </FloatingCard>
 
-            <FloatingCard delay={0.7} className="top-32 right-0 z-20">
-              <div className="space-y-3 w-64">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">{isRTL ? "التقدم" : (lang === "fr" ? "Progression" : "Progress")}</span>
-                  <span className="font-semibold text-amber-600">87%</span>
+            <FloatingCard delay={0.7} className="top-28 right-[10%] z-20">
+              <div className="w-56">
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-slate-600 font-medium">{isRTL ? "التقدم" : (lang === "fr" ? "Progression" : "Progress")}</span>
+                  <span className="font-bold text-amber-600">87%</span>
                 </div>
-                <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <motion.div className="h-full bg-gradient-to-r from-amber-500 to-amber-600 rounded-full" initial={{ width: 0 }} animate={{ width: "87%" }} transition={{ delay: 1, duration: 1.5, ease: "easeOut" }} />
+                <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden mb-2">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-amber-500 to-amber-600 rounded-full" 
+                    initial={{ width: 0 }} 
+                    animate={{ width: "87%" }} 
+                    transition={{ delay: 1.2, duration: 1.2, ease: "easeOut" }} 
+                  />
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-500">
-                  <TrendingUp className="w-4 h-4 text-emerald-500" />
+                <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                  <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
                   <span>+12% {isRTL ? "هذا الشهر" : (lang === "fr" ? "ce mois" : "this month")}</span>
                 </div>
               </div>
             </FloatingCard>
 
-            <FloatingCard delay={0.9} className="bottom-20 left-10 z-10">
+            <FloatingCard delay={0.9} className="bottom-24 left-[15%] z-10">
               <div className="flex items-center gap-3">
-                <div className="flex -space-x-2">
+                <div className="flex -space-x-1.5">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-500 border-2 border-white flex items-center justify-center">
-                      <Zap className="w-4 h-4 text-white" />
+                    <div key={i} className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-400 to-amber-500 border-2 border-white flex items-center justify-center">
+                      <Zap className="w-3.5 h-3.5 text-white" />
                     </div>
                   ))}
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-slate-900">{isRTL ? "سلسلة ١٤ يوم" : (lang === "fr" ? "Série 14 jours" : "14 day streak")}</div>
-                  <div className="text-xs text-slate-500">{isRTL ? "أداء ممتاز" : (lang === "fr" ? "Excellent travail!" : "Great work!")}</div>
+                  <div className="text-sm font-bold text-slate-900">14 {isRTL ? "يوم" : (lang === "fr" ? "jours" : "days")}</div>
+                  <div className="text-xs text-slate-500">{isRTL ? "أداء ممتاز" : (lang === "fr" ? "Excellente série!" : "Great streak!")}</div>
                 </div>
               </div>
             </FloatingCard>
 
-            <FloatingCard delay={1.1} className="bottom-0 right-10">
+            <FloatingCard delay={1.1} className="bottom-4 right-[5%]">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                 </div>
-                <div className="text-sm">
-                  <span className="font-semibold text-slate-900">{isRTL ? "اختبار مُنجز" : (lang === "fr" ? "Examen complété" : "Exam completed")}</span>
-                  <span className="text-slate-500 block">18/20</span>
+                <div>
+                  <div className="text-sm font-bold text-slate-900">{isRTL ? "اختبار مُنجز" : (lang === "fr" ? "Examen réussi" : "Exam passed")}</div>
+                  <div className="text-lg font-bold text-emerald-600">18/20</div>
                 </div>
               </div>
             </FloatingCard>
