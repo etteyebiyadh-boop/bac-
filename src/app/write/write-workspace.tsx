@@ -8,6 +8,7 @@ import { FREE_CORRECTIONS_PER_WEEK, MAX_ESSAY_CHARS, MIN_ESSAY_CHARS } from "@/l
 import { profileLanguageOptions } from "@/lib/learning";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { AIHighlightDiff, AIExplanationCard } from "@/components/ai-correction-view";
+import { NextAction } from "@/lib/recommendations";
 
 type ExamOption = {
   id: string;
@@ -83,6 +84,7 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
   const [error, setError] = useState("");
   const [result, setResult] = useState<CorrectionResult | null>(null);
 
+  const [nextAction, setNextAction] = useState<NextAction | null>(null);
   const [isFocusMode, setIsFocusMode] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
 
@@ -232,6 +234,16 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
     }
 
     setResult(data);
+    
+    // Fetch next best action after correction
+    fetch("/api/recommendations")
+      .then(res => res.json())
+      .then(recData => {
+        if (recData.action) {
+          setNextAction(recData.action);
+        }
+      })
+      .catch(() => {});
   }
 
   if (isFocusMode && activeExam) {
@@ -768,6 +780,63 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
               <Link href={`/lessons/${result.recommendedLesson.slug}`} className="button-link hover-glow" style={{ background: "var(--accent)", color: "black", padding: "20px 40px" }}>
                 Start Lesson
               </Link>
+            </div>
+          ) : null}
+
+          {/* Next Best Action - Personalized Study Path */}
+          {nextAction ? (
+            <div className="card stack" style={{ padding: "40px", border: "2px solid var(--primary-glow)", background: "linear-gradient(135deg, rgba(99, 102, 241, 0.15), transparent)", position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, right: 0, width: "150px", height: "150px", background: "radial-gradient(circle, rgba(99,102,241,0.2), transparent)", borderRadius: "50%", transform: "translate(40%, -40%)" }} />
+              
+              <div className="row-between" style={{ marginBottom: "20px", position: "relative", zIndex: 1 }}>
+                <span className="eyebrow" style={{ color: "var(--primary)" }}>🎯 Your Next Best Action</span>
+                <span className="pill" style={{ background: nextAction.priority > 80 ? "#ef4444" : "var(--primary)", color: "white", fontSize: "11px" }}>
+                  Priority {nextAction.priority}
+                </span>
+              </div>
+
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <div style={{ display: "flex", gap: "12px", marginBottom: "16px", fontSize: "12px", opacity: 0.8 }}>
+                  <span style={{ textTransform: "uppercase", letterSpacing: "1px" }}>
+                    {nextAction.type === "lesson" ? "📚 Lesson" :
+                     nextAction.type === "exercise" ? "✏️ Exercise" :
+                     nextAction.type === "exam" ? "📝 Practice Exam" :
+                     nextAction.type === "grammar_rule" ? "🔤 Grammar Rule" :
+                     nextAction.type === "vocab_set" ? "📖 Vocabulary Set" : "📚 Content"}
+                  </span>
+                  <span>•</span>
+                  <span>{nextAction.estimatedMinutes} min</span>
+                  <span>•</span>
+                  <span>+{nextAction.xpReward} XP</span>
+                </div>
+
+                <h3 className="section-title" style={{ fontSize: "1.8rem", marginBottom: "12px" }}>{nextAction.title}</h3>
+                
+                <p style={{ fontSize: "15px", opacity: 0.9, lineHeight: 1.6, marginBottom: "24px" }}>
+                  {nextAction.reason}
+                </p>
+
+                <div className="row-between" style={{ gap: "12px" }}>
+                  <Link 
+                    href={nextAction.type === "lesson" ? `/lessons/${nextAction.slug}` :
+                          nextAction.type === "grammar_rule" ? `/lessons/grammar/${nextAction.slug}` :
+                          nextAction.type === "vocab_set" ? `/lessons/vocab/${nextAction.slug}` :
+                          nextAction.type === "exam" ? `/exams/${nextAction.slug}/mock` :
+                          `/daily`}
+                    className="button-link"
+                    style={{ flex: 1, textAlign: "center", background: "var(--primary)", fontWeight: 700 }}
+                  >
+                    Start Now →
+                  </Link>
+                  <Link 
+                    href="/dashboard" 
+                    className="button-link"
+                    style={{ background: "transparent", border: "1px solid var(--glass-border)" }}
+                  >
+                    Go to Dashboard
+                  </Link>
+                </div>
+              </div>
             </div>
           ) : null}
         </section>
