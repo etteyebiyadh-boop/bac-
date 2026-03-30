@@ -439,3 +439,14 @@ enum ChallengeStatus {
   EXPIRED
   DECLINED
 }
+
+model AnalyticsEvent {
+  id         String   @id @default(uuid())
+  userId     String
+  event      String
+  properties Json?
+  timestamp  DateTime @default(now())
+
+  @@index([userId, timestamp])
+  @@index([event, timestamp])
+}

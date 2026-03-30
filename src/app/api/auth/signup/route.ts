@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { hashPassword, setSessionCookie, signToken } from "@/lib/auth";
+import { trackSignup } from "@/lib/analytics";
 
 const schema = z.object({
   email: z.string().email(),
@@ -26,6 +27,9 @@ export async function POST(req: Request) {
         }
       }
     });
+
+    // Track signup event
+    await trackSignup(user.id, user.email);
 
     const token = signToken({ userId: user.id, email: user.email });
     await setSessionCookie(token);

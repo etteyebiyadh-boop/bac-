@@ -3,6 +3,7 @@ import { getUserFromRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { extractTextFromWorkImage, getReliableCompletion } from "@/lib/ai-provider";
 import { MAX_ESSAY_CHARS, MAX_SCAN_IMAGE_BYTES, MIN_ESSAY_CHARS } from "@/lib/constants";
+import { trackCorrectionCompleted } from "@/lib/analytics";
 
 const MAX_AI_WORDS_FOR_CORRECTION = 220; // Cost control: keep inputs short for Bac-style corrections.
 const MAX_PROMPT_CHARS = 600; // Prevent unusually large prompts from burning tokens.
@@ -314,7 +315,7 @@ export async function POST(req: NextRequest) {
     };
 
     // Persist submission
-    await db.submission.create({
+    const submission = await db.submission.create({
       data: {
         userId: auth.userId,
         examId: safeExamId,
@@ -330,6 +331,15 @@ export async function POST(req: NextRequest) {
         wordCount,
       }
     });
+
+    // Track correction completed
+    const user = await db.user.findUnique({ where: { id: auth.userId }, select: { isPremium: true } });
+    await trackCorrectionCompleted(auth.userId, submission.id, {
+      overall: result.overallScore || 0,
+      grammar: result.grammarScore || 0,
+      vocabulary: result.vocabularyScore || 0,
+      structure: result.structureScore || 0
+    }, user?.isPremium || false);
 
     return NextResponse.json(responsePayload);
   } catch (error: any) {
