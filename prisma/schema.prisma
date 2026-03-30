@@ -450,3 +450,15 @@ model AnalyticsEvent {
   @@index([userId, timestamp])
   @@index([event, timestamp])
 }
+
+model Feedback {
+  id           String   @id @default(uuid())
+  submissionId String
+  userId       String
+  rating       Int      // 1-5 stars
+  comment      String?
+  createdAt    DateTime @default(now())
+
+  @@index([submissionId])
+  @@index([userId])
+}

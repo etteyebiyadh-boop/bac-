@@ -8,6 +8,7 @@ import { FREE_CORRECTIONS_PER_WEEK, MAX_ESSAY_CHARS, MIN_ESSAY_CHARS } from "@/l
 import { profileLanguageOptions } from "@/lib/learning";
 import { SiteLanguage, translations } from "@/lib/translations";
 import { AIHighlightDiff, AIExplanationCard } from "@/components/ai-correction-view";
+import { CorrectionFeedback } from "@/components/correction-feedback";
 import { NextAction } from "@/lib/recommendations";
 
 type ExamOption = {
@@ -40,6 +41,7 @@ type CorrectionResult = {
     skillFocus: string;
   } | null;
   remainingFreeCorrections: number | null;
+  submissionId: string;
 };
 
 type WriteWorkspaceProps = {
@@ -768,6 +770,9 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
             </div>
 
             <AIExplanationCard explanations={result.explanations} />
+
+            {/* Teacher/Student Feedback */}
+            <CorrectionFeedback submissionId={result.submissionId} />
           </div>
 
           {result.recommendedLesson ? (

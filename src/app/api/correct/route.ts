@@ -341,7 +341,11 @@ export async function POST(req: NextRequest) {
       structure: result.structureScore || 0
     }, user?.isPremium || false);
 
-    return NextResponse.json(responsePayload);
+    // Return with submission ID for feedback
+    return NextResponse.json({
+      ...responsePayload,
+      submissionId: submission.id
+    });
   } catch (error: any) {
     const status = getErrorStatus(error);
     console.error(error);
