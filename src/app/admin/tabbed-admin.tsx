@@ -4,8 +4,9 @@ import { useState } from "react";
 import { PlanToggleForm } from "./plan-toggle-form";
 import { LessonForm } from "./lesson-form";
 import { SocialGenerator } from "./social-generator";
+import { AnalyticsDashboard } from "./analytics-dashboard";
 
-type AdminTab = "USERS" | "CONTENT" | "MARKETING";
+type AdminTab = "USERS" | "CONTENT" | "MARKETING" | "ANALYTICS";
 
 export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
   const [activeTab, setActiveTab] = useState<AdminTab>("USERS");
@@ -17,6 +18,7 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
         {[
           { id: "USERS", label: "Students", icon: "💎" },
           { id: "CONTENT", label: "Curriculum", icon: "📚" },
+          { id: "ANALYTICS", label: "Analytics", icon: "📊" },
           { id: "MARKETING", label: "Media Engine", icon: "🚀" }
         ].map(tab => (
           <button 
@@ -88,6 +90,12 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
                 </div>
              </div>
           </section>
+        </div>
+      )}
+
+      {activeTab === "ANALYTICS" && (
+        <div className="page-stack fadeIn">
+          <AnalyticsDashboard />
         </div>
       )}
 
