@@ -176,6 +176,53 @@ export function SocialGenerator() {
   const grammarRef     = useRef<HTMLDivElement>(null);
   const tipsRef        = useRef<HTMLDivElement>(null);
 
+  // Video Script Templates
+  const videoScripts = {
+    studyWithMe: `📹 STUDY WITH ME - 15 SEC SCRIPT
+
+[0-3s] Hook: "POV: Your essay just got corrected by AI"
+[3-8s] Show: Screen recording of correction process
+[8-12s] Reveal: "8/20 → 16/20 in 3 minutes"
+[12-15s] CTA: "Link in bio for free corrections"
+
+SOUND: Trending satisfying/ASMR audio`,
+
+    gradeFlip: `📹 GRADE FLIP REEL - 15 SEC SCRIPT
+
+[0-3s] Text: "I was stuck at 10/20..."
+[3-8s] Text: "Then I found this AI tool"
+[8-12s] Show: Before/After side by side
+[12-15s] Text: "Now I'm getting 18/20s"
+
+SOUND: Dramatic transformation audio`,
+
+    tipReveal: `📹 TIP REVEAL - 30 SEC SCRIPT
+
+[0-5s] Hook: "Stop making this BAC mistake"
+[5-15s] Show: Common error with red X
+[15-25s] Show: Correction with green check
+[25-30s] CTA: "Follow for daily tips"
+
+SOUND: Educational/Informative beat`,
+
+    testimonial: `📹 TESTIMONIAL - 30 SEC SCRIPT
+
+[0-5s] Student: "I was stressed about BAC"
+[5-15s] Show: Using Bac Excellence platform
+[15-25s] Student: "Now I feel confident"
+[25-30s] Show: High score + CTA
+
+SOUND: Inspirational/Uplifting`};
+
+  // Best Posting Times for Tunisian Students
+  const postingSchedule = [
+    { platform: "Instagram Feed", time: "6:00 PM - 8:00 PM", days: "Tue, Thu, Sat", engagement: "High" },
+    { platform: "Instagram Stories", time: "12:00 PM - 1:00 PM", days: "Daily", engagement: "Very High" },
+    { platform: "TikTok", time: "7:00 PM - 9:00 PM", days: "Wed, Fri, Sun", engagement: "Highest" },
+    { platform: "Facebook", time: "12:00 PM - 1:00 PM", days: "Mon, Wed, Fri", engagement: "Medium" },
+    { platform: "WhatsApp Status", time: "8:00 PM - 10:00 PM", days: "Daily", engagement: "High" },
+  ];
+
   const t = THEMES[cardTheme];
 
   const [captions, setCaptions] = useState<string[]>([]);
@@ -422,6 +469,107 @@ export function SocialGenerator() {
           </div>
         </div>
       </div>
+
+      {/* ══════════ CONTENT TOOLS ══════════ */}
+      {hasContent && (
+        <div className="grid grid-cols-2" style={{ gap: 24 }}>
+          {/* Video Script Templates */}
+          <div className="card stack" style={{ background: "rgba(10,15,25,0.6)", border: "1px solid #a855f7", padding: 24 }}>
+            <div style={{ paddingBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+              <span className="eyebrow" style={{ color: "#a855f7" }}>🎬 Viral Video Scripts</span>
+              <p className="muted" style={{ fontSize: 11, marginTop: 3 }}>Ready-to-shoot scripts for Reels, TikTok & Shorts. Click to copy.</p>
+            </div>
+            
+            <div className="stack" style={{ gap: 10, marginTop: 16 }}>
+              {Object.entries(videoScripts).map(([key, script]) => (
+                <div key={key} style={{ 
+                  padding: 12, 
+                  background: "rgba(255,255,255,0.03)", 
+                  borderRadius: 10,
+                  border: "1px solid rgba(255,255,255,0.08)"
+                }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <span style={{ fontSize: 11, color: "#a855f7", fontWeight: 700, textTransform: "uppercase" }}>
+                      {key === 'studyWithMe' ? '📚 Study With Me' : 
+                       key === 'gradeFlip' ? '📈 Grade Flip' : 
+                       key === 'tipReveal' ? '💡 Tip Reveal' : '🎤 Testimonial'}
+                    </span>
+                    <button 
+                      onClick={() => navigator.clipboard.writeText(script)}
+                      style={{ 
+                        background: "#a855f7", 
+                        color: "#fff", 
+                        border: "none", 
+                        padding: "4px 10px", 
+                        borderRadius: 5, 
+                        fontSize: 10, 
+                        fontWeight: 800,
+                        cursor: "pointer"
+                      }}
+                    >
+                      COPY
+                    </button>
+                  </div>
+                  <pre style={{ 
+                    fontSize: 11, 
+                    lineHeight: 1.5, 
+                    color: "rgba(255,255,255,0.7)", 
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "monospace",
+                    margin: 0,
+                    maxHeight: 80,
+                    overflow: "hidden"
+                  }}>{script}</pre>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Best Posting Times */}
+          <div className="card stack" style={{ background: "rgba(10,15,25,0.6)", border: "1px solid #00ffff", padding: 24 }}>
+            <div style={{ paddingBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+              <span className="eyebrow" style={{ color: "#00ffff" }}>⏰ Best Posting Times</span>
+              <p className="muted" style={{ fontSize: 11, marginTop: 3 }}>Optimal times for Tunisian BAC students (Tunis timezone).</p>
+            </div>
+            
+            <div className="stack" style={{ gap: 8, marginTop: 16 }}>
+              {postingSchedule.map((item, i) => (
+                <div key={i} style={{ 
+                  display: "flex", 
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: 10, 
+                  background: "rgba(255,255,255,0.03)", 
+                  borderRadius: 8,
+                  border: "1px solid rgba(255,255,255,0.08)"
+                }}>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700, color: "#fff" }}>{item.platform}</div>
+                    <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>{item.time} • {item.days}</div>
+                  </div>
+                  <span style={{ 
+                    fontSize: 10, 
+                    padding: "2px 8px", 
+                    background: item.engagement === "Highest" ? "#22c55e22" : item.engagement === "Very High" ? "#3b82f622" : "#fbbf2422",
+                    color: item.engagement === "Highest" ? "#22c55e" : item.engagement === "Very High" ? "#3b82f6" : "#fbbf24",
+                    borderRadius: 4,
+                    fontWeight: 700
+                  }}>
+                    {item.engagement}
+                  </span>
+                </div>
+              ))}
+            </div>
+            
+            <div style={{ marginTop: 16, padding: 12, background: "rgba(0,255,255,0.05)", borderRadius: 8, border: "1px solid rgba(0,255,255,0.2)" }}>
+              <div style={{ fontSize: 11, color: "#00ffff", fontWeight: 700 }}>💡 Pro Tip</div>
+              <div style={{ fontSize: 10, color: "rgba(255,255,255,0.6)", marginTop: 4 }}>
+                Post at 7-9 PM for maximum engagement. Students scroll after homework/dinner.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ══════════ 12 MASTERY CARDS ══════════ */}
       {hasContent && (
