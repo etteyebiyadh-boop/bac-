@@ -1,6 +1,6 @@
 import { requireCurrentUser } from "@/lib/auth";
 import { ensureStudentProfile } from "@/lib/missions";
-import { OverallProgress, GradePredictions, HighYieldTopics, LanguageModules, WordOfTheDay, DailyStreakWidget, SmartStudyPlanner, AdminAccessButton } from "./excellence-components";
+import { OverallProgress, GradePredictions, HighYieldTopics, LanguageModules, WordOfTheDay, DailyStreakWidget, SmartStudyPlanner, AdminAccessButton, NextBestActionCard } from "./excellence-components";
 import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
@@ -140,6 +140,9 @@ export default async function DashboardPage() {
                 <SmartStudyPlanner lang={langCookie} />
               </div>
            </div>
+
+           {/* Next Best Action - Personalized Recommendation */}
+           <NextBestActionCard />
 
            {/* Grid Layout mimicking the mockup */}
            <div className="grid" style={{ gridTemplateColumns: "1fr 1fr 1.2fr", gap: "24px", alignItems: "stretch" }}>

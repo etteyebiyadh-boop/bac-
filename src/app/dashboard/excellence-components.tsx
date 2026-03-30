@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SiteLanguage, translations } from "@/lib/translations";
+import type { NextAction } from "@/lib/recommendations";
 import {
   DIAGNOSTIC_STORAGE_KEY,
   buildRoadmapSteps,
@@ -319,6 +320,99 @@ export function WordOfTheDay({ lang }: { lang: SiteLanguage }) {
       </div>
       <div style={{ padding: "12px", background: "rgba(255,255,255,0.02)", borderRadius: "12px", fontStyle: "italic", fontSize: "14px", borderLeft: "4px solid var(--accent)" }}>
         &quot;{data.example}&quot;
+      </div>
+    </div>
+  );
+}
+
+export function NextBestActionCard() {
+  const [action, setAction] = useState<NextAction | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/recommendations")
+      .then(res => res.json())
+      .then(data => {
+        setAction(data.action);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="card stack" style={{ padding: "32px", background: "linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent)", border: "1px solid var(--primary-glow)", marginBottom: "24px" }}>
+        <span className="eyebrow" style={{ color: "var(--primary)" }}>🎯 NEXT BEST ACTION</span>
+        <div style={{ opacity: 0.5 }}>Loading your personalized path...</div>
+      </div>
+    );
+  }
+
+  if (!action) {
+    return (
+      <div className="card stack" style={{ padding: "32px", background: "linear-gradient(135deg, rgba(99, 102, 241, 0.1), transparent)", border: "1px solid var(--primary-glow)", marginBottom: "24px" }}>
+        <span className="eyebrow" style={{ color: "var(--primary)" }}>🎯 NEXT BEST ACTION</span>
+        <p className="muted">Complete a writing submission to get AI-powered recommendations tailored to your weaknesses.</p>
+        <Link href="/write" className="button-link" style={{ marginTop: "16px" }}>
+          Start Writing →
+        </Link>
+      </div>
+    );
+  }
+
+  const typeLabels: Record<string, string> = {
+    lesson: "📚 Lesson",
+    exercise: "✏️ Exercise",
+    exam: "📝 Practice Exam",
+    grammar_rule: "🔤 Grammar Rule",
+    vocab_set: "📖 Vocabulary Set"
+  };
+
+  const href = action.type === "lesson" ? `/lessons/${action.slug}` :
+               action.type === "grammar_rule" ? `/lessons/grammar/${action.slug}` :
+               action.type === "vocab_set" ? `/lessons/vocab/${action.slug}` :
+               action.type === "exam" ? `/exams/${action.slug}/mock` :
+               `/daily`;
+
+  return (
+    <div className="card stack" style={{ padding: "32px", background: "linear-gradient(135deg, rgba(99, 102, 241, 0.15), transparent)", border: "2px solid var(--primary-glow)", marginBottom: "24px", position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", top: 0, right: 0, width: "100px", height: "100px", background: "radial-gradient(circle, rgba(99,102,241,0.3), transparent)", borderRadius: "50%", transform: "translate(30%, -30%)" }} />
+      
+      <div className="row-between" style={{ marginBottom: "16px", position: "relative", zIndex: 1 }}>
+        <span className="eyebrow" style={{ color: "var(--primary)" }}>🎯 NEXT BEST ACTION</span>
+        <span className="pill" style={{ background: action.priority > 80 ? "#ef4444" : "var(--primary)", color: "white", fontSize: "11px" }}>
+          Priority {action.priority}
+        </span>
+      </div>
+
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <span style={{ fontSize: "12px", opacity: 0.7, textTransform: "uppercase", letterSpacing: "1px" }}>
+          {typeLabels[action.type]} • {action.estimatedMinutes} min • +{action.xpReward} XP
+        </span>
+        
+        <h3 style={{ fontSize: "1.5rem", fontWeight: 800, margin: "12px 0" }}>{action.title}</h3>
+        
+        <p style={{ fontSize: "14px", opacity: 0.9, lineHeight: 1.6, marginBottom: "20px" }}>
+          {action.reason}
+        </p>
+
+        <div className="row-between" style={{ gap: "12px" }}>
+          <Link 
+            href={href} 
+            className="button-link"
+            style={{ flex: 1, textAlign: "center", background: "var(--primary)", fontWeight: 700 }}
+          >
+            Start Now →
+          </Link>
+          <Link 
+            href="/lessons" 
+            className="button-link"
+            style={{ background: "transparent", border: "1px solid var(--glass-border)" }}
+          >
+            Browse All
+          </Link>
+        </div>
       </div>
     </div>
   );
