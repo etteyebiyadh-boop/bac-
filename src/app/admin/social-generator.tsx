@@ -7,17 +7,77 @@ import { saveAs } from "file-saver";
 
 type Theme = "grammar" | "vocab" | "mindset" | "elite" | "cyber" | "retro" | "gold" | "vibrant" | "midnight" | "glass";
 
-const THEMES: Record<Theme, { bg: string; accent: string; glow: string }> = {
-  grammar:  { bg: "radial-gradient(circle at 10% 10%, #4f46e5 0%, #000410 80%)", accent: "#818cf8", glow: "rgba(99,102,241,0.45)" },
-  vocab:    { bg: "radial-gradient(circle at 10% 10%, #047857 0%, #000a05 80%)", accent: "#34d399", glow: "rgba(16,185,129,0.45)" },
-  mindset:  { bg: "radial-gradient(circle at 10% 10%, #92400e 0%, #0a0500 80%)", accent: "#fbbf24", glow: "rgba(245,158,11,0.45)" },
-  elite:    { bg: "linear-gradient(135deg, #111827 0%, #000 100%)",               accent: "#e5e7eb", glow: "rgba(255,255,255,0.12)" },
-  cyber:    { bg: "radial-gradient(circle at 10% 10%, #6d28d9 0%, #000 80%)",     accent: "#00ffff", glow: "rgba(0,255,255,0.45)" },
-  retro:    { bg: "radial-gradient(circle at 10% 10%, #991b1b 0%, #1a0000 80%)",  accent: "#fcd34d", glow: "rgba(252,211,77,0.4)" },
-  gold:     { bg: "radial-gradient(circle at 10% 10%, #78350f 0%, #000 80%)",     accent: "#ffd700", glow: "rgba(212,175,55,0.55)" },
-  vibrant:  { bg: "linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)", accent: "#fff", glow: "rgba(168,85,247,0.5)" },
-  midnight: { bg: "linear-gradient(135deg, #0f172a 0%, #020617 100%)",             accent: "#38bdf8", glow: "rgba(56,189,248,0.35)" },
-  glass:    { bg: "rgba(15,23,42,0.75)",                                            accent: "#e2e8f0", glow: "rgba(255,255,255,0.09)" },
+const THEMES: Record<Theme, { bg: string; accent: string; glow: string; border: string; overlay: string }> = {
+  grammar:  { 
+    bg: "linear-gradient(145deg, #1e1b4b 0%, #0f0a1e 50%, #000000 100%)", 
+    accent: "#818cf8", 
+    glow: "rgba(99,102,241,0.6)", 
+    border: "rgba(129,140,248,0.4)",
+    overlay: "radial-gradient(circle at 20% 30%, rgba(99,102,241,0.15) 0%, transparent 50%)"
+  },
+  vocab:    { 
+    bg: "linear-gradient(145deg, #064e3b 0%, #022c22 50%, #000000 100%)", 
+    accent: "#34d399", 
+    glow: "rgba(16,185,129,0.6)", 
+    border: "rgba(52,211,153,0.4)",
+    overlay: "radial-gradient(circle at 80% 20%, rgba(16,185,129,0.15) 0%, transparent 50%)"
+  },
+  mindset:  { 
+    bg: "linear-gradient(145deg, #78350f 0%, #451a03 50%, #000000 100%)", 
+    accent: "#fbbf24", 
+    glow: "rgba(245,158,11,0.6)", 
+    border: "rgba(251,191,36,0.4)",
+    overlay: "radial-gradient(circle at 50% 50%, rgba(245,158,11,0.12) 0%, transparent 60%)"
+  },
+  elite:    { 
+    bg: "linear-gradient(145deg, #1f2937 0%, #111827 50%, #000000 100%)", 
+    accent: "#e5e7eb", 
+    glow: "rgba(255,255,255,0.25)", 
+    border: "rgba(229,231,235,0.3)",
+    overlay: "radial-gradient(circle at 30% 70%, rgba(255,255,255,0.08) 0%, transparent 50%)"
+  },
+  cyber:    { 
+    bg: "linear-gradient(145deg, #581c87 0%, #3b0764 50%, #000000 100%)", 
+    accent: "#00ffff", 
+    glow: "rgba(0,255,255,0.6)", 
+    border: "rgba(0,255,255,0.4)",
+    overlay: "radial-gradient(circle at 70% 30%, rgba(0,255,255,0.15) 0%, transparent 50%)"
+  },
+  retro:    { 
+    bg: "linear-gradient(145deg, #7f1d1d 0%, #450a0a 50%, #000000 100%)", 
+    accent: "#fcd34d", 
+    glow: "rgba(252,211,77,0.5)", 
+    border: "rgba(252,211,77,0.35)",
+    overlay: "radial-gradient(circle at 40% 60%, rgba(252,211,77,0.1) 0%, transparent 50%)"
+  },
+  gold:     { 
+    bg: "linear-gradient(145deg, #92400e 0%, #78350f 50%, #000000 100%)", 
+    accent: "#ffd700", 
+    glow: "rgba(255,215,0,0.55)", 
+    border: "rgba(255,215,0,0.4)",
+    overlay: "radial-gradient(circle at 60% 40%, rgba(255,215,0,0.15) 0%, transparent 50%)"
+  },
+  vibrant:  { 
+    bg: "linear-gradient(135deg, #4f46e5 0%, #7c3aed 30%, #db2777 70%, #f59e0b 100%)", 
+    accent: "#fff", 
+    glow: "rgba(168,85,247,0.6)", 
+    border: "rgba(255,255,255,0.3)",
+    overlay: "radial-gradient(circle at 50% 0%, rgba(255,255,255,0.15) 0%, transparent 50%)"
+  },
+  midnight: { 
+    bg: "linear-gradient(180deg, #0c4a6e 0%, #082f49 30%, #020617 100%)", 
+    accent: "#38bdf8", 
+    glow: "rgba(56,189,248,0.5)", 
+    border: "rgba(56,189,248,0.35)",
+    overlay: "radial-gradient(circle at 25% 75%, rgba(56,189,248,0.12) 0%, transparent 50%)"
+  },
+  glass:    { 
+    bg: "linear-gradient(145deg, rgba(30,41,59,0.9) 0%, rgba(15,23,42,0.85) 100%)", 
+    accent: "#e2e8f0", 
+    glow: "rgba(255,255,255,0.15)", 
+    border: "rgba(255,255,255,0.2)",
+    overlay: "radial-gradient(circle at 50% 100%, rgba(255,255,255,0.1) 0%, transparent 50%)"
+  },
 };
 
 const CARD_THEMES: Record<string, Theme> = {
@@ -82,26 +142,124 @@ function CardShell({
     <div ref={refProp} style={{
       width: 400, height: 400, flexShrink: 0,
       background: t.bg,
-      border: `1px solid ${t.glow}`,
+      border: `2px solid ${t.border}`,
       backdropFilter: theme === "glass" ? "blur(24px)" : "none",
-      boxShadow: `0 0 50px ${t.glow}`,
-      borderRadius: 24, padding: "26px 28px",
+      boxShadow: `
+        0 0 60px ${t.glow},
+        inset 0 1px 0 rgba(255,255,255,0.1),
+        0 20px 40px rgba(0,0,0,0.4)
+      `,
+      borderRadius: 28, padding: "28px 30px",
       display: "flex", flexDirection: "column", overflow: "hidden", position: "relative",
     }}>
-      <div style={{ position: "absolute", top: "-15%", right: "-15%", width: 190, height: 190, background: t.accent, filter: "blur(90px)", opacity: 0.14, borderRadius: "50%", zIndex: 0 }} />
+      {/* Ambient glow overlay */}
+      <div style={{ 
+        position: "absolute", 
+        inset: 0, 
+        background: t.overlay,
+        pointerEvents: "none",
+        zIndex: 0 
+      }} />
+      
+      {/* Top accent glow */}
+      <div style={{ 
+        position: "absolute", 
+        top: "-20%", 
+        right: "-10%", 
+        width: 200, 
+        height: 200, 
+        background: `radial-gradient(circle, ${t.accent}40 0%, transparent 70%)`,
+        filter: "blur(60px)", 
+        opacity: 0.6, 
+        borderRadius: "50%", 
+        zIndex: 0 
+      }} />
+      
+      {/* Bottom corner glow */}
+      <div style={{ 
+        position: "absolute", 
+        bottom: "-15%", 
+        left: "-15%", 
+        width: 180, 
+        height: 180, 
+        background: `radial-gradient(circle, ${t.accent}30 0%, transparent 70%)`,
+        filter: "blur(50px)", 
+        opacity: 0.4, 
+        borderRadius: "50%", 
+        zIndex: 0 
+      }} />
+      
+      {/* Shine line at top */}
+      <div style={{ 
+        position: "absolute", 
+        top: 0, 
+        left: "10%", 
+        right: "10%", 
+        height: 1, 
+        background: `linear-gradient(90deg, transparent 0%, ${t.accent}60 50%, transparent 100%)`,
+        zIndex: 2 
+      }} />
+      
       {/* header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, zIndex: 2 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-          <div style={{ width: 24, height: 24, background: t.accent, borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center", color: "#000", fontWeight: 900, fontSize: 14 }}>B</div>
-          <span style={{ fontSize: 11, fontWeight: 900, letterSpacing: "1.5px", color: "#fff", opacity: 0.9 }}>BAC EXCELLENCE</span>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18, zIndex: 2 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ 
+            width: 32, 
+            height: 32, 
+            background: `linear-gradient(135deg, ${t.accent} 0%, ${t.accent}80 100%)`, 
+            borderRadius: 10, 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center", 
+            color: "#000", 
+            fontWeight: 900, 
+            fontSize: 16,
+            boxShadow: `0 4px 12px ${t.glow}`
+          }}>B</div>
+          <div>
+            <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: "2px", color: "#fff", display: "block" }}>BAC EXCELLENCE</span>
+            <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "1px", color: t.accent, opacity: 0.8 }}>ELITE PREP</span>
+          </div>
         </div>
-        <span style={{ fontSize: 10, fontWeight: 800, color: accent, letterSpacing: 1, background: `${accent}18`, padding: "3px 8px", borderRadius: 6, border: `1px solid ${accent}33` }}>{label}</span>
+        <span style={{ 
+          fontSize: 10, 
+          fontWeight: 800, 
+          color: accent, 
+          letterSpacing: 1.2, 
+          background: `linear-gradient(135deg, ${accent}20 0%, ${accent}08 100%)`, 
+          padding: "5px 12px", 
+          borderRadius: 20, 
+          border: `1.5px solid ${accent}40`,
+          boxShadow: `0 2px 8px ${accent}20`
+        }}>{label}</span>
       </div>
+      
+      {/* Divider */}
+      <div style={{ 
+        height: 2, 
+        background: `linear-gradient(90deg, transparent 0%, ${t.accent}40 20%, ${t.accent}60 50%, ${t.accent}40 80%, transparent 100%)`,
+        marginBottom: 16,
+        borderRadius: 1,
+        zIndex: 2
+      }} />
+      
       {/* body */}
       <div style={{ flex: 1, zIndex: 2, overflow: "hidden" }}>{children}</div>
+      
       {/* footer */}
-      <div style={{ textAlign: "center", marginTop: 10, zIndex: 2 }}>
-        <span style={{ fontSize: 10, letterSpacing: "3px", fontWeight: 800, color: "#fff", opacity: 0.4 }}>{watermark.toUpperCase()}</span>
+      <div style={{ 
+        marginTop: "auto", 
+        paddingTop: 14,
+        borderTop: `1px solid ${t.border}60`,
+        zIndex: 2,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 8
+      }}>
+        <div style={{ width: 6, height: 6, borderRadius: "50%", background: t.accent, opacity: 0.6 }} />
+        <span style={{ fontSize: 10, letterSpacing: "3px", fontWeight: 800, color: "#fff", opacity: 0.5 }}>{watermark.toUpperCase()}</span>
+        <div style={{ width: 6, height: 6, borderRadius: "50%", background: t.accent, opacity: 0.6 }} />
       </div>
     </div>
   );
