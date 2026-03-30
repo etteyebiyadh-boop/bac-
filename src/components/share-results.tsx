@@ -111,7 +111,7 @@ export function ShareResults({
     } catch (error) {
       console.error("Failed to copy:", error);
     }
-  }, [score, examTitle, language, t]);
+  }, [score, examTitle, language, t, lang]);
 
   const handleNativeShare = useCallback(async () => {
     const isTunisian = lang === "tn" || lang === "ar";
@@ -133,7 +133,7 @@ export function ShareResults({
     } else {
       handleCopyLink();
     }
-  }, [score, examTitle, language, t, handleCopyLink]);
+  }, [score, examTitle, language, t, handleCopyLink, lang]);
 
   const scoreColor = score >= 15 ? "#22c55e" : score >= 12 ? "#eab308" : "#ef4444";
 

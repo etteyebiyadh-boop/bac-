@@ -1,6 +1,7 @@
 import { requireCurrentUser } from "@/lib/auth";
 import { ensureStudentProfile } from "@/lib/missions";
 import { OverallProgress, GradePredictions, HighYieldTopics, LanguageModules, WordOfTheDay, DailyStreakWidget, SmartStudyPlanner, AdminAccessButton } from "./excellence-components";
+import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { SiteLanguage, translations } from "@/lib/translations";
@@ -119,8 +120,13 @@ export default async function DashboardPage() {
                     <div style={{ position: "absolute", top: 0, right: 0, width: "8px", height: "8px", background: "var(--error)", borderRadius: "50%", border: "2px solid #000" }} />
                  </div>
                  <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "2px solid var(--primary-glow)", overflow: "hidden" }}>
-                       <img src={`https://ui-avatars.com/api/?name=${serializedUser.fullName}&background=6366f1&color=fff`} alt={serializedUser.fullName || "User"} width="40" height="40" />
+                    <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: "2px solid var(--primary-glow)", overflow: "hidden", position: "relative" }}>
+                       <Image 
+                         src={`https://ui-avatars.com/api/?name=${serializedUser.fullName}&background=6366f1&color=fff`} 
+                         alt={serializedUser.fullName || "User"} 
+                         width={40} 
+                         height={40} 
+                       />
                     </div>
                     <span style={{ fontWeight: 800, fontSize: "14px" }}>{serializedUser.fullName}</span>
                  </div>

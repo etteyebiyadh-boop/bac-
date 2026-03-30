@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import Image from "next/image";
 import { useRef, useState } from "react";
 import { BookOpen, Target, TrendingUp, Award, Clock, Zap, Flame, Trophy } from "lucide-react";
 
@@ -525,9 +526,11 @@ export function PremiumSidebar({ items, user }: SidebarProps) {
         className="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10"
         whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.08)" }}
       >
-        <img 
+        <Image 
           src={user.avatar} 
           alt={user.name}
+          width={40}
+          height={40}
           className="w-10 h-10 rounded-full border-2 border-indigo-500/50"
         />
         <div className="flex-1 min-w-0">

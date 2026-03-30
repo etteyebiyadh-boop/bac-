@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { FREE_CORRECTIONS_PER_WEEK, MAX_ESSAY_CHARS, MIN_ESSAY_CHARS } from "@/lib/constants";
 import { profileLanguageOptions } from "@/lib/learning";
@@ -511,11 +512,15 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
                       </div>
 
                       {scanPreviewUrl ? (
-                        <img
-                          src={scanPreviewUrl}
-                          alt="Work preview"
-                          style={{ width: "100%", maxHeight: "420px", objectFit: "contain", borderRadius: "14px", border: "1px solid var(--glass-border)", background: "rgba(0,0,0,0.28)" }}
-                        />
+                        <div style={{ position: "relative", width: "100%", height: "420px", background: "rgba(0,0,0,0.28)", borderRadius: "14px", border: "1px solid var(--glass-border)", overflow: "hidden" }}>
+                          <Image
+                            src={scanPreviewUrl}
+                            alt="Work preview"
+                            fill
+                            style={{ objectFit: "contain" }}
+                            unoptimized
+                          />
+                        </div>
                       ) : null}
 
                       <div className="row-between" style={{ gap: "12px", alignItems: "center", flexWrap: "wrap" }}>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { DashboardIcon, FireIcon, ChartIcon, BookIcon, ClockIcon, TrophyIcon, TargetIcon } from "@/components/icons";
@@ -121,8 +122,14 @@ export function MobileDashboard({ user, profile, translations: t, lang }: Mobile
           <p style={{ color: "var(--ink-dim)", fontSize: "14px", margin: 0 }}>{greeting}</p>
           <h1 style={{ fontSize: "26px", fontWeight: 900, margin: "4px 0 0" }}>{user.fullName?.split(" ")[0] || "Student"}</h1>
         </div>
-        <div style={{ position: "relative" }}>
-          <img src={`https://ui-avatars.com/api/?name=${user.fullName}&background=6366f1&color=fff`} alt="" width="48" height="48" style={{ borderRadius: "50%", border: "2px solid var(--primary)" }} />
+        <div style={{ position: "relative", width: 48, height: 48 }}>
+          <Image 
+            src={`https://ui-avatars.com/api/?name=${user.fullName}&background=6366f1&color=fff`} 
+            alt={user.fullName || "User avatar"} 
+            width={48} 
+            height={48} 
+            style={{ borderRadius: "50%", border: "2px solid var(--primary)" }} 
+          />
           <div style={{ position: "absolute", bottom: 0, right: 0, width: "12px", height: "12px", background: "#10b981", borderRadius: "50%", border: "2px solid #000" }} />
         </div>
       </div>

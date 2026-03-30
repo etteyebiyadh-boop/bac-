@@ -867,7 +867,7 @@ export function SocialGenerator() {
               <CardShell refProp={quizPollRef} theme="cyber" watermark={watermark} label="QUIZ TIME" accent={ac}>
                 <div style={{ textAlign: "center", padding: "12px 0" }}>
                   <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10, letterSpacing: 1 }}>WHICH IS CORRECT?</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 16 }}>"___ have I seen such talent"</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 16 }}>&quot;___ have I seen such talent&quot;</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 14 }}>
                     <div style={{ 
                       padding: "12px 16px", 
@@ -975,7 +975,7 @@ export function SocialGenerator() {
                     marginBottom: 16,
                     fontStyle: "italic"
                   }}>
-                    "Success is the sum of small efforts, repeated day in and day out"
+                    &quot;Success is the sum of small efforts, repeated day in and day out&quot;
                   </div>
                   <div style={{ 
                     fontSize: 11, 
@@ -1020,7 +1020,7 @@ export function SocialGenerator() {
                       borderLeft: "3px solid #fb7185"
                     }}>
                       <div style={{ fontSize: 9, color: "#fb7185", marginBottom: 3, fontWeight: 700 }}>BEFORE (12/20)</div>
-                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>"The problem is very big and affects many people..."</div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>&quot;The problem is very big and affects many people...&quot;</div>
                     </div>
                     <div style={{ 
                       padding: "10px 12px", 
@@ -1030,7 +1030,7 @@ export function SocialGenerator() {
                       borderLeft: `3px solid ${ac}`
                     }}>
                       <div style={{ fontSize: 9, color: ac, marginBottom: 3, fontWeight: 700 }}>AFTER (18/20)</div>
-                      <div style={{ fontSize: 11, color: "#fff", lineHeight: 1.4, fontWeight: 500 }}>"This pressing issue has profound ramifications for society at large..."</div>
+                      <div style={{ fontSize: 11, color: "#fff", lineHeight: 1.4, fontWeight: 500 }}>&quot;This pressing issue has profound ramifications for society at large...&quot;</div>
                     </div>
                   </div>
                   <div style={{ 
@@ -1061,7 +1061,7 @@ export function SocialGenerator() {
                   <div style={{ fontSize: 48, marginBottom: 10 }}>🧠</div>
                   <div style={{ fontSize: 11, color: ac, marginBottom: 8, letterSpacing: 2, fontWeight: 800 }}>DID YOU KNOW?</div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", lineHeight: 1.5, marginBottom: 12 }}>
-                    Students who use "Moreover" and "Furthermore" in their essays score 15% higher on average
+                    Students who use &quot;Moreover&quot; and &quot;Furthermore&quot; in their essays score 15% higher on average
                   </div>
                   <div style={{ 
                     padding: "8px 16px",
@@ -1133,7 +1133,7 @@ export function SocialGenerator() {
                 <div style={{ textAlign: "center", padding: "12px 0" }}>
                   <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10, letterSpacing: 1 }}>COMPLETE THE SENTENCE</div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", lineHeight: 1.6, marginBottom: 14 }}>
-                    "The government should <span style={{ color: ac, fontWeight: 800, textDecoration: "underline" }}>__________</span> stricter laws to protect the environment."
+                    &quot;The government should <span style={{ color: ac, fontWeight: 800, textDecoration: "underline" }}>__________</span> stricter laws to protect the environment.&quot;
                   </div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 12 }}>
                     {["implement", "enforce", "establish", "introduce"].map((word, i) => (
@@ -1177,7 +1177,7 @@ export function SocialGenerator() {
                         <span style={{ fontSize: 14 }}>❌</span>
                         <span style={{ fontSize: 10, color: "#fb7185", fontWeight: 800 }}>MYTH</span>
                       </div>
-                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>"Longer essays always get higher scores"</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>&quot;Longer essays always get higher scores&quot;</div>
                     </div>
                     <div style={{ 
                       padding: "12px", 
@@ -1190,7 +1190,7 @@ export function SocialGenerator() {
                         <span style={{ fontSize: 14 }}>✅</span>
                         <span style={{ fontSize: 10, color: ac, fontWeight: 800 }}>FACT</span>
                       </div>
-                      <div style={{ fontSize: 12, color: "#fff" }}>"Quality and structure matter more than word count"</div>
+                      <div style={{ fontSize: 12, color: "#fff" }}>&quot;Quality and structure matter more than word count&quot;</div>
                     </div>
                   </div>
                 </div>
