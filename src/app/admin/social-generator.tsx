@@ -175,6 +175,9 @@ export function SocialGenerator() {
   const mistakeRef     = useRef<HTMLDivElement>(null);
   const grammarRef     = useRef<HTMLDivElement>(null);
   const tipsRef        = useRef<HTMLDivElement>(null);
+  const gradeFlipRef     = useRef<HTMLDivElement>(null);
+  const referralRef      = useRef<HTMLDivElement>(null);
+  const statsRef         = useRef<HTMLDivElement>(null);
 
   // Best Posting Times for Tunisian Students
   const postingSchedule = [
@@ -468,6 +471,101 @@ export function SocialGenerator() {
           </div>
         </div>
       )}
+
+      {/* ══════════ GROWTH CARDS (For Platform Virality) ══════════ */}
+      <div className="stack" style={{ gap: 48, marginTop: 32 }}>
+        <div style={{ borderBottom: "1px solid rgba(168,85,247,0.25)", paddingBottom: 18 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <span className="eyebrow" style={{ color: "#a855f7", fontSize: 13 }}>🚀 VIRAL GROWTH CARDS — Drive engagement & referrals</span>
+              <p className="muted" style={{ fontSize: 12, marginTop: 6 }}>These cards incentivize sharing and bring new users to the platform.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Grade Flip Card ── */}
+        {(() => { const ac = "#22c55e"; return (
+          <div className="stack" style={{ gap: 16 }}>
+            <ExportRow label="🎯 Grade Flip Card" color={ac} onExport={() => exportCard(gradeFlipRef, "grade-flip")} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CardShell refProp={gradeFlipRef} theme="vocab" watermark={watermark} label="GRADE FLIP" accent={ac}>
+                <div style={{ textAlign: "center", padding: "20px 0" }}>
+                  <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>MY BAC TRANSFORMATION</div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 20, marginBottom: 16 }}>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 48, fontWeight: 900, color: "#fb7185" }}>8/20</div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Before</div>
+                    </div>
+                    <div style={{ fontSize: 32, color: ac }}>→</div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 48, fontWeight: 900, color: ac }}>16/20</div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>After Bac Excellence</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 13, color: "#fff", background: "rgba(34,197,94,0.1)", padding: "10px 16px", borderRadius: 8, border: "1px solid rgba(34,197,94,0.3)" }}>
+                    💡 AI correction helped me jump 8 points!
+                  </div>
+                </div>
+              </CardShell>
+            </div>
+          </div>
+        ); })()}
+
+        {/* ── Referral Milestone Card ── */}
+        {(() => { const ac = "#f59e0b"; return (
+          <div className="stack" style={{ gap: 16 }}>
+            <ExportRow label="👥 Referral Milestone Card" color={ac} onExport={() => exportCard(referralRef, "referral-milestone")} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CardShell refProp={referralRef} theme="mindset" watermark={watermark} label="REFERRAL HERO" accent={ac}>
+                <div style={{ textAlign: "center", padding: "20px 0" }}>
+                  <div style={{ fontSize: 64, marginBottom: 8 }}>🎁</div>
+                  <div style={{ fontSize: 18, fontWeight: 900, color: "#fff", marginBottom: 4 }}>I Invited 5 Friends!</div>
+                  <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", marginBottom: 16 }}>Join me on Bac Excellence</div>
+                  <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 12 }}>
+                    {[1,2,3,4,5].map(i => (
+                      <div key={i} style={{ width: 28, height: 28, borderRadius: "50%", background: ac, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12 }}>✓</div>
+                    ))}
+                  </div>
+                  <div style={{ fontSize: 11, color: ac, background: "rgba(245,158,11,0.1)", padding: "6px 12px", borderRadius: 6, display: "inline-block" }}>
+                    🔓 Unlocked: 5 Free Corrections
+                  </div>
+                </div>
+              </CardShell>
+            </div>
+          </div>
+        ); })()}
+
+        {/* ── Study Stats Card ── */}
+        {(() => { const ac = "#3b82f6"; return (
+          <div className="stack" style={{ gap: 16 }}>
+            <ExportRow label="📊 Study Stats Card" color={ac} onExport={() => exportCard(statsRef, "study-stats")} />
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <CardShell refProp={statsRef} theme="cyber" watermark={watermark} label="STUDY STREAK" accent={ac}>
+                <div style={{ textAlign: "center", padding: "20px 0" }}>
+                  <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 16 }}>MY BAC EXCELLENCE JOURNEY</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 20 }}>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 36, fontWeight: 900, color: ac }}>47</div>
+                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)" }}>Essays Corrected</div>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 36, fontWeight: 900, color: ac }}>12</div>
+                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)" }}>Day Streak 🔥</div>
+                    </div>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 36, fontWeight: 900, color: ac }}>156</div>
+                      <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)" }}>Words Mastered</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: "#fff", background: "rgba(59,130,246,0.1)", padding: "10px 16px", borderRadius: 8, border: "1px solid rgba(59,130,246,0.3)" }}>
+                    🏆 Top 10% of BAC students on the platform
+                  </div>
+                </div>
+              </CardShell>
+            </div>
+          </div>
+        ); })()}
+      </div>
 
       {/* ══════════ 12 MASTERY CARDS ══════════ */}
       {hasContent && (
