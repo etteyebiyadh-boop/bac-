@@ -30,6 +30,7 @@ model User {
   createdAt        DateTime          @default(now())
   dailyMissions    DailyMission[]
   exerciseAttempts ExerciseAttempt[]
+  lessonCompletions LessonCompletion[]
   studentProfile   StudentProfile?
   submissions      Submission[]
 }
@@ -100,19 +101,20 @@ model StudentProfile {
 }
 
 model Lesson {
-  id               String         @id @default(uuid())
-  slug             String         @unique
-  language         Language       @default(ENGLISH)
+  id               String             @id @default(uuid())
+  slug             String             @unique
+  language         Language           @default(ENGLISH)
   title            String
   summary          String
   body             String
   theme            String
   skillFocus       String
-  difficulty       Difficulty     @default(MEDIUM)
-  estimatedMinutes Int            @default(5)
+  difficulty       Difficulty         @default(MEDIUM)
+  estimatedMinutes Int                @default(5)
   videoUrl         String?
   takeawayJson     Json
-  createdAt        DateTime       @default(now())
+  createdAt        DateTime           @default(now())
+  completions      LessonCompletion[]
   dailyMissions    DailyMission[]
   exercises        Exercise[]
 
@@ -174,6 +176,20 @@ model DailyMission {
 
   @@unique([userId, missionDate])
   @@index([userId, status])
+}
+
+model LessonCompletion {
+  id          String   @id @default(uuid())
+  userId      String
+  lessonId    String
+  completedAt DateTime @default(now())
+  xpEarned    Int      @default(50)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId, completedAt])
+  @@index([lessonId])
 }
 
 model GrammarRule {

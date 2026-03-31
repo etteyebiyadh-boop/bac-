@@ -46,9 +46,26 @@ export async function GET(req: NextRequest) {
         vocabularyScore: true,
         structureScore: true,
         wordCount: true,
+        language: true,
         exam: {
           select: {
             year: true,
+            title: true
+          }
+        }
+      }
+    }),
+    db.submission.findMany({
+      where: { userId: auth.userId },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      select: {
+        id: true,
+        createdAt: true,
+        overallScore: true,
+        language: true,
+        exam: {
+          select: {
             title: true
           }
         }
@@ -57,6 +74,14 @@ export async function GET(req: NextRequest) {
   ]);
 
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const recentActivity = recentSubmissions.slice(0, 3).map((sub: any) => ({
+    id: sub.id,
+    title: sub.exam?.title || (sub.language ? `${sub.language} Essay` : "Writing Practice"),
+    score: sub.overallScore,
+    date: sub.createdAt,
+    language: sub.language
+  }));
 
   return NextResponse.json({
     plan: user.isPremium ? "premium" : "free",
@@ -70,6 +95,7 @@ export async function GET(req: NextRequest) {
     profile,
     mission,
     xpTotal,
-    recentSubmissions
+    recentSubmissions,
+    recentActivity
   });
 }

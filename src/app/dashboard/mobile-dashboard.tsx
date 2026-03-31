@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { DashboardIcon, FireIcon, ChartIcon, BookIcon, ClockIcon, TrophyIcon, TargetIcon } from "@/components/icons";
 import { SkeletonCard, SkeletonProgress, SkeletonGrid, SkeletonStats, SkeletonList } from "@/components/skeletons";
+import { formatDistanceToNow } from "date-fns";
 
 interface MobileDashboardProps {
   user: any;
@@ -19,19 +20,113 @@ interface ProgressDetail {
   color: string;
 }
 
+interface ActivityItem {
+  id: string;
+  title: string;
+  score: number | null;
+  date: string;
+  type: "essay" | "mock" | "lesson" | "exercise";
+}
+
 export function MobileDashboard({ user, profile, translations: t, lang }: MobileDashboardProps) {
   const [greeting, setGreeting] = useState("");
-  const [streak] = useState(7);
-  const [progress] = useState(68);
   const [activeTab, setActiveTab] = useState("activity");
   const [isLoading, setIsLoading] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  
+  // Real data states
+  const [streak, setStreak] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [totalEssays, setTotalEssays] = useState(0);
+  const [averageScore, setAverageScore] = useState<number | null>(null);
+  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
+  const [granularProgress, setGranularProgress] = useState<ProgressDetail[]>([
+    { label: "Grammar", value: 0, color: "#6366f1" },
+    { label: "Vocab", value: 0, color: "#10b981" },
+    { label: "Writing", value: 0, color: "#f59e0b" },
+    { label: "Reading", value: 0, color: "#ec4899" },
+    { label: "Listening", value: 0, color: "#8b5cf6" }
+  ]);
+  const [upcoming, setUpcoming] = useState([
+    { title: "Daily Essay", due: "Today", urgent: true, icon: "⏰", color: "#ef4444" },
+    { title: "Vocab Quiz", due: "Tomorrow", urgent: false, icon: "📖", color: "#6366f1" }
+  ]);
 
-  // Simulate loading for better UX
+  // Fetch real dashboard data
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 800);
-    return () => clearTimeout(timer);
+    fetch("/api/dashboard")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success !== false && data.metrics) {
+          const metrics = data.metrics;
+          
+          // Set streak from real data
+          setStreak(metrics.currentStreak || 0);
+          
+          // Calculate progress from average score
+          const avgScore = metrics.averageScore;
+          if (avgScore) {
+            setAverageScore(avgScore);
+            setProgress(Math.round((avgScore / 20) * 100));
+          }
+          
+          // Set total essays/corrections
+          setTotalEssays(metrics.totalCorrections || 0);
+          
+          // Update granular progress from breakdown
+          const breakdown = metrics.averageBreakdown;
+          if (breakdown) {
+            setGranularProgress([
+              { label: "Grammar", value: Math.round((breakdown.grammar / 20) * 100) || 0, color: "#6366f1" },
+              { label: "Vocab", value: Math.round((breakdown.vocabulary / 20) * 100) || 0, color: "#10b981" },
+              { label: "Writing", value: Math.round((breakdown.structure / 20) * 100) || 0, color: "#f59e0b" },
+              { label: "Reading", value: 0, color: "#ec4899" }, // Not tracked yet
+              { label: "Listening", value: 0, color: "#8b5cf6" }  // Not tracked yet
+            ]);
+          }
+          
+          // Process recent activity from submissions
+          if (data.recentSubmissions && data.recentSubmissions.length > 0) {
+            const activity = data.recentSubmissions.slice(0, 3).map((sub: any) => ({
+              id: sub.id,
+              title: sub.exam?.title || (sub.language ? `${sub.language} Essay` : "Writing Practice"),
+              score: sub.overallScore,
+              date: formatDistanceToNow(new Date(sub.createdAt), { addSuffix: false }),
+              type: sub.exam ? "mock" : "essay" as const
+            }));
+            setRecentActivity(activity);
+          } else {
+            // Default empty state
+            setRecentActivity([]);
+          }
+
+          // Update upcoming tasks based on mission data
+          if (data.mission) {
+            setUpcoming([
+              { 
+                title: data.mission.title || "Daily Mission", 
+                due: "Today", 
+                urgent: true, 
+                icon: "⏰", 
+                color: "#ef4444" 
+              },
+              { 
+                title: "Continue Learning", 
+                due: "Tomorrow", 
+                urgent: false, 
+                icon: "📖", 
+                color: "#6366f1" 
+              }
+            ]);
+          }
+        }
+        setIsLoading(false);
+      })
+      .catch(() => {
+        // Fallback to empty state on error
+        setIsLoading(false);
+      });
   }, []);
 
   // Welcome toast
@@ -65,28 +160,9 @@ export function MobileDashboard({ user, profile, translations: t, lang }: Mobile
   ];
 
   const stats = [
-    { label: "Essays", value: "12", Icon: BookIcon, color: "#6366f1" },
+    { label: "Essays", value: totalEssays.toString(), Icon: BookIcon, color: "#6366f1" },
     { label: "Streak", value: `${streak}d`, Icon: FireIcon, color: "#f59e0b" },
-    { label: "Score", value: "14.5", Icon: ChartIcon, color: "#10b981" },
-  ];
-
-  const recentActivity = [
-    { title: "Technology Essay", score: 12, date: "2h ago", Icon: BookIcon, color: "#6366f1" },
-    { title: "BAC 2024 Mock", score: 14, date: "1d ago", Icon: DashboardIcon, color: "#10b981" },
-    { title: "Grammar Lesson", score: null, date: "2d ago", Icon: TrophyIcon, color: "#f59e0b" },
-  ];
-
-  const granularProgress: ProgressDetail[] = [
-    { label: "Grammar", value: 75, color: "#6366f1" },
-    { label: "Vocab", value: 62, color: "#10b981" },
-    { label: "Writing", value: 58, color: "#f59e0b" },
-    { label: "Reading", value: 82, color: "#ec4899" },
-    { label: "Listening", value: 70, color: "#8b5cf6" },
-  ];
-
-  const upcoming = [
-    { title: "Daily Essay", due: "Today", urgent: true, icon: "⏰", color: "#ef4444" },
-    { title: "Vocab Quiz", due: "Tomorrow", urgent: false, icon: "📖", color: "#6366f1" },
+    { label: "Score", value: averageScore ? averageScore.toFixed(1) : "--", Icon: ChartIcon, color: "#10b981" },
   ];
 
   if (isLoading) {
@@ -225,21 +301,31 @@ export function MobileDashboard({ user, profile, translations: t, lang }: Mobile
       {/* Tab Content */}
       <div className="stack stagger-item" style={{ gap: "10px" }}>
         {activeTab === "activity" ? (
-          recentActivity.map((item, idx) => {
-            const IconComponent = item.Icon;
-            return (
-              <div key={idx} className="card hover-lift" style={{ padding: "16px", borderRadius: "16px", display: "flex", alignItems: "center", gap: "12px", borderLeft: `3px solid ${item.color}`, animationDelay: `${idx * 0.05}s` }}>
-                <div style={{ padding: "8px", borderRadius: "10px", background: `${item.color}20` }}>
-                  <IconComponent className="w-5 h-5" style={{ color: item.color }} />
+          recentActivity.length > 0 ? (
+            recentActivity.map((item, idx) => {
+              const IconComponent = item.type === "mock" ? DashboardIcon : BookIcon;
+              const color = item.type === "mock" ? "#10b981" : "#6366f1";
+              return (
+                <div key={item.id} className="card hover-lift" style={{ padding: "16px", borderRadius: "16px", display: "flex", alignItems: "center", gap: "12px", borderLeft: `3px solid ${color}`, animationDelay: `${idx * 0.05}s` }}>
+                  <div style={{ padding: "8px", borderRadius: "10px", background: `${color}20` }}>
+                    <IconComponent className="w-5 h-5" style={{ color }} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 700, fontSize: "15px" }}>{item.title}</div>
+                    <div style={{ fontSize: "12px", color: "var(--ink-dim)" }}>{item.date} ago</div>
+                  </div>
+                  {item.score && <div className="pill" style={{ background: "rgba(16, 185, 129, 0.2)", color: "#10b981" }}>{item.score}/20</div>}
                 </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, fontSize: "15px" }}>{item.title}</div>
-                  <div style={{ fontSize: "12px", color: "var(--ink-dim)" }}>{item.date}</div>
-                </div>
-                {item.score && <div className="pill" style={{ background: "rgba(16, 185, 129, 0.2)", color: "#10b981" }}>{item.score}/20</div>}
-              </div>
-            );
-          })
+              );
+            })
+          ) : (
+            <div className="card" style={{ padding: "24px", textAlign: "center", opacity: 0.7 }}>
+              <p>No recent activity. Start practicing!</p>
+              <Link href="/write" className="button-link" style={{ marginTop: "12px", display: "inline-block" }}>
+                Write your first essay →
+              </Link>
+            </div>
+          )
         ) : (
           upcoming.map((item, idx) => {
             const IconComponent = item.icon === "⏰" ? ClockIcon : BookIcon;
