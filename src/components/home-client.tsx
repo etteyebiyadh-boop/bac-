@@ -364,6 +364,390 @@ const landingCopy: Record<SiteLanguage, LandingCopy> = {
   },
 };
 
+const refreshedLandingCopy: Record<SiteLanguage, LandingCopy> = {
+  en: {
+    ...landingCopy.en,
+    badge: "Turn Bac pressure into a clear plan",
+    heroTitle: "Open the platform and feel your next win immediately.",
+    heroSubtitle:
+      "Students do not need a generic landing page. They need a first screen that feels focused, ambitious, and built for the weeks before the Bac.",
+    primaryCta: "Build my study plan",
+    secondaryCta: "Take the diagnostic",
+    proof: [
+      "The hero feels like an exam control room instead of a marketing template.",
+      "Every card points to the next move: diagnose, repair, practise, simulate.",
+      "The opening is serious, motivating, and made for students without looking childish.",
+    ],
+    metrics: [
+      { value: "06", label: "Bac sections ready" },
+      { value: "12d", label: "Sprint mindset" },
+      { value: "+1.6", label: "Potential score lift" },
+    ],
+    buildLabel: "How strong weeks are built",
+    candidateLabel: "Bac sprint",
+    candidateName: "Session 2026",
+    candidateNote: "A calm plan beats panic every single time.",
+    buildSteps: [
+      {
+        title: "Diagnose",
+        description: "Start with the real level so revision stops feeling random.",
+        cue: "sets the target",
+      },
+      {
+        title: "Repair",
+        description: "Fix the weak skills first before spending energy everywhere.",
+        cue: "fixes the weakness",
+      },
+      {
+        title: "Train",
+        description: "Build speed, writing confidence, and reading rhythm together.",
+        cue: "builds the rhythm",
+      },
+      {
+        title: "Simulate",
+        description: "Test the result under the same pressure the Bac will bring.",
+        cue: "proves the level",
+      },
+    ],
+    diplomaTag: "Exam momentum",
+    diplomaNote:
+      "The home page should feel like momentum and control, not like decoration.",
+    stripCards: [
+      {
+        title: "It feels like exam season",
+        description: "The first screen now matches the student's real mood: pressure, ambition, and a need for clarity.",
+      },
+      {
+        title: "The next move is obvious",
+        description: "Instead of abstract design, the hero shows a sequence students can understand and act on fast.",
+      },
+      {
+        title: "Motivation gets structure",
+        description: "The page does not just hype the Bac. It turns that energy into a practical plan.",
+      },
+    ],
+    workflowEyebrow: "Built for momentum",
+    workflowTitle: "Students need direction fast, especially when pressure starts rising.",
+    workflowSubtitle:
+      "The new opening is built on a simple idea: reduce panic, show the next action, and make progress feel possible from the first second.",
+    workflowBullets: [
+      "Start from the real section and not from a generic lesson dump.",
+      "Turn writing, reading, grammar, and mock exams into one visible system.",
+      "Make the product feel sharp and motivating without falling into empty effects.",
+    ],
+    workflowSteps: [
+      {
+        title: "Diagnose",
+        description: "See exactly where the student stands before losing time.",
+      },
+      {
+        title: "Train",
+        description: "Work on the skills that can move the score the fastest.",
+      },
+      {
+        title: "Deliver",
+        description: "Walk into the exam with rhythm, clarity, and proof.",
+      },
+    ],
+    selectorEyebrow: "Personalized start",
+    selectorTitle: "Choose the Bac path that matches the way you actually study.",
+    selectorSubtitle:
+      "Start from the real section, then build the right mix of writing, reading, grammar, and mock pressure.",
+    featureEyebrow: "What the platform gives you",
+    featureTitle: "Everything should push the next score upward.",
+    featureSubtitle:
+      "Diagnostics, writing feedback, and exam practice should feel like one system instead of disconnected tools.",
+    finalEyebrow: "Ready to move",
+    finalNote:
+      "Create an account to save the plan, track the streak, and keep the next Bac win in front of you.",
+  },
+  fr: {
+    ...landingCopy.fr,
+    badge: "Transformez la pression du Bac en plan clair",
+    heroTitle: "Ouvrez la plateforme et sentez votre prochaine victoire tout de suite.",
+    heroSubtitle:
+      "Les etudiants n'ont pas besoin d'une page d'accueil generique. Ils ont besoin d'un premier ecran net, ambitieux et pense pour les semaines avant le Bac.",
+    primaryCta: "Construire mon plan Bac",
+    secondaryCta: "Faire le diagnostic",
+    proof: [
+      "Le hero ressemble a une salle de controle d'examen plutot qu'a un template marketing.",
+      "Chaque carte montre la prochaine action: diagnostiquer, reparer, pratiquer, simuler.",
+      "L'ouverture est serieuse, motivante et pensee pour l'etudiant sans devenir enfantine.",
+    ],
+    metrics: [
+      { value: "06", label: "Sections Bac" },
+      { value: "12j", label: "Etat d'esprit sprint" },
+      { value: "+1.6", label: "Gain possible" },
+    ],
+    buildLabel: "Comment une bonne semaine se construit",
+    candidateLabel: "Sprint Bac",
+    candidateName: "Session 2026",
+    candidateNote: "Un plan calme bat la panique a chaque fois.",
+    buildSteps: [
+      {
+        title: "Diagnostic",
+        description: "Partir du vrai niveau pour arreter la revision au hasard.",
+        cue: "fixe la cible",
+      },
+      {
+        title: "Reparation",
+        description: "Corriger d'abord les faiblesses qui bloquent vraiment la note.",
+        cue: "repare la faille",
+      },
+      {
+        title: "Entrainement",
+        description: "Construire vitesse, confiance en ecriture et rythme de lecture.",
+        cue: "cree le rythme",
+      },
+      {
+        title: "Simulation",
+        description: "Verifier le niveau sous la pression du vrai examen.",
+        cue: "valide le niveau",
+      },
+    ],
+    diplomaTag: "Momentum examen",
+    diplomaNote:
+      "La page d'accueil doit donner une sensation d'elan et de controle, pas seulement de decoration.",
+    stripCards: [
+      {
+        title: "On sent la saison du Bac",
+        description: "Le premier ecran reflète enfin l'etat reel de l'etudiant: pression, ambition et besoin de clarte.",
+      },
+      {
+        title: "La suite est evidente",
+        description: "Au lieu d'un design abstrait, le hero montre une progression que l'etudiant comprend tout de suite.",
+      },
+      {
+        title: "La motivation gagne une structure",
+        description: "La page ne vend pas juste le Bac. Elle transforme cette energie en plan concret.",
+      },
+    ],
+    workflowEyebrow: "Construit pour l'elan",
+    workflowTitle: "Les etudiants ont besoin d'une direction rapide, surtout quand la pression monte.",
+    workflowSubtitle:
+      "La nouvelle ouverture suit une idee simple: reduire la panique, montrer la prochaine action et rendre le progres visible des la premiere seconde.",
+    workflowBullets: [
+      "Commencer par la vraie section au lieu d'une bibliotheque generique.",
+      "Relier ecriture, lecture, grammaire et examens blancs dans un seul systeme visible.",
+      "Garder une interface forte et motivante sans tomber dans les effets vides.",
+    ],
+    workflowSteps: [
+      {
+        title: "Diagnostiquer",
+        description: "Voir exactement ou l'etudiant en est avant de perdre du temps.",
+      },
+      {
+        title: "Entrainer",
+        description: "Travailler les competences qui font monter la note le plus vite.",
+      },
+      {
+        title: "Assurer",
+        description: "Arriver a l'examen avec rythme, clarte et preuves.",
+      },
+    ],
+    selectorEyebrow: "Depart personnalise",
+    selectorTitle: "Choisissez le parcours Bac qui correspond a votre vraie maniere d'etudier.",
+    selectorSubtitle:
+      "Partez de la vraie section puis composez le bon melange entre ecriture, lecture, grammaire et pression d'examen.",
+    featureEyebrow: "Ce que la plateforme apporte",
+    featureTitle: "Tout doit pousser la prochaine note vers le haut.",
+    featureSubtitle:
+      "Diagnostics, corrections d'ecriture et pratique d'examen doivent former un seul systeme au lieu d'outils separes.",
+    finalEyebrow: "Pret a avancer",
+    finalNote:
+      "Creez un compte pour sauvegarder le plan, suivre la serie de travail et garder la prochaine victoire Bac devant vous.",
+  },
+  ar: {
+    ...landingCopy.ar,
+    badge: "حوّل ضغط الباك لخطة واضحة",
+    heroTitle: "افتح المنصة وحس من أول ثانية بالربحة الجاية.",
+    heroSubtitle:
+      "الطالب ما يحتاجش صفحة أولى عامة. يحتاج افتتاحية تحسها مركزة وطموحة ومبنية للأسابيع اللي قبل الباك.",
+    primaryCta: "ابني خطة المراجعة متاعي",
+    secondaryCta: "اعمل التشخيص",
+    proof: [
+      "الواجهة ولات تحسها غرفة قيادة للامتحان موش template تسويق.",
+      "كل card تورّيك الحركة الجاية: تشخّص، تصلّح، تتدرّب، وتعمل simulation.",
+      "الافتتاحية جدية ومحفزة ومصممة للطالب من غير ما تولّي طفولية.",
+    ],
+    metrics: [
+      { value: "06", label: "شعب الباك" },
+      { value: "12ي", label: "عقلية sprint" },
+      { value: "+1.6", label: "ارتفاع محتمل" },
+    ],
+    buildLabel: "كيفاش تتبنى semaine قوية",
+    candidateLabel: "Sprint باك",
+    candidateName: "Session 2026",
+    candidateNote: "الخطة الهادية تغلب panic كل مرة.",
+    buildSteps: [
+      {
+        title: "شخّص",
+        description: "ابدأ بالمستوى الحقيقي باش المراجعة ما تبقاش عشوائية.",
+        cue: "يحدد الهدف",
+      },
+      {
+        title: "صلّح",
+        description: "اصلح أولاً المهارات الضعيفة اللي تعطل فعلاً النقطة.",
+        cue: "يسكر الضعف",
+      },
+      {
+        title: "تدرّب",
+        description: "ابني السرعة والثقة في الكتابة وريتم القراءة مع بعضهم.",
+        cue: "يبني الريتم",
+      },
+      {
+        title: "حاكي الامتحان",
+        description: "جرّب النتيجة تحت نفس الضغط اللي يجي نهار الباك.",
+        cue: "يثبت المستوى",
+      },
+    ],
+    diplomaTag: "Momentum الامتحان",
+    diplomaNote:
+      "الصفحة الأولى لازم تعطيك إحساس بالتحكم والتقدم موش مجرد زينة.",
+    stripCards: [
+      {
+        title: "تحسها موسم الباك",
+        description: "أول شاشة ولات قريبة من حالة الطالب الحقيقية: ضغط وطموح وحاجة للوضوح.",
+      },
+      {
+        title: "الحركة الجاية واضحة",
+        description: "بلا تصميم abstract، الhero يوريك progression ينجم الطالب يفهمها بسرعة.",
+      },
+      {
+        title: "الحماس ولى عنده structure",
+        description: "الصفحة ما تعطيكش hype فقط. تحوّل الطاقة لخطة عملية.",
+      },
+    ],
+    workflowEyebrow: "مبنية على الmomentum",
+    workflowTitle: "الطالب يحتاج direction بسرعة، خاصة وقت الضغط يطلع.",
+    workflowSubtitle:
+      "الافتتاحية الجديدة مبنية على فكرة بسيطة: تنقص الpanic، تورّي الحركة الجاية، وتخلي التقدم يبان من أول ثانية.",
+    workflowBullets: [
+      "ابدأ بالشعبة الحقيقية موش بمكتبة دروس عامة.",
+      "اربط الكتابة والقراءة والgrammar والmock exams في system واحد واضح.",
+      "خلي الواجهة قوية ومحفزة من غير effects فارغة.",
+    ],
+    workflowSteps: [
+      {
+        title: "شخّص",
+        description: "شوف بالضبط وين واقف قبل ما تضيع الوقت.",
+      },
+      {
+        title: "تدرّب",
+        description: "اخدم على المهارات اللي ترفع النقطة بأسرع طريقة.",
+      },
+      {
+        title: "ادخل حاضر",
+        description: "امش للامتحان بريتم واضح وثقة وأدلة على التقدم.",
+      },
+    ],
+    selectorEyebrow: "بداية شخصية",
+    selectorTitle: "اختار مسار الباك اللي يوافق الطريقة اللي تراجع بها فعلاً.",
+    selectorSubtitle:
+      "ابدأ بالشعبة الصحيحة وبعدها كوّن الخليط المناسب من كتابة وقراءة وgrammar وضغط mock.",
+    featureEyebrow: "شنوّة تعطيك المنصة",
+    featureTitle: "كل حاجة لازم تدز النقطة الجاية للفوق.",
+    featureSubtitle:
+      "التشخيص وتصحيح الكتابة وتدريب الامتحان لازم يحسّوك system واحد موش أدوات مقصوصة على بعضها.",
+    finalEyebrow: "جاهز تتحرك",
+    finalNote:
+      "اعمل compte باش تحفظ الخطة وتتابع الstreak وتخلي ربحة الباك الجاية ديما قدامك.",
+  },
+};
+
+const heroSceneCopy: Record<
+  SiteLanguage,
+  {
+    boardEyebrow: string;
+    boardTitle: string;
+    boardNote: string;
+    liveLabel: string;
+    focusLabel: string;
+    focusItems: string[];
+    forecastLabel: string;
+    forecastValue: string;
+    forecastNote: string;
+    countdownLabel: string;
+    countdownValue: string;
+    streakLabel: string;
+    streakValue: string;
+    weakLabel: string;
+    weakValue: string;
+    routeStatus: string;
+    sideNote: string;
+    previewLabel: string;
+    previewTitle: string;
+    previewNote: string;
+  }
+> = {
+  en: {
+    boardEyebrow: "Bac Mode",
+    boardTitle: "This is what focused revision should feel like.",
+    boardNote: "Clear targets, fast feedback, zero visual noise.",
+    liveLabel: "Focus mode active",
+    focusLabel: "Tonight's focus",
+    focusItems: ["Essay structure repair", "Grammar precision drill", "Timed reading pass"],
+    forecastLabel: "Score forecast",
+    forecastValue: "15.8/20",
+    forecastNote: "+1.6 vs last mock when the sprint is complete",
+    countdownLabel: "Next mock",
+    countdownValue: "03 days",
+    streakLabel: "Study streak",
+    streakValue: "12 days",
+    weakLabel: "Weak spot",
+    weakValue: "Introductions",
+    routeStatus: "72% ready",
+    sideNote: "A strong homepage should feel like momentum, not decoration.",
+    previewLabel: "Platform view",
+    previewTitle: "One board. No panic.",
+    previewNote: "Writing, diagnostics, reading, and mock exams finally feel connected.",
+  },
+  fr: {
+    boardEyebrow: "Mode Bac",
+    boardTitle: "Voila le type d'ouverture qui donne envie d'etudier.",
+    boardNote: "Objectifs clairs, feedback rapide, zero bruit visuel.",
+    liveLabel: "Mode focus actif",
+    focusLabel: "Focus de ce soir",
+    focusItems: ["Reparation du plan", "Drill de grammaire", "Lecture chronometree"],
+    forecastLabel: "Projection de note",
+    forecastValue: "15.8/20",
+    forecastNote: "+1.6 par rapport au dernier blanc si le sprint est tenu",
+    countdownLabel: "Prochain blanc",
+    countdownValue: "03 jours",
+    streakLabel: "Serie de travail",
+    streakValue: "12 jours",
+    weakLabel: "Point faible",
+    weakValue: "Introductions",
+    routeStatus: "72% pret",
+    sideNote: "Une bonne page d'accueil doit donner de l'elan, pas juste decorer.",
+    previewLabel: "Vue plateforme",
+    previewTitle: "Un seul tableau. Zero panique.",
+    previewNote: "Ecriture, diagnostic, lecture et examens blancs se lisent enfin comme un seul systeme.",
+  },
+  ar: {
+    boardEyebrow: "وضع الباك",
+    boardTitle: "هكّا لازم تحس المراجعة المركزة.",
+    boardNote: "أهداف واضحة، feedback سريع، ومن غير ضجيج بصري.",
+    liveLabel: "التركيز مفعّل",
+    focusLabel: "تركيز الليلة",
+    focusItems: ["إصلاح plan المقال", "drill على grammar", "قراءة بوقت محدد"],
+    forecastLabel: "توقع النقطة",
+    forecastValue: "15.8/20",
+    forecastNote: "+1.6 على آخر mock كي تكمل الsprint",
+    countdownLabel: "الmock الجاي",
+    countdownValue: "03 أيام",
+    streakLabel: "سلسلة المراجعة",
+    streakValue: "12 يوم",
+    weakLabel: "النقطة الضعيفة",
+    weakValue: "المقدمات",
+    routeStatus: "72% جاهز",
+    sideNote: "الصفحة الأولى لازم تعطيك momentum موش مجرد زينة.",
+    previewLabel: "نظرة على المنصة",
+    previewTitle: "لوحة وحدة. بلا panic.",
+    previewNote: "الكتابة والتشخيص والقراءة والmock exams ولاو مربوطين في system واحد.",
+  },
+};
+
 const sectionLabels: Record<SiteLanguage, string[]> = {
   en: ["Maths", "Sciences", "Technique", "Eco", "Lettres", "Info"],
   fr: ["Maths", "Sciences", "Technique", "Éco", "Lettres", "Info"],
@@ -796,8 +1180,198 @@ function RealDiplomaScene({ copy }: { copy: LandingCopy }) {
   );
 }
 
+function MomentumScene({
+  copy,
+  lang,
+  sections,
+  isRTL,
+}: {
+  copy: LandingCopy;
+  lang: SiteLanguage;
+  sections: string[];
+  isRTL: boolean;
+}) {
+  const scene = heroSceneCopy[lang] || heroSceneCopy.en;
+
+  return (
+    <div className="landing-momentum-scene" style={{ direction: isRTL ? "rtl" : "ltr" }}>
+      <div className="landing-momentum-glow landing-momentum-glow-a" aria-hidden="true" />
+      <div className="landing-momentum-glow landing-momentum-glow-b" aria-hidden="true" />
+
+      <motion.div
+        className="landing-command-board"
+        initial={{ opacity: 0, y: 26, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.65, delay: 0.08 }}
+      >
+        <div className="landing-command-top">
+          <div className="landing-command-heading">
+            <span className="landing-chip-label">{scene.boardEyebrow}</span>
+            <h3>{scene.boardTitle}</h3>
+            <p>{scene.boardNote}</p>
+          </div>
+          <div className="landing-command-live">
+            <span className="landing-command-live-dot" aria-hidden="true" />
+            {scene.liveLabel}
+          </div>
+        </div>
+
+        <div className="landing-command-grid">
+          <motion.div
+            className="landing-command-card landing-command-card-focus"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.2 }}
+          >
+            <span className="landing-chip-label">{scene.focusLabel}</span>
+            <div className="landing-command-list">
+              {scene.focusItems.map((item) => (
+                <div key={item} className="landing-command-list-item">
+                  <CheckCircle2 size={16} />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="landing-command-card landing-command-card-score"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.3 }}
+          >
+            <span className="landing-chip-label">{scene.forecastLabel}</span>
+            <div className="landing-command-score-wrap">
+              <strong>{scene.forecastValue}</strong>
+              <span>{scene.forecastNote}</span>
+            </div>
+            <div className="landing-command-bars" aria-hidden="true">
+              <span className="landing-command-bar landing-command-bar-a" />
+              <span className="landing-command-bar landing-command-bar-b" />
+              <span className="landing-command-bar landing-command-bar-c" />
+              <span className="landing-command-bar landing-command-bar-d" />
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="landing-command-card landing-command-card-stats"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.4 }}
+          >
+            {[
+              { label: scene.countdownLabel, value: scene.countdownValue },
+              { label: scene.streakLabel, value: scene.streakValue },
+              { label: scene.weakLabel, value: scene.weakValue },
+            ].map((item) => (
+              <div key={item.label} className="landing-command-mini-stat">
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="landing-route-card"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <div className="landing-route-head">
+            <span className="landing-chip-label">{copy.buildLabel}</span>
+            <strong>{scene.routeStatus}</strong>
+          </div>
+          <div className="landing-route-progress-track" aria-hidden="true">
+            <motion.span
+              className="landing-route-progress-fill"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1, delay: 0.7 }}
+            />
+          </div>
+          <div className="landing-route-steps">
+            {copy.buildSteps.map((step, index) => {
+              const Icon = buildIcons[index];
+
+              return (
+                <motion.div
+                  key={step.title}
+                  className="landing-route-step"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.42, delay: 0.72 + index * 0.1 }}
+                >
+                  <div className="landing-route-step-top">
+                    <div className="landing-card-icon landing-card-icon-small">
+                      <Icon size={18} />
+                    </div>
+                    <span className="landing-step-number">0{index + 1}</span>
+                  </div>
+                  <strong>{step.title}</strong>
+                  <p>{step.description}</p>
+                  <span className="landing-route-step-cue">{step.cue}</span>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        className="landing-sprint-note"
+        initial={{ opacity: 0, x: isRTL ? 30 : -30, y: 16 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        transition={{ duration: 0.52, delay: 0.35 }}
+      >
+        <span className="landing-photo-kicker">{copy.candidateLabel}</span>
+        <strong>{copy.candidateName}</strong>
+        <p>{scene.sideNote}</p>
+      </motion.div>
+
+      <motion.div
+        className="landing-section-cloud"
+        initial={{ opacity: 0, x: isRTL ? -24 : 24, y: -8 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.48 }}
+      >
+        <span className="landing-photo-kicker">{copy.sectionsLabel}</span>
+        <div className="landing-section-pill-row">
+          {sections.map((section) => (
+            <span key={section} className="landing-section-pill">
+              {section}
+            </span>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="landing-preview-card"
+        initial={{ opacity: 0, x: isRTL ? 32 : -32, y: 16, rotate: isRTL ? 3 : -3 }}
+        animate={{ opacity: 1, x: 0, y: 0, rotate: isRTL ? 2 : -2 }}
+        transition={{ duration: 0.55, delay: 0.6 }}
+      >
+        <div className="landing-preview-media">
+          <Image
+            src="/dashboard.png"
+            alt="Platform dashboard preview"
+            fill
+            sizes="(max-width: 768px) 100vw, 300px"
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+        <div className="landing-preview-copy">
+          <span className="landing-photo-kicker">{scene.previewLabel}</span>
+          <strong>{scene.previewTitle}</strong>
+          <p>{scene.previewNote}</p>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
-  const copy = landingCopy[lang] || landingCopy.en;
+  const copy = refreshedLandingCopy[lang] || refreshedLandingCopy.en;
   const sections = sectionLabels[lang] || sectionLabels.en;
   const featureCards = [
     {
@@ -823,7 +1397,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
       <section className="landing-stage">
         <div className="landing-shell">
           <motion.div className="landing-hero" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="landing-hero-inner landing-hero-inner-diploma">
+            <div className="landing-hero-inner landing-hero-inner-command">
               <div className="landing-copy" style={{ textAlign: isRTL ? "right" : "left" }}>
                 <span className="landing-badge">{copy.badge}</span>
                 <h1 className="landing-title">{copy.heroTitle}</h1>
@@ -859,7 +1433,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
               </div>
 
               <div className="landing-visual">
-                <RealDiplomaScene copy={copy} />
+                <MomentumScene copy={copy} lang={lang} sections={sections} isRTL={isRTL} />
               </div>
             </div>
           </motion.div>
