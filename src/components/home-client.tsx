@@ -64,6 +64,24 @@ interface LandingCopy {
   finalNote: string;
 }
 
+interface DeskSceneContent {
+  sceneBadge: string;
+  sceneTitle: string;
+  sceneNote: string;
+  sheetLabel: string;
+  sheetTitle: string;
+  promptLabel: string;
+  promptTitle: string;
+  promptNote: string;
+  timerLabel: string;
+  timerValue: string;
+  timerNote: string;
+  scoreLabel: string;
+  scoreValue: string;
+  scoreNote: string;
+  caption: string;
+}
+
 const landingCopy: Record<SiteLanguage, LandingCopy> = {
   en: {
     badge: "The diploma is the target",
@@ -652,6 +670,101 @@ const refreshedLandingCopy: Record<SiteLanguage, LandingCopy> = {
     finalEyebrow: "جاهز تتحرك",
     finalNote:
       "اعمل compte باش تحفظ الخطة وتتابع الstreak وتخلي ربحة الباك الجاية ديما قدامك.",
+  },
+};
+
+const cinematicLandingOverrides: Partial<Record<SiteLanguage, Partial<LandingCopy>>> = {
+  en: {
+    badge: "A cinematic Bac night in one screen",
+    heroTitle: "Make the platform feel like the desk where success gets built.",
+    heroSubtitle:
+      "For social media and for students, the opening needs instant impact. This direction turns the hero into a hyper-realistic 3D study desk with light, pressure, and progress all in one shot.",
+    primaryCta: "Open my Bac desk",
+    secondaryCta: "Start the diagnostic",
+    proof: [
+      "One strong central object makes the hero easier to remember and better to record.",
+      "The scene mixes real exam tension with premium lighting and 3D depth.",
+      "The platform stays visible inside the laptop so the product still leads the story.",
+    ],
+    metrics: [
+      { value: "3D", label: "Cinematic desk feel" },
+      { value: "15.8", label: "Forecast on screen" },
+      { value: "03d", label: "Mock countdown" },
+    ],
+    buildLabel: "Tonight's revision stack",
+    candidateLabel: "Bac night",
+    candidateName: "Session 2026",
+    candidateNote: "One focused evening can change the whole week.",
+    buildSteps: [
+      {
+        title: "Diagnose",
+        description: "Check the real level before spending energy in the wrong place.",
+        cue: "sets the target",
+      },
+      {
+        title: "Repair",
+        description: "Fix grammar and writing weaknesses while the session is still fresh.",
+        cue: "cleans the weak spot",
+      },
+      {
+        title: "Drill",
+        description: "Repeat the skills that need speed, rhythm, and confidence.",
+        cue: "locks the rhythm",
+      },
+      {
+        title: "Simulate",
+        description: "Finish under timed pressure so progress feels earned, not guessed.",
+        cue: "proves the level",
+      },
+    ],
+    diplomaTag: "Cinematic hero",
+    diplomaNote:
+      "The page should look powerful in a screen recording before the user even reads the text.",
+    stripCards: [
+      {
+        title: "Built for short-form impact",
+        description: "The first seconds now have a single memorable visual instead of several competing ones.",
+      },
+      {
+        title: "More emotional realism",
+        description: "The desk, papers, timer, and warm light make the page feel closer to exam life.",
+      },
+      {
+        title: "The product still wins",
+        description: "Even inside the cinematic scene, the platform stays visible and central.",
+      },
+    ],
+    workflowEyebrow: "Built for attention",
+    workflowTitle: "A strong hero should stop the scroll before it starts explaining.",
+    workflowSubtitle:
+      "This direction gives the page one powerful image first, then lets the platform story unfold around it.",
+    workflowBullets: [
+      "Lead with one cinematic object instead of many equal elements.",
+      "Use motion as payoff, not as constant noise.",
+      "Keep the student dream visible while still showing the actual product.",
+    ],
+    finalNote:
+      "Create an account to keep the plan, the writing feedback, and the next Bac win on the same desk.",
+  },
+};
+
+const deskSceneCopy: Partial<Record<SiteLanguage, DeskSceneContent>> = {
+  en: {
+    sceneBadge: "Desk Camera 01",
+    sceneTitle: "A hyper-realistic study desk with the platform at the center.",
+    sceneNote: "Warm lamp light. Open notebook. Mock pressure. Clear next move.",
+    sheetLabel: "Revision Sheet",
+    sheetTitle: "English sprint before the next mock",
+    promptLabel: "Exam Prompt",
+    promptTitle: "Build a sharper essay answer tonight",
+    promptNote: "Structure, grammar, and timed reading need to feel connected in one sitting.",
+    timerLabel: "Next mock",
+    timerValue: "03 days",
+    timerNote: "Countdown visible so urgency feels real.",
+    scoreLabel: "Forecast",
+    scoreValue: "15.8/20",
+    scoreNote: "+1.6 when the full stack is completed",
+    caption: "The hero now feels like a real exam-night desk, not a generic product block.",
   },
 };
 
@@ -1370,8 +1483,186 @@ function MomentumScene({
   );
 }
 
+function CinematicDeskScene({
+  copy,
+  lang,
+  sections,
+  isRTL,
+}: {
+  copy: LandingCopy;
+  lang: SiteLanguage;
+  sections: string[];
+  isRTL: boolean;
+}) {
+  const scene = deskSceneCopy[lang] || deskSceneCopy.en!;
+
+  return (
+    <div className="landing-desk-scene" style={{ direction: isRTL ? "rtl" : "ltr" }}>
+      <div className="landing-desk-ambient landing-desk-ambient-a" aria-hidden="true" />
+      <div className="landing-desk-ambient landing-desk-ambient-b" aria-hidden="true" />
+      <div className="landing-lamp-glow" aria-hidden="true" />
+
+      <motion.div
+        className="landing-desk-surface"
+        initial={{ opacity: 0, y: 32, rotateX: 74 }}
+        animate={{ opacity: 1, y: 0, rotateX: 72 }}
+        transition={{ duration: 0.8, delay: 0.08 }}
+        aria-hidden="true"
+      />
+
+      <motion.div
+        className="landing-paper-sheet landing-paper-sheet-left"
+        initial={{ opacity: 0, x: -48, y: 30, rotate: -18 }}
+        animate={{ opacity: 1, x: 0, y: 0, rotate: -12 }}
+        transition={{ duration: 0.65, delay: 0.22 }}
+      >
+        <span className="landing-photo-kicker">{scene.sheetLabel}</span>
+        <strong>{scene.sheetTitle}</strong>
+        <div className="landing-paper-lines">
+          {copy.buildSteps.slice(0, 3).map((step, index) => {
+            const Icon = buildIcons[index];
+
+            return (
+              <div key={step.title} className="landing-paper-line">
+                <div className="landing-paper-line-icon">
+                  <Icon size={14} />
+                </div>
+                <span>{step.title}</span>
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="landing-paper-sheet landing-paper-sheet-right"
+        initial={{ opacity: 0, x: 46, y: 26, rotate: 20 }}
+        animate={{ opacity: 1, x: 0, y: 0, rotate: 11 }}
+        transition={{ duration: 0.65, delay: 0.3 }}
+      >
+        <span className="landing-photo-kicker">{scene.promptLabel}</span>
+        <strong>{scene.promptTitle}</strong>
+        <p>{scene.promptNote}</p>
+        <div className="landing-paper-pill-row">
+          {sections.slice(0, 4).map((section) => (
+            <span key={section} className="landing-paper-pill">
+              {section}
+            </span>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="landing-desk-laptop"
+        initial={{ opacity: 0, y: 42, scale: 0.94, rotateX: -8 }}
+        animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+        transition={{ duration: 0.72, delay: 0.18 }}
+      >
+        <div className="landing-laptop-screen">
+          <div className="landing-laptop-bezel">
+            <div className="landing-laptop-status">
+              <span className="landing-chip-label">{scene.sceneBadge}</span>
+              <span className="landing-laptop-status-pill">{copy.candidateName}</span>
+            </div>
+
+            <div className="landing-laptop-hero-copy">
+              <h3>{scene.sceneTitle}</h3>
+              <p>{scene.sceneNote}</p>
+            </div>
+
+            <div className="landing-laptop-dashboard">
+              <Image
+                src="/dashboard.png"
+                alt="Platform dashboard preview on laptop"
+                fill
+                sizes="(max-width: 768px) 100vw, 420px"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+
+            <motion.div
+              className="landing-floating-score-chip"
+              initial={{ opacity: 0, x: 24, y: 12, scale: 0.88 }}
+              animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+              transition={{ duration: 0.55, delay: 0.72 }}
+            >
+              <span>{scene.scoreLabel}</span>
+              <strong>{scene.scoreValue}</strong>
+              <p>{scene.scoreNote}</p>
+            </motion.div>
+
+            <motion.div
+              className="landing-screen-reflection"
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 120 }}
+              transition={{ duration: 1.15, delay: 1.02 }}
+              aria-hidden="true"
+            />
+          </div>
+        </div>
+
+        <div className="landing-laptop-base">
+          <div className="landing-laptop-keyboard" aria-hidden="true" />
+          <div className="landing-laptop-trackpad" aria-hidden="true" />
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="landing-desk-timer"
+        initial={{ opacity: 0, y: 18, x: 24 }}
+        animate={{ opacity: 1, y: 0, x: 0 }}
+        transition={{ duration: 0.48, delay: 0.66 }}
+      >
+        <span className="landing-photo-kicker">{scene.timerLabel}</span>
+        <strong>{scene.timerValue}</strong>
+        <p>{scene.timerNote}</p>
+      </motion.div>
+
+      <motion.div
+        className="landing-desk-note"
+        initial={{ opacity: 0, x: isRTL ? 26 : -26, y: 16 }}
+        animate={{ opacity: 1, x: 0, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.54 }}
+      >
+        <span className="landing-photo-kicker">{copy.candidateLabel}</span>
+        <strong>{copy.candidateName}</strong>
+        <p>{copy.candidateNote}</p>
+      </motion.div>
+
+      <motion.div
+        className="landing-desk-caption-card"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.82 }}
+      >
+        <span className="landing-photo-kicker">{copy.diplomaTag}</span>
+        <p>{scene.caption}</p>
+      </motion.div>
+
+      <motion.div
+        className="landing-desk-cup"
+        initial={{ opacity: 0, scale: 0.84, y: 14 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.56, delay: 0.76 }}
+        aria-hidden="true"
+      >
+        <div className="landing-desk-cup-rim" />
+      </motion.div>
+
+      <motion.div
+        className="landing-desk-pen"
+        initial={{ opacity: 0, x: 26, y: 12, rotate: 18 }}
+        animate={{ opacity: 1, x: 0, y: 0, rotate: 12 }}
+        transition={{ duration: 0.52, delay: 0.86 }}
+        aria-hidden="true"
+      />
+    </div>
+  );
+}
+
 export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
-  const copy = refreshedLandingCopy[lang] || refreshedLandingCopy.en;
+  const baseCopy = refreshedLandingCopy[lang] || refreshedLandingCopy.en;
+  const copy = { ...baseCopy, ...(cinematicLandingOverrides[lang] || {}) };
   const sections = sectionLabels[lang] || sectionLabels.en;
   const featureCards = [
     {
@@ -1397,7 +1688,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
       <section className="landing-stage">
         <div className="landing-shell">
           <motion.div className="landing-hero" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="landing-hero-inner landing-hero-inner-command">
+            <div className="landing-hero-inner landing-hero-inner-cinematic">
               <div className="landing-copy" style={{ textAlign: isRTL ? "right" : "left" }}>
                 <span className="landing-badge">{copy.badge}</span>
                 <h1 className="landing-title">{copy.heroTitle}</h1>
@@ -1433,7 +1724,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
               </div>
 
               <div className="landing-visual">
-                <MomentumScene copy={copy} lang={lang} sections={sections} isRTL={isRTL} />
+                <CinematicDeskScene copy={copy} lang={lang} sections={sections} isRTL={isRTL} />
               </div>
             </div>
           </motion.div>
