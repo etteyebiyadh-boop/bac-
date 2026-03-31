@@ -3,6 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment, Float, Sparkles, MeshDistortMaterial, ContactShadows, Text, Torus, TorusKnot, Sphere, Box, PresentationControls } from "@react-three/drei";
+import { useRef } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
@@ -675,96 +678,96 @@ const refreshedLandingCopy: Record<SiteLanguage, LandingCopy> = {
 
 const cinematicLandingOverrides: Partial<Record<SiteLanguage, Partial<LandingCopy>>> = {
   en: {
-    badge: "A cinematic Bac night in one screen",
-    heroTitle: "Make the platform feel like the desk where success gets built.",
+    badge: "The Ultimate Bac Intelligence Hub",
+    heroTitle: "Unlock your true Baccalaureate potential.",
     heroSubtitle:
-      "For social media and for students, the opening needs instant impact. This direction turns the hero into a hyper-realistic 3D study desk with light, pressure, and progress all in one shot.",
-    primaryCta: "Open my Bac desk",
-    secondaryCta: "Start the diagnostic",
+      "Stop guessing your score. Our proprietary AI engine identifies exactly what you need to master next to secure your target grade.",
+    primaryCta: "Start My Journey",
+    secondaryCta: "Take Free Diagnostic",
     proof: [
-      "One strong central object makes the hero easier to remember and better to record.",
-      "The scene mixes real exam tension with premium lighting and 3D depth.",
-      "The platform stays visible inside the laptop so the product still leads the story.",
+      "Precision diagnosis of your current academic level.",
+      "Customized roadmap dynamically generated for you.",
+      "Daily progress tracking and advanced analytics.",
     ],
     metrics: [
-      { value: "3D", label: "Cinematic desk feel" },
-      { value: "15.8", label: "Forecast on screen" },
-      { value: "03d", label: "Mock countdown" },
+      { value: "48h", label: "Smart Diagnostic" },
+      { value: "98%", label: "Accuracy" },
+      { value: "24/7", label: "Availability" },
     ],
-    buildLabel: "Tonight's revision stack",
-    candidateLabel: "Bac night",
-    candidateName: "Session 2026",
-    candidateNote: "One focused evening can change the whole week.",
+    buildLabel: "Today's Study Matrix",
+    candidateLabel: "Academic Profile",
+    candidateName: "Baccalaureate 2026",
+    candidateNote: "Every minute spent here translates to exam points.",
     buildSteps: [
       {
         title: "Diagnose",
-        description: "Check the real level before spending energy in the wrong place.",
-        cue: "sets the target",
+        description: "Pinpoint your weaknesses instantly.",
+        cue: "Analyze current level",
       },
       {
-        title: "Repair",
-        description: "Fix grammar and writing weaknesses while the session is still fresh.",
-        cue: "cleans the weak spot",
+        title: "Strategize",
+        description: "Follow an optimized study roadmap.",
+        cue: "Build study habits",
       },
       {
-        title: "Drill",
-        description: "Repeat the skills that need speed, rhythm, and confidence.",
-        cue: "locks the rhythm",
+        title: "Practice",
+        description: "Solve exam-grade questions.",
+        cue: "Hone test skills",
       },
       {
-        title: "Simulate",
-        description: "Finish under timed pressure so progress feels earned, not guessed.",
-        cue: "proves the level",
+        title: "Achieve",
+        description: "Hit your target score reliably.",
+        cue: "Ace the final",
       },
     ],
-    diplomaTag: "Cinematic hero",
+    diplomaTag: "Exam Ready",
     diplomaNote:
-      "The page should look powerful in a screen recording before the user even reads the text.",
+      "Walk into the exam room with the confidence of someone who has already seen the test.",
     stripCards: [
       {
-        title: "Built for short-form impact",
-        description: "The first seconds now have a single memorable visual instead of several competing ones.",
+        title: "Advanced AI Scoring",
+        description: "Real-time grading on your essays and responses.",
       },
       {
-        title: "More emotional realism",
-        description: "The desk, papers, timer, and warm light make the page feel closer to exam life.",
+        title: "Dynamic Feedback",
+        description: "Line-by-line grammar and structure corrections.",
       },
       {
-        title: "The product still wins",
-        description: "Even inside the cinematic scene, the platform stays visible and central.",
+        title: "Deep Analytics",
+        description: "Watch your projected score climb dynamically.",
       },
     ],
-    workflowEyebrow: "Built for attention",
-    workflowTitle: "A strong hero should stop the scroll before it starts explaining.",
+    workflowEyebrow: "Proven Methodology",
+    workflowTitle: "Success isn't luck. It's an algorithm.",
     workflowSubtitle:
-      "This direction gives the page one powerful image first, then lets the platform story unfold around it.",
+      "We broke down the last 15 years of exams to create the most efficient preparation engine ever designed.",
     workflowBullets: [
-      "Lead with one cinematic object instead of many equal elements.",
-      "Use motion as payoff, not as constant noise.",
-      "Keep the student dream visible while still showing the actual product.",
+      "No wasted effort on concepts you already know.",
+      "Instant feedback loops for faster retention.",
+      "Simulated exam environments to build pressure tolerance.",
     ],
     finalNote:
-      "Create an account to keep the plan, the writing feedback, and the next Bac win on the same desk.",
+      "Join thousands of students who have already hacked their way to academic excellence.",
   },
 };
 
 const deskSceneCopy: Partial<Record<SiteLanguage, DeskSceneContent>> = {
   en: {
-    sceneBadge: "Desk Camera 01",
-    sceneTitle: "A hyper-realistic study desk with the platform at the center.",
-    sceneNote: "Warm lamp light. Open notebook. Mock pressure. Clear next move.",
-    sheetLabel: "Revision Sheet",
-    sheetTitle: "English sprint before the next mock",
-    promptLabel: "Exam Prompt",
-    promptTitle: "Build a sharper essay answer tonight",
-    promptNote: "Structure, grammar, and timed reading need to feel connected in one sitting.",
-    timerLabel: "Next mock",
+    sceneBadge: "BAC 2026 FOCUS",
+    sceneTitle: "Precision preparation for the Tunisian Baccalaureate.",
+    sceneNote: "Your study roadmap is structured, targeted, and highly effective.",
+    sheetLabel: "Diagnostic",
+    sheetTitle: "Find your true starting point",
+    promptLabel: "Mastery",
+    promptTitle: "Target weaknesses, build confidence",
+    promptNote: "Structure, grammar, and mock practice combined.",
+    timerLabel: "Next Mock Exam",
     timerValue: "03 days",
-    timerNote: "Countdown visible so urgency feels real.",
-    scoreLabel: "Forecast",
-    scoreValue: "15.8/20",
-    scoreNote: "+1.6 when the full stack is completed",
-    caption: "The hero now feels like a real exam-night desk, not a generic product block.",
+    timerNote: "Stay on track with regular check-ins.",
+    scoreLabel: "Goal",
+    scoreValue: "16+/20",
+    scoreNote: "Build the score you actually deserve.",
+    caption: "A structured, premium environment built for exam success.",
   },
 };
 
@@ -1483,6 +1486,110 @@ function MomentumScene({
   );
 }
 
+function NextLevelCore() {
+  const coreRef = useRef<any>(null);
+  const ring1Ref = useRef<any>(null);
+  const ring2Ref = useRef<any>(null);
+  const ring3Ref = useRef<any>(null);
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    if (coreRef.current) {
+      coreRef.current.rotation.y = t * 0.5;
+      coreRef.current.rotation.x = t * 0.2;
+    }
+    if (ring1Ref.current) {
+      ring1Ref.current.rotation.x = t * 0.8;
+      ring1Ref.current.rotation.y = t * 0.3;
+    }
+    if (ring2Ref.current) {
+      ring2Ref.current.rotation.y = t * -0.5;
+      ring2Ref.current.rotation.z = t * 0.6;
+    }
+    if (ring3Ref.current) {
+      ring3Ref.current.rotation.x = t * 0.4;
+      ring3Ref.current.rotation.z = t * -0.3;
+    }
+  });
+
+  return (
+    <PresentationControls
+      global
+      snap={true}
+      rotation={[0, 0.3, 0]}
+      polar={[-Math.PI / 3, Math.PI / 3]}
+      azimuth={[-Math.PI / 1.4, Math.PI / 2]}
+    >
+      <Float speed={2} rotationIntensity={0.5} floatIntensity={1.5}>
+        <mesh ref={coreRef} scale={1.2}>
+          <icosahedronGeometry args={[1, 0]} />
+          <meshPhysicalMaterial 
+            color="#a855f7" 
+            emissive="#7e22ce" 
+            emissiveIntensity={1.5} 
+            wireframe 
+            thickness={2}
+          />
+        </mesh>
+
+        <mesh scale={1.8}>
+          <sphereGeometry args={[1, 32, 32]} />
+          <meshPhysicalMaterial 
+            color="#6366f1" 
+            transmission={0.95} 
+            opacity={1} 
+            transparent 
+            roughness={0.1} 
+            ior={1.5}
+            thickness={0.5}
+          />
+        </mesh>
+
+        <Text
+          position={[0, 0, 0]}
+          fontSize={0.5}
+          color="#ffffff"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.02}
+          outlineColor="#000000"
+          font="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYMZhrib2Bg-4.ttf"
+        >
+          A.I. MATRIX
+        </Text>
+
+        <group ref={ring1Ref}>
+          <Torus args={[2.8, 0.015, 16, 100]} rotation={[Math.PI / 2, 0, 0]}>
+            <meshStandardMaterial color="#38bdf8" emissive="#0ea5e9" emissiveIntensity={2} />
+          </Torus>
+        </group>
+        
+        <group ref={ring2Ref}>
+          <Torus args={[3.2, 0.015, 16, 100]} rotation={[0, Math.PI / 2, 0]}>
+            <meshStandardMaterial color="#f472b6" emissive="#db2777" emissiveIntensity={2} />
+          </Torus>
+        </group>
+
+        <group ref={ring3Ref}>
+          <Torus args={[3.6, 0.025, 32, 100]} rotation={[Math.PI / 4, 0, Math.PI / 4]}>
+            <meshPhysicalMaterial color="#ffffff" transmission={0.5} opacity={0.8} transparent roughness={0} />
+          </Torus>
+          <mesh position={[3.6, 0, 0]}>
+            <sphereGeometry args={[0.15, 16, 16]} />
+            <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={3} />
+          </mesh>
+          <mesh position={[-3.6, 0, 0]}>
+            <sphereGeometry args={[0.1, 16, 16]} />
+            <meshStandardMaterial color="#a855f7" emissive="#a855f7" emissiveIntensity={2} />
+          </mesh>
+        </group>
+
+        <Sparkles count={200} scale={10} size={2} speed={0.8} opacity={0.7} color="#e0e7ff" />
+      </Float>
+    </PresentationControls>
+  );
+}
+
 function CinematicDeskScene({
   copy,
   lang,
@@ -1494,168 +1601,16 @@ function CinematicDeskScene({
   sections: string[];
   isRTL: boolean;
 }) {
-  const scene = deskSceneCopy[lang] || deskSceneCopy.en!;
-
   return (
-    <div className="landing-desk-scene" style={{ direction: isRTL ? "rtl" : "ltr" }}>
-      <div className="landing-desk-ambient landing-desk-ambient-a" aria-hidden="true" />
-      <div className="landing-desk-ambient landing-desk-ambient-b" aria-hidden="true" />
-      <div className="landing-lamp-glow" aria-hidden="true" />
-
-      <motion.div
-        className="landing-desk-surface"
-        initial={{ opacity: 0, y: 32, rotateX: 74 }}
-        animate={{ opacity: 1, y: 0, rotateX: 72 }}
-        transition={{ duration: 0.8, delay: 0.08 }}
-        aria-hidden="true"
-      />
-
-      <motion.div
-        className="landing-paper-sheet landing-paper-sheet-left"
-        initial={{ opacity: 0, x: -48, y: 30, rotate: -18 }}
-        animate={{ opacity: 1, x: 0, y: 0, rotate: -12 }}
-        transition={{ duration: 0.65, delay: 0.22 }}
-      >
-        <span className="landing-photo-kicker">{scene.sheetLabel}</span>
-        <strong>{scene.sheetTitle}</strong>
-        <div className="landing-paper-lines">
-          {copy.buildSteps.slice(0, 3).map((step, index) => {
-            const Icon = buildIcons[index];
-
-            return (
-              <div key={step.title} className="landing-paper-line">
-                <div className="landing-paper-line-icon">
-                  <Icon size={14} />
-                </div>
-                <span>{step.title}</span>
-              </div>
-            );
-          })}
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="landing-paper-sheet landing-paper-sheet-right"
-        initial={{ opacity: 0, x: 46, y: 26, rotate: 20 }}
-        animate={{ opacity: 1, x: 0, y: 0, rotate: 11 }}
-        transition={{ duration: 0.65, delay: 0.3 }}
-      >
-        <span className="landing-photo-kicker">{scene.promptLabel}</span>
-        <strong>{scene.promptTitle}</strong>
-        <p>{scene.promptNote}</p>
-        <div className="landing-paper-pill-row">
-          {sections.slice(0, 4).map((section) => (
-            <span key={section} className="landing-paper-pill">
-              {section}
-            </span>
-          ))}
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="landing-desk-laptop"
-        initial={{ opacity: 0, y: 42, scale: 0.94, rotateX: -8 }}
-        animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-        transition={{ duration: 0.72, delay: 0.18 }}
-      >
-        <div className="landing-laptop-screen">
-          <div className="landing-laptop-bezel">
-            <div className="landing-laptop-status">
-              <span className="landing-chip-label">{scene.sceneBadge}</span>
-              <span className="landing-laptop-status-pill">{copy.candidateName}</span>
-            </div>
-
-            <div className="landing-laptop-hero-copy">
-              <h3>{scene.sceneTitle}</h3>
-              <p>{scene.sceneNote}</p>
-            </div>
-
-            <div className="landing-laptop-dashboard">
-              <Image
-                src="/dashboard.png"
-                alt="Platform dashboard preview on laptop"
-                fill
-                sizes="(max-width: 768px) 100vw, 420px"
-                style={{ objectFit: "cover" }}
-              />
-            </div>
-
-            <motion.div
-              className="landing-floating-score-chip"
-              initial={{ opacity: 0, x: 24, y: 12, scale: 0.88 }}
-              animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
-              transition={{ duration: 0.55, delay: 0.72 }}
-            >
-              <span>{scene.scoreLabel}</span>
-              <strong>{scene.scoreValue}</strong>
-              <p>{scene.scoreNote}</p>
-            </motion.div>
-
-            <motion.div
-              className="landing-screen-reflection"
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 1, x: 120 }}
-              transition={{ duration: 1.15, delay: 1.02 }}
-              aria-hidden="true"
-            />
-          </div>
-        </div>
-
-        <div className="landing-laptop-base">
-          <div className="landing-laptop-keyboard" aria-hidden="true" />
-          <div className="landing-laptop-trackpad" aria-hidden="true" />
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="landing-desk-timer"
-        initial={{ opacity: 0, y: 18, x: 24 }}
-        animate={{ opacity: 1, y: 0, x: 0 }}
-        transition={{ duration: 0.48, delay: 0.66 }}
-      >
-        <span className="landing-photo-kicker">{scene.timerLabel}</span>
-        <strong>{scene.timerValue}</strong>
-        <p>{scene.timerNote}</p>
-      </motion.div>
-
-      <motion.div
-        className="landing-desk-note"
-        initial={{ opacity: 0, x: isRTL ? 26 : -26, y: 16 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.54 }}
-      >
-        <span className="landing-photo-kicker">{copy.candidateLabel}</span>
-        <strong>{copy.candidateName}</strong>
-        <p>{copy.candidateNote}</p>
-      </motion.div>
-
-      <motion.div
-        className="landing-desk-caption-card"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.82 }}
-      >
-        <span className="landing-photo-kicker">{copy.diplomaTag}</span>
-        <p>{scene.caption}</p>
-      </motion.div>
-
-      <motion.div
-        className="landing-desk-cup"
-        initial={{ opacity: 0, scale: 0.84, y: 14 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.56, delay: 0.76 }}
-        aria-hidden="true"
-      >
-        <div className="landing-desk-cup-rim" />
-      </motion.div>
-
-      <motion.div
-        className="landing-desk-pen"
-        initial={{ opacity: 0, x: 26, y: 12, rotate: 18 }}
-        animate={{ opacity: 1, x: 0, y: 0, rotate: 12 }}
-        transition={{ duration: 0.52, delay: 0.86 }}
-        aria-hidden="true"
-      />
+    <div className="landing-desk-scene" style={{ width: "100%", position: "relative", zIndex: 10, cursor: "grab" }}>
+      <Canvas camera={{ position: [0, 0, 9], fov: 45 }}>
+        <ambientLight intensity={0.8} />
+        <directionalLight position={[10, 10, 5]} intensity={2} color="#6366f1" />
+        <directionalLight position={[-10, -10, -5]} intensity={1.5} color="#ec4899" />
+        <NextLevelCore />
+        <Environment preset="city" />
+        <ContactShadows position={[0, -3.5, 0]} opacity={0.6} scale={18} blur={3} far={6} color="#a855f7" />
+      </Canvas>
     </div>
   );
 }
@@ -1685,6 +1640,145 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
 
   return (
     <div className="home-bleed landing-home">
+      <style dangerouslySetInnerHTML={{ __html: `
+        .landing-home {
+          background-color: #000000 !important;
+          background-image: 
+            radial-gradient(circle at 10% 40%, rgba(99, 102, 241, 0.25), transparent 30%),
+            radial-gradient(circle at 90% 60%, rgba(245, 158, 11, 0.15), transparent 35%) !important;
+        }
+        .landing-hero-inner-cinematic {
+          position: relative;
+          padding: 4.5rem !important;
+          border-radius: 2.5rem !important;
+          background: linear-gradient(145deg, rgba(20,20,30,0.6) 0%, rgba(5,5,10,0.95) 100%) !important;
+          box-shadow: 
+            0 0 0 1px rgba(255,255,255,0.05) inset,
+            0 30px 60px rgba(0,0,0,0.8),
+            0 0 120px rgba(99, 102, 241, 0.15) !important;
+          backdrop-filter: blur(24px) !important;
+          overflow: hidden;
+          margin-top: 2rem;
+        }
+        .landing-hero-inner-cinematic::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+          transform: skewX(-20deg) translateX(-150%);
+          animation: shine 8s infinite cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        @keyframes shine {
+          0%, 30% { transform: skewX(-20deg) translateX(-150%); }
+          100% { transform: skewX(-20deg) translateX(300%); }
+        }
+        .landing-badge {
+          display: inline-block;
+          background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.15)) !important;
+          color: #d8b4fe !important;
+          border: 1px solid rgba(168, 85, 247, 0.4) !important;
+          text-shadow: 0 0 15px rgba(168, 85, 247, 0.6) !important;
+          padding: 10px 20px !important;
+          border-radius: 100px !important;
+          font-weight: 800 !important;
+          font-size: 0.95rem !important;
+          letter-spacing: 1.5px !important;
+          margin-bottom: 2rem !important;
+          box-shadow: 0 0 30px rgba(168, 85, 247, 0.25) !important;
+        }
+        .landing-desk-scene {
+          height: 600px !important;
+        }
+        @media (max-width: 768px) {
+          .landing-desk-scene {
+            height: 350px !important;
+            margin-top: -2rem !important;
+          }
+        }
+        .landing-title {
+          font-size: clamp(3rem, 5vw, 4.5rem) !important;
+          line-height: 1.1 !important;
+          background: linear-gradient(to bottom right, #ffffff 20%, #a855f7 80%, #6366f1 100%) !important;
+          -webkit-background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+          text-shadow: 0 15px 35px rgba(99, 102, 241, 0.25) !important;
+          margin-bottom: 1.75rem !important;
+          letter-spacing: -1px !important;
+        }
+        .landing-subtitle {
+          font-size: 1.25rem !important;
+          line-height: 1.6 !important;
+          color: rgba(255,255,255,0.7) !important;
+        }
+        .button-link {
+          background: linear-gradient(135deg, #ffffff, #e0e0e0) !important;
+          color: #000 !important;
+          box-shadow: 0 10px 30px rgba(255,255,255,0.35), 0 0 40px rgba(255,255,255,0.2) inset !important;
+          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
+          border: 1px solid rgba(255,255,255,0.8) !important;
+          font-weight: 800 !important;
+        }
+        .button-link:hover {
+          transform: translateY(-5px) scale(1.04) !important;
+          box-shadow: 0 20px 40px rgba(255,255,255,0.45), 0 0 50px rgba(255,255,255,0.3) inset !important;
+        }
+        .button-secondary {
+          background: rgba(255,255,255,0.03) !important;
+          color: #fff !important;
+          border: 1px solid rgba(255,255,255,0.15) !important;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+        }
+        .button-secondary:hover {
+          background: rgba(255,255,255,0.08) !important;
+          border-color: rgba(255,255,255,0.4) !important;
+          box-shadow: 0 10px 30px rgba(255,255,255,0.15) !important;
+        }
+        .landing-metric-card {
+          background: rgba(255,255,255,0.02) !important;
+          backdrop-filter: blur(12px) !important;
+          border: 1px solid rgba(255,255,255,0.08) !important;
+          border-radius: 1.25rem !important;
+          padding: 1.75rem !important;
+          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
+          position: relative;
+          overflow: hidden;
+        }
+        .landing-metric-card::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle at 50% 120%, rgba(99, 102, 241, 0.1), transparent 70%);
+          opacity: 0;
+          transition: opacity 0.4s ease;
+        }
+        .landing-metric-card:hover {
+          background: rgba(255,255,255,0.04) !important;
+          border-color: rgba(168, 85, 247, 0.4) !important;
+          transform: translateY(-4px) !important;
+          box-shadow: 0 15px 40px rgba(168, 85, 247, 0.2) !important;
+        }
+        .landing-metric-card:hover::after {
+          opacity: 1;
+        }
+        .landing-metric-card strong {
+          background: linear-gradient(to right, #818cf8, #c084fc) !important;
+          -webkit-background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+          font-size: 3rem !important;
+          display: block !important;
+          margin-bottom: 0.5rem !important;
+          text-shadow: 0 0 25px rgba(168, 85, 247, 0.4) !important;
+        }
+        .landing-desk-scene {
+          filter: drop-shadow(0 0 40px rgba(99, 102, 241, 0.3));
+        }
+        @media (max-width: 768px) {
+          .landing-hero-inner-cinematic {
+            padding: 2rem !important;
+            border-radius: 1.5rem !important;
+          }
+        }
+      `}} />
       <section className="landing-stage">
         <div className="landing-shell">
           <motion.div className="landing-hero" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
