@@ -1,4 +1,4 @@
-import { diagnosticQuestionBank, type DiagnosticQuestion } from "@/data/language-diagnostic";
+import { diagnosticQuestionBank, type DiagnosticQuestion } from "@/data/language-diagnostic-tunisian";
 import {
   CURRICULUM_LEVEL_ORDER,
   getCurriculumTrack,

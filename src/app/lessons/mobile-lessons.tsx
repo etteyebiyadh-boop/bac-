@@ -19,8 +19,9 @@ interface MobileLessonsProps {
   moduleLabels: Record<string, string>;
 }
 
-function CollapsibleSection({ title, count, icon: Icon, children, color = "var(--primary)", defaultOpen = false }: {
+function CollapsibleSection({ title, subtitle, count, icon: Icon, children, color = "var(--primary)", defaultOpen = false }: {
   title: string;
+  subtitle?: string;
   count: number;
   icon: any;
   children: React.ReactNode;
@@ -52,14 +53,17 @@ function CollapsibleSection({ title, count, icon: Icon, children, color = "var(-
           </div>
           <div style={{ textAlign: "left" }}>
             <div style={{ fontWeight: 700, fontSize: "15px" }}>{title}</div>
-            <div style={{ fontSize: "12px", color: "var(--ink-dim)" }}>{count} items</div>
+            {subtitle && <div style={{ fontSize: "12px", color: "var(--ink-dim)" }}>{subtitle}</div>}
           </div>
         </div>
-        <span style={{
-          transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-          transition: "transform 0.3s ease",
-          fontSize: "20px",
-        }}>▼</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span className="pill" style={{ fontSize: "11px" }}>{count} items</span>
+          <span style={{
+            transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.3s ease",
+            fontSize: "20px",
+          }}>▼</span>
+        </div>
       </button>
 
       {isOpen && (
@@ -69,6 +73,37 @@ function CollapsibleSection({ title, count, icon: Icon, children, color = "var(-
       )}
     </div>
   );
+}
+
+// Helper to map lesson themes to BAC modules
+function getModuleFromTheme(theme: string, currentModule: string): string | null {
+  const themeLower = theme.toLowerCase();
+  
+  if (themeLower.includes('holiday') || themeLower.includes('art') || themeLower.includes('travel') || themeLower.includes('tourism')) {
+    return 'MODULE_1_HOLIDAYING_ART_SHOWS';
+  }
+  if (themeLower.includes('education') || themeLower.includes('school') || themeLower.includes('learn') || themeLower.includes('student')) {
+    return 'MODULE_2_EDUCATION_MATTERS';
+  }
+  if (themeLower.includes('creative') || themeLower.includes('inventive') || themeLower.includes('technology') || themeLower.includes('innovation') || themeLower.includes('digital')) {
+    return 'MODULE_3_CREATIVE_INVENTIVE_MINDS';
+  }
+  if (themeLower.includes('youth') || themeLower.includes('teen') || themeLower.includes('young') || themeLower.includes('generation')) {
+    return 'MODULE_4_YOUTH_ISSUES';
+  }
+  if (themeLower.includes('woman') || themeLower.includes('women') || themeLower.includes('power') || themeLower.includes('gender')) {
+    return 'MODULE_5_WOMEN_POWER';
+  }
+  if (themeLower.includes('environment') || themeLower.includes('sustainable') || themeLower.includes('ecology') || themeLower.includes('green') || themeLower.includes('pollution')) {
+    return 'MODULE_6_SUSTAINABLE_DEVELOPMENT';
+  }
+  if (themeLower.includes('work') || themeLower.includes('job') || themeLower.includes('career') || themeLower.includes('employment') || themeLower.includes('profession')) {
+    return 'MODULE_7_WORK_COMMITMENT';
+  }
+  if (themeLower.includes('literature') || themeLower.includes('literary') || themeLower.includes('poetry') || themeLower.includes('novel') || themeLower.includes('author')) {
+    return 'MODULE_8_LITERARY_TEXTS';
+  }
+  return currentModule;
 }
 
 export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels }: MobileLessonsProps) {
@@ -152,37 +187,55 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
         {activeTab === "curriculum" && currentTrack && (
           <>
             <div className="card card-vibrant" style={{ padding: "20px", borderRadius: "16px", marginBottom: "16px" }}>
-              <div style={{ fontSize: "14px", color: "var(--ink-dim)", marginBottom: "4px" }}>{getLanguageLabel(selectedLanguage)} - Your Learning Path</div>
-              <div style={{ fontSize: "20px", fontWeight: 800 }}>{currentTrack.mode === "communication-first" ? "Communication Track" : "BAC Path"}</div>
+              <div style={{ fontSize: "14px", color: "var(--ink-dim)", marginBottom: "4px" }}>{getLanguageLabel(selectedLanguage)} - BAC Programme</div>
+              <div style={{ fontSize: "20px", fontWeight: 800 }}>Programme Units</div>
               <div style={{ marginTop: "12px", height: "4px", background: "rgba(255,255,255,0.1)", borderRadius: "100px" }}>
                 <div style={{ width: "35%", height: "100%", background: "var(--primary)", borderRadius: "100px" }} />
               </div>
-              <div style={{ fontSize: "12px", color: "var(--ink-dim)", marginTop: "8px" }}>35% Complete</div>
+              <div style={{ fontSize: "12px", color: "var(--ink-dim)", marginTop: "8px" }}>35% Complete across all units</div>
             </div>
 
-            {currentTrack.levels.map((level: any) => {
-              const populatedSkills = level.skills
-                .map((skill: any) => ({
-                  ...skill,
-                  lessons: skill.lessons.filter((lesson: any) => availableSlugs.includes(lesson.slug))
-                }))
-                .filter((skill: any) => skill.lessons.length > 0);
+            {/* Programme Units First */}
+            {modules.map((mod: any) => {
+              // Get all lessons from curriculum that relate to this module
+              const moduleLessons: any[] = [];
+              currentTrack.levels.forEach((level: any) => {
+                level.skills.forEach((skill: any) => {
+                  skill.lessons
+                    .filter((lesson: any) => availableSlugs.includes(lesson.slug))
+                    .forEach((lesson: any) => {
+                      // Map lesson theme to module
+                      const lessonModule = getModuleFromTheme(lesson.theme, mod);
+                      if (lessonModule === mod || lessonModule === null) {
+                        moduleLessons.push({ ...lesson, level: level.level, skill: skill.skill });
+                      }
+                    });
+                });
+              });
 
-              if (populatedSkills.length === 0) return null;
+              if (moduleLessons.length === 0) return null;
+
+              // Group by skill
+              const lessonsBySkill = moduleLessons.reduce((acc: any, lesson: any) => {
+                if (!acc[lesson.skill]) acc[lesson.skill] = [];
+                acc[lesson.skill].push(lesson);
+                return acc;
+              }, {});
 
               return (
                 <CollapsibleSection
-                  key={level.level}
-                  title={`${level.level}: ${level.summary}`}
-                  count={populatedSkills.reduce((count: number, skill: any) => count + skill.lessons.length, 0)}
+                  key={mod}
+                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  subtitle={`${moduleLessons.length} lessons`}
+                  count={moduleLessons.length}
                   icon={TargetIcon}
                   color="#6366f1"
                 >
                   <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                    {populatedSkills.map((skill: any) => (
-                      <div key={skill.skill} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                        <div style={{ fontSize: "12px", color: "var(--accent)", fontWeight: 700 }}>{skill.skill}</div>
-                        {skill.lessons.map((lesson: any) => (
+                    {Object.entries(lessonsBySkill).map(([skill, lessons]: [string, any]) => (
+                      <div key={skill} style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                        <div style={{ fontSize: "12px", color: "var(--accent)", fontWeight: 700 }}>{skill}</div>
+                        {lessons.map((lesson: any) => (
                           <Link
                             key={lesson.slug}
                             href={`/lessons/${lesson.slug}`}
@@ -200,7 +253,10 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
                               <div style={{ fontWeight: 600, fontSize: "14px" }}>{lesson.title}</div>
                               <div style={{ fontSize: "11px", color: "var(--ink-dim)" }}>{lesson.summary}</div>
                             </div>
-                            <span style={{ fontSize: "20px" }}>→</span>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                              <span className="pill" style={{ fontSize: "10px", padding: "2px 6px" }}>{lesson.level}</span>
+                              <span style={{ fontSize: "20px" }}>→</span>
+                            </div>
                           </Link>
                         ))}
                       </div>
@@ -209,6 +265,41 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
                 </CollapsibleSection>
               );
             })}
+
+            {/* View by Level (collapsed) */}
+            <CollapsibleSection
+              title="View by Level (A1-B2)"
+              subtitle="Alternative view by language level"
+              count={currentTrack.levels.reduce((acc: number, l: any) => acc + l.skills.reduce((sacc: number, s: any) => sacc + s.lessons.length, 0), 0)}
+              icon={TargetIcon}
+              color="#8b5cf6"
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                {currentTrack.levels.map((level: any) => {
+                  const populatedSkills = level.skills
+                    .map((skill: any) => ({
+                      ...skill,
+                      lessons: skill.lessons.filter((lesson: any) => availableSlugs.includes(lesson.slug))
+                    }))
+                    .filter((skill: any) => skill.lessons.length > 0);
+
+                  if (populatedSkills.length === 0) return null;
+
+                  return (
+                    <div key={level.level} className="card" style={{ padding: "16px", borderRadius: "12px", background: "rgba(255,255,255,0.02)" }}>
+                      <div style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>
+                        {level.level}: {level.summary}
+                      </div>
+                      {populatedSkills.map((skill: any) => (
+                        <div key={skill.skill} style={{ fontSize: "12px", color: "var(--ink-dim)" }}>
+                          {skill.skill}: {skill.lessons.length} lessons
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            </CollapsibleSection>
           </>
         )}
 

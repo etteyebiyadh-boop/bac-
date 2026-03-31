@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { extractTextFromWorkImage, getReliableCompletion } from "@/lib/ai-provider";
 import { MAX_ESSAY_CHARS, MAX_SCAN_IMAGE_BYTES, MIN_ESSAY_CHARS } from "@/lib/constants";
 import { trackCorrectionCompleted } from "@/lib/analytics";
+import { selectRelevantExamples, buildFewShotPrompt, BacEssayExample } from "@/lib/bac-grading-examples";
 
 const MAX_AI_WORDS_FOR_CORRECTION = 220; // Cost control: keep inputs short for Bac-style corrections.
 const MAX_PROMPT_CHARS = 600; // Prevent unusually large prompts from burning tokens.
@@ -128,9 +129,19 @@ function buildSystemPrompt(input: {
   languageAnswers?: unknown;
   studentEssay: string;
 }) {
+  // Select relevant BAC examples for few-shot prompting
+  const wordCount = input.studentEssay.split(/\s+/).filter(Boolean).length;
+  const relevantExamples = selectRelevantExamples(input.studentEssay, wordCount);
+  const fewShotContext = buildFewShotPrompt(relevantExamples);
+
   if (input.type === "FULL_MOCK" && input.examData) {
-    return `You are an elite Tunisian Baccalaureate examiner.
-Evaluate this 3-hour Full Mock Exam for ${input.language}.
+    return `You are an elite Tunisian Baccalaureate examiner with 20 years of experience grading official BAC exams.
+
+Below are official BAC essay examples with their Tunisian examiner scores. Study these carefully to understand the grading standards:
+
+${fewShotContext}
+
+Now evaluate this 3-hour Full Mock Exam for ${input.language}.
 
 Section I: Reading (12 pts)
 Official Questions: ${JSON.stringify(input.examData?.readingQuestions)}
@@ -144,50 +155,62 @@ Section III: Writing (10 pts)
 Prompt: ${input.examData?.prompt}
 Student Essay: "${input.studentEssay}"
 
-Grading Protocol:
-- Calculate Reading score (out of 12) strictly.
-- Calculate Language score (out of 8) strictly.
-- Grade Writing (out of 10) on grammar, vocab, and structure.
+Grading Protocol (Tunisian Ministry Standards):
+- Calculate Reading score (out of 12) strictly based on comprehension accuracy.
+- Calculate Language score (out of 8) based on grammar rule application.
+- Grade Writing (out of 10) considering grammar accuracy, vocabulary sophistication, and argument coherence.
 - Sum them up for an Overall Score out of 30, then convert to /20.
+- Be CRITICAL: A "good" essay should score 13-15, not 18+. Only truly exceptional work deserves 16+.
 
 Output a JSON object with:
-- "overallScore": Final mark out of 20.
+- "overallScore": Final mark out of 20 (be conservative, use half-points like 12.5, 13.5)
 - "readingScore": Mark out of 12.
 - "languageScore": Mark out of 8.
 - "writingScore": Mark out of 10.
-- "summary": 2-sentence feedback.
-- "correctedText": Improved version of the student's essay (max 200 words).
-- "explanations": Array of objects { "original": "text", "fixed": "text", "reason": "why" } for writing improvements.
-- "strengths": Array of 3 points.
-- "improvements": Array of 3 points.
-- "recommendedLesson": { "slug": "link", "title": "Title", "summary": "Summary", "skillFocus": "focus" }
+- "summary": 2-sentence feedback referencing specific strengths.
+- "correctedText": Improved version (max 200 words).
+- "explanations": Array of { "original": "error", "fixed": "correction", "reason": "grammar rule" }
+- "strengths": Array of 3 specific strengths.
+- "improvements": Array of 3 actionable improvements.
+- "recommendedLesson": { "slug": "link", "title": "Title", "summary": "Why this lesson?", "skillFocus": "grammar/vocab/structure" }
 `;
   }
 
-  return `You are an elite Tunisian Baccalaureate examiner for ${input.language}.
-Your task is to grade the student essay based on official ministry criteria:
-1. Grammar & Syntax (5 pts)
-2. Vocabulary range & accuracy (5 pts)
-3. Structure, Coherence & Flow (10 pts)
+  return `You are an elite Tunisian Baccalaureate examiner with 20 years of experience grading official BAC exams for ${input.language}.
+
+Below are official BAC essay examples with their Tunisian examiner scores. Study these carefully to understand the grading standards:
+
+${fewShotContext}
+
+Now grade this student essay based on official Tunisian Ministry criteria:
+1. Grammar & Syntax (5 pts): Accuracy of tenses, subject-verb agreement, articles, prepositions
+2. Vocabulary range & accuracy (5 pts): Word variety, appropriateness, collocations
+3. Structure, Coherence & Flow (10 pts): Introduction quality, paragraph development, connectors, conclusion
 
 Exam Prompt: ${input.examPrompt || "Free writing topic"}
 Student Essay: "${input.studentEssay}"
 
+Grading Instructions:
+- Be STRICT and realistic. A typical student essay with some errors should score 10-13, not 17+.
+- Reserve 16-20 for truly excellent work with sophisticated vocabulary and complex structures.
+- Use HALF-POINTS (e.g., 12.5, 13.5) for more nuanced grading.
+- Grammar errors: -0.5 for minor errors, -1 for major errors (wrong tense, missing subject)
+- Vocabulary: Simple repetitive words = low score; varied appropriate vocabulary = high score
+- Structure: Missing conclusion = -2 points; weak connectors = -1 point
+
 Output a JSON object with:
-- "overallScore": Final mark out of 20.
-- "grammarScore": Mark out of 20 for grammar.
-- "vocabularyScore": Mark out of 20 for vocab.
-- "structureScore": Mark out of 20 for structure.
-- "summary": A brief encouraging 2-sentence overview.
-- "correctedText": The full essay with grammar and lexical improvements. Keep the correctedText concise:
-  - same meaning
-  - do not add new ideas
-  - NOT longer than ${MAX_AI_WORDS_FOR_CORRECTION} words (and keep similar length to the original).
-- "explanations": Array of objects { "original": "text", "fixed": "text", "reason": "why" } explaining the 3-5 most important changes made.
-- "strengths": Array of 3 bullet points.
-- "improvements": Array of 3 bullet points.
-- "recommendedLesson": { "slug": "link-to-best-matching-lesson", "title": "Lesson Title", "summary": "Why this lesson?", "skillFocus": "grammar/vocab/structure" }
-`;
+- "overallScore": Final mark out of 20 (conservative, realistic Tunisian BAC standards)
+- "grammarScore": Mark out of 20 for grammar accuracy
+- "vocabularyScore": Mark out of 20 for vocabulary range/appropriateness
+- "structureScore": Mark out of 20 for essay organization and coherence
+- "summary": A brief 2-sentence overview with encouraging but honest tone
+- "correctedText": The full essay with grammar and lexical improvements. Keep same meaning, do not add new ideas, NOT longer than ${MAX_AI_WORDS_FOR_CORRECTION} words.
+- "explanations": Array of { "original": "text with error", "fixed": "corrected text", "reason": "explanation of the rule" } for the 3-5 most important changes
+- "strengths": Array of 3 specific things done well
+- "improvements": Array of 3 specific areas to improve
+- "recommendedLesson": { "slug": "link-to-best-matching-lesson", "title": "Lesson Title", "summary": "Why this lesson helps?", "skillFocus": "grammar/vocab/structure" }
+
+Remember: You are grading against REAL Tunisian BAC standards where the national average is around 11-12/20. Be honest and constructive.`;
 }
 
 export async function POST(req: NextRequest) {

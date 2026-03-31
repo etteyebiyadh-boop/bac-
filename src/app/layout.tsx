@@ -9,6 +9,7 @@ import { SiteLanguage, translations } from "@/lib/translations";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Navbar } from "@/components/navbar";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
+import { ContentProtectionProvider } from "@/components/content-protection-provider";
 
 export const dynamic = "force-dynamic";
 
@@ -33,21 +34,22 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <div className="glow-orb orb-amber" />
         </div>
         
-        <div className="site-shell">
-          <Navbar session={session} translations={t} lang={langCookie} />
+        <ContentProtectionProvider>
+          <div className="site-shell">
+            <Navbar session={session} translations={t} lang={langCookie} />
 
-          <main className="container relative z-10" style={{ paddingTop: '120px' }}>{children}</main>
+            <main className="container relative z-10" style={{ paddingTop: '120px' }}>{children}</main>
 
-          <MobileBottomNav session={session} translations={t} lang={langCookie} />
+            <MobileBottomNav session={session} translations={t} lang={langCookie} />
 
-          <footer className="relative z-10" style={{ padding: '80px 0 40px', borderTop: '1px solid var(--glass-border)', marginTop: '100px' }}>
-            <div className="container row-between" style={{ alignItems: 'flex-start' }}>
-              <div className="stack" style={{ maxWidth: '400px' }}>
-                <strong style={{ fontSize: '1.5rem', fontFamily: 'var(--font-display)' }}>{APP_NAME}</strong>
-                <p className="muted" style={{ fontSize: "14px" }}>
-                  {t.footer_builtBy}
-                </p>
-              </div>
+            <footer className="relative z-10" style={{ padding: '80px 0 40px', borderTop: '1px solid var(--glass-border)', marginTop: '100px' }}>
+              <div className="container row-between" style={{ alignItems: 'flex-start' }}>
+                <div className="stack" style={{ maxWidth: '400px' }}>
+                  <strong style={{ fontSize: '1.5rem', fontFamily: 'var(--font-display)' }}>{APP_NAME}</strong>
+                  <p className="muted" style={{ fontSize: "14px" }}>
+                    {t.footer_builtBy}
+                  </p>
+                </div>
               <div className="row-between" style={{ gap: '32px' }}>
                 <Link className="button-link button-secondary" href="/admin" style={{ padding: '12px 24px', fontSize: '12px', border: '1px solid rgba(255,255,255,0.1)' }}>🛡️ ADMIN ACCESS</Link>
                 <Link className="nav-link" href="/privacy">Privacy</Link>
@@ -59,6 +61,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             </div>
           </footer>
         </div>
+        </ContentProtectionProvider>
       </body>
     </html>
   );

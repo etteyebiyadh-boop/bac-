@@ -161,9 +161,9 @@ export function DiagnosticWorkspace({
   return (
     <div className="page-stack" style={{ gap: "32px", direction: lang === "ar" ? "rtl" : "ltr" }}>
       <section className="card stack hero-panel" style={{ padding: "56px", gap: "18px" }}>
-        <span className="eyebrow" style={{ color: "var(--primary)" }}>{copy.title}</span>
-        <h1 className="section-title" style={{ fontSize: "3rem", lineHeight: 1.05 }}>{copy.title}</h1>
-        <p className="muted" style={{ maxWidth: "820px", fontSize: "1.1rem" }}>{copy.subtitle}</p>
+        <span className="eyebrow" style={{ color: "var(--primary)" }}>🇹🇳 {track.title}</span>
+        <h1 className="section-title" style={{ fontSize: "3rem", lineHeight: 1.05 }}>{track.title}</h1>
+        <p className="muted" style={{ maxWidth: "820px", fontSize: "1.1rem" }}>{track.subtitle}</p>
         <div className="row-between" style={{ justifyContent: "flex-start", gap: "10px", flexWrap: "wrap" }}>
           {sectionLabel ? <span className="pill">{copy.section}: {sectionLabel.replace(/_/g, " ")}</span> : null}
           <span className="pill" style={{ borderColor: "var(--accent)", color: "var(--accent)" }}>{copy.saveNote}</span>
@@ -209,6 +209,11 @@ export function DiagnosticWorkspace({
                 </div>
               </div>
               <strong style={{ fontSize: "1.15rem" }}>{question.prompt}</strong>
+              {(question as any).bacContext && (
+                <div style={{ fontSize: "12px", color: "var(--warning)", background: "rgba(245, 158, 11, 0.1)", padding: "8px 12px", borderRadius: "8px", border: "1px solid rgba(245, 158, 11, 0.3)" }}>
+                  🎯 BAC Context: {(question as any).bacContext}
+                </div>
+              )}
               <div className="stack" style={{ gap: "10px" }}>
                 {question.choices.map((choice) => {
                   const isSelected = answers[question.id] === choice.id;

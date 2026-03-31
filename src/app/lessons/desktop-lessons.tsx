@@ -77,6 +77,40 @@ function CollapsibleSection({ title, subtitle, count, icon: Icon, children, colo
   );
 }
 
+// Helper to map lesson themes to BAC modules
+function getModuleFromTheme(theme: string, currentModule: string): string | null {
+  const themeLower = theme.toLowerCase();
+  
+  // Map themes to modules based on keywords
+  if (themeLower.includes('holiday') || themeLower.includes('art') || themeLower.includes('travel') || themeLower.includes('tourism')) {
+    return 'MODULE_1_HOLIDAYING_ART_SHOWS';
+  }
+  if (themeLower.includes('education') || themeLower.includes('school') || themeLower.includes('learn') || themeLower.includes('student')) {
+    return 'MODULE_2_EDUCATION_MATTERS';
+  }
+  if (themeLower.includes('creative') || themeLower.includes('inventive') || themeLower.includes('technology') || themeLower.includes('innovation') || themeLower.includes('digital')) {
+    return 'MODULE_3_CREATIVE_INVENTIVE_MINDS';
+  }
+  if (themeLower.includes('youth') || themeLower.includes('teen') || themeLower.includes('young') || themeLower.includes('generation')) {
+    return 'MODULE_4_YOUTH_ISSUES';
+  }
+  if (themeLower.includes('woman') || themeLower.includes('women') || themeLower.includes('power') || themeLower.includes('gender')) {
+    return 'MODULE_5_WOMEN_POWER';
+  }
+  if (themeLower.includes('environment') || themeLower.includes('sustainable') || themeLower.includes('ecology') || themeLower.includes('green') || themeLower.includes('pollution')) {
+    return 'MODULE_6_SUSTAINABLE_DEVELOPMENT';
+  }
+  if (themeLower.includes('work') || themeLower.includes('job') || themeLower.includes('career') || themeLower.includes('employment') || themeLower.includes('profession')) {
+    return 'MODULE_7_WORK_COMMITMENT';
+  }
+  if (themeLower.includes('literature') || themeLower.includes('literary') || themeLower.includes('poetry') || themeLower.includes('novel') || themeLower.includes('author')) {
+    return 'MODULE_8_LITERARY_TEXTS';
+  }
+  
+  // If theme doesn't match any module, return current module (to include all lessons)
+  return currentModule;
+}
+
 export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels, bacSection }: DesktopLessonsProps) {
   const [activeTab, setActiveTab] = useState<"curriculum" | "reading" | "grammar" | "vocab">("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
@@ -166,9 +200,9 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
             <div className="card card-vibrant" style={{ padding: "28px", borderRadius: "20px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
                 <div>
-                  <div style={{ fontSize: "14px", color: "var(--ink-dim)" }}>{getLanguageLabel(selectedLanguage)} - Learning Path</div>
+                  <div style={{ fontSize: "14px", color: "var(--ink-dim)" }}>{getLanguageLabel(selectedLanguage)} - BAC Programme</div>
                   <div style={{ fontSize: "24px", fontWeight: 800, marginTop: "4px" }}>
-                    {currentTrack.mode === "communication-first" ? "Communication Track" : "BAC Path"}
+                    Programme Units
                   </div>
                 </div>
                 <span className="pill" style={{ borderColor: "var(--success)", color: "var(--success)" }}>
@@ -178,36 +212,54 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
               <div style={{ marginTop: "20px", height: "6px", background: "rgba(255,255,255,0.1)", borderRadius: "100px" }}>
                 <div style={{ width: "35%", height: "100%", background: "var(--primary)", borderRadius: "100px" }} />
               </div>
-              <div style={{ fontSize: "14px", color: "var(--ink-dim)", marginTop: "12px" }}>35% Complete</div>
+              <div style={{ fontSize: "14px", color: "var(--ink-dim)", marginTop: "12px" }}>35% Complete across all units</div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "20px" }}>
-              {currentTrack.levels.map((level: any) => {
-                const populatedSkills = level.skills
-                  .map((skill: any) => ({
-                    ...skill,
-                    lessons: skill.lessons.filter((lesson: any) => availableSlugs.includes(lesson.slug))
-                  }))
-                  .filter((skill: any) => skill.lessons.length > 0);
+            {/* Programme Units First */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+              {modules.map((mod: any) => {
+                // Get all lessons from curriculum that relate to this module
+                const moduleLessons: any[] = [];
+                currentTrack.levels.forEach((level: any) => {
+                  level.skills.forEach((skill: any) => {
+                    skill.lessons
+                      .filter((lesson: any) => availableSlugs.includes(lesson.slug))
+                      .forEach((lesson: any) => {
+                        // Map lesson theme to module
+                        const lessonModule = getModuleFromTheme(lesson.theme, mod);
+                        if (lessonModule === mod || lessonModule === null) {
+                          moduleLessons.push({ ...lesson, level: level.level, skill: skill.skill });
+                        }
+                      });
+                  });
+                });
 
-                if (populatedSkills.length === 0) return null;
+                if (moduleLessons.length === 0) return null;
+
+                // Group by skill
+                const lessonsBySkill = moduleLessons.reduce((acc: any, lesson: any) => {
+                  if (!acc[lesson.skill]) acc[lesson.skill] = [];
+                  acc[lesson.skill].push(lesson);
+                  return acc;
+                }, {});
 
                 return (
                   <CollapsibleSection
-                    key={level.level}
-                    title={`${level.level}: ${level.summary}`}
-                    count={populatedSkills.reduce((count: number, skill: any) => count + skill.lessons.length, 0)}
+                    key={mod}
+                    title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                    subtitle={`${moduleLessons.length} lessons across all levels`}
+                    count={moduleLessons.length}
                     icon={TargetIcon}
                     color="#6366f1"
                   >
                     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                      {populatedSkills.map((skill: any) => (
-                        <div key={skill.skill} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                      {Object.entries(lessonsBySkill).map(([skill, lessons]: [string, any]) => (
+                        <div key={skill} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                           <div style={{ fontSize: "13px", color: "var(--accent)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                            {skill.skill}
+                            {skill}
                           </div>
                           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                            {skill.lessons.map((lesson: any) => (
+                            {lessons.map((lesson: any) => (
                               <Link
                                 key={lesson.slug}
                                 href={`/lessons/${lesson.slug}`}
@@ -226,9 +278,12 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
                                   <div style={{ fontWeight: 600, fontSize: "15px" }}>{lesson.title}</div>
                                   <div style={{ fontSize: "13px", color: "var(--ink-dim)", marginTop: "4px" }}>{lesson.summary}</div>
                                 </div>
-                                <span className="button-link button-secondary" style={{ padding: "8px 16px", fontSize: "12px" }}>
-                                  {t.lib_open_btn}
-                                </span>
+                                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                  <span className="pill" style={{ fontSize: "10px", padding: "4px 8px" }}>{lesson.level}</span>
+                                  <span className="button-link button-secondary" style={{ padding: "8px 16px", fontSize: "12px" }}>
+                                    {t.lib_open_btn}
+                                  </span>
+                                </div>
                               </Link>
                             ))}
                           </div>
@@ -239,6 +294,42 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
                 );
               })}
             </div>
+
+            {/* Optional: View by Level (collapsed by default) */}
+            <CollapsibleSection
+              title="View by Language Level (A1-B2)"
+              subtitle="Alternative view organized by CEFR levels"
+              count={currentTrack.levels.reduce((acc: number, l: any) => acc + l.skills.reduce((sacc: number, s: any) => sacc + s.lessons.length, 0), 0)}
+              icon={TargetIcon}
+              color="#8b5cf6"
+            >
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "20px" }}>
+                {currentTrack.levels.map((level: any) => {
+                  const populatedSkills = level.skills
+                    .map((skill: any) => ({
+                      ...skill,
+                      lessons: skill.lessons.filter((lesson: any) => availableSlugs.includes(lesson.slug))
+                    }))
+                    .filter((skill: any) => skill.lessons.length > 0);
+
+                  if (populatedSkills.length === 0) return null;
+
+                  return (
+                    <div key={level.level} className="card" style={{ padding: "20px", borderRadius: "16px", background: "rgba(255,255,255,0.02)" }}>
+                      <div style={{ fontSize: "18px", fontWeight: 700, marginBottom: "12px" }}>
+                        {level.level}: {level.summary}
+                      </div>
+                      {populatedSkills.map((skill: any) => (
+                        <div key={skill.skill} style={{ marginBottom: "12px" }}>
+                          <div style={{ fontSize: "12px", color: "var(--accent)", fontWeight: 600, marginBottom: "6px" }}>{skill.skill}</div>
+                          <div style={{ fontSize: "13px", color: "var(--ink-dim)" }}>{skill.lessons.length} lessons</div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            </CollapsibleSection>
           </>
         )}
 
