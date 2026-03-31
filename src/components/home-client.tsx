@@ -352,18 +352,60 @@ function EyeCatchingHero({ badge, title, subtitle, ctaText, ctaHref, secondaryCt
   );
 }
 
-// BAC Diploma SVG Component
+// Animated BAC Diploma being built step by step
 function BacDiploma({ mouseX, mouseY }: { mouseX: any; mouseY: any }) {
-  const rotateX = useTransform(mouseY, [-300, 300], [10, -10]);
-  const rotateY = useTransform(mouseX, [-300, 300], [-10, 10]);
+  const rotateX = useTransform(mouseY, [-300, 300], [5, -5]);
+  const rotateY = useTransform(mouseX, [-300, 300], [-5, 5]);
   const springRotateX = useSpring(rotateX, { stiffness: 50, damping: 20 });
   const springRotateY = useSpring(rotateY, { stiffness: 50, damping: 20 });
+
+  const [buildProgress, setBuildProgress] = useState(0);
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setBuildProgress(p => {
+        if (p >= 100) return 100;
+        return p + 1;
+      });
+    }, 100);
+    return () => clearInterval(timer);
+  }, []);
+
+  const steps = [
+    { threshold: 10, label: "Foundation" },
+    { threshold: 25, label: "Framework" },
+    { threshold: 40, label: "Identity" },
+    { threshold: 55, label: "Recognition" },
+    { threshold: 70, label: "Achievement" },
+    { threshold: 85, label: "Excellence" },
+    { threshold: 100, label: "Complete" }
+  ];
+
+  const currentStep = steps.find(s => buildProgress <= s.threshold) || steps[steps.length - 1];
 
   return (
     <motion.div
       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
       style={{ perspective: 1000 }}
     >
+      {/* Progress indicator */}
+      <motion.div
+        className="absolute -top-16 left-1/2 -translate-x-1/2 flex flex-col items-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <span className="text-amber-400 text-sm font-bold mb-2">{currentStep.label}</span>
+        <div className="w-48 h-2 bg-slate-800 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-gradient-to-r from-amber-400 to-amber-500"
+            animate={{ width: `${buildProgress}%` }}
+            transition={{ duration: 0.3 }}
+          />
+        </div>
+        <span className="text-slate-500 text-xs mt-1">{buildProgress}%</span>
+      </motion.div>
+
       <motion.svg
         width="600"
         height="800"
@@ -374,55 +416,228 @@ function BacDiploma({ mouseX, mouseY }: { mouseX: any; mouseY: any }) {
           rotateY: springRotateY,
           transformStyle: "preserve-3d"
         }}
-        initial={{ opacity: 0, scale: 0.8, y: 50 }}
-        animate={{ opacity: 0.15, scale: 1, y: 0 }}
-        transition={{ duration: 1.5, delay: 0.5 }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 0.12, scale: 1 }}
+        transition={{ duration: 1 }}
       >
-        {/* Diploma Background */}
-        <rect x="50" y="50" width="500" height="700" rx="20" fill="#1a1a2e" stroke="#f59e0b" strokeWidth="3" />
-        
-        {/* Inner Border */}
-        <rect x="70" y="70" width="460" height="660" rx="15" stroke="#f59e0b" strokeWidth="1" strokeDasharray="10 5" fill="none" opacity="0.5" />
-        
-        {/* Republic of Tunisia Seal */}
-        <circle cx="300" cy="150" r="50" fill="#f59e0b" opacity="0.8" />
-        <circle cx="300" cy="150" r="40" fill="#1a1a2e" />
-        <text x="300" y="140" textAnchor="middle" fill="#f59e0b" fontSize="12" fontWeight="bold">REPUBLIC</text>
-        <text x="300" y="160" textAnchor="middle" fill="#f59e0b" fontSize="10">of TUNISIA</text>
-        
-        {/* Ministry Title */}
-        <text x="300" y="240" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" opacity="0.9">Ministry of Education</text>
-        
-        {/* BAC Title */}
-        <text x="300" y="300" textAnchor="middle" fill="#f59e0b" fontSize="32" fontWeight="900">BACCALAUREATE</text>
-        <text x="300" y="340" textAnchor="middle" fill="#fbbf24" fontSize="18" opacity="0.8">Diploma</text>
-        
-        {/* Decorative Line */}
-        <line x1="150" y1="380" x2="450" y2="380" stroke="#f59e0b" strokeWidth="2" opacity="0.5" />
-        
-        {/* Awarded to */}
-        <text x="300" y="430" textAnchor="middle" fill="#94a3b8" fontSize="12" fontStyle="italic">This diploma is awarded to</text>
-        
-        {/* Student Name Placeholder */}
-        <text x="300" y="480" textAnchor="middle" fill="#fff" fontSize="28" fontWeight="bold">YOU</text>
-        
-        {/* Score Display */}
-        <rect x="200" y="520" width="200" height="80" rx="10" fill="#f59e0b" opacity="0.9" />
-        <text x="300" y="560" textAnchor="middle" fill="#1a1a2e" fontSize="36" fontWeight="900">17.00</text>
-        <text x="300" y="580" textAnchor="middle" fill="#1a1a2e" fontSize="14" fontWeight="bold">/ 20</text>
-        
-        {/* Mention */}
-        <text x="300" y="640" textAnchor="middle" fill="#22c55e" fontSize="20" fontWeight="bold">Très Bien</text>
-        
-        {/* Session */}
-        <text x="300" y="690" textAnchor="middle" fill="#64748b" fontSize="12">Session: June 2026</text>
-        
-        {/* Corner Decorations */}
-        <circle cx="100" cy="100" r="8" fill="#f59e0b" opacity="0.6" />
-        <circle cx="500" cy="100" r="8" fill="#f59e0b" opacity="0.6" />
-        <circle cx="100" cy="700" r="8" fill="#f59e0b" opacity="0.6" />
-        <circle cx="500" cy="700" r="8" fill="#f59e0b" opacity="0.6" />
+        {/* Step 1: Foundation (Frame) */}
+        <motion.g
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: buildProgress >= 10 ? 1 : 0,
+            opacity: buildProgress >= 10 ? 1 : 0
+          }}
+          transition={{ duration: 0.5 }}
+        >
+          <rect x="50" y="50" width="500" height="700" rx="20" fill="#0f0f23" stroke="#f59e0b" strokeWidth="3" />
+        </motion.g>
+
+        {/* Step 2: Inner Border */}
+        <motion.g
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            opacity: buildProgress >= 25 ? 0.5 : 0
+          }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <rect x="70" y="70" width="460" height="660" rx="15" stroke="#f59e0b" strokeWidth="1" strokeDasharray="10 5" fill="none" />
+        </motion.g>
+
+        {/* Step 3: Corner Decorations */}
+        <motion.g
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ 
+            scale: buildProgress >= 40 ? 1 : 0,
+            opacity: buildProgress >= 40 ? 0.6 : 0
+          }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+        >
+          <circle cx="100" cy="100" r="8" fill="#f59e0b" />
+          <circle cx="500" cy="100" r="8" fill="#f59e0b" />
+          <circle cx="100" cy="700" r="8" fill="#f59e0b" />
+          <circle cx="500" cy="700" r="8" fill="#f59e0b" />
+        </motion.g>
+
+        {/* Step 4: Republic Seal */}
+        <motion.g
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ 
+            scale: buildProgress >= 40 ? 1 : 0,
+            opacity: buildProgress >= 40 ? 0.8 : 0
+          }}
+          transition={{ duration: 0.5, type: "spring" }}
+        >
+          <circle cx="300" cy="150" r="50" fill="#f59e0b" />
+          <circle cx="300" cy="150" r="40" fill="#0f0f23" />
+          <motion.text
+            x="300"
+            y="140"
+            textAnchor="middle"
+            fill="#f59e0b"
+            fontSize="12"
+            fontWeight="bold"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: buildProgress >= 45 ? 1 : 0 }}
+          >REPUBLIC</motion.text>
+          <motion.text
+            x="300"
+            y="160"
+            textAnchor="middle"
+            fill="#f59e0b"
+            fontSize="10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: buildProgress >= 48 ? 1 : 0 }}
+          >of TUNISIA</motion.text>
+        </motion.g>
+
+        {/* Step 5: Ministry Title */}
+        <motion.text
+          x="300"
+          y="240"
+          textAnchor="middle"
+          fill="#fff"
+          fontSize="16"
+          fontWeight="bold"
+          initial={{ y: 220, opacity: 0 }}
+          animate={{ 
+            y: buildProgress >= 55 ? 240 : 220,
+            opacity: buildProgress >= 55 ? 0.9 : 0
+          }}
+          transition={{ duration: 0.4 }}
+        >Ministry of Education</motion.text>
+
+        {/* Step 6: BAC Title */}
+        <motion.g
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ 
+            scale: buildProgress >= 60 ? 1 : 0.5,
+            opacity: buildProgress >= 60 ? 1 : 0
+          }}
+          transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
+        >
+          <text x="300" y="300" textAnchor="middle" fill="#f59e0b" fontSize="32" fontWeight="900">BACCALAUREATE</text>
+          <text x="300" y="340" textAnchor="middle" fill="#fbbf24" fontSize="18" opacity="0.8">Diploma</text>
+        </motion.g>
+
+        {/* Step 7: Decorative Line */}
+        <motion.line
+          x1="150"
+          y1="380"
+          x2="450"
+          y2="380"
+          stroke="#f59e0b"
+          strokeWidth="2"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ 
+            pathLength: buildProgress >= 65 ? 1 : 0,
+            opacity: buildProgress >= 65 ? 0.5 : 0
+          }}
+          transition={{ duration: 0.5 }}
+        />
+
+        {/* Step 8: Awarded Text & Student Name */}
+        <motion.text
+          x="300"
+          y="430"
+          textAnchor="middle"
+          fill="#94a3b8"
+          fontSize="12"
+          fontStyle="italic"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: buildProgress >= 70 ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+        >This diploma is awarded to</motion.text>
+
+        <motion.text
+          x="300"
+          y="480"
+          textAnchor="middle"
+          fill="#fff"
+          fontSize="28"
+          fontWeight="bold"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ 
+            scale: buildProgress >= 75 ? 1 : 0,
+            opacity: buildProgress >= 75 ? 1 : 0
+          }}
+          transition={{ duration: 0.5, type: "spring", stiffness: 300 }}
+        >YOU</motion.text>
+
+        {/* Step 9: Score Box */}
+        <motion.g
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ 
+            y: buildProgress >= 80 ? 0 : 50,
+            opacity: buildProgress >= 80 ? 1 : 0
+          }}
+          transition={{ duration: 0.5, type: "spring" }}
+        >
+          <rect x="200" y="520" width="200" height="80" rx="10" fill="#f59e0b" opacity="0.9" />
+          <text x="300" y="560" textAnchor="middle" fill="#0f0f23" fontSize="36" fontWeight="900">17.00</text>
+          <text x="300" y="580" textAnchor="middle" fill="#0f0f23" fontSize="14" fontWeight="bold">/ 20</text>
+        </motion.g>
+
+        {/* Step 10: Mention */}
+        <motion.g
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ 
+            opacity: buildProgress >= 90 ? 1 : 0,
+            scale: buildProgress >= 90 ? 1 : 0.8
+          }}
+          transition={{ duration: 0.5 }}
+        >
+          <text x="300" y="640" textAnchor="middle" fill="#22c55e" fontSize="20" fontWeight="bold">Très Bien</text>
+        </motion.g>
+
+        {/* Step 11: Session */}
+        <motion.text
+          x="300"
+          y="690"
+          textAnchor="middle"
+          fill="#64748b"
+          fontSize="12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: buildProgress >= 95 ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+        >Session: June 2026</motion.text>
+
+        {/* Completion Glow Effect */}
+        <motion.rect
+          x="50"
+          y="50"
+          width="500"
+          height="700"
+          rx="20"
+          fill="none"
+          stroke="#f59e0b"
+          strokeWidth="3"
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: buildProgress >= 100 ? [0, 0.5, 0] : 0
+          }}
+          transition={{ 
+            duration: 2,
+            repeat: buildProgress >= 100 ? Infinity : 0
+          }}
+          style={{
+            filter: buildProgress >= 100 ? "blur(10px)" : "none"
+          }}
+        />
       </motion.svg>
+
+      {/* Completion Message */}
+      <motion.div
+        className="absolute -bottom-20 left-1/2 -translate-x-1/2 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ 
+          opacity: buildProgress >= 100 ? 1 : 0,
+          y: buildProgress >= 100 ? 0 : 20
+        }}
+        transition={{ duration: 0.5 }}
+      >
+        <span className="text-amber-400 text-lg font-bold">Your Future Diploma Awaits</span>
+        <p className="text-slate-400 text-sm">Start building it today</p>
+      </motion.div>
     </motion.div>
   );
 }
