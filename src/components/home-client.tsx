@@ -159,7 +159,7 @@ function EyeCatchingHero({ badge, title, subtitle, ctaText, ctaHref, secondaryCt
       </div>
       
       {/* BAC Diploma Background */}
-      <BacDiploma mouseX={mouseX} mouseY={mouseY} />
+      <WaveBackground />
       
       {/* Ambient glow effects */}
       <div className="absolute inset-0">
@@ -352,293 +352,121 @@ function EyeCatchingHero({ badge, title, subtitle, ctaText, ctaHref, secondaryCt
   );
 }
 
-// Animated BAC Diploma being built step by step
-function BacDiploma({ mouseX, mouseY }: { mouseX: any; mouseY: any }) {
-  const rotateX = useTransform(mouseY, [-300, 300], [5, -5]);
-  const rotateY = useTransform(mouseX, [-300, 300], [-5, 5]);
-  const springRotateX = useSpring(rotateX, { stiffness: 50, damping: 20 });
-  const springRotateY = useSpring(rotateY, { stiffness: 50, damping: 20 });
-
-  const [buildProgress, setBuildProgress] = useState(0);
-  
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setBuildProgress(p => {
-        if (p >= 100) return 100;
-        return p + 1;
-      });
-    }, 100);
-    return () => clearInterval(timer);
-  }, []);
-
-  const steps = [
-    { threshold: 10, label: "Foundation" },
-    { threshold: 25, label: "Framework" },
-    { threshold: 40, label: "Identity" },
-    { threshold: 55, label: "Recognition" },
-    { threshold: 70, label: "Achievement" },
-    { threshold: 85, label: "Excellence" },
-    { threshold: 100, label: "Complete" }
-  ];
-
-  const currentStep = steps.find(s => buildProgress <= s.threshold) || steps[steps.length - 1];
-
+// Flowing Wave Background
+function WaveBackground() {
   return (
-    <motion.div
-      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
-      style={{ perspective: 1000 }}
-    >
-      {/* Progress indicator */}
-      <motion.div
-        className="absolute -top-16 left-1/2 -translate-x-1/2 flex flex-col items-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
+    <div className="absolute inset-0 overflow-hidden">
+      {/* Animated gradient waves */}
+      <svg
+        className="absolute bottom-0 left-0 w-full h-full"
+        viewBox="0 0 1440 800"
+        preserveAspectRatio="none"
       >
-        <span className="text-amber-400 text-sm font-bold mb-2">{currentStep.label}</span>
-        <div className="w-48 h-2 bg-slate-800 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-gradient-to-r from-amber-400 to-amber-500"
-            animate={{ width: `${buildProgress}%` }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-        <span className="text-slate-500 text-xs mt-1">{buildProgress}%</span>
-      </motion.div>
-
-      <motion.svg
-        width="600"
-        height="800"
-        viewBox="0 0 600 800"
-        fill="none"
-        style={{
-          rotateX: springRotateX,
-          rotateY: springRotateY,
-          transformStyle: "preserve-3d"
-        }}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 0.12, scale: 1 }}
-        transition={{ duration: 1 }}
-      >
-        {/* Step 1: Foundation (Frame) */}
-        <motion.g
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: buildProgress >= 10 ? 1 : 0,
-            opacity: buildProgress >= 10 ? 1 : 0
+        <defs>
+          <linearGradient id="wave1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.3" />
+            <stop offset="50%" stopColor="#fbbf24" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.3" />
+          </linearGradient>
+          <linearGradient id="wave2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.2" />
+            <stop offset="50%" stopColor="#a78bfa" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.2" />
+          </linearGradient>
+        </defs>
+        
+        {/* Wave 1 - Fast */}
+        <motion.path
+          fill="url(#wave1)"
+          initial={{ d: "M0,400 C360,300 720,500 1080,400 C1260,350 1380,450 1440,400 L1440,800 L0,800 Z" }}
+          animate={{
+            d: [
+              "M0,400 C360,300 720,500 1080,400 C1260,350 1380,450 1440,400 L1440,800 L0,800 Z",
+              "M0,450 C360,550 720,350 1080,450 C1260,500 1380,350 1440,450 L1440,800 L0,800 Z",
+              "M0,400 C360,300 720,500 1080,400 C1260,350 1380,450 1440,400 L1440,800 L0,800 Z"
+            ]
           }}
-          transition={{ duration: 0.5 }}
-        >
-          <rect x="50" y="50" width="500" height="700" rx="20" fill="#0f0f23" stroke="#f59e0b" strokeWidth="3" />
-        </motion.g>
-
-        {/* Step 2: Inner Border */}
-        <motion.g
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            opacity: buildProgress >= 25 ? 0.5 : 0
-          }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <rect x="70" y="70" width="460" height="660" rx="15" stroke="#f59e0b" strokeWidth="1" strokeDasharray="10 5" fill="none" />
-        </motion.g>
-
-        {/* Step 3: Corner Decorations */}
-        <motion.g
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ 
-            scale: buildProgress >= 40 ? 1 : 0,
-            opacity: buildProgress >= 40 ? 0.6 : 0
-          }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-        >
-          <circle cx="100" cy="100" r="8" fill="#f59e0b" />
-          <circle cx="500" cy="100" r="8" fill="#f59e0b" />
-          <circle cx="100" cy="700" r="8" fill="#f59e0b" />
-          <circle cx="500" cy="700" r="8" fill="#f59e0b" />
-        </motion.g>
-
-        {/* Step 4: Republic Seal */}
-        <motion.g
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ 
-            scale: buildProgress >= 40 ? 1 : 0,
-            opacity: buildProgress >= 40 ? 0.8 : 0
-          }}
-          transition={{ duration: 0.5, type: "spring" }}
-        >
-          <circle cx="300" cy="150" r="50" fill="#f59e0b" />
-          <circle cx="300" cy="150" r="40" fill="#0f0f23" />
-          <motion.text
-            x="300"
-            y="140"
-            textAnchor="middle"
-            fill="#f59e0b"
-            fontSize="12"
-            fontWeight="bold"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: buildProgress >= 45 ? 1 : 0 }}
-          >REPUBLIC</motion.text>
-          <motion.text
-            x="300"
-            y="160"
-            textAnchor="middle"
-            fill="#f59e0b"
-            fontSize="10"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: buildProgress >= 48 ? 1 : 0 }}
-          >of TUNISIA</motion.text>
-        </motion.g>
-
-        {/* Step 5: Ministry Title */}
-        <motion.text
-          x="300"
-          y="240"
-          textAnchor="middle"
-          fill="#fff"
-          fontSize="16"
-          fontWeight="bold"
-          initial={{ y: 220, opacity: 0 }}
-          animate={{ 
-            y: buildProgress >= 55 ? 240 : 220,
-            opacity: buildProgress >= 55 ? 0.9 : 0
-          }}
-          transition={{ duration: 0.4 }}
-        >Ministry of Education</motion.text>
-
-        {/* Step 6: BAC Title */}
-        <motion.g
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ 
-            scale: buildProgress >= 60 ? 1 : 0.5,
-            opacity: buildProgress >= 60 ? 1 : 0
-          }}
-          transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
-        >
-          <text x="300" y="300" textAnchor="middle" fill="#f59e0b" fontSize="32" fontWeight="900">BACCALAUREATE</text>
-          <text x="300" y="340" textAnchor="middle" fill="#fbbf24" fontSize="18" opacity="0.8">Diploma</text>
-        </motion.g>
-
-        {/* Step 7: Decorative Line */}
-        <motion.line
-          x1="150"
-          y1="380"
-          x2="450"
-          y2="380"
-          stroke="#f59e0b"
-          strokeWidth="2"
-          initial={{ pathLength: 0, opacity: 0 }}
-          animate={{ 
-            pathLength: buildProgress >= 65 ? 1 : 0,
-            opacity: buildProgress >= 65 ? 0.5 : 0
-          }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
-
-        {/* Step 8: Awarded Text & Student Name */}
-        <motion.text
-          x="300"
-          y="430"
-          textAnchor="middle"
-          fill="#94a3b8"
-          fontSize="12"
-          fontStyle="italic"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: buildProgress >= 70 ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        >This diploma is awarded to</motion.text>
-
-        <motion.text
-          x="300"
-          y="480"
-          textAnchor="middle"
-          fill="#fff"
-          fontSize="28"
-          fontWeight="bold"
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ 
-            scale: buildProgress >= 75 ? 1 : 0,
-            opacity: buildProgress >= 75 ? 1 : 0
+        
+        {/* Wave 2 - Medium */}
+        <motion.path
+          fill="url(#wave2)"
+          initial={{ d: "M0,500 C480,400 960,600 1440,500 L1440,800 L0,800 Z" }}
+          animate={{
+            d: [
+              "M0,500 C480,400 960,600 1440,500 L1440,800 L0,800 Z",
+              "M0,550 C480,650 960,450 1440,550 L1440,800 L0,800 Z",
+              "M0,500 C480,400 960,600 1440,500 L1440,800 L0,800 Z"
+            ]
           }}
-          transition={{ duration: 0.5, type: "spring", stiffness: 300 }}
-        >YOU</motion.text>
-
-        {/* Step 9: Score Box */}
-        <motion.g
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ 
-            y: buildProgress >= 80 ? 0 : 50,
-            opacity: buildProgress >= 80 ? 1 : 0
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+        />
+        
+        {/* Wave 3 - Slow base */}
+        <motion.path
+          fill="#0f172a"
+          initial={{ d: "M0,600 C480,550 960,650 1440,600 L1440,800 L0,800 Z" }}
+          animate={{
+            d: [
+              "M0,600 C480,550 960,650 1440,600 L1440,800 L0,800 Z",
+              "M0,620 C480,670 960,570 1440,620 L1440,800 L0,800 Z",
+              "M0,600 C480,550 960,650 1440,600 L1440,800 L0,800 Z"
+            ]
           }}
-          transition={{ duration: 0.5, type: "spring" }}
-        >
-          <rect x="200" y="520" width="200" height="80" rx="10" fill="#f59e0b" opacity="0.9" />
-          <text x="300" y="560" textAnchor="middle" fill="#0f0f23" fontSize="36" fontWeight="900">17.00</text>
-          <text x="300" y="580" textAnchor="middle" fill="#0f0f23" fontSize="14" fontWeight="bold">/ 20</text>
-        </motion.g>
-
-        {/* Step 10: Mention */}
-        <motion.g
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ 
-            opacity: buildProgress >= 90 ? 1 : 0,
-            scale: buildProgress >= 90 ? 1 : 0.8
-          }}
-          transition={{ duration: 0.5 }}
-        >
-          <text x="300" y="640" textAnchor="middle" fill="#22c55e" fontSize="20" fontWeight="bold">Très Bien</text>
-        </motion.g>
-
-        {/* Step 11: Session */}
-        <motion.text
-          x="300"
-          y="690"
-          textAnchor="middle"
-          fill="#64748b"
-          fontSize="12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: buildProgress >= 95 ? 1 : 0 }}
-          transition={{ duration: 0.5 }}
-        >Session: June 2026</motion.text>
-
-        {/* Completion Glow Effect */}
-        <motion.rect
-          x="50"
-          y="50"
-          width="500"
-          height="700"
-          rx="20"
-          fill="none"
-          stroke="#f59e0b"
-          strokeWidth="3"
-          initial={{ opacity: 0 }}
-          animate={{ 
-            opacity: buildProgress >= 100 ? [0, 0.5, 0] : 0
-          }}
-          transition={{ 
-            duration: 2,
-            repeat: buildProgress >= 100 ? Infinity : 0
-          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+      </svg>
+      
+      {/* Floating particles */}
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full"
           style={{
-            filter: buildProgress >= 100 ? "blur(10px)" : "none"
+            width: Math.random() * 6 + 2,
+            height: Math.random() * 6 + 2,
+            background: i % 2 === 0 ? '#f59e0b' : '#8b5cf6',
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`
+          }}
+          animate={{
+            y: [0, -30, 0],
+            x: [0, Math.random() * 20 - 10, 0],
+            opacity: [0.2, 0.8, 0.2],
+            scale: [1, 1.5, 1]
+          }}
+          transition={{
+            duration: 2 + Math.random() * 2,
+            repeat: Infinity,
+            delay: Math.random() * 2
           }}
         />
-      </motion.svg>
-
-      {/* Completion Message */}
-      <motion.div
-        className="absolute -bottom-20 left-1/2 -translate-x-1/2 text-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ 
-          opacity: buildProgress >= 100 ? 1 : 0,
-          y: buildProgress >= 100 ? 0 : 20
-        }}
-        transition={{ duration: 0.5 }}
-      >
-        <span className="text-amber-400 text-lg font-bold">Your Future Diploma Awaits</span>
-        <p className="text-slate-400 text-sm">Start building it today</p>
-      </motion.div>
-    </motion.div>
+      ))}
+      
+      {/* Speed lines */}
+      {[...Array(5)].map((_, i) => (
+        <motion.div
+          key={`line-${i}`}
+          className="absolute h-px bg-gradient-to-r from-transparent via-amber-400/50 to-transparent"
+          style={{
+            width: '200px',
+            left: `${Math.random() * 100}%`,
+            top: `${20 + Math.random() * 60}%`
+          }}
+          animate={{
+            x: [-200, 1440],
+            opacity: [0, 1, 0]
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            delay: i * 0.3,
+            ease: "easeOut"
+          }}
+        />
+      ))}
+    </div>
   );
 }
 function SectionTitle({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle?: string }) {
