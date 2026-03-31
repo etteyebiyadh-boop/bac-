@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
+  Award,
   BarChart3,
   BookOpen,
   Calendar,
@@ -23,6 +24,12 @@ interface HomeClientProps {
   isRTL: boolean;
 }
 
+interface HeroStep {
+  title: string;
+  description: string;
+  cue: string;
+}
+
 interface LandingCopy {
   badge: string;
   heroTitle: string;
@@ -31,11 +38,13 @@ interface LandingCopy {
   secondaryCta: string;
   proof: string[];
   metrics: Array<{ value: string; label: string }>;
-  visualEyebrow: string;
-  visualTitle: string;
-  visualNote: string;
-  weeklyLabel: string;
-  weeklyTasks: string[];
+  buildLabel: string;
+  candidateLabel: string;
+  candidateName: string;
+  candidateNote: string;
+  buildSteps: HeroStep[];
+  diplomaTag: string;
+  diplomaNote: string;
   stripCards: Array<{ title: string; description: string }>;
   workflowEyebrow: string;
   workflowTitle: string;
@@ -57,253 +66,301 @@ interface LandingCopy {
 
 const landingCopy: Record<SiteLanguage, LandingCopy> = {
   en: {
-    badge: "Focused Tunisian Bac prep",
-    heroTitle: "Know what to study next from the first screen.",
+    badge: "The diploma is the target",
+    heroTitle: "Build the Bac diploma before exam day arrives.",
     heroSubtitle:
-      "Choose your Bac section, unlock the right diagnostic, and work with /20 feedback built for Tunisian Baccalaureate students.",
-    primaryCta: "Choose my Bac path",
+      "Turn diagnostics, writing, revision, and mock practice into a hero that feels earned. The first screen should look like the goal students actually care about.",
+    primaryCta: "Start building my Bac path",
     secondaryCta: "Open diagnostic",
     proof: [
-      "Bac-style writing correction with clear /20 logic.",
-      "Roadmaps shaped by section and optional language.",
-      "A calmer start that helps students move instead of hesitating.",
+      "The diploma becomes the visual target instead of a generic premium UI.",
+      "Every animated step maps to real study work students understand immediately.",
+      "The paper uses a serious Tunisian Bac-inspired composition in Arabic and French.",
     ],
     metrics: [
-      { value: "6", label: "Bac sections covered" },
-      { value: "3", label: "Optional languages" },
-      { value: "/20", label: "Feedback-first scoring" },
+      { value: "4", label: "Study stages build the paper" },
+      { value: "6", label: "Bac sections supported" },
+      { value: "/20", label: "Score logic stays visible" },
     ],
-    visualEyebrow: "Student view",
-    visualTitle: "One dashboard. One roadmap. One place to improve.",
-    visualNote:
-      "The opening experience now feels more academic, more credible, and easier to trust on day one.",
-    weeklyLabel: "This week's focus",
-    weeklyTasks: [
-      "Take the English diagnostic",
-      "Fix writing structure and transitions",
-      "Review the optional language roadmap",
+    buildLabel: "How the diploma gets built",
+    candidateLabel: "Bac candidate",
+    candidateName: "Student 2026",
+    candidateNote: "Each finished step locks another part of the diploma into place.",
+    buildSteps: [
+      {
+        title: "Diagnostic",
+        description: "Find the real starting level before touching random lessons.",
+        cue: "draws the frame",
+      },
+      {
+        title: "Writing Lab",
+        description: "Correct structure, grammar, and Bac-style expression.",
+        cue: "writes the body",
+      },
+      {
+        title: "Revision",
+        description: "Strengthen the weak spots that actually cost marks.",
+        cue: "protects the mention",
+      },
+      {
+        title: "Mock Exam",
+        description: "Seal progress with timed practice under exam pressure.",
+        cue: "stamps the result",
+      },
     ],
+    diplomaTag: "Tunisian Bac target",
+    diplomaNote:
+      "A diploma-inspired hero makes the ambition visible: not just learning languages, but earning the paper students dream about holding.",
     stripCards: [
       {
-        title: "Know your level",
-        description:
-          "Students begin with a real starting point instead of guessing what to revise first.",
+        title: "A real symbol",
+        description: "The hero now points to the official-looking paper students are chasing, not a decorative dashboard.",
       },
       {
-        title: "Fix what costs marks",
-        description:
-          "Writing feedback points to structure, grammar, and Bac scoring expectations.",
+        title: "A visible build-up",
+        description: "The animation tells a story: each study action adds a real layer instead of moving abstract shapes.",
       },
       {
-        title: "Keep momentum",
-        description:
-          "Daily study actions make the platform feel useful after the first visit too.",
+        title: "A student-first mood",
+        description: "The page feels serious, ambitious, and emotionally tied to the Bac goal from the first second.",
       },
     ],
     workflowEyebrow: "Built around the Bac workflow",
-    workflowTitle: "A platform that tells students what to do next.",
+    workflowTitle: "Every study block should feel like it adds something real.",
     workflowSubtitle:
-      "The first page now introduces the real study loop: diagnose, practice, and track progress without the noise of a generic language app.",
+      "The diploma-first opening works because the study loop is clear: diagnose, practise, reinforce, then prove it under mock conditions.",
     workflowBullets: [
-      "Start with a diagnostic before touching random lessons.",
-      "Keep writing, reading, and roadmap work in the same system.",
-      "Make English, French, and the optional language feel connected.",
+      "Start from the section and language combination that actually matches the student.",
+      "Keep writing, reading, and roadmap work inside one focused routine.",
+      "Make the dream outcome visible without making the page childish or noisy.",
     ],
     workflowSteps: [
       {
         title: "Diagnose",
-        description: "Find the current level quickly and stop revising blindly.",
+        description: "Set the right level and remove the guesswork from revision.",
       },
       {
-        title: "Practice",
-        description: "Work on the skills that matter most for Bac performance.",
+        title: "Practise",
+        description: "Work on the exact skills that move the Bac result upward.",
       },
       {
-        title: "Improve",
-        description: "Follow one roadmap and keep progress visible every week.",
+        title: "Earn It",
+        description: "Turn consistent effort into a result students can imagine holding.",
       },
     ],
     sectionsLabel: "Available sections",
     selectorEyebrow: "Personalized start",
-    selectorTitle: "Choose the track the student actually belongs to.",
+    selectorTitle: "Choose the Bac path that will build the right diploma.",
     selectorSubtitle:
-      "This is where the experience becomes personal: section, optional language, and a roadmap that makes sense from the first click.",
+      "The roadmap should begin with the student's real section and optional language, not with a generic lesson library.",
     featureEyebrow: "What the platform gives you",
-    featureTitle: "Every screen should lead back to better Bac marks.",
+    featureTitle: "The study tools should feel connected to the final paper.",
     featureSubtitle:
-      "These are the study tools students expect to see immediately when they open the platform.",
+      "The home page now points every action back to the result: stronger writing, smarter diagnostics, and better Bac decisions.",
     diagnosticTitle: "Level-based diagnostics",
     diagnosticDescription:
-      "Quick tests give each student a tighter roadmap before they dive into lessons.",
-    finalEyebrow: "Ready to begin",
+      "Quick tests give each student a real starting point before they commit to the next lessons.",
+    finalEyebrow: "Ready to build it",
     finalNote:
-      "Create an account to save the roadmap, feedback history, and next study steps in one place.",
+      "Create an account to save the roadmap, writing feedback, and every stage that moves the student closer to the diploma.",
   },
   fr: {
-    badge: "Préparation Bac tunisien, claire et sérieuse",
-    heroTitle: "Dès le premier écran, l'étudiant sait quoi réviser ensuite.",
+    badge: "Le diplôme devient la cible",
+    heroTitle: "Construisez le diplôme du Bac avant même le jour de l'examen.",
     heroSubtitle:
-      "Choisissez votre section, lancez le bon diagnostic et travaillez avec un feedback sur 20 pensé pour le Bac tunisien.",
-    primaryCta: "Choisir mon parcours",
+      "Transformez diagnostic, écriture, révision et simulation en une entrée qui semble méritée. Le premier écran doit montrer l'objectif que l'étudiant veut vraiment atteindre.",
+    primaryCta: "Commencer mon parcours Bac",
     secondaryCta: "Ouvrir le diagnostic",
     proof: [
-      "Correction d'écriture alignée sur une logique Bac et une note sur 20.",
-      "Roadmaps adaptées à la section et à la langue optionnelle.",
-      "Une entrée plus calme et plus crédible pour donner envie de commencer.",
+      "Le diplôme devient la cible visuelle au lieu d'une interface premium générique.",
+      "Chaque étape animée correspond à un vrai travail scolaire compréhensible par l'étudiant.",
+      "Le papier reprend une composition sérieuse inspirée du Bac tunisien en arabe et en français.",
     ],
     metrics: [
-      { value: "6", label: "Sections Bac couvertes" },
-      { value: "3", label: "Langues optionnelles" },
-      { value: "/20", label: "Feedback orienté note" },
+      { value: "4", label: "Étapes pour construire le diplôme" },
+      { value: "6", label: "Sections Bac prises en charge" },
+      { value: "/20", label: "La logique de note reste visible" },
     ],
-    visualEyebrow: "Vue étudiant",
-    visualTitle: "Un dashboard, une roadmap, un seul endroit pour progresser.",
-    visualNote:
-      "L'ouverture paraît maintenant plus académique, plus crédible et plus rassurante dès le premier jour.",
-    weeklyLabel: "Focus de la semaine",
-    weeklyTasks: [
-      "Passer le diagnostic d'anglais",
-      "Corriger la structure et les transitions",
-      "Revoir la roadmap de la langue optionnelle",
+    buildLabel: "Comment le diplôme se construit",
+    candidateLabel: "Candidat Bac",
+    candidateName: "Étudiant 2026",
+    candidateNote: "Chaque étape terminée verrouille une nouvelle partie du diplôme.",
+    buildSteps: [
+      {
+        title: "Diagnostic",
+        description: "Définir le vrai niveau avant d'ouvrir des leçons au hasard.",
+        cue: "trace le cadre",
+      },
+      {
+        title: "Atelier d'écriture",
+        description: "Corriger structure, grammaire et expression type Bac.",
+        cue: "écrit le contenu",
+      },
+      {
+        title: "Révision",
+        description: "Renforcer les faiblesses qui coûtent vraiment des points.",
+        cue: "protège la mention",
+      },
+      {
+        title: "Simulation",
+        description: "Valider les progrès sous la pression d'un vrai sujet chronométré.",
+        cue: "pose le sceau final",
+      },
     ],
+    diplomaTag: "Cible Bac tunisien",
+    diplomaNote:
+      "Un hero inspiré du diplôme rend l'ambition visible: il ne s'agit pas seulement d'apprendre, mais d'obtenir le papier que l'étudiant rêve de tenir.",
     stripCards: [
       {
-        title: "Connaître son niveau",
-        description:
-          "L'étudiant commence avec un vrai point de départ au lieu de réviser au hasard.",
+        title: "Un vrai symbole",
+        description: "Le hero montre maintenant le papier officiel que l'étudiant vise, pas un tableau de bord décoratif.",
       },
       {
-        title: "Corriger ce qui fait perdre des points",
-        description:
-          "Le feedback d'écriture cible la structure, la grammaire et les attentes du Bac.",
+        title: "Une construction visible",
+        description: "L'animation raconte une progression: chaque effort ajoute une vraie couche au lieu de déplacer des formes abstraites.",
       },
       {
-        title: "Garder le rythme",
-        description:
-          "Les actions quotidiennes rendent la plateforme utile après la première visite aussi.",
+        title: "Une ambiance plus juste",
+        description: "La page paraît plus sérieuse, ambitieuse et liée au vrai objectif du Bac dès la première seconde.",
       },
     ],
-    workflowEyebrow: "Construit autour du vrai flux Bac",
-    workflowTitle: "Une plateforme qui indique quoi faire ensuite.",
+    workflowEyebrow: "Construit autour du vrai rythme Bac",
+    workflowTitle: "Chaque session d'étude doit sembler utile et concrète.",
     workflowSubtitle:
-      "La première page introduit maintenant la vraie boucle de travail: diagnostiquer, pratiquer et suivre ses progrès sans l'effet application générique.",
+      "L'ouverture centrée sur le diplôme fonctionne parce que la boucle d'étude est claire: diagnostiquer, pratiquer, renforcer, puis prouver le niveau en simulation.",
     workflowBullets: [
-      "Commencer par un diagnostic avant d'ouvrir des leçons au hasard.",
-      "Garder écriture, lecture et roadmap dans le même système.",
-      "Relier anglais, français et langue optionnelle dans une seule routine.",
+      "Partir de la vraie section et de la bonne langue optionnelle.",
+      "Garder écriture, lecture et roadmap dans une seule routine cohérente.",
+      "Rendre le résultat final visible sans tomber dans un design enfantin.",
     ],
     workflowSteps: [
       {
         title: "Diagnostiquer",
-        description: "Situer rapidement le niveau et arrêter de réviser à l'aveugle.",
+        description: "Fixer le bon niveau et enlever le hasard de la révision.",
       },
       {
         title: "Pratiquer",
-        description: "Travailler les compétences qui pèsent vraiment dans la note.",
+        description: "Travailler les compétences qui font réellement monter la note.",
       },
       {
-        title: "Progresser",
-        description: "Suivre une roadmap claire et garder les progrès visibles.",
+        title: "Le mériter",
+        description: "Transformer l'effort régulier en résultat que l'étudiant peut déjà imaginer.",
       },
     ],
     sectionsLabel: "Sections disponibles",
     selectorEyebrow: "Départ personnalisé",
-    selectorTitle: "Choisissez la filière réelle de l'étudiant.",
+    selectorTitle: "Choisissez le parcours Bac qui construira le bon diplôme.",
     selectorSubtitle:
-      "C'est ici que l'expérience devient personnelle: section, langue optionnelle et roadmap cohérente dès le premier clic.",
+      "La roadmap doit commencer par la vraie section et la vraie langue optionnelle, pas par une bibliothèque générique.",
     featureEyebrow: "Ce que la plateforme apporte",
-    featureTitle: "Chaque écran doit rapprocher d'une meilleure note au Bac.",
+    featureTitle: "Les outils d'étude doivent tous pointer vers le diplôme final.",
     featureSubtitle:
-      "Voici les outils d'étude que les étudiants veulent voir immédiatement en arrivant.",
+      "La page d'accueil relie désormais chaque action au résultat: meilleure écriture, diagnostic plus juste et décisions Bac plus intelligentes.",
     diagnosticTitle: "Diagnostics par niveau",
     diagnosticDescription:
-      "Des tests rapides donnent une roadmap plus précise avant même d'entrer dans la bibliothèque.",
-    finalEyebrow: "Prêt à commencer",
+      "Des tests rapides donnent à chaque étudiant un point de départ réel avant les prochaines leçons.",
+    finalEyebrow: "Prêt à le construire",
     finalNote:
-      "Créez un compte pour enregistrer la roadmap, l'historique des corrections et les prochaines étapes.",
+      "Créez un compte pour sauvegarder la roadmap, les corrections d'écriture et chaque étape qui rapproche du diplôme.",
   },
   ar: {
-    badge: "منصة باك تونسية أوضح وأكثر جدية",
-    heroTitle: "من أول شاشة، الطالب يعرف شنوّة يراجع بعد.",
+    badge: "الدبلوم ولى هو الهدف",
+    heroTitle: "ابني دبلوم الباك قبل ما يجي نهار الامتحان.",
     heroSubtitle:
-      "اختار الشعبة متاعك، افتح التشخيص الصحيح، وخذ Feedback على /20 معمول خصيصًا لتلامذة الباك التونسي.",
-    primaryCta: "اختار مسارك",
+      "حوّل التشخيص والكتابة والمراجعة والامتحان التجريبي إلى افتتاحية تحسّها مستحقّة. أول شاشة لازم توري الطالب الهدف اللي يحب يوصل له فعلاً.",
+    primaryCta: "ابدأ مسار الباك",
     secondaryCta: "افتح التشخيص",
     proof: [
-      "تصحيح Writing بمنطق الباك ومع ملاحظات واضحة على /20.",
-      "Roadmaps تتبدل حسب الشعبة واللغة الاختيارية.",
-      "بداية أهدأ وأوضح تخلي الطالب يحب يبدأ من أول مرة.",
+      "الدبلوم ولى الهدف البصري بدل واجهة premium عامة وما عندها حتى معنى.",
+      "كل مرحلة في الأنيميشن مربوطة بخدمة حقيقية يفهمها الطالب مباشرة.",
+      "شكل الورقة جدي ومستوحي من شهادة الباك التونسية بالعربية والفرنسية.",
     ],
     metrics: [
-      { value: "6", label: "شعب باك" },
-      { value: "3", label: "لغات اختيارية" },
-      { value: "/20", label: "Feedback موجّه للنقطة" },
+      { value: "4", label: "مراحل تبني الشهادة" },
+      { value: "6", label: "شعب باك مدعومة" },
+      { value: "/20", label: "منطق النقطة حاضر" },
     ],
-    visualEyebrow: "واجهة الطالب",
-    visualTitle: "Dashboard واحدة، roadmap واحدة، ومكان واحد للتحسن.",
-    visualNote:
-      "الانطباع الأول ولىّ أكثر أكاديمية، أكثر مصداقية، وأسهل باش يثق فيه الطالب من النهار الأول.",
-    weeklyLabel: "تركيز الأسبوع",
-    weeklyTasks: [
-      "اعمل تشخيص الإنجليزية",
-      "صلّح structure و transitions",
-      "راجع roadmap متاع اللغة الاختيارية",
+    buildLabel: "كيفاش تتبنى الشهادة",
+    candidateLabel: "مترشح باك",
+    candidateName: "طالب 2026",
+    candidateNote: "كل مرحلة تكملها تركّب جزء جديد من الشهادة في بلاصتو.",
+    buildSteps: [
+      {
+        title: "التشخيص",
+        description: "حدّد المستوى الحقيقي قبل ما تدخل لدروس عشوائية.",
+        cue: "يرسم الإطار",
+      },
+      {
+        title: "مخبر الكتابة",
+        description: "يصلّح structure و grammar والتعبير متاع الباك.",
+        cue: "يكتب المحتوى",
+      },
+      {
+        title: "المراجعة",
+        description: "يقوّي النقاط الضعيفة اللي تنقص فعلاً في العدد.",
+        cue: "يحمي الملاحظة",
+      },
+      {
+        title: "الامتحان التجريبي",
+        description: "يثبّت التقدّم تحت الضغط وفي وقت حقيقي.",
+        cue: "يحط الختم النهائي",
+      },
     ],
+    diplomaTag: "هدف الباك التونسي",
+    diplomaNote:
+      "Hero مستوحى من الشهادة يخلّي الطموح ظاهر: موش مجرد تعلّم لغات، بل الورقة اللي الطالب يحلم يشدّها بيديه.",
     stripCards: [
       {
-        title: "اعرف مستواك",
-        description:
-          "الطالب يبدأ من نقطة واضحة بدل ما يضيع في مراجعة عشوائية.",
+        title: "رمز حقيقي",
+        description: "الافتتاحية تورّي الآن الورقة اللي الطالب يجري عليها، موش dashboard مزخرفة.",
       },
       {
-        title: "صلّح الحاجات اللي تنقص في النقطة",
-        description:
-          "تصحيح الكتابة يركّز على structure و grammar ومتطلبات الباك.",
+        title: "بناء واضح",
+        description: "الأنيميشن يروي قصة: كل خدمة دراسية تضيف طبقة حقيقية بدل أشكال تتحرّك بلا معنى.",
       },
       {
-        title: "حافظ على النسق",
-        description:
-          "المهام اليومية تخلي المنصة نافعة حتى بعد أول زيارة.",
+        title: "إحساس أقرب للطالب",
+        description: "الصفحة ولات أكثر جدية وطموح ومرتبطة بهدف الباك من أول ثانية.",
       },
     ],
-    workflowEyebrow: "مبنية على طريقة خدمة الباك",
-    workflowTitle: "منصة تقول للطالب شنوّة يعمل بعد.",
+    workflowEyebrow: "مبنية على منطق خدمة الباك",
+    workflowTitle: "كل session مراجعة لازم تحسّها تضيف حاجة حقيقية.",
     workflowSubtitle:
-      "الصفحة الأولى تقدّم الآن الدورة الحقيقية للمراجعة: تشخيص، تدريب، ومتابعة تقدّم بدون ضجيج تطبيقات اللغات العادية.",
+      "الافتتاحية المرتكزة على الشهادة تنجح خاطر دورة الخدمة واضحة: تشخيص، تدريب، تقوية، وبعدها إثبات المستوى في mock.",
     workflowBullets: [
-      "ابدأ بتشخيص قبل ما تدخل لدروس عشوائية.",
-      "خلّي الكتابة والقراءة والroadmap في نفس المنظومة.",
-      "اربط الإنجليزية والفرنسية واللغة الاختيارية في routine وحدة.",
+      "ابدأ بالشعبة واللغة الاختيارية اللي يخصّوا الطالب فعلاً.",
+      "خلّي الكتابة والقراءة والroadmap في routine وحدة مركّزة.",
+      "ورّي النتيجة النهائية من غير ما الصفحة تولّي طفولية أو noisy.",
     ],
     workflowSteps: [
       {
         title: "شخّص",
-        description: "اعرف المستوى بسرعة وبطّل المراجعة العشوائية.",
+        description: "حدّد المستوى الصحيح وانحّي العشوائية من المراجعة.",
       },
       {
         title: "تدرّب",
-        description: "خدم على المهارات اللي تفرق فعلاً في نقطة الباك.",
+        description: "اخدم على المهارات اللي ترفع فعلاً نتيجة الباك.",
       },
       {
-        title: "تقدّم",
-        description: "اتبع roadmap واضحة وخلي التقدّم ظاهر كل أسبوع.",
+        title: "استحقّه",
+        description: "حوّل الجهد المنتظم لنتيجة الطالب ينجم يتخيلها قدّامه.",
       },
     ],
     sectionsLabel: "الشعب الموجودة",
     selectorEyebrow: "بداية شخصية",
-    selectorTitle: "اختار المسار الحقيقي متاع الطالب.",
+    selectorTitle: "اختار مسار الباك اللي يبني الشهادة الصحيحة.",
     selectorSubtitle:
-      "من هنا تولّي التجربة شخصية: شعبة، لغة اختيارية، وroadmap منطقية من أول click.",
+      "الroadmap لازم تبدأ بالشعبة واللغة الاختيارية الحقيقيتين، موش بمكتبة دروس عامة.",
     featureEyebrow: "شنوّة تعطيك المنصة",
-    featureTitle: "كل شاشة لازم تقرّب الطالب من نقطة خير في الباك.",
+    featureTitle: "كل أداة دراسة لازم تربطك بالشهادة النهائية.",
     featureSubtitle:
-      "هاذم أهم أدوات الدراسة اللي الطالب يحب يلقاهم مباشرة كي يفتح المنصة.",
+      "الصفحة الأولى تردّ كل action لنفس الهدف: كتابة أقوى، تشخيص أذكى، وقرارات باك أوضح.",
     diagnosticTitle: "تشخيص حسب المستوى",
     diagnosticDescription:
-      "اختبارات سريعة تعطي لكل طالب roadmap أدق قبل ما يدخل للمكتبة.",
-    finalEyebrow: "جاهز تبدأ",
+      "اختبارات سريعة تعطي لكل طالب نقطة انطلاق حقيقية قبل ما يكمل الطريق.",
+    finalEyebrow: "جاهز تبنيه",
     finalNote:
-      "اعمل compte باش تحفظ roadmap والfeedback وكل الخطوات الجاية في بلاصة واحدة.",
+      "اعمل compte باش تحفظ roadmap وتصحيح الكتابة وكل مرحلة تقرّبك من الشهادة.",
   },
 };
 
@@ -313,9 +370,10 @@ const sectionLabels: Record<SiteLanguage, string[]> = {
   ar: ["رياضيات", "علوم", "تقني", "اقتصاد", "آداب", "إعلامية"],
 };
 
-const stripIcons: LucideIcon[] = [BookOpen, NotebookPen, Calendar];
-const workflowIcons: LucideIcon[] = [Target, NotebookPen, BarChart3];
+const stripIcons: LucideIcon[] = [Target, NotebookPen, Award];
+const workflowIcons: LucideIcon[] = [Target, NotebookPen, Award];
 const featureIcons: LucideIcon[] = [NotebookPen, Library, Target, Calendar];
+const buildIcons: LucideIcon[] = [Target, NotebookPen, BookOpen, BarChart3];
 
 const revealProps = {
   initial: { opacity: 0, y: 24 },
@@ -417,6 +475,187 @@ function ProductCard({
   );
 }
 
+function DiplomaScene({ copy }: { copy: LandingCopy }) {
+  return (
+    <div className="landing-diploma-scene">
+      <div className="landing-diploma-target" aria-hidden="true" />
+
+      <motion.div
+        className="landing-builder-candidate"
+        initial={{ opacity: 0, x: -32 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
+        <div className="landing-builder-avatar">
+          <Image
+            src="/student.png"
+            alt="Bac student preparing for the diploma target"
+            fill
+            sizes="72px"
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+        <div className="landing-builder-candidate-copy">
+          <span className="landing-builder-label">{copy.candidateLabel}</span>
+          <strong>{copy.candidateName}</strong>
+          <p>{copy.candidateNote}</p>
+        </div>
+      </motion.div>
+
+      <div className="landing-builder-rail">
+        <span className="landing-builder-rail-title">{copy.buildLabel}</span>
+        {copy.buildSteps.map((step, index) => {
+          const Icon = buildIcons[index];
+
+          return (
+            <motion.div
+              key={step.title}
+              className={`landing-builder-card landing-puzzle-piece landing-puzzle-piece-${index + 1}`}
+              initial={{
+                opacity: 0,
+                x: index % 2 === 0 ? -70 : 70,
+                y: index < 2 ? -40 : 50,
+                rotate: index % 2 === 0 ? -10 : 10,
+              }}
+              animate={{ opacity: 1, x: 0, y: 0, rotate: 0 }}
+              transition={{ duration: 0.65, delay: 0.28 + index * 0.18 }}
+            >
+              <div className="landing-builder-card-top">
+                <div className="landing-builder-icon">
+                  <Icon size={18} />
+                </div>
+                <span className="landing-builder-step">0{index + 1}</span>
+              </div>
+              <strong>{step.title}</strong>
+              <p>{step.description}</p>
+              <span className="landing-builder-cue">{step.cue}</span>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <motion.div
+        className="landing-diploma-paper"
+        initial={{ opacity: 0, y: 20, rotate: 7, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, rotate: 5, scale: 1 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        <div className="landing-diploma-pattern landing-diploma-pattern-a" aria-hidden="true" />
+        <div className="landing-diploma-pattern landing-diploma-pattern-b" aria-hidden="true" />
+
+        <motion.div
+          className="landing-diploma-score-chip"
+          initial={{ opacity: 0, y: -10, scale: 0.85 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.45, delay: 1.55 }}
+        >
+          <span>Target</span>
+          <strong>17.20/20</strong>
+        </motion.div>
+
+        <motion.div
+          className="landing-diploma-header"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.62 }}
+        >
+          <span className="landing-diploma-republic">REPUBLIQUE TUNISIENNE</span>
+          <span className="landing-diploma-ministry">MINISTERE DE L&apos;EDUCATION ET DE LA FORMATION</span>
+          <div className="landing-diploma-title-wrap">
+            <strong>DIPLOME DU BACCALAUREAT</strong>
+            <span className="landing-diploma-subline">Le Ministre de l&apos;Education et de la Formation</span>
+          </div>
+          <div className="landing-diploma-divider" />
+        </motion.div>
+
+        <motion.div
+          className="landing-diploma-body"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.95 }}
+        >
+          <p className="landing-diploma-script landing-diploma-script-law">
+            Vu la loi n°2002-80 du 23 Juillet 2002, relative au régime éducatif et à l&apos;enseignement scolaire et notamment son article 62.
+          </p>
+          <p className="landing-diploma-script landing-diploma-script-fr">
+            Vu le procès verbal final d&apos;admission à l&apos;examen du Baccalauréat. A décerné le présent Diplôme à :
+          </p>
+
+          <div className="landing-diploma-fields">
+            <div className="landing-diploma-field">
+              <span className="landing-diploma-field-label">Nom et prénom</span>
+              <strong className="landing-diploma-field-value">Wassim BESSAAD</strong>
+            </div>
+            <div className="landing-diploma-field">
+              <span className="landing-diploma-field-label">Né le</span>
+              <strong className="landing-diploma-field-value">19.02.1990 à Tunis - Gouvernorat de Tunis</strong>
+            </div>
+            <div className="landing-diploma-field-grid">
+              <div className="landing-diploma-field">
+                <span className="landing-diploma-field-label">Session de Juin 2008</span>
+                <strong className="landing-diploma-field-value">Section : Sciences Informatiques</strong>
+              </div>
+              <div className="landing-diploma-field">
+                <span className="landing-diploma-field-label">Identification</span>
+                <strong className="landing-diploma-field-value">Série : 00018 - N° d&apos;inscription : 113392</strong>
+              </div>
+            </div>
+          </div>
+
+          <div className="landing-diploma-award">
+            <div className="landing-diploma-law">
+              <span>Avec la mention : « Passable ».</span>
+              <span>Tunis, le 24.06.2008</span>
+              <span>P/Le Ministre de l&apos;Education et de la Formation et P.O</span>
+            </div>
+            <div className="landing-diploma-mention-box">
+              <span>Numéro</span>
+              <strong>N°502942</strong>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="landing-diploma-seal"
+          initial={{ opacity: 0, scale: 0.4, rotate: -28 }}
+          animate={{ opacity: 1, scale: 1, rotate: -16 }}
+          transition={{ type: "spring", stiffness: 180, damping: 18, delay: 1.45 }}
+        >
+          <span>
+            MINISTERE
+            <br />
+            EDUCATION
+          </span>
+        </motion.div>
+
+        <motion.div
+          className="landing-diploma-signatures"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 1.3 }}
+        >
+          <div className="landing-signature">
+            <span>Chef du Centre de Correction</span>
+          </div>
+          <div className="landing-signature">
+            <span>NB : le présent n&apos;est délivré qu&apos;une seule fois</span>
+          </div>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        className="landing-diploma-caption"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 1.7 }}
+      >
+        <span className="landing-photo-kicker">{copy.diplomaTag}</span>
+        <p>{copy.diplomaNote}</p>
+      </motion.div>
+    </div>
+  );
+}
+
 export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
   const copy = landingCopy[lang] || landingCopy.en;
   const sections = sectionLabels[lang] || sectionLabels.en;
@@ -444,7 +683,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
       <section className="landing-stage">
         <div className="landing-shell">
           <motion.div className="landing-hero" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="landing-hero-inner">
+            <div className="landing-hero-inner landing-hero-inner-diploma">
               <div className="landing-copy" style={{ textAlign: isRTL ? "right" : "left" }}>
                 <span className="landing-badge">{copy.badge}</span>
                 <h1 className="landing-title">{copy.heroTitle}</h1>
@@ -479,52 +718,9 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
                 </div>
               </div>
 
-              <motion.div
-                className="landing-visual"
-                initial={{ opacity: 0, x: isRTL ? -24 : 24 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.65, delay: 0.1 }}
-              >
-                <div className="landing-portrait-card">
-                  <div className="landing-portrait-media">
-                    <Image
-                      src="/student.png"
-                      alt="Student studying with BacLang"
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 40vw"
-                      style={{ objectFit: "cover" }}
-                      priority
-                    />
-                  </div>
-                  <div className="landing-photo-caption" style={{ textAlign: isRTL ? "right" : "left" }}>
-                    <span className="landing-photo-kicker">{copy.visualEyebrow}</span>
-                    <h3>{copy.visualTitle}</h3>
-                    <p>{copy.visualNote}</p>
-                  </div>
-                </div>
-
-                <div className="landing-floating-card" style={{ textAlign: isRTL ? "right" : "left" }}>
-                  <span className="landing-floating-label">{copy.weeklyLabel}</span>
-                  <div className="landing-task-list">
-                    {copy.weeklyTasks.map((task) => (
-                      <div key={task} className="landing-task-item">
-                        <span className="landing-task-dot" />
-                        <span>{task}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="landing-dashboard-peek">
-                  <Image
-                    src="/dashboard.png"
-                    alt="BacLang dashboard preview"
-                    width={360}
-                    height={250}
-                    className="landing-dashboard-image"
-                  />
-                </div>
-              </motion.div>
+              <div className="landing-visual">
+                <DiplomaScene copy={copy} />
+              </div>
             </div>
           </motion.div>
         </div>
