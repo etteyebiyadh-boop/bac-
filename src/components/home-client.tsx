@@ -137,9 +137,20 @@ function TypeText({ text, delay = 0 }: { text: string; delay?: number }) {
 function EyeCatchingHero({ badge, title, subtitle, ctaText, ctaHref, secondaryCtaText, secondaryCtaHref, isRTL }: any) {
   const particles = Array.from({ length: 30 }, (_, i) => i);
   const words = title.split(' ');
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
   
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left - rect.width / 2);
+    mouseY.set(e.clientY - rect.top - rect.height / 2);
+  };
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-950">
+    <section 
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-950"
+      onMouseMove={handleMouseMove}
+    >
       {/* Particle background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {particles.map((i) => (
@@ -147,21 +158,12 @@ function EyeCatchingHero({ badge, title, subtitle, ctaText, ctaHref, secondaryCt
         ))}
       </div>
       
-      {/* Animated gradient background */}
+      {/* BAC Diploma Background */}
+      <BacDiploma mouseX={mouseX} mouseY={mouseY} />
+      
+      {/* Ambient glow effects */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/30" />
-        <motion.div
-          className="absolute top-1/4 left-1/4 w-[800px] h-[800px] rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.2) 0%, transparent 60%)' }}
-          animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, -30, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 60%)' }}
-          animate={{ scale: [1, 1.3, 1], x: [0, -40, 0], y: [0, 40, 0] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900/90 to-amber-950/20" />
         
         {/* Grid pattern overlay */}
         <div 
@@ -350,7 +352,80 @@ function EyeCatchingHero({ badge, title, subtitle, ctaText, ctaHref, secondaryCt
   );
 }
 
-// Section title component
+// BAC Diploma SVG Component
+function BacDiploma({ mouseX, mouseY }: { mouseX: any; mouseY: any }) {
+  const rotateX = useTransform(mouseY, [-300, 300], [10, -10]);
+  const rotateY = useTransform(mouseX, [-300, 300], [-10, 10]);
+  const springRotateX = useSpring(rotateX, { stiffness: 50, damping: 20 });
+  const springRotateY = useSpring(rotateY, { stiffness: 50, damping: 20 });
+
+  return (
+    <motion.div
+      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+      style={{ perspective: 1000 }}
+    >
+      <motion.svg
+        width="600"
+        height="800"
+        viewBox="0 0 600 800"
+        fill="none"
+        style={{
+          rotateX: springRotateX,
+          rotateY: springRotateY,
+          transformStyle: "preserve-3d"
+        }}
+        initial={{ opacity: 0, scale: 0.8, y: 50 }}
+        animate={{ opacity: 0.15, scale: 1, y: 0 }}
+        transition={{ duration: 1.5, delay: 0.5 }}
+      >
+        {/* Diploma Background */}
+        <rect x="50" y="50" width="500" height="700" rx="20" fill="#1a1a2e" stroke="#f59e0b" strokeWidth="3" />
+        
+        {/* Inner Border */}
+        <rect x="70" y="70" width="460" height="660" rx="15" stroke="#f59e0b" strokeWidth="1" strokeDasharray="10 5" fill="none" opacity="0.5" />
+        
+        {/* Republic of Tunisia Seal */}
+        <circle cx="300" cy="150" r="50" fill="#f59e0b" opacity="0.8" />
+        <circle cx="300" cy="150" r="40" fill="#1a1a2e" />
+        <text x="300" y="140" textAnchor="middle" fill="#f59e0b" fontSize="12" fontWeight="bold">REPUBLIC</text>
+        <text x="300" y="160" textAnchor="middle" fill="#f59e0b" fontSize="10">of TUNISIA</text>
+        
+        {/* Ministry Title */}
+        <text x="300" y="240" textAnchor="middle" fill="#fff" fontSize="16" fontWeight="bold" opacity="0.9">Ministry of Education</text>
+        
+        {/* BAC Title */}
+        <text x="300" y="300" textAnchor="middle" fill="#f59e0b" fontSize="32" fontWeight="900">BACCALAUREATE</text>
+        <text x="300" y="340" textAnchor="middle" fill="#fbbf24" fontSize="18" opacity="0.8">Diploma</text>
+        
+        {/* Decorative Line */}
+        <line x1="150" y1="380" x2="450" y2="380" stroke="#f59e0b" strokeWidth="2" opacity="0.5" />
+        
+        {/* Awarded to */}
+        <text x="300" y="430" textAnchor="middle" fill="#94a3b8" fontSize="12" fontStyle="italic">This diploma is awarded to</text>
+        
+        {/* Student Name Placeholder */}
+        <text x="300" y="480" textAnchor="middle" fill="#fff" fontSize="28" fontWeight="bold">YOU</text>
+        
+        {/* Score Display */}
+        <rect x="200" y="520" width="200" height="80" rx="10" fill="#f59e0b" opacity="0.9" />
+        <text x="300" y="560" textAnchor="middle" fill="#1a1a2e" fontSize="36" fontWeight="900">17.00</text>
+        <text x="300" y="580" textAnchor="middle" fill="#1a1a2e" fontSize="14" fontWeight="bold">/ 20</text>
+        
+        {/* Mention */}
+        <text x="300" y="640" textAnchor="middle" fill="#22c55e" fontSize="20" fontWeight="bold">Très Bien</text>
+        
+        {/* Session */}
+        <text x="300" y="690" textAnchor="middle" fill="#64748b" fontSize="12">Session: June 2026</text>
+        
+        {/* Corner Decorations */}
+        <circle cx="100" cy="100" r="8" fill="#f59e0b" opacity="0.6" />
+        <circle cx="500" cy="100" r="8" fill="#f59e0b" opacity="0.6" />
+        <circle cx="100" cy="700" r="8" fill="#f59e0b" opacity="0.6" />
+        <circle cx="500" cy="700" r="8" fill="#f59e0b" opacity="0.6" />
+      </motion.svg>
+    </motion.div>
+  );
+}
 function SectionTitle({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle?: string }) {
   return (
     <div className="text-center max-w-3xl mx-auto">
