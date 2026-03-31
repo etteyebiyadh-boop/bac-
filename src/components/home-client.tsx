@@ -75,7 +75,7 @@ const landingCopy: Record<SiteLanguage, LandingCopy> = {
     proof: [
       "The diploma becomes the visual target instead of a generic premium UI.",
       "Every animated step maps to real study work students understand immediately.",
-      "The paper uses a serious Tunisian Bac-inspired composition in Arabic and French.",
+      "The background now uses the real Tunisian Bac diploma as the visual target.",
     ],
     metrics: [
       { value: "4", label: "Study stages build the paper" },
@@ -110,7 +110,7 @@ const landingCopy: Record<SiteLanguage, LandingCopy> = {
     ],
     diplomaTag: "Tunisian Bac target",
     diplomaNote:
-      "A diploma-inspired hero makes the ambition visible: not just learning languages, but earning the paper students dream about holding.",
+      "A real diploma hero makes the ambition visible: not just learning languages, but earning the paper students dream about holding.",
     stripCards: [
       {
         title: "A real symbol",
@@ -174,7 +174,7 @@ const landingCopy: Record<SiteLanguage, LandingCopy> = {
     proof: [
       "Le diplôme devient la cible visuelle au lieu d'une interface premium générique.",
       "Chaque étape animée correspond à un vrai travail scolaire compréhensible par l'étudiant.",
-      "Le papier reprend une composition sérieuse inspirée du Bac tunisien en arabe et en français.",
+      "L'arrière-plan utilise maintenant le vrai diplôme du Bac tunisien comme cible visuelle.",
     ],
     metrics: [
       { value: "4", label: "Étapes pour construire le diplôme" },
@@ -209,7 +209,7 @@ const landingCopy: Record<SiteLanguage, LandingCopy> = {
     ],
     diplomaTag: "Cible Bac tunisien",
     diplomaNote:
-      "Un hero inspiré du diplôme rend l'ambition visible: il ne s'agit pas seulement d'apprendre, mais d'obtenir le papier que l'étudiant rêve de tenir.",
+      "Un hero construit sur le vrai diplôme rend l'ambition visible: il ne s'agit pas seulement d'apprendre, mais d'obtenir le papier que l'étudiant rêve de tenir.",
     stripCards: [
       {
         title: "Un vrai symbole",
@@ -656,6 +656,146 @@ function DiplomaScene({ copy }: { copy: LandingCopy }) {
   );
 }
 
+function RealDiplomaScene({ copy }: { copy: LandingCopy }) {
+  const pieceMotions = [
+    { x: -180, y: -110, rotate: -15, delay: 0.24 },
+    { x: 170, y: -120, rotate: 14, delay: 0.42 },
+    { x: -150, y: 136, rotate: -11, delay: 0.6 },
+    { x: 162, y: 128, rotate: 12, delay: 0.78 },
+  ];
+
+  return (
+    <div className="landing-diploma-scene landing-diploma-scene-real">
+      <div className="landing-diploma-target" aria-hidden="true" />
+
+      <motion.div
+        className="landing-diploma-board-wrap"
+        initial={{ opacity: 0, y: 28, rotate: 1, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
+        transition={{ duration: 0.75, delay: 0.12 }}
+      >
+        <div className="landing-diploma-board">
+          <div className="landing-diploma-ghost" aria-hidden="true" />
+          <div className="landing-diploma-board-grain" aria-hidden="true" />
+
+          {copy.buildSteps.map((step, index) => {
+            const Icon = buildIcons[index];
+            const motionState = pieceMotions[index];
+
+            return (
+              <motion.div
+                key={step.title}
+                className={`landing-diploma-piece landing-diploma-piece-${index + 1}`}
+                initial={{
+                  opacity: 0,
+                  x: motionState.x,
+                  y: motionState.y,
+                  rotate: motionState.rotate,
+                  scale: 0.88,
+                }}
+                animate={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 130,
+                  damping: 18,
+                  delay: motionState.delay,
+                }}
+              >
+                <div className="landing-diploma-piece-chip">
+                  <div className="landing-builder-icon">
+                    <Icon size={16} />
+                  </div>
+                  <div className="landing-diploma-piece-copy">
+                    <strong>{step.title}</strong>
+                    <span>{step.cue}</span>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+
+          <motion.div
+            className="landing-diploma-score-chip"
+            initial={{ opacity: 0, y: -12, scale: 0.86 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.45, delay: 1.18 }}
+          >
+            <span>Session</span>
+            <strong>2022</strong>
+          </motion.div>
+
+          <motion.div
+            className="landing-diploma-glint"
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 150 }}
+            transition={{ duration: 1.25, delay: 1.2 }}
+            aria-hidden="true"
+          />
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="landing-builder-candidate landing-builder-candidate-real"
+        initial={{ opacity: 0, x: -32 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
+        <div className="landing-builder-avatar">
+          <Image
+            src="/student.png"
+            alt="Bac student preparing for the diploma target"
+            fill
+            sizes="72px"
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+        <div className="landing-builder-candidate-copy">
+          <span className="landing-builder-label">{copy.candidateLabel}</span>
+          <strong>{copy.candidateName}</strong>
+          <p>{copy.candidateNote}</p>
+        </div>
+      </motion.div>
+
+      <div className="landing-builder-rail landing-builder-rail-real">
+        <span className="landing-builder-rail-title">{copy.buildLabel}</span>
+        {copy.buildSteps.map((step, index) => {
+          const Icon = buildIcons[index];
+
+          return (
+            <motion.div
+              key={step.title}
+              className="landing-builder-card landing-builder-card-real"
+              initial={{ opacity: 0, x: -24, y: 10 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.92 + index * 0.12 }}
+            >
+              <div className="landing-builder-card-top">
+                <div className="landing-builder-icon">
+                  <Icon size={18} />
+                </div>
+                <span className="landing-builder-step">0{index + 1}</span>
+              </div>
+              <strong>{step.title}</strong>
+              <p>{step.description}</p>
+              <span className="landing-builder-cue">{step.cue}</span>
+            </motion.div>
+          );
+        })}
+      </div>
+
+      <motion.div
+        className="landing-diploma-caption landing-diploma-caption-real"
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, delay: 1.45 }}
+      >
+        <span className="landing-photo-kicker">{copy.diplomaTag}</span>
+        <p>{copy.diplomaNote}</p>
+      </motion.div>
+    </div>
+  );
+}
+
 export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
   const copy = landingCopy[lang] || landingCopy.en;
   const sections = sectionLabels[lang] || sectionLabels.en;
@@ -719,7 +859,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
               </div>
 
               <div className="landing-visual">
-                <DiplomaScene copy={copy} />
+                <RealDiplomaScene copy={copy} />
               </div>
             </div>
           </motion.div>
