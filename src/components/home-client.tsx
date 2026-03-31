@@ -1,9 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { HeroPathSelector } from "@/components/home-path-selector";
-import { BookOpen, PenTool, Library, Target, ArrowRight, Sparkles, Zap, Award } from "lucide-react";
+import { BookOpen, PenTool, Library, Target, ArrowRight, Sparkles, Zap, Award, Star, Trophy, Crown } from "lucide-react";
 import { SiteLanguage } from "@/lib/translations";
 
 interface HomeClientProps {
@@ -12,10 +13,140 @@ interface HomeClientProps {
   isRTL: boolean;
 }
 
+// Particle component for background
+function Particle({ delay }: { delay: number }) {
+  return (
+    <motion.div
+      className="absolute w-1 h-1 bg-amber-400/30 rounded-full"
+      initial={{ 
+        x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000), 
+        y: typeof window !== 'undefined' ? window.innerHeight : 800 
+      }}
+      animate={{ 
+        y: -10,
+        x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000)
+      }}
+      transition={{ 
+        duration: 8 + Math.random() * 4, 
+        repeat: Infinity, 
+        delay,
+        ease: "linear"
+      }}
+    />
+  );
+}
+
+// Floating Score Badge (3D effect)
+function ScoreBadge() {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  
+  const rotateX = useTransform(mouseY, [-300, 300], [15, -15]);
+  const rotateY = useTransform(mouseX, [-300, 300], [-15, 15]);
+  
+  const springConfig = { stiffness: 100, damping: 20 };
+  const springRotateX = useSpring(rotateX, springConfig);
+  const springRotateY = useSpring(rotateY, springConfig);
+
+  return (
+    <motion.div
+      className="absolute right-8 top-1/4 hidden lg:block"
+      style={{ perspective: 1000 }}
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        mouseX.set(e.clientX - rect.left - rect.width / 2);
+        mouseY.set(e.clientY - rect.top - rect.height / 2);
+      }}
+      initial={{ opacity: 0, scale: 0, rotateY: 180 }}
+      animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+      transition={{ duration: 1, delay: 0.8, type: "spring" }}
+    >
+      <motion.div
+        style={{
+          rotateX: springRotateX,
+          rotateY: springRotateY,
+          transformStyle: "preserve-3d"
+        }}
+        className="relative w-32 h-32"
+      >
+        {/* Glowing background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl blur-xl opacity-50 animate-pulse" />
+        
+        {/* Main badge */}
+        <div className="relative w-full h-full bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 rounded-2xl flex flex-col items-center justify-center shadow-2xl border border-amber-300/50">
+          <Crown className="w-8 h-8 text-amber-100 mb-1" />
+          <span className="text-4xl font-black text-white">17</span>
+          <span className="text-xs text-amber-100 font-bold">/20</span>
+          <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
+            <Star className="w-4 h-4 text-white fill-white" />
+          </div>
+        </div>
+        
+        {/* Shine effect */}
+        <motion.div
+          className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-transparent via-white/30 to-transparent"
+          animate={{ x: [-100, 200], opacity: [0, 1, 0] }}
+          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+        />
+      </motion.div>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="text-center mt-2 text-amber-400/80 text-sm font-medium"
+      >
+        Your Target
+      </motion.p>
+    </motion.div>
+  );
+}
+
+// Typing text effect
+function TypeText({ text, delay = 0 }: { text: string; delay?: number }) {
+  const [displayText, setDisplayText] = useState("");
+  
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i <= text.length) {
+          setDisplayText(text.slice(0, i));
+          i++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 50);
+      return () => clearInterval(interval);
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [text, delay]);
+  
+  return (
+    <span>
+      {displayText}
+      <motion.span
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.5, repeat: Infinity }}
+        className="inline-block w-0.5 h-8 bg-amber-400 ml-1 align-middle"
+      />
+    </span>
+  );
+}
+
 // Eye-catching gradient hero
 function EyeCatchingHero({ badge, title, subtitle, ctaText, ctaHref, secondaryCtaText, secondaryCtaHref, isRTL }: any) {
+  const particles = Array.from({ length: 30 }, (_, i) => i);
+  const words = title.split(' ');
+  
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-slate-950">
+      {/* Particle background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {particles.map((i) => (
+          <Particle key={i} delay={i * 0.3} />
+        ))}
+      </div>
+      
       {/* Animated gradient background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/30" />
@@ -31,108 +162,190 @@ function EyeCatchingHero({ badge, title, subtitle, ctaText, ctaHref, secondaryCt
           animate={{ scale: [1, 1.3, 1], x: [0, -40, 0], y: [0, 40, 0] }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 5 }}
         />
+        
+        {/* Grid pattern overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
+            backgroundSize: '100px 100px'
+          }}
+        />
       </div>
 
+      {/* 3D Score Badge */}
+      <ScoreBadge />
+
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-        {/* Badge */}
+        {/* Badge with glow */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8"
+          initial={{ opacity: 0, y: 20, scale: 0.8 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm mb-8 relative group cursor-pointer hover:bg-white/10 transition-colors"
         >
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <motion.span 
+            className="w-2 h-2 rounded-full bg-emerald-400"
+            animate={{ scale: [1, 1.2, 1], opacity: [1, 0.5, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
           <span className="text-sm font-medium text-white/80">{badge}</span>
+          <motion.div
+            className="absolute inset-0 rounded-full bg-amber-400/20 blur-md -z-10"
+            animate={{ opacity: [0, 1, 0], scale: [0.8, 1.2, 0.8] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          />
         </motion.div>
 
-        {/* Bold gradient title */}
+        {/* Animated title with staggered word reveal */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-6xl md:text-7xl lg:text-8xl font-black mb-6 leading-[1.1]"
+          className="text-6xl md:text-7xl lg:text-8xl font-black mb-6 leading-[1.1] min-h-[1.2em]"
         >
-          {title.split(' ').map((word: string, i: number, arr: string[]) => (
-            <span 
+          {words.map((word: string, i: number, arr: string[]) => (
+            <motion.span 
               key={i} 
-              className="inline-block"
+              className="inline-block mr-3"
+              initial={{ opacity: 0, y: 40, rotateX: -90 }}
+              animate={{ opacity: 1, y: 0, rotateX: 0 }}
+              transition={{ 
+                duration: 0.6, 
+                delay: 0.3 + i * 0.1,
+                type: "spring",
+                stiffness: 100
+              }}
               style={{
-                background: i === arr.length - 1 || i === arr.length - 2
-                  ? 'linear-gradient(135deg, #f59e0b, #fbbf24, #f59e0b)' 
+                background: i >= arr.length - 2
+                  ? 'linear-gradient(135deg, #f59e0b, #fbbf24, #f59e0b, #fbbf24)' 
                   : 'linear-gradient(135deg, #ffffff, #e2e8f0)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                marginRight: '0.25em'
+                backgroundSize: i >= arr.length - 2 ? '200% 200%' : '100% 100%',
+                animation: i >= arr.length - 2 ? 'gradient 3s ease infinite' : 'none'
               }}
             >
               {word}
-            </span>
+            </motion.span>
           ))}
         </motion.h1>
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed"
+        {/* Subtitle with typing effect */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto mb-12 leading-relaxed h-16"
         >
-          {subtitle}
-        </motion.p>
+          <TypeText text={subtitle} delay={1000} />
+        </motion.div>
 
-        {/* CTAs */}
+        {/* CTAs with hover effects */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 1.2 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <a
+          <motion.a
             href={ctaHref}
-            className="group relative px-8 py-4 bg-white text-black font-bold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-lg hover:shadow-white/20"
+            className="group relative px-8 py-4 bg-white text-black font-bold rounded-full overflow-hidden"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <span className="relative z-10">{ctaText}</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </a>
+            <motion.span 
+              className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-500"
+              initial={{ x: '-100%' }}
+              whileHover={{ x: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+            <span className="relative z-10 flex items-center gap-2">
+              {ctaText}
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                →
+              </motion.span>
+            </span>
+          </motion.a>
           
           {secondaryCtaText && (
-            <a
+            <motion.a
               href={secondaryCtaHref}
-              className="px-8 py-4 text-white font-medium rounded-full border border-white/20 hover:bg-white/5 transition-colors"
+              className="px-8 py-4 text-white font-medium rounded-full border border-white/20 hover:bg-white/5 transition-colors relative overflow-hidden group"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              {secondaryCtaText}
-            </a>
+              <motion.span
+                className="absolute inset-0 bg-gradient-to-r from-amber-400/20 to-transparent"
+                initial={{ x: '-100%' }}
+                whileHover={{ x: 0 }}
+                transition={{ duration: 0.3 }}
+              />
+              <span className="relative z-10">{secondaryCtaText}</span>
+            </motion.a>
           )}
         </motion.div>
 
-        {/* Feature highlights */}
+        {/* Animated feature highlights */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.6, delay: 1.4 }}
           className="flex flex-wrap items-center justify-center gap-8 mt-12 text-sm text-slate-400"
         >
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-500" />
-            <span>AI Writing Feedback</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-amber-500" />
-            <span>Personalized Path</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Award className="w-4 h-4 text-amber-500" />
-            <span>All Bac Sections</span>
-          </div>
+          {[
+            { icon: Sparkles, text: "AI Writing Feedback" },
+            { icon: Zap, text: "Personalized Path" },
+            { icon: Award, text: "All Bac Sections" },
+            { icon: Trophy, text: "17/20 Guarantee" }
+          ].map((item, i) => (
+            <motion.div 
+              key={item.text}
+              className="flex items-center gap-2 cursor-pointer"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1.5 + i * 0.1 }}
+              whileHover={{ scale: 1.1, color: '#f59e0b' }}
+            >
+              <motion.div
+                animate={{ rotate: [0, 360] }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              >
+                <item.icon className="w-4 h-4 text-amber-500" />
+              </motion.div>
+              <span>{item.text}</span>
+            </motion.div>
+          ))}
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2 animate-bounce">
-          <div className="w-1.5 h-1.5 rounded-full bg-white/60" />
-        </div>
-      </div>
+      {/* Animated scroll indicator */}
+      <motion.div 
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2 }}
+      >
+        <motion.div 
+          className="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <motion.div 
+            className="w-1.5 h-1.5 rounded-full bg-amber-400"
+            animate={{ y: [0, 12, 0], opacity: [1, 0.3, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
+        </motion.div>
+      </motion.div>
+
+      <style jsx global>{`
+        @keyframes gradient {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+      `}</style>
     </section>
   );
 }
