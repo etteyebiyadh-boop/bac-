@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import {
@@ -14,7 +14,11 @@ import {
   Star,
   TrendingUp,
   Award,
-  Clock
+  Clock,
+  ShieldCheck,
+  ZapIcon,
+  FlameIcon,
+  CrownIcon
 } from "lucide-react";
 import { SiteLanguage } from "@/lib/translations";
 
@@ -24,418 +28,301 @@ interface NextLevelMobileProps {
   isRTL: boolean;
 }
 
-// Spring physics for premium feel
 const springTransition = {
   type: "spring" as const,
-  stiffness: 300,
-  damping: 30
+  stiffness: 260,
+  damping: 20
 };
-
-// Stagger children animation
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: springTransition
-  }
-};
-
-// Animated gradient mesh background
-function AnimatedMesh() {
-  return (
-    <div className="absolute inset-0 overflow-hidden">
-      {/* Base gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950" />
-      
-      {/* Animated orbs */}
-      <motion.div
-        className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-amber-500/10 blur-[100px]"
-        animate={{
-          x: [0, 50, 0],
-          y: [0, 30, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-      <motion.div
-        className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full bg-indigo-500/10 blur-[80px]"
-        animate={{
-          x: [0, -40, 0],
-          y: [0, -30, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 2
-        }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full bg-purple-500/5 blur-[60px]"
-        animate={{
-          x: [0, 30, 0],
-          y: [0, -20, 0],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1
-        }}
-      />
-
-      {/* Grid pattern overlay */}
-      <div 
-        className="absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                           linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px'
-        }}
-      />
-    </div>
-  );
-}
-
-// Glass card component
-function GlassCard({ 
-  children, 
-  className = "",
-  delay = 0 
-}: { 
-  children: React.ReactNode; 
-  className?: string;
-  delay?: number;
-}) {
-  return (
-    <motion.div
-      variants={itemVariants}
-      whileTap={{ scale: 0.98 }}
-      className={`relative overflow-hidden rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] ${className}`}
-    >
-      {/* Shine effect on hover */}
-      <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-500">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
-      </div>
-      <div className="relative">{children}</div>
-    </motion.div>
-  );
-}
-
-// Feature row with icon
-function FeatureRow({ 
-  icon: Icon, 
-  title, 
-  description,
-  delay 
-}: { 
-  icon: any; 
-  title: string; 
-    description: string;
-  delay: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ ...springTransition, delay }}
-      className="flex items-start gap-4 p-4"
-    >
-      <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 flex items-center justify-center">
-        <Icon className="w-5 h-5 text-amber-400" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <h3 className="text-sm font-semibold text-white mb-1">{title}</h3>
-        <p className="text-xs text-slate-400 leading-relaxed">{description}</p>
-      </div>
-      <ChevronRight className="w-4 h-4 text-slate-600 flex-shrink-0 mt-1" />
-    </motion.div>
-  );
-}
-
-// Stats pill
-function StatPill({ value, label, icon: Icon }: { value: string; label: string; icon: any }) {
-  return (
-    <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-white/[0.03] border border-white/[0.06]">
-      <Icon className="w-3.5 h-3.5 text-amber-500" />
-      <span className="text-sm font-semibold text-white">{value}</span>
-      <span className="text-xs text-slate-500">{label}</span>
-    </div>
-  );
-}
-
-// Section badge
-function SectionBadge({ name, color }: { name: string; color: string }) {
-  return (
-    <motion.span
-      whileTap={{ scale: 0.95 }}
-      className="inline-flex items-center px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] text-xs text-slate-300"
-    >
-      <span className={`w-1.5 h-1.5 rounded-full mr-2`} style={{ backgroundColor: color }} />
-      {name}
-    </motion.span>
-  );
-}
 
 export function NextLevelMobile({ lang, t, isRTL }: NextLevelMobileProps) {
-  const [activeTab, setActiveTab] = useState(0);
+  const [step, setStep] = useState(0); // 0: Intro, 1: Hero, 2: Config
+  const [configStep, setConfigStep] = useState(1);
+  const [formData, setFormData] = useState({ section: "", language: "" });
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Animation sequences
+  useEffect(() => {
+    const timer = setTimeout(() => setStep(1), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const copy = {
     en: {
-      badge: "BAC 2026 Preparation",
-      headline: "Your Path to Excellence",
-      subheadline: "Master the Bac with AI-powered personalized study plans",
-      cta: "Start My Journey",
-      ctaSub: "Free. No credit card required.",
-      features: [
-        { icon: Target, title: "Smart Diagnostics", desc: "AI analyzes your level in 5 minutes" },
-        { icon: BookOpen, title: "Personalized Roadmap", desc: "Study plan adapted to your section" },
-        { icon: BarChart3, title: "Progress Tracking", desc: "Real-time score predictions" },
-        { icon: Zap, title: "Mock Exams", desc: "Timed practice under exam conditions" }
-      ],
-      stats: [
-        { value: "50K+", label: "Students", icon: Star },
-        { value: "17+", label: "Target Score", icon: TrendingUp },
-        { value: "98%", label: "Success", icon: Award }
-      ],
-      sections: [
-        { name: "Math", color: "#f59e0b" },
-        { name: "Science", color: "#10b981" },
-        { name: "Tech", color: "#6366f1" },
-        { name: "Eco", color: "#ec4899" },
-        { name: "Lettres", color: "#8b5cf6" },
-        { name: "Info", color: "#06b6d4" }
-      ],
-      trustBadge: "Trusted by 50,000+ students"
+      badge: "BAC 2026 ELITE",
+      headline: "Master Your Baccalaureate",
+      subheadline: "Join the top 2% of students with our AI-driven pedagogical engine.",
+      cta: "Initialize My Path",
+      sections: ["Mathematics", "Experimental Sciences", "Technical Sciences", "Economy & Management", "Letters", "Computer Science"],
+      languages: ["German", "Spanish", "Italian", "Chinese"],
+      next: "Continue",
+      finish: "Activate My Roadmap",
+      configTitle: "Configure Your Matrix",
+      sectionLabel: "Select Your Section",
+      langLabel: "Optional Language",
     },
     fr: {
-      badge: "Préparation Bac 2026",
-      headline: "Votre Voie vers l'Excellence",
-      subheadline: "Maîtrisez le Bac avec des plans d'étude IA personnalisés",
-      cta: "Commencer Mon Parcours",
-      ctaSub: "Gratuit. Sans engagement.",
-      features: [
-        { icon: Target, title: "Diagnostics Intelligents", desc: "L'IA analyse votre niveau en 5 min" },
-        { icon: BookOpen, title: "Parcours Personnalisé", desc: "Plan adapté à votre section" },
-        { icon: BarChart3, title: "Suivi de Progrès", desc: "Prédictions de notes en temps réel" },
-        { icon: Zap, title: "Examens Blancs", desc: "Pratique chronométrée" }
-      ],
-      stats: [
-        { value: "50K+", label: "Étudiants", icon: Star },
-        { value: "17+", label: "Objectif", icon: TrendingUp },
-        { value: "98%", label: "Réussite", icon: Award }
-      ],
-      sections: [
-        { name: "Math", color: "#f59e0b" },
-        { name: "Sciences", color: "#10b981" },
-        { name: "Tech", color: "#6366f1" },
-        { name: "Éco", color: "#ec4899" },
-        { name: "Lettres", color: "#8b5cf6" },
-        { name: "Info", color: "#06b6d4" }
-      ],
-      trustBadge: "Utilisé par 50 000+ étudiants"
+      badge: "ELITE BAC 2026",
+      headline: "Maîtrisez Votre Bac",
+      subheadline: "Rejoignez le top 2% des élèves avec notre moteur pédagogique IA.",
+      cta: "Initialiser Mon Parcours",
+      sections: ["Mathématiques", "Sciences Expérimentales", "Sciences Techniques", "Économie et Gestion", "Lettres", "Informatique"],
+      languages: ["Allemand", "Espagnol", "Italien", "Chinois"],
+      next: "Continuer",
+      finish: "Activer Ma Roadmap",
+      configTitle: "Configuration de Matrice",
+      sectionLabel: "Sélectionnez Votre Section",
+      langLabel: "Langue Optionnelle",
     },
     ar: {
-      badge: "تحضير الباك 2026",
-      headline: "طريقك نحو التميز",
-      subheadline: "تفوق في الباك مع خطط دراسية ذكية مخصصة",
-      cta: "ابدأ رحلتي",
-      ctaSub: "مجاني. بدون بطاقة بنكية.",
-      features: [
-        { icon: Target, title: "تشخيص ذكي", desc: "الذكاء الاصطناعي يحلل مستواك في 5 دقائق" },
-        { icon: BookOpen, title: "خطة مخصصة", desc: "خطة دراسية تتكيف مع شعبتك" },
-        { icon: BarChart3, title: "تتبع التقدم", desc: "توقع درجاتك في الوقت الفعلي" },
-        { icon: Zap, title: "اختبارات تجريبية", desc: "تمرين بضغط الامتحان" }
-      ],
-      stats: [
-        { value: "50K+", label: "طالب", icon: Star },
-        { value: "17+", label: "الهدف", icon: TrendingUp },
-        { value: "98%", label: "نجاح", icon: Award }
-      ],
-      sections: [
-        { name: "رياضيات", color: "#f59e0b" },
-        { name: "علوم", color: "#10b981" },
-        { name: "تقنية", color: "#6366f1" },
-        { name: "اقتصاد", color: "#ec4899" },
-        { name: "آداب", color: "#8b5cf6" },
-        { name: "إعلامية", color: "#06b6d4" }
-      ],
-      trustBadge: "موثوق من 50,000+ طالب"
+      badge: "نخبة الباك 2026",
+      headline: "تمكّن من الباك",
+      subheadline: "التحق بأفضل 2% من الطلاب مع محركنا البيداغوجي الذكي.",
+      cta: "ابدأ مساري",
+      sections: ["رياضيات", "علوم تجريبية", "علوم تقنية", "اقتصاد وتصرف", "آداب", "إعلامية"],
+      languages: ["ألمانية", "إسبانية", "إيطالية", "صينية"],
+      next: "متابعة",
+      finish: "تفعيل خارطة الطريق",
+      configTitle: "تهيئة مصفوفة الدراسة",
+      sectionLabel: "اختر شعبتك",
+      langLabel: "اللغة الاختيارية",
     }
   };
 
   const c = copy[lang] || copy.en;
 
   return (
-    <div className={`relative min-h-screen bg-slate-950 overflow-x-hidden ${isRTL ? "rtl" : "ltr"}`}>
-      <AnimatedMesh />
-
-      {/* Main Content */}
-      <div className="relative z-10 px-5 pt-12 pb-8">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="max-w-md mx-auto"
-        >
-          {/* Badge */}
-          <motion.div variants={itemVariants} className="flex justify-center mb-6">
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              <span className="text-xs font-medium text-amber-400">{c.badge}</span>
-            </span>
-          </motion.div>
-
-          {/* Hero Title */}
-          <motion.h1 
-            variants={itemVariants}
-            className="text-3xl sm:text-4xl font-bold text-center text-white mb-3 leading-tight"
+    <div className={`relative min-h-screen bg-[#050508] text-white overflow-hidden ${isRTL ? "rtl" : "ltr"}`} ref={containerRef}>
+      <AnimatePresence mode="wait">
+        {/* Step 0: Cinematic Curtains / Intro */}
+        {step === 0 && (
+          <motion.div 
+            key="intro"
+            exit={{ opacity: 0, scale: 1.1 }}
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#050508]"
           >
-            {c.headline.split(" ").map((word, i) => (
-              <span key={i}>
-                {i === c.headline.split(" ").length - 1 ? (
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-500">
-                    {word}
-                  </span>
-                ) : (
-                  word + " "
-                )}
-              </span>
-            ))}
-          </motion.h1>
-
-          <motion.p 
-            variants={itemVariants}
-            className="text-center text-slate-400 text-sm mb-8 px-4"
-          >
-            {c.subheadline}
-          </motion.p>
-
-          {/* Primary CTA */}
-          <motion.div variants={itemVariants} className="mb-4">
-            <Link href="/auth/signup">
-              <motion.div
-                whileTap={{ scale: 0.97 }}
-                className="group relative overflow-hidden"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: "circOut" }}
+              className="relative"
+            >
+              <div className="absolute inset-0 bg-amber-500/20 blur-[100px] rounded-full" />
+              <div 
+                className="w-24 h-24 bg-gradient-to-br from-white via-amber-400 to-amber-600 rounded-[24px] flex items-center justify-center border-2 border-white/20 shadow-[0_0_50px_rgba(245,158,11,0.3)]"
+                style={{ transform: "rotate(-10deg)" }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-400 rounded-xl" />
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-yellow-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <div className="relative flex items-center justify-center gap-2 px-6 py-4 rounded-xl">
-                  <Sparkles className="w-4 h-4 text-slate-950" />
-                  <span className="font-semibold text-slate-950">{c.cta}</span>
-                  <ArrowRight className="w-4 h-4 text-slate-950 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </motion.div>
-            </Link>
-            <p className="text-center text-xs text-slate-500 mt-2">{c.ctaSub}</p>
-          </motion.div>
-
-          {/* Stats Pills */}
-          <motion.div 
-            variants={itemVariants}
-            className="flex flex-wrap justify-center gap-2 mb-8"
-          >
-            {c.stats.map((stat, i) => (
-              <StatPill key={i} {...stat} />
-            ))}
-          </motion.div>
-
-          {/* Features Card */}
-          <GlassCard className="mb-6" delay={0.3}>
-            <div className="p-1">
-              {c.features.map((feature, i) => (
-                <FeatureRow
-                  key={i}
-                  icon={feature.icon}
-                  title={feature.title}
-                  description={feature.desc}
-                  delay={0.4 + i * 0.1}
-                />
-              ))}
+                <span className="text-4xl font-black text-black">B</span>
+              </div>
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="mt-8 text-3xl font-black tracking-tighter text-center"
+            >
+              BAC<br/>EXCELLENCE
+            </motion.h1>
+            
+            <div className="absolute bottom-12 w-48 h-[2px] bg-white/5 overflow-hidden">
+              <motion.div 
+                initial={{ x: "-100%" }}
+                animate={{ x: "100%" }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="w-full h-full bg-gradient-to-r from-transparent via-amber-500 to-transparent"
+              />
             </div>
-          </GlassCard>
+          </motion.div>
+        )}
 
-          {/* Sections Supported */}
+        {/* Step 1: Main Hero Experience */}
+        {step === 1 && (
           <motion.div 
+            key="hero"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="mb-6"
+            exit={{ opacity: 0, x: -100 }}
+            className="relative z-10 px-6 pt-24 pb-12 min-h-screen flex flex-col"
           >
-            <p className="text-xs text-slate-500 text-center mb-3">
-              {lang === "en" ? "All Bac Sections Supported" : lang === "fr" ? "Toutes les sections Bac" : "جميع شعب الباك المدعومة"}
-            </p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {c.sections.map((section, i) => (
-                <SectionBadge key={i} {...section} />
-              ))}
+            {/* Background Orbs */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden">
+               <motion.div 
+                 animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, 30, 0] }}
+                 transition={{ duration: 20, repeat: Infinity }}
+                 className="absolute -top-1/4 -right-1/4 w-[150vw] h-[150vw] bg-indigo-500/10 blur-[120px] rounded-full" 
+               />
+               <motion.div 
+                 animate={{ scale: [1, 1.3, 1], x: [0, -30, 0], y: [0, -50, 0] }}
+                 transition={{ duration: 15, repeat: Infinity, delay: 1 }}
+                 className="absolute -bottom-1/4 -left-1/4 w-[120vw] h-[120vw] bg-amber-500/5 blur-[100px] rounded-full" 
+               />
+            </div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex justify-center mb-8"
+            >
+              <span className="px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[10px] font-black tracking-[0.2em] text-amber-500 uppercase">
+                {c.badge}
+              </span>
+            </motion.div>
+
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl sm:text-5xl font-black text-center leading-[0.95] tracking-tight mb-6"
+            >
+              {c.headline}
+            </motion.h2>
+
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-center text-slate-400 text-lg font-medium max-w-sm mx-auto mb-12"
+            >
+              {c.subheadline}
+            </motion.p>
+
+            <div className="grid grid-cols-2 gap-4 mb-12">
+               <motion.div 
+                 initial={{ opacity: 0, scale: 0.9 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 transition={{ delay: 0.3 }}
+                 className="p-6 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-3xl text-center"
+               >
+                 <div className="text-2xl font-black mb-1">17.5+</div>
+                 <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Target Score</div>
+               </motion.div>
+               <motion.div 
+                 initial={{ opacity: 0, scale: 0.9 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 transition={{ delay: 0.4 }}
+                 className="p-6 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-3xl text-center"
+               >
+                 <div className="text-2xl font-black mb-1">Top 2%</div>
+                 <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ranking</div>
+               </motion.div>
+            </div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, type: "spring" }}
+              className="mt-auto"
+            >
+               <button 
+                 onClick={() => setStep(2)}
+                 className="w-full py-6 rounded-3xl bg-white text-black font-black text-lg flex items-center justify-center gap-3 shadow-[0_20px_50px_rgba(255,255,255,0.2)] active:scale-95 transition-transform"
+               >
+                 {c.cta}
+                 <ArrowRight className="w-5 h-5" />
+               </button>
+               <p className="text-center text-slate-500 text-xs mt-6 font-bold uppercase tracking-widest">
+                 Bac Excellence &copy; 2026 Elite Edition
+               </p>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Step 2: Interactive Configuration Flow */}
+        {step === 2 && (
+          <motion.div 
+            key="config"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="fixed inset-0 z-50 bg-[#050508] p-6 pt-20"
+          >
+            <div className="max-w-md mx-auto h-full flex flex-col">
+               <div className="flex items-center justify-between mb-8">
+                  <div className="stack">
+                    <span className="text-[10px] font-black text-amber-500 tracking-widest uppercase">Step 0{configStep} of 02</span>
+                    <h3 className="text-3xl font-black leading-tight">{c.configTitle}</h3>
+                  </div>
+                  <button 
+                    onClick={() => setStep(1)}
+                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400"
+                  >
+                    ✕
+                  </button>
+               </div>
+
+               <AnimatePresence mode="wait">
+                  {configStep === 1 && (
+                    <motion.div 
+                      key="s1"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="flex-1 overflow-y-auto pr-2"
+                    >
+                       <p className="text-slate-400 font-bold text-sm mb-6 uppercase tracking-widest">{c.sectionLabel}</p>
+                       <div className="grid gap-3">
+                          {c.sections.map(section => (
+                            <button
+                              key={section}
+                              onClick={() => { setFormData({...formData, section}); setConfigStep(2); }}
+                              className={`p-6 rounded-[24px] text-left transition-all border ${formData.section === section ? "bg-amber-500 border-amber-500 text-black" : "bg-white/[0.03] border-white/10 text-white"}`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="font-black text-lg">{section}</span>
+                                {formData.section === section && <ShieldCheck className="w-6 h-6" />}
+                              </div>
+                            </button>
+                          ))}
+                       </div>
+                    </motion.div>
+                  )}
+
+                  {configStep === 2 && (
+                    <motion.div 
+                      key="s2"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      className="flex-1"
+                    >
+                       <p className="text-slate-400 font-bold text-sm mb-6 uppercase tracking-widest">{c.langLabel}</p>
+                       <div className="grid gap-3 mb-12">
+                          {c.languages.map(langName => (
+                            <button
+                              key={langName}
+                              onClick={() => setFormData({...formData, language: langName})}
+                              className={`p-6 rounded-[24px] text-left transition-all border ${formData.language === langName ? "bg-white text-black border-white" : "bg-white/[0.03] border-white/10 text-white"}`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="font-black text-lg">{langName}</span>
+                                {formData.language === langName ? <CrownIcon className="w-6 h-6" /> : <div className="w-6 h-6 rounded-full border-2 border-white/20" />}
+                              </div>
+                            </button>
+                          ))}
+                       </div>
+
+                       <div className="mt-auto">
+                          <Link href="/auth/signup">
+                            <button 
+                              className="w-full py-6 rounded-3xl bg-indigo-600 text-white font-black text-lg flex items-center justify-center gap-3 shadow-[0_20px_50px_rgba(79,70,229,0.4)] active:scale-95 transition-transform"
+                            >
+                              {c.finish}
+                              <ZapIcon className="w-5 h-5 fill-white" />
+                            </button>
+                          </Link>
+                          <button 
+                            onClick={() => setConfigStep(1)}
+                            className="w-full py-4 text-slate-500 text-sm font-black uppercase tracking-widest mt-4"
+                          >
+                            Back to sections
+                          </button>
+                       </div>
+                    </motion.div>
+                  )}
+               </AnimatePresence>
             </div>
           </motion.div>
-
-          {/* Trust Indicators */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="flex items-center justify-center gap-4 text-xs text-slate-500"
-          >
-            <span className="flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5" />
-              {lang === "en" ? "5 min setup" : lang === "fr" ? "5 min setup" : "٥ دقائق إعداد"}
-            </span>
-            <span className="w-1 h-1 rounded-full bg-slate-700" />
-            <span className="flex items-center gap-1.5">
-              <Award className="w-3.5 h-3.5" />
-              {c.trustBadge}
-            </span>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Bottom CTA Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.1, ...springTransition }}
-        className="relative z-10 px-5 pb-8"
-      >
-        <GlassCard className="p-5">
-          <div className="text-center">
-            <p className="text-sm text-slate-300 mb-3">
-              {lang === "en" 
-                ? "Join the students already preparing for success" 
-                : lang === "fr" 
-                ? "Rejoignez les étudiants qui se préparent" 
-                : "انضم للطلاب الذين يستعدون للنجاح"}
-            </p>
-            <Link href="/auth/signup">
-              <motion.span
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex items-center gap-2 text-amber-400 font-medium text-sm"
-              >
-                {lang === "en" ? "Get Started Free →" : lang === "fr" ? "Commencer Gratuitement →" : "ابدأ مجاناً →"}
-              </motion.span>
-            </Link>
-          </div>
-        </GlassCard>
-      </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
