@@ -18,7 +18,7 @@ model BacSubject {
   isLanguage  Boolean      @default(false)
   createdAt   DateTime     @default(now())
 
-  @@index([bacSections])
+  @@index([name])
 }
 
 model User {
@@ -29,6 +29,9 @@ model User {
   fullName          String?
   isPremium         Boolean            @default(false)
   createdAt         DateTime           @default(now())
+  challengesSent    Challenge[]        @relation("Challenger")
+  challengesReceived Challenge[]       @relation("Challenged")
+  feedbacks         Feedback[]
   dailyMissions     DailyMission[]
   exerciseAttempts  ExerciseAttempt[]
   lessonCompletions LessonCompletion[]
@@ -57,6 +60,7 @@ model Submission {
   createdAt       DateTime       @default(now())
   exam            Exam?          @relation(fields: [examId], references: [id])
   user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feedbacks       Feedback[]
 
   @@index([userId, createdAt])
   @@index([examId])
@@ -94,7 +98,7 @@ model StudentProfile {
   bacSection             BacSection?
   user                   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([bacSection])
+  @@index([userId])
 }
 
 model Lesson {
@@ -111,11 +115,13 @@ model Lesson {
   takeawayJson     Json
   createdAt        DateTime           @default(now())
   videoUrl         String?
+  bacModule        BacModule?
   dailyMissions    DailyMission[]
   exercises        Exercise[]
   completions      LessonCompletion[]
 
   @@index([language, skillFocus])
+  @@index([bacModule])
 }
 
 model Exercise {
@@ -212,7 +218,6 @@ model GrammarRule {
 
   @@index([language, category])
   @@index([bacModule])
-  @@index([bacSections])
   @@index([difficulty])
 }
 
@@ -260,7 +265,6 @@ model VocabularySet {
 
   @@index([language, theme])
   @@index([bacModule])
-  @@index([bacSections])
   @@index([difficulty])
 }
 
@@ -327,6 +331,8 @@ model Challenge {
   createdAt       DateTime        @default(now())
   expiresAt       DateTime
   completedAt     DateTime?
+  challenger      User            @relation("Challenger", fields: [challengerId], references: [id], onDelete: Cascade)
+  challenged      User?           @relation("Challenged", fields: [challengedId], references: [id], onDelete: SetNull)
 
   @@index([challengerId])
   @@index([challengedId])
@@ -345,12 +351,14 @@ model AnalyticsEvent {
 }
 
 model Feedback {
-  id           String   @id @default(uuid())
+  id           String     @id @default(uuid())
   submissionId String
   userId       String
   rating       Int
   comment      String?
-  createdAt    DateTime @default(now())
+  createdAt    DateTime   @default(now())
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([submissionId])
   @@index([userId])

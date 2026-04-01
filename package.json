@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "db:sync": "prisma generate && prisma db push --accept-data-loss && node prisma/seed.js && node prisma/seed-comprehensive.js && node prisma/seed-language-system.js && node prisma/seed-bac-official.js && node prisma/seed-sections.js && node prisma/seed-global-bac-parity.js",
+    "db:sync": "prisma generate && prisma db push --accept-data-loss && node prisma/seed-complete-library.js && node prisma/seed-french-complete.js && node prisma/seed-arabic-complete.js",
+    "db:sync:full": "prisma generate && prisma db push --accept-data-loss && node prisma/seed.js && node prisma/seed-comprehensive.js && node prisma/seed-bac-official.js && node prisma/seed-complete-library.js && node prisma/seed-french-complete.js && node prisma/seed-arabic-complete.js",
+    "prisma:seed:complete": "node prisma/seed-complete-library.js",
+    "prisma:seed:french": "node prisma/seed-french-complete.js",
+    "prisma:seed:arabic": "node prisma/seed-arabic-complete.js",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
