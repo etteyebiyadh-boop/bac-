@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Sphere, MeshDistortMaterial, Float } from "@react-three/drei";
@@ -8,7 +8,97 @@ import * as THREE from "three";
 import Image from "next/image";
 
 // ==========================================
-// 3D FLOATING SPHERE - Hero centerpiece
+// MOBILE DETECTION HOOK
+// ==========================================
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+  
+  return isMobile;
+}
+
+// ==========================================
+// MOBILE-OPTIMIZED FLOATING ORBS (CSS-based)
+// ==========================================
+function MobileOrbs() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Gradient orbs instead of 3D spheres */}
+      <motion.div
+        className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-indigo-500/20 blur-3xl"
+        animate={{
+          x: [0, 30, 0],
+          y: [0, -20, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full bg-purple-500/15 blur-3xl"
+        animate={{
+          x: [0, -20, 0],
+          y: [0, 30, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
+      />
+      <motion.div
+        className="absolute top-1/2 right-1/3 w-32 h-32 rounded-full bg-amber-500/10 blur-2xl"
+        animate={{
+          x: [0, 15, 0],
+          y: [0, -15, 0],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2,
+        }}
+      />
+      
+      {/* Subtle star particles */}
+      {Array.from({ length: 20 }).map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 rounded-full bg-white/30"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            opacity: [0.2, 0.8, 0.2],
+            scale: [1, 1.5, 1],
+          }}
+          transition={{
+            duration: 2 + Math.random() * 2,
+            repeat: Infinity,
+            delay: Math.random() * 2,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ==========================================
+// 3D FLOATING SPHERE - Hero centerpiece (Desktop only)
 // ==========================================
 function FloatingSphere({ 
   position, 
@@ -56,7 +146,7 @@ function FloatingSphere({
 }
 
 // ==========================================
-// 3D SCENE - Hero background
+// 3D SCENE - Hero background (Desktop only)
 // ==========================================
 function Scene3D() {
   return (
@@ -131,6 +221,7 @@ export function PremiumHero({
   show3D = true
 }: PremiumHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
@@ -143,21 +234,42 @@ export function PremiumHero({
   const springConfig = { stiffness: 100, damping: 30 };
   const ySpring = useSpring(y, springConfig);
 
+  // Mobile-optimized title (no per-character animation)
+  const titleAnimation = isMobile 
+    ? { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.6, delay: 0.4 } }
+    : {
+        initial: "hidden",
+        animate: "visible",
+        variants: {
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.03,
+              delayChildren: 0.4
+            }
+          }
+        }
+      };
+
   return (
     <motion.section
       ref={containerRef}
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{ opacity, scale }}
     >
-      {/* 3D Background */}
+      {/* Background - 3D for desktop, CSS orbs for mobile */}
       {show3D && (
         <div className="absolute inset-0 -z-10">
-          <Canvas
-            camera={{ position: [0, 0, 8], fov: 45 }}
-            style={{ background: "transparent" }}
-          >
-            <Scene3D />
-          </Canvas>
+          {isMobile ? (
+            <MobileOrbs />
+          ) : (
+            <Canvas
+              camera={{ position: [0, 0, 8], fov: 45 }}
+              style={{ background: "transparent" }}
+            >
+              <Scene3D />
+            </Canvas>
+          )}
         </div>
       )}
       
@@ -180,50 +292,67 @@ export function PremiumHero({
           <span className="text-sm font-medium text-white/80">{badge}</span>
         </motion.div>
         
-        {/* Title with character animation */}
-        <motion.h1
-          className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight mb-6"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.03,
-                delayChildren: 0.4
-              }
-            }
-          }}
-        >
-          {title.split("").map((char, i) => (
-            <motion.span
-              key={i}
-              className="inline-block bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent"
-              variants={{
-                hidden: { opacity: 0, y: 50, rotateX: -90 },
-                visible: { 
-                  opacity: 1, 
-                  y: 0, 
-                  rotateX: 0,
-                  transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] }
+        {/* Title - simplified for mobile */}
+        {isMobile ? (
+          <motion.h1
+            className="text-4xl sm:text-5xl font-black leading-tight mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            style={{ 
+              background: "linear-gradient(to right, #fff, #818cf8, #fff)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              textShadow: "0 0 40px rgba(99,102,241,0.3)"
+            }}
+          >
+            {title}
+          </motion.h1>
+        ) : (
+          <motion.h1
+            className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight mb-6"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.03,
+                  delayChildren: 0.4
                 }
-              }}
-              style={{ 
-                textShadow: "0 0 80px rgba(99,102,241,0.3)",
-                transformStyle: "preserve-3d"
-              }}
-            >
-              {char === " " ? "\u00A0" : char}
-            </motion.span>
-          ))}
-        </motion.h1>
+              }
+            }}
+          >
+            {title.split("").map((char, i) => (
+              <motion.span
+                key={i}
+                className="inline-block bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent"
+                variants={{
+                  hidden: { opacity: 0, y: 50, rotateX: -90 },
+                  visible: { 
+                    opacity: 1, 
+                    y: 0, 
+                    rotateX: 0,
+                    transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] }
+                  }
+                }}
+                style={{ 
+                  textShadow: "0 0 80px rgba(99,102,241,0.3)",
+                  transformStyle: "preserve-3d"
+                }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            ))}
+          </motion.h1>
+        )}
         
         {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed"
+          transition={{ duration: 0.6, delay: isMobile ? 0.5 : 0.8 }}
+          className="text-lg sm:text-xl md:text-2xl text-white/60 max-w-2xl mx-auto mb-12 leading-relaxed"
         >
           {subtitle}
         </motion.p>
@@ -232,12 +361,12 @@ export function PremiumHero({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
+          transition={{ duration: 0.6, delay: isMobile ? 0.6 : 1 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <motion.a
             href={ctaHref}
-            className="group relative px-8 py-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-bold rounded-full overflow-hidden"
+            className="group relative px-8 py-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white font-bold rounded-full overflow-hidden w-full sm:w-auto text-center"
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -257,7 +386,7 @@ export function PremiumHero({
               transition={{ duration: 0.3 }}
             />
             
-            <span className="relative z-10 flex items-center gap-2">
+            <span className="relative z-10 flex items-center justify-center gap-2">
               {ctaText}
               <motion.svg 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -280,7 +409,7 @@ export function PremiumHero({
           
           <motion.a
             href={secondaryCtaHref}
-            className="px-8 py-4 text-white/80 font-semibold rounded-full border border-white/20 backdrop-blur-sm hover:bg-white/5 transition-colors"
+            className="px-8 py-4 text-white/80 font-semibold rounded-full border border-white/20 backdrop-blur-sm hover:bg-white/5 transition-colors w-full sm:w-auto text-center"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -288,12 +417,12 @@ export function PremiumHero({
           </motion.a>
         </motion.div>
         
-        {/* Stats row */}
+        {/* Stats row - simplified for mobile */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-          className="flex items-center justify-center gap-8 md:gap-16 mt-20"
+          transition={{ duration: 0.6, delay: isMobile ? 0.7 : 1.2 }}
+          className="flex items-center justify-center gap-6 sm:gap-8 md:gap-16 mt-16 sm:mt-20"
         >
           {[
             { value: "50K+", label: "Students" },
@@ -303,13 +432,13 @@ export function PremiumHero({
             <motion.div
               key={i}
               className="text-center"
-              whileHover={{ scale: 1.1, y: -5 }}
+              whileHover={isMobile ? {} : { scale: 1.1, y: -5 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="text-3xl md:text-4xl font-black bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">
+              <div className="text-2xl sm:text-3xl md:text-4xl font-black bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">
                 {stat.value}
               </div>
-              <div className="text-sm text-white/50 mt-1">{stat.label}</div>
+              <div className="text-xs sm:text-sm text-white/50 mt-1">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>
@@ -320,7 +449,7 @@ export function PremiumHero({
         className="absolute bottom-10 left-1/2 -translate-x-1/2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: isMobile ? 1 : 1.5 }}
       >
         <motion.div
           className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2"
