@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Float, Sparkles, MeshDistortMaterial, ContactShadows, Text, Torus, TorusKnot, Sphere, Box, PresentationControls, Stars } from "@react-three/drei";
+import { Environment, Float, Sparkles, MeshDistortMaterial, ContactShadows, Text, PresentationControls, Stars } from "@react-three/drei";
 import { useRef, useState, useEffect } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { HeroPathSelector } from "@/components/home-path-selector";
 import { SiteLanguage } from "@/lib/translations";
+import { SimpleHero } from "@/components/simple-hero";
 
 interface HomeClientProps {
   lang: SiteLanguage;
@@ -1757,7 +1758,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -1765,6 +1766,9 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
   }, []);
 
   useEffect(() => {
+    // Skip cinematic intro setup on mobile
+    if (isMobile) return;
+    
     // Check session to avoid re-login if already authenticated
     const checkSession = async () => {
       try {
@@ -1784,7 +1788,12 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
       setStep(1); 
     }, 8000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isMobile]);
+
+  // For mobile, use simple hero
+  if (isMobile) {
+    return <SimpleHero lang={lang} t={t} isRTL={isRTL} />;
+  }
 
   return (
     <div style={{ position: 'fixed', inset: 0, backgroundColor: '#020205', color: '#fff', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
