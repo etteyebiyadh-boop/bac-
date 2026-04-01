@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Float, Sparkles, MeshDistortMaterial, ContactShadows, Text, Torus, TorusKnot, Sphere, Box, PresentationControls } from "@react-three/drei";
-import { useRef } from "react";
+import { Environment, Float, Sparkles, MeshDistortMaterial, ContactShadows, Text, Torus, TorusKnot, Sphere, Box, PresentationControls, Stars } from "@react-three/drei";
+import { useRef, useState, useEffect } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
@@ -678,16 +678,16 @@ const refreshedLandingCopy: Record<SiteLanguage, LandingCopy> = {
 
 const cinematicLandingOverrides: Partial<Record<SiteLanguage, Partial<LandingCopy>>> = {
   en: {
-    badge: "The Ultimate Bac Intelligence Hub",
-    heroTitle: "Unlock your true Baccalaureate potential.",
+    badge: "The Ultimate Language Mastery Hub",
+    heroTitle: "Master the structure. Command the language.",
     heroSubtitle:
-      "Stop guessing your score. Our proprietary AI engine identifies exactly what you need to master next to secure your target grade.",
+      "Stop losing points on essays and grammar. Our proprietary A.I. engine identifies exactly what vocabulary and syntax you need to secure your target grade.",
     primaryCta: "Start My Journey",
     secondaryCta: "Take Free Diagnostic",
     proof: [
-      "Precision diagnosis of your current academic level.",
+      "Precision diagnosis of your current linguistic level.",
       "Customized roadmap dynamically generated for you.",
-      "Daily progress tracking and advanced analytics.",
+      "Daily progress tracking and advanced essay analytics.",
     ],
     metrics: [
       { value: "48h", label: "Smart Diagnostic" },
@@ -701,7 +701,7 @@ const cinematicLandingOverrides: Partial<Record<SiteLanguage, Partial<LandingCop
     buildSteps: [
       {
         title: "Diagnose",
-        description: "Pinpoint your weaknesses instantly.",
+        description: "Pinpoint your grammar and vocabulary weaknesses.",
         cue: "Analyze current level",
       },
       {
@@ -711,8 +711,8 @@ const cinematicLandingOverrides: Partial<Record<SiteLanguage, Partial<LandingCop
       },
       {
         title: "Practice",
-        description: "Solve exam-grade questions.",
-        cue: "Hone test skills",
+        description: "Solve exam-grade paragraphs and essays.",
+        cue: "Hone writing skills",
       },
       {
         title: "Achieve",
@@ -722,7 +722,7 @@ const cinematicLandingOverrides: Partial<Record<SiteLanguage, Partial<LandingCop
     ],
     diplomaTag: "Exam Ready",
     diplomaNote:
-      "Walk into the exam room with the confidence of someone who has already seen the test.",
+      "Walk into the exam room with the confidence of someone who has mastered the language.",
     stripCards: [
       {
         title: "Advanced AI Scoring",
@@ -738,13 +738,13 @@ const cinematicLandingOverrides: Partial<Record<SiteLanguage, Partial<LandingCop
       },
     ],
     workflowEyebrow: "Proven Methodology",
-    workflowTitle: "Success isn't luck. It's an algorithm.",
+    workflowTitle: "Fluency isn't luck. It's structure.",
     workflowSubtitle:
-      "We broke down the last 15 years of exams to create the most efficient preparation engine ever designed.",
+      "We broke down the last 15 years of exams to create the most efficient language preparation engine ever designed.",
     workflowBullets: [
-      "No wasted effort on concepts you already know.",
-      "Instant feedback loops for faster retention.",
-      "Simulated exam environments to build pressure tolerance.",
+      "No wasted effort on vocabulary you already know.",
+      "Instant feedback loops to correct repeated grammar mistakes.",
+      "Simulated exam environments to build writing endurance.",
     ],
     finalNote:
       "Join thousands of students who have already hacked their way to academic excellence.",
@@ -1486,31 +1486,27 @@ function MomentumScene({
   );
 }
 
-function NextLevelCore() {
-  const coreRef = useRef<any>(null);
+function LanguageCore() {
+  const group = useRef<any>(null);
   const ring1Ref = useRef<any>(null);
   const ring2Ref = useRef<any>(null);
-  const ring3Ref = useRef<any>(null);
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
-    if (coreRef.current) {
-      coreRef.current.rotation.y = t * 0.5;
-      coreRef.current.rotation.x = t * 0.2;
+    if (group.current) {
+      group.current.rotation.y = t * 0.15;
     }
     if (ring1Ref.current) {
-      ring1Ref.current.rotation.x = t * 0.8;
-      ring1Ref.current.rotation.y = t * 0.3;
+      ring1Ref.current.rotation.x = t * 0.25;
+      ring1Ref.current.rotation.y = t * 0.2;
     }
     if (ring2Ref.current) {
-      ring2Ref.current.rotation.y = t * -0.5;
-      ring2Ref.current.rotation.z = t * 0.6;
-    }
-    if (ring3Ref.current) {
-      ring3Ref.current.rotation.x = t * 0.4;
-      ring3Ref.current.rotation.z = t * -0.3;
+      ring2Ref.current.rotation.x = t * -0.2;
+      ring2Ref.current.rotation.z = t * 0.15;
     }
   });
+
+  const fontUrl = "https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYMZhrib2Bg-4.ttf";
 
   return (
     <PresentationControls
@@ -1521,70 +1517,68 @@ function NextLevelCore() {
       azimuth={[-Math.PI / 1.4, Math.PI / 2]}
     >
       <Float speed={2} rotationIntensity={0.5} floatIntensity={1.5}>
-        <mesh ref={coreRef} scale={1.2}>
-          <icosahedronGeometry args={[1, 0]} />
-          <meshPhysicalMaterial 
-            color="#a855f7" 
-            emissive="#7e22ce" 
-            emissiveIntensity={1.5} 
-            wireframe 
-            thickness={2}
-          />
-        </mesh>
-
-        <mesh scale={1.8}>
-          <sphereGeometry args={[1, 32, 32]} />
-          <meshPhysicalMaterial 
-            color="#6366f1" 
-            transmission={0.95} 
-            opacity={1} 
-            transparent 
-            roughness={0.1} 
-            ior={1.5}
-            thickness={0.5}
-          />
-        </mesh>
-
-        <Text
-          position={[0, 0, 0]}
-          fontSize={0.5}
-          color="#ffffff"
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.02}
-          outlineColor="#000000"
-          font="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYMZhrib2Bg-4.ttf"
-        >
-          A.I. MATRIX
-        </Text>
-
-        <group ref={ring1Ref}>
-          <Torus args={[2.8, 0.015, 16, 100]} rotation={[Math.PI / 2, 0, 0]}>
-            <meshStandardMaterial color="#38bdf8" emissive="#0ea5e9" emissiveIntensity={2} />
-          </Torus>
-        </group>
-        
-        <group ref={ring2Ref}>
-          <Torus args={[3.2, 0.015, 16, 100]} rotation={[0, Math.PI / 2, 0]}>
-            <meshStandardMaterial color="#f472b6" emissive="#db2777" emissiveIntensity={2} />
-          </Torus>
-        </group>
-
-        <group ref={ring3Ref}>
-          <Torus args={[3.6, 0.025, 32, 100]} rotation={[Math.PI / 4, 0, Math.PI / 4]}>
-            <meshPhysicalMaterial color="#ffffff" transmission={0.5} opacity={0.8} transparent roughness={0} />
-          </Torus>
-          <mesh position={[3.6, 0, 0]}>
-            <sphereGeometry args={[0.15, 16, 16]} />
-            <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={3} />
+        <group ref={group}>
+          <mesh scale={1.4}>
+            <sphereGeometry args={[1, 64, 64]} />
+            <meshPhysicalMaterial 
+              color="#4f46e5" 
+              transmission={0.9} 
+              opacity={1} 
+              transparent 
+              roughness={0.1} 
+              ior={1.2}
+            />
           </mesh>
-          <mesh position={[-3.6, 0, 0]}>
-            <sphereGeometry args={[0.1, 16, 16]} />
-            <meshStandardMaterial color="#a855f7" emissive="#a855f7" emissiveIntensity={2} />
+          <mesh scale={1.3}>
+             <sphereGeometry args={[1, 24, 24]} />
+             <meshBasicMaterial color="#c084fc" wireframe transparent opacity={0.2} />
           </mesh>
-        </group>
 
-        <Sparkles count={200} scale={10} size={2} speed={0.8} opacity={0.7} color="#e0e7ff" />
+          <Text
+            position={[0, 0, 0]}
+            fontSize={0.35}
+            color="#ffffff"
+            anchorX="center"
+            anchorY="middle"
+            outlineWidth={0.01}
+            outlineColor="#000000"
+            font={fontUrl}
+          >
+            FLUENCY
+          </Text>
+
+          <group ref={ring1Ref}>
+            <Text position={[2.2, 0, 0]} fontSize={0.6} color="#ffffff" anchorX="center" anchorY="middle" font={fontUrl}>
+              A
+            </Text>
+            <Text position={[-2.2, 0, 1]} fontSize={0.5} color="#38bdf8" anchorX="center" anchorY="middle" font={fontUrl}>
+              Syntax
+            </Text>
+            <Text position={[0, 2.2, -1]} fontSize={0.45} color="#f472b6" outlineWidth={0.02} outlineColor="#000" anchorX="center" anchorY="middle" font={fontUrl}>
+              Grammar
+            </Text>
+            <Text position={[0, -2.2, 0]} fontSize={0.7} color="#e879f9" anchorX="center" anchorY="middle" font={fontUrl}>
+              é
+            </Text>
+          </group>
+          
+          <group ref={ring2Ref}>
+            <Text position={[1.5, 1.5, 0]} fontSize={0.4} color="#10b981" anchorX="center" anchorY="middle" font={fontUrl}>
+              Vocabulary
+            </Text>
+            <Text position={[-1.5, -1.5, 0]} fontSize={0.55} color="#fbbf24" anchorX="center" anchorY="middle" font={fontUrl}>
+              Speak
+            </Text>
+            <Text position={[0, 0, 2.4]} fontSize={0.5} color="#ffffff" anchorX="center" anchorY="middle" font={fontUrl}>
+              English
+            </Text>
+            <Text position={[0, 0, -2.4]} fontSize={0.5} color="#eb4899" anchorX="center" anchorY="middle" font={fontUrl}>
+              Français
+            </Text>
+          </group>
+
+        </group>
+        <Sparkles count={150} scale={8} size={2.5} speed={0.4} opacity={0.6} color="#e0e7ff" />
       </Float>
     </PresentationControls>
   );
@@ -1607,7 +1601,7 @@ function CinematicDeskScene({
         <ambientLight intensity={0.8} />
         <directionalLight position={[10, 10, 5]} intensity={2} color="#6366f1" />
         <directionalLight position={[-10, -10, -5]} intensity={1.5} color="#ec4899" />
-        <NextLevelCore />
+        <LanguageCore />
         <Environment preset="city" />
         <ContactShadows position={[0, -3.5, 0]} opacity={0.6} scale={18} blur={3} far={6} color="#a855f7" />
       </Canvas>
@@ -1615,354 +1609,278 @@ function CinematicDeskScene({
   );
 }
 
-export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
-  const baseCopy = refreshedLandingCopy[lang] || refreshedLandingCopy.en;
-  const copy = { ...baseCopy, ...(cinematicLandingOverrides[lang] || {}) };
-  const sections = sectionLabels[lang] || sectionLabels.en;
-  const featureCards = [
-    {
-      title: t.feat_writing_title,
-      description: t.feat_writing_desc,
-    },
-    {
-      title: t.feat_library_title,
-      description: t.feat_library_desc,
-    },
-    {
-      title: copy.diagnosticTitle,
-      description: copy.diagnosticDescription,
-    },
-    {
-      title: t.feat_missions_title,
-      description: t.feat_missions_desc,
-    },
-  ];
+function CurtainsIntro({ onComplete }: { onComplete: () => void }) {
+  const [isSkipped, setIsSkipped] = useState(false);
 
   return (
-    <div className="home-bleed landing-home">
-      <style dangerouslySetInnerHTML={{ __html: `
-        .landing-home {
-          background-color: #000000 !important;
-          background-image: 
-            radial-gradient(circle at 10% 40%, rgba(99, 102, 241, 0.25), transparent 30%),
-            radial-gradient(circle at 90% 60%, rgba(245, 158, 11, 0.15), transparent 35%) !important;
-        }
-        .landing-hero-inner-cinematic {
-          position: relative;
-          padding: 4.5rem !important;
-          border-radius: 2.5rem !important;
-          background: linear-gradient(145deg, rgba(20,20,30,0.6) 0%, rgba(5,5,10,0.95) 100%) !important;
-          box-shadow: 
-            0 0 0 1px rgba(255,255,255,0.05) inset,
-            0 30px 60px rgba(0,0,0,0.8),
-            0 0 120px rgba(99, 102, 241, 0.15) !important;
-          backdrop-filter: blur(24px) !important;
-          overflow: hidden;
-          margin-top: 2rem;
-        }
-        .landing-hero-inner-cinematic::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
-          transform: skewX(-20deg) translateX(-150%);
-          animation: shine 8s infinite cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        @keyframes shine {
-          0%, 30% { transform: skewX(-20deg) translateX(-150%); }
-          100% { transform: skewX(-20deg) translateX(300%); }
-        }
-        .landing-badge {
-          display: inline-block;
-          background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.15)) !important;
-          color: #d8b4fe !important;
-          border: 1px solid rgba(168, 85, 247, 0.4) !important;
-          text-shadow: 0 0 15px rgba(168, 85, 247, 0.6) !important;
-          padding: 10px 20px !important;
-          border-radius: 100px !important;
-          font-weight: 800 !important;
-          font-size: 0.95rem !important;
-          letter-spacing: 1.5px !important;
-          margin-bottom: 2rem !important;
-          box-shadow: 0 0 30px rgba(168, 85, 247, 0.25) !important;
-        }
-        .landing-desk-scene {
-          height: 600px !important;
-        }
-        @media (max-width: 768px) {
-          .landing-desk-scene {
-            height: 350px !important;
-            margin-top: -2rem !important;
-          }
-        }
-        .landing-title {
-          font-size: clamp(3rem, 5vw, 4.5rem) !important;
-          line-height: 1.1 !important;
-          background: linear-gradient(to bottom right, #ffffff 20%, #a855f7 80%, #6366f1 100%) !important;
-          -webkit-background-clip: text !important;
-          -webkit-text-fill-color: transparent !important;
-          text-shadow: 0 15px 35px rgba(99, 102, 241, 0.25) !important;
-          margin-bottom: 1.75rem !important;
-          letter-spacing: -1px !important;
-        }
-        .landing-subtitle {
-          font-size: 1.25rem !important;
-          line-height: 1.6 !important;
-          color: rgba(255,255,255,0.7) !important;
-        }
-        .button-link {
-          background: linear-gradient(135deg, #ffffff, #e0e0e0) !important;
-          color: #000 !important;
-          box-shadow: 0 10px 30px rgba(255,255,255,0.35), 0 0 40px rgba(255,255,255,0.2) inset !important;
-          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
-          border: 1px solid rgba(255,255,255,0.8) !important;
-          font-weight: 800 !important;
-        }
-        .button-link:hover {
-          transform: translateY(-5px) scale(1.04) !important;
-          box-shadow: 0 20px 40px rgba(255,255,255,0.45), 0 0 50px rgba(255,255,255,0.3) inset !important;
-        }
-        .button-secondary {
-          background: rgba(255,255,255,0.03) !important;
-          color: #fff !important;
-          border: 1px solid rgba(255,255,255,0.15) !important;
-          box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
-        }
-        .button-secondary:hover {
-          background: rgba(255,255,255,0.08) !important;
-          border-color: rgba(255,255,255,0.4) !important;
-          box-shadow: 0 10px 30px rgba(255,255,255,0.15) !important;
-        }
-        .landing-metric-card {
-          background: rgba(255,255,255,0.02) !important;
-          backdrop-filter: blur(12px) !important;
-          border: 1px solid rgba(255,255,255,0.08) !important;
-          border-radius: 1.25rem !important;
-          padding: 1.75rem !important;
-          transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
-          position: relative;
-          overflow: hidden;
-        }
-        .landing-metric-card::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 50% 120%, rgba(99, 102, 241, 0.1), transparent 70%);
-          opacity: 0;
-          transition: opacity 0.4s ease;
-        }
-        .landing-metric-card:hover {
-          background: rgba(255,255,255,0.04) !important;
-          border-color: rgba(168, 85, 247, 0.4) !important;
-          transform: translateY(-4px) !important;
-          box-shadow: 0 15px 40px rgba(168, 85, 247, 0.2) !important;
-        }
-        .landing-metric-card:hover::after {
-          opacity: 1;
-        }
-        .landing-metric-card strong {
-          background: linear-gradient(to right, #818cf8, #c084fc) !important;
-          -webkit-background-clip: text !important;
-          -webkit-text-fill-color: transparent !important;
-          font-size: 3rem !important;
-          display: block !important;
-          margin-bottom: 0.5rem !important;
-          text-shadow: 0 0 25px rgba(168, 85, 247, 0.4) !important;
-        }
-        .landing-desk-scene {
-          filter: drop-shadow(0 0 40px rgba(99, 102, 241, 0.3));
-        }
-        @media (max-width: 768px) {
-          .landing-hero-inner-cinematic {
-            padding: 2rem !important;
-            border-radius: 1.5rem !important;
-          }
-        }
-      `}} />
-      <section className="landing-stage">
-        <div className="landing-shell">
-          <motion.div className="landing-hero" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="landing-hero-inner landing-hero-inner-cinematic">
-              <div className="landing-copy" style={{ textAlign: isRTL ? "right" : "left" }}>
-                <span className="landing-badge">{copy.badge}</span>
-                <h1 className="landing-title">{copy.heroTitle}</h1>
-                <p className="landing-subtitle">{copy.heroSubtitle}</p>
+    <motion.div
+      style={{
+        position: 'fixed',
+        top: 0, left: 0, width: '100vw', height: '100vh',
+        zIndex: 999999,
+        display: 'flex',
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        backgroundColor: 'transparent'
+      }}
+    >
+       {/* Shimmering Golden Rod */}
+       <div style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '20px', zIndex: 12, overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, #d4af37, #f9f295, #b8860b)' }} />
+          <motion.div 
+            animate={{ x: ['-100%', '200%'] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            style={{ position: 'absolute', height: '100%', width: '100px', background: 'rgba(255,255,255,0.4)', skewX: '-25deg', filter: 'blur(10px)' }}
+          />
+       </div>
 
-                <div className="landing-cta-row">
-                  <a className="button-link" href="#selector">
-                    {copy.primaryCta}
-                    <ArrowRight size={18} />
-                  </a>
-                  <Link className="button-link button-secondary" href="/diagnostic">
-                    {copy.secondaryCta}
-                  </Link>
-                </div>
+       {/* Left Ultra-Red Velvet Curtain */}
+       <motion.div
+         style={{ 
+           width: '50vw', height: '100vh', 
+           background: `repeating-linear-gradient(90deg, #100002 0px, #300006 15px, #8d0c22 30px, #300006 45px, #100002 60px)`,
+           backgroundSize: '120px 100%',
+           borderRight: '10px solid #d4af37', 
+           boxShadow: '40px 0 150px rgba(0,0,0,1)', 
+           zIndex: 10,
+           position: 'relative'
+         }}
+         initial={{ x: 0 }}
+         animate={{ x: '-100%' }}
+         transition={{ duration: 3.2, delay: 4.8, ease: [0.8, 0, 0.2, 1] }}
+         onAnimationComplete={() => onComplete()}
+       >
+          <motion.div 
+            animate={{ opacity: [0.1, 0.5, 0.1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            style={{ position: 'absolute', right: '15px', height: '100%', width: '2px', background: '#d4af37', filter: 'blur(2px)' }} 
+          />
+       </motion.div>
 
-                <div className="landing-proof-list">
-                  {copy.proof.map((item) => (
-                    <div key={item} className="landing-proof-item">
-                      <CheckCircle2 className="landing-proof-icon" size={18} />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
+       {/* Right Velvet Ripple Curtain */}
+       <motion.div
+         initial={{ x: 0 }}
+         animate={{ x: '100%', transition: { duration: 3.2, delay: 4.8, ease: [0.8, 0, 0.2, 1] } }}
+         style={{ 
+           width: '50vw', height: '100vh', 
+           background: `repeating-linear-gradient(90deg, #100002 0px, #300006 15px, #8d0c22 30px, #300006 45px, #100002 60px)`,
+           borderLeft: '10px solid #d4af37', 
+           boxShadow: '-40px 0 150px rgba(0,0,0,1)', 
+           zIndex: 10,
+           position: 'relative'
+         }}
+       />
 
-                <div className="landing-metric-grid">
-                  {copy.metrics.map((metric) => (
-                    <div key={metric.label} className="landing-metric-card">
-                      <strong>{metric.value}</strong>
-                      <span>{metric.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="landing-visual">
-                <CinematicDeskScene copy={copy} lang={lang} sections={sections} isRTL={isRTL} />
-              </div>
-            </div>
+       {/* God-Mode Logo Reveal */}
+       <motion.div
+         style={{ 
+           position: 'absolute', 
+           inset: 0,
+           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+           zIndex: 20 
+         }}
+         initial={{ opacity: 0 }}
+         animate={{ 
+           opacity: [0, 1, 1, 0],
+           scale: [0.7, 1, 1, 1.4],
+           filter: ["blur(20px) brightness(0.5)", "blur(0px) brightness(1.2)", "blur(0px) brightness(1.5)", "blur(40px) brightness(3)"]
+         }}
+         transition={{ duration: 5.5, times: [0, 0.2, 0.8, 1], ease: "easeInOut" }}
+       >
+          {/* Gold Beveled Cube 'B' */}
+          <motion.div 
+            animate={{ 
+              rotateY: [0, 360],
+              boxShadow: ["0 0 50px rgba(212,175,55,0.4)", "0 0 120px rgba(212,175,55,0.8)", "0 0 50px rgba(212,175,55,0.4)"]
+            }}
+            transition={{ rotateY: { duration: 6, repeat: Infinity, ease: "linear" }, boxShadow: { duration: 2, repeat: Infinity } }}
+            style={{ 
+              width: '140px', height: '140px', 
+              marginBottom: '3rem', 
+              background: 'linear-gradient(135deg, #fff, #d4af37, #b8860b)', 
+              borderRadius: '35px', 
+              display: 'flex', alignItems: 'center', justifyContent: 'center', 
+              fontSize: '5rem', fontWeight: 950, color: '#050508',
+              border: '4px solid #fff',
+              boxShadow: 'inset 0 0 20px rgba(255,255,255,0.5)'
+            }}
+          >
+            B
           </motion.div>
-        </div>
-      </section>
+          <h1 style={{ 
+            fontSize: 'clamp(5rem, 10vw, 8rem)', 
+            fontWeight: 950, 
+            color: '#fff',
+            letterSpacing: '-5px',
+            textAlign: 'center',
+            background: 'linear-gradient(to bottom, #fff 40%, #d4af37 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 50px rgba(212,175,55,0.5)',
+            margin: 0,
+            lineHeight: 0.9
+          }}>
+            BAC<br/>EXCELLENCE
+          </h1>
+          <motion.div 
+             animate={{ scaleX: [0, 1, 1, 0] }}
+             transition={{ duration: 5, times: [0, 0.2, 0.8, 1] }}
+             style={{ height: '3px', width: '500px', background: 'linear-gradient(90deg, transparent, #d4af37, #fff, #d4af37, transparent)', marginTop: '2rem' }}
+          />
+       </motion.div>
 
-      <section className="landing-section">
-        <div className="landing-shell">
-          <div className="landing-strip">
-            {copy.stripCards.map((card, index) => (
-              <StripCard
-                key={card.title}
-                icon={stripIcons[index]}
-                title={card.title}
-                description={card.description}
-                isRTL={isRTL}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+       {/* Scanner Light Sweep */}
+       <motion.div
+         style={{
+           position: 'absolute',
+           height: '15px',
+           width: '300vw',
+           left: '-100vw',
+           background: 'linear-gradient(90deg, transparent, #fff, #d4af37, #fff, transparent)',
+           transform: 'rotate(-45deg)',
+           zIndex: 25,
+           boxShadow: "0 0 150px 50px rgba(255,255,255,1), 0 0 400px 150px rgba(212,175,55,0.6)"
+         }}
+         initial={{ y: -1500 }}
+         animate={{ y: 2000 }}
+         transition={{ duration: 5, ease: "easeInOut" }}
+       />
+    </motion.div>
+  );
+}
 
-      <section className="landing-section">
-        <div className="landing-shell">
-          <div className="landing-workflow-panel">
-            <div className="landing-workflow-copy">
-              <SectionHeading
-                eyebrow={copy.workflowEyebrow}
-                title={copy.workflowTitle}
-                subtitle={copy.workflowSubtitle}
-                isRTL={isRTL}
-              />
+export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
+  const [step, setStep] = useState(0); 
+  const [showCurtains, setShowCurtains] = useState(true);
+  const [formData, setFormData] = useState({ section: "", language: "" });
 
-              <div className="landing-workflow-grid">
-                {copy.workflowSteps.map((step, index) => (
-                  <WorkflowCard
-                    key={step.title}
-                    icon={workflowIcons[index]}
-                    index={index}
-                    title={step.title}
-                    description={step.description}
-                    isRTL={isRTL}
-                  />
-                ))}
-              </div>
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    const timer = setTimeout(() => {
+      setStep(1); 
+    }, 8000);
+    return () => clearTimeout(timer);
+  }, []);
 
-              <div className="landing-bullet-list" style={{ textAlign: isRTL ? "right" : "left" }}>
-                {copy.workflowBullets.map((bullet) => (
-                  <div key={bullet} className="landing-bullet-item">
-                    <CheckCircle2 className="landing-proof-icon" size={18} />
-                    <span>{bullet}</span>
-                  </div>
-                ))}
-              </div>
+  return (
+    <div style={{ position: 'fixed', inset: 0, backgroundColor: '#020205', color: '#fff', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      
+      {/* GOD MODE Persistant 3D Atmos Background */}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+        <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
+          <ambientLight intensity={2} />
+          <pointLight position={[10, 10, 10]} intensity={5} color="#d4af37" />
+          <spotLight position={[-20, 20, 20]} angle={0.3} penumbra={1} intensity={10} color="#fff" />
+          <LanguageCore />
+          <Environment preset="night" />
+          <Stars radius={150} depth={100} count={10000} factor={6} saturation={1} fade speed={2} />
+          <Sparkles count={1500} scale={20} size={5} speed={0.5} opacity={0.3} color="#d4af37" />
+        </Canvas>
+      </div>
 
-              <div className="landing-chip-block" style={{ textAlign: isRTL ? "right" : "left" }}>
-                <span className="landing-chip-label">{copy.sectionsLabel}</span>
-                <div className="landing-chip-row">
-                  {sections.map((section) => (
-                    <span key={section} className="landing-chip">
-                      {section}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+      {showCurtains && <CurtainsIntro onComplete={() => setShowCurtains(false)} />}
 
-            <motion.div className="landing-screenshot-frame" {...revealProps}>
-              <Image
-                src="/dashboard.png"
-                alt="BacLang learning dashboard"
-                width={760}
-                height={520}
-                className="landing-screenshot-image"
-              />
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '750px', padding: '3rem' }}>
+        <AnimatePresence mode="wait">
+          {step === 1 && (
+            <motion.div key="auth" initial={{ opacity: 0, y: 100, filter: 'blur(30px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} exit={{ opacity: 0, scale: 0.8, filter: 'blur(50px)' }} transition={{ duration: 1.2, ease: "circOut" }} style={{ textAlign: 'center' }}>
+               <motion.div 
+                 animate={{ scale: [1, 1.05, 1] }} 
+                 transition={{ duration: 3, repeat: Infinity }}
+                 style={{ fontSize: '4.5rem', fontWeight: 950, marginBottom: '1rem', letterSpacing: '-4px', background: 'linear-gradient(to right, #fff, #d4af37, #fff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+               >
+                 REJOIGNEZ L'ÉLITE
+               </motion.div>
+               <p style={{ color: 'rgba(212,175,55,0.6)', marginBottom: '5rem', fontSize: '1.5rem', fontWeight: 600, letterSpacing: '2px', textTransform: 'uppercase' }}>Votre parcours vers le Bac commence ici.</p>
+               
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '0 2rem' }}>
+                 <button onClick={() => setStep(2)} style={{ width: '100%', padding: '1.75rem', background: '#fff', color: '#000', borderRadius: '1.5rem', fontSize: '1.4rem', fontWeight: 950, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', boxShadow: '0 40px 80px rgba(255,255,255,0.4), 0 0 0 1px rgba(255,255,255,1) inset', transition: 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1)' }} onMouseOver={(e) => { e.currentTarget.style.transform = 'translateY(-15px) scale(1.05)'; e.currentTarget.style.boxShadow = '0 60px 100px rgba(255,255,255,0.6)'; }} onMouseOut={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 40px 80px rgba(255,255,255,0.4)'; }}>
+                   <svg width="30" height="30" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                   ACCÈS VIA GOOGLE
+                 </button>
+                 <button onClick={() => setStep(2)} style={{ width: '100%', padding: '1.75rem', background: 'rgba(255,255,255,0.01)', color: '#fff', borderRadius: '1.5rem', fontSize: '1.4rem', fontWeight: 800, border: '1px solid rgba(212,175,55,0.3)', cursor: 'pointer', backdropFilter: 'blur(30px)', transition: 'all 0.5s ease' }} onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.1)'; e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.transform = 'translateY(-10px)'; }} onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.01)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)'; e.currentTarget.style.transform = 'none'; }}>
+                   CONTACT TÉLÉPHONIQUE
+                 </button>
+               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
+          )}
 
-      <section id="selector" className="landing-section">
-        <div className="landing-shell">
-          <SectionHeading
-            eyebrow={copy.selectorEyebrow}
-            title={copy.selectorTitle}
-            subtitle={copy.selectorSubtitle}
-            isRTL={isRTL}
-          />
+          {step === 2 && (
+            <motion.div key="section" initial={{ opacity: 0, x: 200, filter: 'blur(30px)' }} animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }} exit={{ opacity: 0, x: -200, filter: 'blur(30px)' }} transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}>
+               <h2 style={{ fontSize: '3.5rem', fontWeight: 950, marginBottom: '4rem', textAlign: 'center', letterSpacing: '-2px' }}>VOTRE SECTION</h2>
+               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                 {["Mathématiques", "Sciences Expérimentales", "Sciences Techniques", "Économie et Gestion", "Lettres", "Sciences de l'Informatique"].map(sec => (
+                   <button 
+                     key={sec} 
+                     onClick={() => { setFormData({...formData, section: sec}); setStep(3); }}
+                     style={{ position: 'relative', background: 'rgba(212,175,55,0.02)', border: '1px solid rgba(212,175,55,0.1)', borderRadius: '2rem', padding: '3rem 2rem', fontSize: '1.3rem', fontWeight: 800, color: '#fff', cursor: 'pointer', transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)', backdropFilter: 'blur(40px)', overflow: 'hidden' }}
+                     onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.2)'; e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.transform = 'scale(1.1) rotate(1deg)'; e.currentTarget.style.boxShadow = '0 30px 100px rgba(212,175,55,0.4)'; }}
+                     onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.02)'; e.currentTarget.style.borderColor = 'rgba(212,175,55,0.1)'; e.currentTarget.style.transform = 'scale(1) rotate(0deg)'; e.currentTarget.style.boxShadow = 'none'; }}
+                   >
+                     <motion.div animate={{ x: ['-200%', '200%'] }} transition={{ duration: 3, repeat: Infinity }} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent)', pointerEvents: 'none' }} />
+                     {sec}
+                   </button>
+                 ))}
+               </div>
+            </motion.div>
+          )}
 
-          <motion.div className="landing-selector-shell" {...revealProps}>
-            <HeroPathSelector lang={lang} />
-          </motion.div>
-        </div>
-      </section>
+          {step === 3 && (
+            <motion.div key="language" initial={{ opacity: 0, scale: 1.5, filter: 'blur(40px)' }} animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} exit={{ opacity: 0, scale: 0.5, filter: 'blur(40px)' }} transition={{ duration: 0.8 }}>
+               <h2 style={{ fontSize: '3.5rem', fontWeight: 950, marginBottom: '4rem', textAlign: 'center' }}>LANGUE OPTIONNELLE</h2>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                 {["Allemand", "Espagnol", "Italien"].map(langName => (
+                   <button 
+                     key={langName} 
+                     onClick={() => { setFormData({...formData, language: langName}); setStep(4); }}
+                     style={{ position: 'relative', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '2rem', padding: '2.5rem', fontSize: '1.8rem', fontWeight: 900, color: '#fff', cursor: 'pointer', transition: 'all 0.5s ease', backdropFilter: 'blur(40px)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                     onMouseOver={(e) => { e.currentTarget.style.background = 'rgba(212,175,55,0.15)'; e.currentTarget.style.borderColor = '#d4af37'; e.currentTarget.style.transform = 'translateX(20px) scale(1.02)'; }}
+                     onMouseOut={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'translateX(0) scale(1)'; }}
+                   >
+                     {langName}
+                     <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                       <ArrowRight size={35} color="#000" />
+                     </div>
+                   </button>
+                 ))}
+               </div>
+            </motion.div>
+          )}
 
-      <section className="landing-section">
-        <div className="landing-shell">
-          <SectionHeading
-            eyebrow={copy.featureEyebrow}
-            title={copy.featureTitle}
-            subtitle={copy.featureSubtitle}
-            isRTL={isRTL}
-          />
+          {step === 4 && (
+            <motion.div key="recs" initial={{ opacity: 0, scale: 0.8, filter: 'blur(20px)' }} animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} transition={{ duration: 1.2, ease: "circOut" }} style={{ textAlign: 'center' }}>
+               <div style={{ marginBottom: '2rem', display: 'inline-block', padding: '0.5rem 1.5rem', background: 'rgba(212,175,55,0.1)', border: '1px solid #d4af37', borderRadius: '100px', color: '#d4af37', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.8rem' }}>
+                 Algorithm Phase: Initialization
+               </div>
+               <h2 style={{ fontSize: '4.5rem', fontWeight: 950, marginBottom: '1.5rem', letterSpacing: '-3px', background: 'linear-gradient(to bottom, #fff 0%, #d4af37 80%)', WebkitBackgroundClip: 'text', color: 'transparent', lineHeight: 1 }}>
+                 Configuration de votre Matrice
+               </h2>
+               <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '1.3rem', marginBottom: '4rem', maxWidth: '500px', margin: '0 auto 4rem auto' }}>
+                 Nous adaptons chaque mission pédagogique selon votre profil <strong>{formData.section}</strong> et votre option <strong>{formData.language}</strong>.
+               </p>
+               
+               <div style={{ width: '100%', height: '400px' }}>
+                 <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+                   <ambientLight intensity={1.5} />
+                   <pointLight position={[10, 10, 10]} intensity={2.5} color="#d4af37" />
+                   <LanguageCore />
+                   <Environment preset="city" />
+                   <Sparkles count={300} scale={10} size={4} speed={0.8} color="#d4af37" />
+                 </Canvas>
+               </div>
 
-          <div className="landing-product-grid">
-            {featureCards.map((card, index) => (
-              <ProductCard
-                key={card.title}
-                icon={featureIcons[index]}
-                title={card.title}
-                description={card.description}
-                isRTL={isRTL}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+               <Link href="/dashboard" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginTop: '4rem', padding: '1.5rem 4rem', background: '#fff', color: '#000', borderRadius: '1.5rem', fontSize: '1.3rem', fontWeight: 950, textDecoration: 'none', boxShadow: '0 30px 60px rgba(255,255,255,0.2), 0 0 0 10px rgba(255,255,255,0.1)', transition: 'all 0.4s ease' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-10px) scale(1.05)'} onMouseOut={(e) => e.currentTarget.style.transform = 'none'}>
+                 ACTIVER L'ALGORITHME <ArrowRight size={24} style={{ marginLeft: '15px' }}/>
+               </Link>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
-      <section className="landing-section landing-section-final">
-        <div className="landing-shell">
-          <motion.div className="landing-final-panel" {...revealProps}>
-            <div style={{ textAlign: isRTL ? "right" : "left" }}>
-              <span className="eyebrow">{copy.finalEyebrow}</span>
-              <h2 className="section-title-large" style={{ marginBottom: "16px" }}>
-                {t.cta_title}
-              </h2>
-              <p className="muted landing-section-subtitle" style={{ marginBottom: "16px" }}>
-                {t.cta_subtitle}
-              </p>
-              <p className="landing-final-note">{copy.finalNote}</p>
-            </div>
-
-            <div className="landing-final-actions">
-              <Link className="button-link" href="/auth/signup">
-                {t.cta_btn}
-                <ArrowRight size={18} />
-              </Link>
-              <Link className="button-link button-secondary" href="/lessons">
-                {t.hero_explore}
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <div style={{ position: 'absolute', bottom: '2rem', left: '2rem', zIndex: 5, color: 'rgba(212,175,55,0.3)', pointerEvents: 'none' }}>
+        <span style={{ fontSize: '0.7rem', display: 'block', letterSpacing: '5px' }}>BAC EXCELLENCE</span>
+        <span style={{ fontSize: '0.7rem', display: 'block', letterSpacing: '2px', marginTop: '4px' }}>© 2026 ELITE PEDAGOGY</span>
+      </div>
     </div>
   );
 }
