@@ -1753,6 +1753,16 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
   const [step, setStep] = useState(0); 
   const [showCurtains, setShowCurtains] = useState(true);
   const [formData, setFormData] = useState({ section: "", language: "" });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     // Check session to avoid re-login if already authenticated
@@ -1782,13 +1792,13 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
       {/* GOD MODE Persistant 3D Atmos Background */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
-          <ambientLight intensity={2} />
-          <pointLight position={[10, 10, 10]} intensity={5} color="#d4af37" />
-          <spotLight position={[-20, 20, 20]} angle={0.3} penumbra={1} intensity={10} color="#fff" />
+          <ambientLight intensity={isMobile ? 3 : 2} />
+          <pointLight position={[10, 10, 10]} intensity={isMobile ? 2 : 5} color="#d4af37" />
+          {!isMobile && <spotLight position={[-20, 20, 20]} angle={0.3} penumbra={1} intensity={10} color="#fff" />}
           <LanguageCore />
-          <Environment preset="night" />
-          <Stars radius={150} depth={100} count={10000} factor={6} saturation={1} fade speed={2} />
-          <Sparkles count={1500} scale={20} size={5} speed={0.5} opacity={0.3} color="#d4af37" />
+          {!isMobile && <Environment preset="night" />}
+          <Stars radius={150} depth={100} count={isMobile ? 1500 : 10000} factor={isMobile ? 4 : 6} saturation={1} fade speed={isMobile ? 1 : 2} />
+          <Sparkles count={isMobile ? 200 : 1500} scale={20} size={isMobile ? 3 : 5} speed={0.5} opacity={0.3} color="#d4af37" />
         </Canvas>
       </div>
 
