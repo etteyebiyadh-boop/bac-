@@ -21,6 +21,7 @@ import {
 import { HeroPathSelector } from "@/components/home-path-selector";
 import { SiteLanguage } from "@/lib/translations";
 import { SimpleHero } from "@/components/simple-hero";
+import { NextLevelMobile } from "@/components/next-level-mobile";
 
 interface HomeClientProps {
   lang: SiteLanguage;
@@ -1790,9 +1791,9 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
     return () => clearTimeout(timer);
   }, [isMobile]);
 
-  // For mobile, use simple hero
+  // For mobile, use next-level mobile experience
   if (isMobile) {
-    return <SimpleHero lang={lang} t={t} isRTL={isRTL} />;
+    return <NextLevelMobile lang={lang} t={t} isRTL={isRTL} />;
   }
 
   return (
