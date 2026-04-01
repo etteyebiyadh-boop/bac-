@@ -1755,6 +1755,20 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
   const [formData, setFormData] = useState({ section: "", language: "" });
 
   useEffect(() => {
+    // Check session to avoid re-login if already authenticated
+    const checkSession = async () => {
+      try {
+        const res = await fetch('/api/auth/session');
+        const data = await res.json();
+        if (data.authenticated) {
+          window.location.href = '/dashboard';
+        }
+      } catch (err) {
+        console.error("Session check failed:", err);
+      }
+    };
+    checkSession();
+
     document.body.style.overflow = "hidden";
     const timer = setTimeout(() => {
       setStep(1); 
