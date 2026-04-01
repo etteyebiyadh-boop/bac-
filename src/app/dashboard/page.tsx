@@ -86,6 +86,10 @@ export default async function DashboardPage() {
                  <span style={{ fontSize: "1.2rem" }}>📝</span>
                  <span>{t.nav_exams}</span>
               </Link>
+              <Link href="/bac-week" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", background: "rgba(99, 102, 241, 0.1)", color: "var(--primary)", border: "1px solid rgba(99, 102, 241, 0.2)" }}>
+                 <span style={{ fontSize: "1.2rem" }}>🎯</span>
+                 <span style={{ fontWeight: 800 }}>BAC Week Sprint</span>
+              </Link>
               <Link href="/challenges" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
                  <span style={{ fontSize: "1.2rem" }}>🏆</span>
                  <span>Challenges</span>

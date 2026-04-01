@@ -160,11 +160,14 @@ Student Essay: "${input.studentEssay}"
 
 Grading Protocol (Tunisian Ministry Standards):
 - Calculate Reading score (out of 12) strictly based on comprehension accuracy.
-- Calculate Language score (out of 8) based on grammar rule application.
-- Grade Writing (out of 10) considering grammar accuracy, vocabulary sophistication, and argument coherence.
-- Sum them up for an Overall Score out of 30, then convert to /20.
-- SECTION CONTEXT: The student is in Section ${input.bacSection || "GENERAL"}. Adjust expectations accordingly (e.g., more technical precision for Math/Tech, more literary depth for Lettres).
-- Be CRITICAL: A "good" essay should score 13-15, not 18+. Only truly exceptional work deserves 16+.
+- Calculate Language score (out of 6 or 8 depending on section) based on grammar rule application.
+- Grade Writing (out of 12 or 10 depending on section) considering grammar accuracy, vocabulary sophistication, and argument coherence.
+- Sum them up for an Overall Score (typically out of 30, scaled to 20 for Scientific, out of 40 scaled to 20 for Lettres).
+- SECTION CONTEXT: The student is in Section ${input.bacSection || "GENERAL"}.
+${input.bacSection === "LETTRES" ? "  -> LETTRES FOCUS: Writing is highly coefficiented. Penalize heavily (-1.5) for poor transitions and basic vocabulary. Expect complex arguments." : ""}
+${input.bacSection === "MATHEMATIQUES" || input.bacSection === "SCIENCES_EXPERIMENTALES" || input.bacSection === "SCIENCES_INFORMATIQUE" ? "  -> SCIENTIFIC FOCUS: Language/Grammar is critical. Points are awarded for clear, concise logic and technical terminology. Do NOT penalize for lacking poetic flair." : ""}
+${input.bacSection === "SCIENCES_TECHNIQUES" || input.bacSection === "ECONOMIE_GESTION" ? "  -> TECH/ECO FOCUS: Focus on practical vocabulary, correct tense usage, and clear paragraph structures." : ""}
+- Be CRITICAL: A "good" essay should score 12-14. 15+ is for excellent work. 18+ is extremely rare.
 
 Output a JSON object with:
 - "overallScore": Final mark out of 20 (be conservative, use half-points like 12.5, 13.5)
@@ -192,20 +195,20 @@ Now grade this student essay based on official Tunisian Ministry criteria:
 3. Structure, Coherence & Flow (10 pts): Introduction quality, paragraph development, connectors, conclusion
 
 SECTION CONTEXT: The student is in Section ${input.bacSection || "GENERAL"}.
-${input.bacSection === "LETTRES" ? "- EXPECTATION: High literary sophistication, complex narrative structures, and deep thematic analysis." : ""}
-${input.bacSection === "MATH" || input.bacSection === "SCIENCE" || input.bacSection === "INFO" ? "- EXPECTATION: Logical clarity, precise technical vocabulary (innovation/environment topics), and efficient argumentation." : ""}
-${input.bacSection === "TECH" ? "- EXPECTATION: Functional precision, descriptive accuracy (processes/mechanisms), and clear structure." : ""}
+${input.bacSection === "LETTRES" ? "-> LETTRES EXPECTATION: High literary sophistication, complex narrative structures, and deep thematic analysis. GRADING RULES: Heavy penalty (-1 to -2) for basic words like 'good', 'bad', 'happy'. Require advanced linkers." : ""}
+${input.bacSection === "MATHEMATIQUES" || input.bacSection === "SCIENCES_EXPERIMENTALES" || input.bacSection === "SCIENCES_INFORMATIQUE" ? "-> SCIENTIFIC EXPECTATION: Logical clarity, precise technical vocabulary (innovation/environment topics), and efficient argumentation. GRADING RULES: Minor penalty (-0.5) for simple vocab, but heavy penalty (-1) for confusing logic or wrong tense." : ""}
+${input.bacSection === "SCIENCES_TECHNIQUES" || input.bacSection === "ECONOMIE_GESTION" ? "-> TECH/ECO EXPECTATION: Functional precision, economic/technical vocabulary, and clear structure. GRADING RULES: Focus heavily on Introduction/Conclusion structure. Missing conclusion = automatic -3 points." : ""}
 
 Exam Prompt: ${input.examPrompt || "Free writing topic"}
 Student Essay: "${input.studentEssay}"
 
 Grading Instructions:
-- Be STRICT and realistic. A typical student essay with some errors should score 10-13, not 17+.
-- Reserve 16-20 for truly excellent work with sophisticated vocabulary and complex structures.
-- Use HALF-POINTS (e.g., 12.5, 13.5) for more nuanced grading.
-- Grammar errors: -0.5 for minor errors, -1 for major errors (wrong tense, missing subject)
-- Vocabulary: Simple repetitive words = low score; varied appropriate vocabulary = high score
-- Structure: Missing conclusion = -2 points; weak connectors = -1 point
+- Be STRICT and realistic. A typical Tunisian BAC student essay with some errors should score 10-13, not 17+.
+- Reserve 16-20 ONLY for work with sophisticated vocabulary and practically zero major grammatical errors.
+- Use HALF-POINTS (e.g., 12.5, 13.5) for accurate grading.
+- Grammar errors: -0.5 for minor errors (articles, spelling), -1 for major errors (wrong tense, missing subject, broken S-V agreement).
+- Vocabulary: Simple repetitive words = max 2.5/5; varied appropriate vocabulary = 4-5/5.
+- Structure: Missing conclusion = -2 points; weak connectors = -1 point; no paragraphs = -3 points.
 
 Output a JSON object with:
 - "overallScore": Final mark out of 20 (conservative, realistic Tunisian BAC standards)

@@ -157,6 +157,7 @@ export function MobileDashboard({ user, profile, translations: t, lang }: Mobile
     { Icon: DashboardIcon, label: t.nav_exams || "Exams", href: "/exams", color: "#10b981", desc: "Mock tests" },
     { Icon: TrophyIcon, label: t.nav_library || "Learn", href: "/lessons", color: "#f59e0b", desc: "Study" },
     { Icon: TargetIcon, label: "BAC Week", href: "/bac-week", color: "#ec4899", desc: "7-day prep" },
+    { Icon: TrophyIcon, label: "Classement", href: "/leaderboard", color: "#f59e0b", desc: "Top élèves" },
   ];
 
   const stats = [
