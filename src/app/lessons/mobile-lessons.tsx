@@ -111,6 +111,22 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
   const [activeTab, setActiveTab] = useState("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
 
+  // Client-side translation lookup for module labels
+  const getModuleLabel = (mod: string): string => {
+    const currentTranslations = translations[lang as keyof typeof translations] || translations.en;
+    const labelMap: Record<string, string> = {
+      'MODULE_1_HOLIDAYING_ART_SHOWS': currentTranslations.unit_1_title,
+      'MODULE_2_EDUCATION_MATTERS': currentTranslations.unit_2_title,
+      'MODULE_3_CREATIVE_INVENTIVE_MINDS': currentTranslations.unit_3_title,
+      'MODULE_4_YOUTH_ISSUES': currentTranslations.unit_4_title,
+      'MODULE_5_WOMEN_POWER': currentTranslations.unit_5_title,
+      'MODULE_6_SUSTAINABLE_DEVELOPMENT': currentTranslations.unit_6_title,
+      'MODULE_7_WORK_COMMITMENT': currentTranslations.unit_7_title,
+      'MODULE_8_LITERARY_TEXTS': currentTranslations.unit_8_title,
+    };
+    return labelMap[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ");
+  };
+
   const currentTrack = curriculumTracks[selectedLanguage];
   const langGrammar = grammarRules.filter((g: any) => g.language === selectedLanguage);
   const langVocab = vocabSets.filter((v: any) => v.language === selectedLanguage);
@@ -226,7 +242,7 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={getModuleLabel(mod)}
                   subtitle={`${moduleLessons.length} lessons`}
                   count={moduleLessons.length}
                   icon={TargetIcon}
@@ -313,7 +329,7 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={getModuleLabel(mod)}
                   count={modReading.length}
                   icon={BookIcon}
                   color="#f59e0b"
@@ -353,7 +369,7 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={getModuleLabel(mod)}
                   count={modGrammar.length}
                   icon={LessonsIcon}
                   color="#6366f1"
@@ -397,7 +413,7 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={getModuleLabel(mod)}
                   count={modVocab.length}
                   icon={FireIcon}
                   color="#10b981"

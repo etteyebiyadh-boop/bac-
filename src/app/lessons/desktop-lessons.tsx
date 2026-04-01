@@ -263,7 +263,7 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
                 return (
                   <CollapsibleSection
                     key={mod}
-                    title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                    title={getModuleLabel(mod)}
                     subtitle={`${moduleLessons.length} lessons across all levels`}
                     count={moduleLessons.length}
                     icon={TargetIcon}
@@ -359,7 +359,7 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={getModuleLabel(mod)}
                   subtitle={`${modReading.length} reading passages`}
                   count={modReading.length}
                   icon={BookIcon}
@@ -403,7 +403,7 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={getModuleLabel(mod)}
                   subtitle={`${modGrammar.length} grammar modules`}
                   count={modGrammar.length}
                   icon={LessonsIcon}
@@ -450,7 +450,7 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
               return (
                 <CollapsibleSection
                   key={mod}
-                  title={moduleLabels[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ")}
+                  title={getModuleLabel(mod)}
                   subtitle={`${modVocab.length} vocabulary sets`}
                   count={modVocab.length}
                   icon={FireIcon}
