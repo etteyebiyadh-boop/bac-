@@ -54,10 +54,11 @@ type CorrectionResult = {
 interface MobileExamProps {
   exam: ExamOption;
   lang: SiteLanguage;
+  bacSection: string | null;
   scanAvailable: boolean;
 }
 
-export function MobileExam({ exam, lang, scanAvailable }: MobileExamProps) {
+export function MobileExam({ exam, lang, bacSection, scanAvailable }: MobileExamProps) {
   const t = translations[lang];
   const [studentText, setStudentText] = useState("");
   const [isFocusMode, setIsFocusMode] = useState(false);
@@ -148,6 +149,7 @@ export function MobileExam({ exam, lang, scanAvailable }: MobileExamProps) {
           promptText: exam.prompt,
           studentText: submissionMode === "scan" ? scanText : studentText,
           language: exam.language,
+          bacSection: bacSection,
           sourceMode: submissionMode
         })
       });

@@ -20,6 +20,7 @@ type ExamOption = {
 interface ResponsiveExamProps {
   exam: ExamOption;
   lang: SiteLanguage;
+  bacSection: string | null;
   scanAvailable: boolean;
   scanProviderLabel: string | null;
 }
@@ -27,6 +28,7 @@ interface ResponsiveExamProps {
 export function ResponsiveExam({
   exam,
   lang,
+  bacSection,
   scanAvailable,
   scanProviderLabel,
 }: ResponsiveExamProps) {
@@ -54,6 +56,7 @@ export function ResponsiveExam({
         </section>
         <WriteWorkspace 
           lang={lang} 
+          bacSection={bacSection}
           exams={[exam]} 
           selectedExam={exam} 
           scanAvailable={scanAvailable}
@@ -68,6 +71,7 @@ export function ResponsiveExam({
       <MobileExam
         exam={exam}
         lang={lang}
+        bacSection={bacSection}
         scanAvailable={scanAvailable}
       />
     );
@@ -106,6 +110,7 @@ export function ResponsiveExam({
       <div id="write-workspace-anchor" />
       <WriteWorkspace 
         lang={lang} 
+        bacSection={bacSection}
         exams={[exam]} 
         selectedExam={exam} 
         scanAvailable={scanAvailable}

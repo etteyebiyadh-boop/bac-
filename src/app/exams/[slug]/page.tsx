@@ -9,7 +9,8 @@ import { ResponsiveExam } from "./responsive-exam";
 export const dynamic = 'force-dynamic';
 
 export default async function ExamPracticePage({ params }: { params: Promise<{ slug: string }> }) {
-  await requireCurrentUser();
+  const user = await requireCurrentUser();
+  const profile = await db.studentProfile.findUnique({ where: { userId: user.id } });
   const cookieStore = await cookies();
   const rawLang = cookieStore.get("site-lang")?.value;
   const langCookie = (rawLang === "fr" || rawLang === "ar" ? rawLang : "en") as SiteLanguage;
@@ -26,6 +27,7 @@ export default async function ExamPracticePage({ params }: { params: Promise<{ s
     <ResponsiveExam
       exam={JSON.parse(JSON.stringify(exam))}
       lang={langCookie}
+      bacSection={profile?.bacSection || null}
       scanAvailable={visionAvailability.available}
       scanProviderLabel={visionAvailability.providerLabel}
     />
