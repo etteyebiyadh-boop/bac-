@@ -17,7 +17,7 @@ export default async function DashboardPage() {
   const profile = await ensureStudentProfile(user.id);
   const cookieStore = await cookies();
   const langCookie = cookieStore.get("site-lang")?.value as SiteLanguage || "en";
-  const t = translations[langCookie];
+  const t = translations[langCookie] || translations.en;
 
   let secondaryLanguages: string[] = [];
   try {

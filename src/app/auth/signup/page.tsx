@@ -10,7 +10,7 @@ function SignupContent() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
-  const [bacSection, setBacSection] = useState("MATH");
+  const [bacSection, setBacSection] = useState("MATHEMATIQUES");
   const [targetScore, setTargetScore] = useState(16);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,13 +32,12 @@ function SignupContent() {
   const t = translations[lang];
 
   const sections = [
-    { id: "MATH", icon: "📐", label: "Mathématiques", color: "#6366f1" },
-    { id: "SCIENCE", icon: "🔬", label: "Sciences Exp.", color: "#10b981" },
-    { id: "TECH", icon: "⚙️", label: "Technique", color: "#f59e0b" },
+    { id: "MATHEMATIQUES", icon: "📐", label: "Mathématiques", color: "#6366f1" },
+    { id: "SCIENCES_EXPERIMENTALES", icon: "🔬", label: "Sciences Exp.", color: "#10b981" },
+    { id: "SCIENCES_TECHNIQUES", icon: "⚙️", label: "Technique", color: "#f59e0b" },
     { id: "LETTRES", icon: "🎭", label: "Lettres", color: "#ec4899" },
-    { id: "ECO", icon: "📈", label: "Éco-Gestion", color: "#8b5cf6" },
-    { id: "INFO", icon: "💻", label: "Informatique", color: "#3b82f6" },
-    { id: "SPORT", icon: "🏅", label: "Sport", color: "#ef4444" },
+    { id: "ECONOMIE_GESTION", icon: "📈", label: "Éco-Gestion", color: "#8b5cf6" },
+    { id: "SCIENCES_INFORMATIQUE", icon: "💻", label: "Informatique", color: "#3b82f6" },
   ];
 
   async function onSubmit() {

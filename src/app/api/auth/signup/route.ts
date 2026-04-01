@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         passwordHash: await hashPassword(body.password),
         studentProfile: {
           create: {
-            bacSection: (body.bacSection as any) || "MATH", // Default or provided
+            bacSection: (body.bacSection as any) || "MATHEMATIQUES", // Default or provided
             targetScore: body.targetScore || 15,
             primaryLanguage: (body.primaryLanguage as any) || "ENGLISH"
           }
