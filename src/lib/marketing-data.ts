@@ -53,45 +53,6 @@ export const FEATURES_HIGHLIGHTS = [
   }
 ];
 
-export const TESTIMONIALS_DATA = [
-  {
-    name: "Ahmed K.",
-    section: "Sciences Expérimentales",
-    bacYear: "2024",
-    score: "14.5/20",
-    improvement: "+5.5 points",
-    quote: "Je suis passé de 9 à 14.5 en anglais grâce à Bac Excellence. L'IA détecte toutes tes erreurs.",
-    avatar: "A"
-  },
-  {
-    name: "Sarah M.",
-    section: "Mathématiques",
-    bacYear: "2024",
-    score: "16/20",
-    improvement: "Mention Très Bien",
-    quote: "J'ai écrit 20+ rédactions sur la plateforme avant le BAC. Le jour J, j'étais prête.",
-    avatar: "S"
-  },
-  {
-    name: "Mohamed R.",
-    section: "Lettres",
-    bacYear: "2024",
-    score: "15/20",
-    improvement: "+4 points",
-    quote: "Le contenu français est incroyable. Les règles de grammaire avec exemples du BAC.",
-    avatar: "M"
-  },
-  {
-    name: "Yasmine B.",
-    section: "Économie & Gestion",
-    bacYear: "2024",
-    score: "13.5/20",
-    improvement: "Assez Bien",
-    quote: "Je pensais que l'anglais était impossible pour moi. Bac Excellence m'a prouvé le contraire.",
-    avatar: "Y"
-  }
-];
-
 export const MODULES_SHOWCASE = [
   { num: 1, title: "Holidaying & Art Shows", desc: "Voyage, tourisme, culture" },
   { num: 2, title: "Education Matters", desc: "Éducation, apprentissage" },
