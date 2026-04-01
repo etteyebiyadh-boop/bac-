@@ -1767,10 +1767,8 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
   }, []);
 
   useEffect(() => {
-    // Skip cinematic intro setup on mobile
     if (isMobile) return;
     
-    // Check session to avoid re-login if already authenticated
     const checkSession = async () => {
       try {
         const res = await fetch('/api/auth/session');
@@ -1791,7 +1789,6 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
     return () => clearTimeout(timer);
   }, [isMobile]);
 
-  // For mobile, use next-level mobile experience
   if (isMobile) {
     return <NextLevelMobile lang={lang} t={t} isRTL={isRTL} />;
   }
@@ -1799,7 +1796,6 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
   return (
     <div style={{ position: 'fixed', inset: 0, backgroundColor: '#020205', color: '#fff', overflow: 'hidden', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       
-      {/* GOD MODE Persistant 3D Atmos Background */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
           <ambientLight intensity={isMobile ? 3 : 2} />
