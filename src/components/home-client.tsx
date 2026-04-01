@@ -1870,7 +1870,7 @@ export function HomeClient({ lang, t, isRTL }: HomeClientProps) {
                </div>
 
                <Link href="/dashboard" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginTop: '4rem', padding: '1.5rem 4rem', background: '#fff', color: '#000', borderRadius: '1.5rem', fontSize: '1.3rem', fontWeight: 950, textDecoration: 'none', boxShadow: '0 30px 60px rgba(255,255,255,0.2), 0 0 0 10px rgba(255,255,255,0.1)', transition: 'all 0.4s ease' }} onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-10px) scale(1.05)'} onMouseOut={(e) => e.currentTarget.style.transform = 'none'}>
-                 ACTIVER L'ALGORITHME <ArrowRight size={24} style={{ marginLeft: '15px' }}/>
+                 ACTIVER L&apos;ALGORITHME <ArrowRight size={24} style={{ marginLeft: '15px' }}/>
                </Link>
             </motion.div>
           )}
