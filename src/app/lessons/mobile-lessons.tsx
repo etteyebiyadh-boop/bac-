@@ -107,6 +107,15 @@ function getModuleFromTheme(theme: string, currentModule: string): string | null
   return currentModule;
 }
 
+const langToSiteLang: Record<string, string> = {
+  'ENGLISH': 'en',
+  'FRENCH': 'fr',
+  'ARABIC': 'ar',
+  'SPANISH': 'es',
+  'GERMAN': 'de',
+  'ITALIAN': 'it'
+};
+
 export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels }: MobileLessonsProps) {
   const [activeTab, setActiveTab] = useState("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
@@ -124,6 +133,17 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
       'MODULE_8_LITERARY_TEXTS': t.unit_8_title,
     };
     return labelMap[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ");
+  };
+
+  const handleLanguageChange = (l: Language) => {
+    setSelectedLanguage(l);
+    // Also update site-lang cookie to match content language for UI consistency
+    const siteLang = langToSiteLang[l];
+    if (siteLang) {
+      document.cookie = `site-lang=${siteLang}; path=/; max-age=31536000`;
+      // Reload to apply new UI language
+      window.location.reload();
+    }
   };
 
   const currentTrack = curriculumTracks[selectedLanguage];
@@ -146,7 +166,7 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
           {activeLanguages.map((l) => (
             <button
               key={l}
-              onClick={() => setSelectedLanguage(l)}
+              onClick={() => handleLanguageChange(l)}
               className="micro-bounce"
               style={{
                 padding: "8px 16px",
