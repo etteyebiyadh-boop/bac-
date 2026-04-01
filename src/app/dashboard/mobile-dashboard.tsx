@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect, useMemo } from "react";
-import { DashboardIcon, FireIcon, ChartIcon, BookIcon, ClockIcon, ArrowRightIcon, TrophyIcon, TargetIcon } from "@/components/icons";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { DashboardIcon, FireIcon, ChartIcon, BookIcon, ClockIcon, TrophyIcon, TargetIcon } from "@/components/icons";
+import { SkeletonCard, SkeletonProgress, SkeletonGrid, SkeletonStats, SkeletonList } from "@/components/skeletons";
 import { formatDistanceToNow } from "date-fns";
 
 interface MobileDashboardProps {
@@ -14,330 +14,353 @@ interface MobileDashboardProps {
   lang: string;
 }
 
+interface ProgressDetail {
+  label: string;
+  value: number;
+  color: string;
+}
+
 interface ActivityItem {
   id: string;
   title: string;
   score: number | null;
   date: string;
-  type: "essay" | "mock" | "lesson";
-}
-
-// Apple-style card with premium glass
-function GlassCard({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, scale: 0.98 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={`bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] rounded-2xl shadow-xl shadow-black/20 ${className}`}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// Premium score ring with glow
-function ScoreRing({ value, size = 100 }: { value: number; size?: number }) {
-  const strokeWidth = 6;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const offset = circumference - (value / 100) * circumference;
-  
-  const getColor = (v: number) => {
-    if (v >= 80) return "#22c55e";
-    if (v >= 60) return "#f59e0b";
-    return "#ef4444";
-  };
-  
-  const color = getColor(value);
-
-  return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <div 
-        className="absolute inset-0 rounded-full blur-xl opacity-30"
-        style={{ backgroundColor: color }}
-      />
-      <svg width={size} height={size} className="transform -rotate-90 relative">
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke="rgba(255,255,255,0.06)"
-          strokeWidth={strokeWidth}
-          fill="none"
-        />
-        <motion.circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke={color}
-          strokeWidth={strokeWidth}
-          fill="none"
-          strokeLinecap="round"
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-          style={{ strokeDasharray: circumference, filter: `drop-shadow(0 0 6px ${color}50)` }}
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-xl font-bold text-white tracking-tight">{value}%</span>
-      </div>
-    </div>
-  );
-}
-
-// Metric tile
-function Metric({ icon: Icon, value, label, trend }: { icon: any; value: string; label: string; trend?: string }) {
-  return (
-    <div className="flex flex-col p-4">
-      <div className="flex items-center gap-2 mb-2">
-        <Icon className="w-4 h-4 text-slate-400" />
-        <span className="text-xs text-slate-500 uppercase tracking-wider">{label}</span>
-      </div>
-      <div className="flex items-baseline gap-2">
-        <span className="text-2xl font-semibold text-white">{value}</span>
-        {trend && <span className="text-xs text-emerald-400">{trend}</span>}
-      </div>
-    </div>
-  );
-}
-
-// Activity row
-function ActivityRow({ item, index }: { item: ActivityItem; index: number }) {
-  const Icon = item.type === "mock" ? DashboardIcon : BookIcon;
-  const color = item.type === "mock" ? "#10b981" : "#6366f1";
-  
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -12 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="flex items-center gap-3 py-3 border-b border-white/[0.04] last:border-0"
-    >
-      <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/[0.04]">
-        <Icon className="w-4 h-4" style={{ color }} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-slate-200 truncate">{item.title}</p>
-        <p className="text-xs text-slate-500">{item.date}</p>
-      </div>
-      {item.score && (
-        <div className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/[0.06] text-slate-300">
-          {item.score}/20
-        </div>
-      )}
-    </motion.div>
-  );
-}
-
-// Primary action button
-function ActionButton({ href, icon: Icon, title, subtitle, color }: { href: string; icon: any; title: string; subtitle: string; color: string }) {
-  return (
-    <Link href={href}>
-      <motion.div
-        whileTap={{ scale: 0.97 }}
-        className="relative overflow-hidden group"
-      >
-        <div 
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{ background: `linear-gradient(135deg, ${color}20, transparent)` }}
-        />
-        <div className="relative flex items-center gap-4 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-white/[0.12] transition-colors">
-          <div 
-            className="w-12 h-12 rounded-xl flex items-center justify-center"
-            style={{ backgroundColor: `${color}15` }}
-          >
-            <Icon className="w-5 h-5" style={{ color }} />
-          </div>
-          <div className="flex-1">
-            <p className="font-medium text-slate-200">{title}</p>
-            <p className="text-xs text-slate-500">{subtitle}</p>
-          </div>
-          <ArrowRightIcon className="w-4 h-4 text-slate-500" />
-        </div>
-      </motion.div>
-    </Link>
-  );
+  type: "essay" | "mock" | "lesson" | "exercise";
 }
 
 export function MobileDashboard({ user, profile, translations: t, lang }: MobileDashboardProps) {
   const [greeting, setGreeting] = useState("");
+  const [activeTab, setActiveTab] = useState("activity");
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  
+  // Real data states
+  const [streak, setStreak] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [totalEssays, setTotalEssays] = useState(0);
+  const [averageScore, setAverageScore] = useState<number | null>(null);
+  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
+  const [granularProgress, setGranularProgress] = useState<ProgressDetail[]>([
+    { label: "Grammar", value: 0, color: "#6366f1" },
+    { label: "Vocab", value: 0, color: "#10b981" },
+    { label: "Writing", value: 0, color: "#f59e0b" },
+    { label: "Reading", value: 0, color: "#ec4899" },
+    { label: "Listening", value: 0, color: "#8b5cf6" }
+  ]);
+  const [upcoming, setUpcoming] = useState([
+    { title: "Daily Essay", due: "Today", urgent: true, icon: "⏰", color: "#ef4444" },
+    { title: "Vocab Quiz", due: "Tomorrow", urgent: false, icon: "📖", color: "#6366f1" }
+  ]);
 
+  // Fetch real dashboard data
   useEffect(() => {
     fetch("/api/dashboard")
       .then(res => res.json())
       .then(data => {
-        setData(data);
+        if (data.success !== false && data.metrics) {
+          const metrics = data.metrics;
+          
+          // Set streak from real data
+          setStreak(metrics.currentStreak || 0);
+          
+          // Calculate progress from average score
+          const avgScore = metrics.averageScore;
+          if (avgScore) {
+            setAverageScore(avgScore);
+            setProgress(Math.round((avgScore / 20) * 100));
+          }
+          
+          // Set total essays/corrections
+          setTotalEssays(metrics.totalCorrections || 0);
+          
+          // Update granular progress from breakdown
+          const breakdown = metrics.averageBreakdown;
+          if (breakdown) {
+            setGranularProgress([
+              { label: "Grammar", value: Math.round((breakdown.grammar / 20) * 100) || 0, color: "#6366f1" },
+              { label: "Vocab", value: Math.round((breakdown.vocabulary / 20) * 100) || 0, color: "#10b981" },
+              { label: "Writing", value: Math.round((breakdown.structure / 20) * 100) || 0, color: "#f59e0b" },
+              { label: "Reading", value: 0, color: "#ec4899" }, // Not tracked yet
+              { label: "Listening", value: 0, color: "#8b5cf6" }  // Not tracked yet
+            ]);
+          }
+          
+          // Process recent activity from submissions
+          if (data.recentSubmissions && data.recentSubmissions.length > 0) {
+            const activity = data.recentSubmissions.slice(0, 3).map((sub: any) => ({
+              id: sub.id,
+              title: sub.exam?.title || (sub.language ? `${sub.language} Essay` : "Writing Practice"),
+              score: sub.overallScore,
+              date: formatDistanceToNow(new Date(sub.createdAt), { addSuffix: false }),
+              type: sub.exam ? "mock" : "essay" as const
+            }));
+            setRecentActivity(activity);
+          } else {
+            // Default empty state
+            setRecentActivity([]);
+          }
+
+          // Update upcoming tasks based on mission data
+          if (data.mission) {
+            setUpcoming([
+              { 
+                title: data.mission.title || "Daily Mission", 
+                due: "Today", 
+                urgent: true, 
+                icon: "⏰", 
+                color: "#ef4444" 
+              },
+              { 
+                title: "Continue Learning", 
+                due: "Tomorrow", 
+                urgent: false, 
+                icon: "📖", 
+                color: "#6366f1" 
+              }
+            ]);
+          }
+        }
         setIsLoading(false);
       })
-      .catch(() => setIsLoading(false));
+      .catch(() => {
+        // Fallback to empty state on error
+        setIsLoading(false);
+      });
   }, []);
+
+  // Welcome toast
+  useEffect(() => {
+    if (!isLoading) {
+      const hour = new Date().getHours();
+      let message = "";
+      if (hour < 12) message = lang === "fr" ? "Bonne étude !" : lang === "ar" ? "دراسة سعيدة!" : "Ready to study?";
+      else if (hour < 18) message = lang === "fr" ? "Continue comme ça !" : lang === "ar" ? "واصل التقدم!" : "Keep the momentum!";
+      else message = lang === "fr" ? "Bonne soirée d'étude" : lang === "ar" ? "مساء دراسي سعيد" : "Evening study session";
+      
+      setToastMessage(message);
+      setShowToast(true);
+      const hideTimer = setTimeout(() => setShowToast(false), 3000);
+      return () => clearTimeout(hideTimer);
+    }
+  }, [isLoading, lang]);
 
   useEffect(() => {
     const hour = new Date().getHours();
-    const greetings: Record<string, { morning: string; afternoon: string; evening: string }> = {
-      fr: { morning: "Bonjour", afternoon: "Bonjour", evening: "Bonsoir" },
-      ar: { morning: "صباح الخير", afternoon: "مساء الخير", evening: "مساء النور" },
-      en: { morning: "Good morning", afternoon: "Good afternoon", evening: "Good evening" }
-    };
-    const g = greetings[lang] || greetings.en;
-    if (hour < 12) setGreeting(g.morning);
-    else if (hour < 18) setGreeting(g.afternoon);
-    else setGreeting(g.evening);
+    if (hour < 12) setGreeting(lang === "fr" ? "Bonjour" : lang === "ar" ? "صباح الخير" : "Good morning");
+    else if (hour < 18) setGreeting(lang === "fr" ? "Bon après-midi" : lang === "ar" ? "مساء الخير" : "Good afternoon");
+    else setGreeting(lang === "fr" ? "Bonsoir" : lang === "ar" ? "مساء النور" : "Good evening");
   }, [lang]);
 
-  const stats = useMemo(() => {
-    if (!data?.metrics) return { progress: 0, streak: 0, essays: 0, average: null };
-    const avg = data.metrics.averageScore;
-    return {
-      progress: avg ? Math.round((avg / 20) * 100) : 0,
-      streak: data.metrics.currentStreak || 0,
-      essays: data.metrics.totalCorrections || 0,
-      average: avg
-    };
-  }, [data]);
+  const quickActions = [
+    { Icon: BookIcon, label: t.nav_writing || "Write", href: "/write", color: "#6366f1", desc: "Practice" },
+    { Icon: DashboardIcon, label: t.nav_exams || "Exams", href: "/exams", color: "#10b981", desc: "Mock tests" },
+    { Icon: TrophyIcon, label: t.nav_library || "Learn", href: "/lessons", color: "#f59e0b", desc: "Study" },
+    { Icon: TargetIcon, label: "BAC Week", href: "/bac-week", color: "#ec4899", desc: "7-day prep" },
+  ];
 
-  const activity = useMemo(() => {
-    if (!data?.recentSubmissions?.length) return [];
-    return data.recentSubmissions.slice(0, 5).map((sub: any) => ({
-      id: sub.id,
-      title: sub.exam?.title || `${sub.language} Essay`,
-      score: sub.overallScore,
-      date: formatDistanceToNow(new Date(sub.createdAt), { addSuffix: false }),
-      type: sub.exam ? "mock" : "essay"
-    }));
-  }, [data]);
+  const stats = [
+    { label: "Essays", value: totalEssays.toString(), Icon: BookIcon, color: "#6366f1" },
+    { label: "Streak", value: `${streak}d`, Icon: FireIcon, color: "#f59e0b" },
+    { label: "Score", value: averageScore ? averageScore.toFixed(1) : "--", Icon: ChartIcon, color: "#10b981" },
+  ];
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0f] p-5">
-        <div className="animate-pulse space-y-4">
-          <div className="h-16 bg-white/[0.03] rounded-2xl" />
-          <div className="h-32 bg-white/[0.03] rounded-2xl" />
-          <div className="grid grid-cols-3 gap-3">
-            <div className="h-20 bg-white/[0.03] rounded-2xl" />
-            <div className="h-20 bg-white/[0.03] rounded-2xl" />
-            <div className="h-20 bg-white/[0.03] rounded-2xl" />
-          </div>
+      <div style={{ padding: "20px 20px 100px" }}>
+        <SkeletonCard className="stagger-item" />
+        <div className="stagger-item" style={{ marginTop: "20px" }}>
+          <SkeletonProgress />
+        </div>
+        <div className="stagger-item" style={{ marginTop: "20px" }}>
+          <SkeletonGrid count={4} />
+        </div>
+        <div className="stagger-item" style={{ marginTop: "20px" }}>
+          <SkeletonStats />
+        </div>
+        <div className="stagger-item" style={{ marginTop: "20px" }}>
+          <SkeletonList count={3} />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] p-5 pb-28">
-      {/* Header */}
-      <GlassCard className="p-4 mb-4 flex items-center justify-between" delay={0}>
-        <div>
-          <p className="text-slate-500 text-sm">{greeting}</p>
-          <h1 className="text-xl font-semibold text-white">{user.fullName?.split(" ")[0] || "Student"}</h1>
-        </div>
-        <div className="relative">
-          <Image
-            src={`https://ui-avatars.com/api/?name=${user.fullName}&background=6366f1&color=fff&size=96`}
-            alt={user.fullName}
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-          <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#0a0a0f]" />
-        </div>
-      </GlassCard>
+    <div style={{ padding: "20px 20px 100px" }}>
+      {/* Toast Notification */}
+      <div className={`toast success ${showToast ? 'show' : ''}`}>
+        {toastMessage}
+      </div>
 
-      {/* Main Score Card */}
-      <GlassCard className="p-5 mb-4" delay={0.1}>
-        <div className="flex items-center gap-5">
-          <ScoreRing value={stats.progress} />
-          <div className="flex-1">
-            <p className="text-slate-500 text-sm mb-1">BAC Readiness</p>
-            <p className="text-3xl font-semibold text-white mb-1">
-              {stats.average ? stats.average.toFixed(1) : "--"}<span className="text-slate-500 text-lg">/20</span>
-            </p>
-            <div className="flex gap-2">
-              {stats.streak > 0 && (
-                <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-amber-500/10 text-amber-400">
-                  🔥 {stats.streak} streak
-                </span>
-              )}
-              <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white/[0.06] text-slate-400">
-                {profile.bacSection || "Science"}
-              </span>
+      {/* Header */}
+      <div className="stagger-item" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+        <div>
+          <p style={{ color: "var(--ink-dim)", fontSize: "14px", margin: 0 }}>{greeting}</p>
+          <h1 style={{ fontSize: "26px", fontWeight: 900, margin: "4px 0 0" }}>{user.fullName?.split(" ")[0] || "Student"}</h1>
+        </div>
+        <div style={{ position: "relative", width: 48, height: 48 }}>
+          <Image 
+            src={`https://ui-avatars.com/api/?name=${user.fullName}&background=6366f1&color=fff`} 
+            alt={user.fullName || "User avatar"} 
+            width={48} 
+            height={48} 
+            style={{ borderRadius: "50%", border: "2px solid var(--primary)" }} 
+          />
+          <div style={{ position: "absolute", bottom: 0, right: 0, width: "12px", height: "12px", background: "#10b981", borderRadius: "50%", border: "2px solid #000" }} />
+        </div>
+      </div>
+
+      {/* Badges */}
+      <div className="stagger-item" style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
+        <span className="pill pill-glow" style={{ background: "rgba(245, 158, 11, 0.15)", color: "#f59e0b", display: "flex", alignItems: "center", gap: "4px" }}>
+          <FireIcon className="w-4 h-4" /> {streak} Day Streak
+        </span>
+        <span className="pill" style={{ background: "rgba(99, 102, 241, 0.15)", color: "#6366f1" }}>
+          {profile.bacSection}
+        </span>
+      </div>
+
+      {/* Progress */}
+      <div className="stagger-item card card-vibrant" style={{ padding: "20px", borderRadius: "20px", marginBottom: "20px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "12px" }}>
+          <span style={{ fontSize: "14px", color: "var(--ink-dim)" }}>BAC Ready</span>
+          <span style={{ fontSize: "22px", fontWeight: 900, color: "var(--primary)" }}>{progress}%</span>
+        </div>
+        <div style={{ height: "6px", background: "rgba(255,255,255,0.1)", borderRadius: "100px", overflow: "hidden" }}>
+          <div style={{ height: "100%", width: `${progress}%`, background: "linear-gradient(90deg, var(--primary), #8b5cf6)", borderRadius: "100px", transition: "width 1s ease-out" }} />
+        </div>
+        
+        {/* Granular Progress */}
+        <div style={{ marginTop: "16px", display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "8px" }}>
+          {granularProgress.map((item, idx) => (
+            <div key={idx} style={{ textAlign: "center" }}>
+              <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: `conic-gradient(${item.color} ${item.value * 3.6}deg, rgba(255,255,255,0.1) 0deg)`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 4px", fontSize: "10px", fontWeight: 700, color: "white", position: "relative" }}>
+                <div style={{ position: "absolute", inset: "3px", background: "#000205", borderRadius: "50%" }} />
+                <span style={{ position: "relative", zIndex: 1 }}>{item.value}</span>
+              </div>
+              <span style={{ fontSize: "10px", color: "var(--ink-dim)" }}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <h2 className="stagger-item" style={{ fontSize: "18px", fontWeight: 800, marginBottom: "12px" }}>Quick Actions</h2>
+      <div className="stagger-item" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px", marginBottom: "20px" }}>
+        {quickActions.map((action, idx) => {
+          const IconComponent = action.Icon;
+          return (
+            <Link key={idx} href={action.href} className="card card-interactive micro-bounce hover-lift" style={{ padding: "16px", borderRadius: "16px", textDecoration: "none", borderLeft: `3px solid ${action.color}`, background: `linear-gradient(135deg, ${action.color}08, transparent)` }}>
+              <IconComponent className="w-7 h-7" style={{ color: action.color, marginBottom: "8px" }} />
+              <div style={{ fontSize: "15px", fontWeight: 700, color: "white" }}>{action.label}</div>
+              <div style={{ fontSize: "12px", color: "var(--ink-dim)" }}>{action.desc}</div>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Stats */}
+      <div className="stagger-item card" style={{ padding: "16px", borderRadius: "16px", display: "flex", justifyContent: "space-around", marginBottom: "20px" }}>
+        {stats.map((stat, idx) => {
+          const IconComponent = stat.Icon;
+          return (
+            <div key={idx} style={{ textAlign: "center" }}>
+              <IconComponent className="w-6 h-6" style={{ color: stat.color, margin: "0 auto 4px" }} />
+              <div style={{ fontSize: "18px", fontWeight: 800 }}>{stat.value}</div>
+              <div style={{ fontSize: "11px", color: "var(--ink-dim)" }}>{stat.label}</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Tabs */}
+      <div className="stagger-item" style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
+        {["activity", "upcoming"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className="micro-bounce"
+            style={{
+              flex: 1,
+              padding: "12px",
+              borderRadius: "12px",
+              border: "none",
+              background: activeTab === tab ? "var(--primary)" : "rgba(255,255,255,0.05)",
+              color: activeTab === tab ? "white" : "var(--ink-dim)",
+              fontWeight: 700,
+              fontSize: "14px",
+              cursor: "pointer",
+              transition: "all 0.2s ease",
+            }}
+          >
+            {tab === "activity" ? "Recent" : "Upcoming"}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      <div className="stack stagger-item" style={{ gap: "10px" }}>
+        {activeTab === "activity" ? (
+          recentActivity.length > 0 ? (
+            recentActivity.map((item, idx) => {
+              const IconComponent = item.type === "mock" ? DashboardIcon : BookIcon;
+              const color = item.type === "mock" ? "#10b981" : "#6366f1";
+              return (
+                <div key={item.id} className="card hover-lift" style={{ padding: "16px", borderRadius: "16px", display: "flex", alignItems: "center", gap: "12px", borderLeft: `3px solid ${color}`, animationDelay: `${idx * 0.05}s` }}>
+                  <div style={{ padding: "8px", borderRadius: "10px", background: `${color}20` }}>
+                    <IconComponent className="w-5 h-5" style={{ color }} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 700, fontSize: "15px" }}>{item.title}</div>
+                    <div style={{ fontSize: "12px", color: "var(--ink-dim)" }}>{item.date} ago</div>
+                  </div>
+                  {item.score && <div className="pill" style={{ background: "rgba(16, 185, 129, 0.2)", color: "#10b981" }}>{item.score}/20</div>}
+                </div>
+              );
+            })
+          ) : (
+            <div className="card" style={{ padding: "24px", textAlign: "center", opacity: 0.7 }}>
+              <p>No recent activity. Start practicing!</p>
+              <Link href="/write" className="button-link" style={{ marginTop: "12px", display: "inline-block" }}>
+                Write your first essay →
+              </Link>
+            </div>
+          )
+        ) : (
+          upcoming.map((item, idx) => {
+            const IconComponent = item.icon === "⏰" ? ClockIcon : BookIcon;
+            return (
+              <div key={idx} className="card hover-lift" style={{ padding: "16px", borderRadius: "16px", display: "flex", alignItems: "center", gap: "12px", border: item.urgent ? `1px solid ${item.color}60` : undefined, animationDelay: `${idx * 0.05}s` }}>
+                <div style={{ padding: "8px", borderRadius: "10px", background: `${item.color}20` }}>
+                  <IconComponent className="w-5 h-5" style={{ color: item.color }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 700, fontSize: "15px" }}>{item.title}</div>
+                  <div style={{ fontSize: "12px", color: item.urgent ? item.color : "var(--ink-dim)" }}>{item.due}</div>
+                </div>
+                <div className="pill" style={{ background: item.urgent ? `${item.color}30` : "rgba(255,255,255,0.1)", color: item.urgent ? item.color : "white" }}>
+                  {item.urgent ? "Due" : "Upcoming"}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Study Tip */}
+      <div className="stagger-item card card-glassmorphism" style={{ padding: "16px", borderRadius: "16px", marginTop: "20px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span style={{ fontSize: "24px" }}>💡</span>
+          <div>
+            <div style={{ fontSize: "12px", color: "var(--primary)", fontWeight: 700, marginBottom: "2px" }}>TODAY&apos;S TIP</div>
+            <div style={{ fontSize: "13px", color: "var(--ink-dim)" }}>
+              {lang === "fr" ? "Faites 20 min de lecture active pour améliorer votre compréhension." : 
+               lang === "ar" ? "اقرأ لمدة 20 دقيقة بنشاط لتحسين فهمك." : 
+               "Do 20 minutes of active reading to boost comprehension."}
             </div>
           </div>
         </div>
-      </GlassCard>
-
-      {/* Metrics */}
-      <GlassCard className="mb-4" delay={0.15}>
-        <div className="grid grid-cols-3 divide-x divide-white/[0.04]">
-          <Metric icon={BookIcon} value={stats.essays.toString()} label="Essays" />
-          <Metric icon={ChartIcon} value={stats.average ? stats.average.toFixed(1) : "--"} label="Avg" trend="+0.5" />
-          <Metric icon={TrophyIcon} value="17.0" label="Target" />
-        </div>
-      </GlassCard>
-
-      {/* Quick Actions */}
-      <div className="space-y-2 mb-4">
-        <ActionButton 
-          href="/write" 
-          icon={BookIcon} 
-          title="Practice Writing" 
-          subtitle="20 min essay session"
-          color="#f59e0b"
-        />
-        <ActionButton 
-          href="/exams" 
-          icon={DashboardIcon} 
-          title="Mock Exam" 
-          subtitle="Test your readiness"
-          color="#8b5cf6"
-        />
-        <ActionButton 
-          href="/lessons" 
-          icon={TargetIcon} 
-          title="Daily Lesson" 
-          subtitle="Grammar & vocabulary"
-          color="#10b981"
-        />
       </div>
-
-      {/* Recent Activity */}
-      <GlassCard className="p-4" delay={0.25}>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium text-slate-300">Recent</h3>
-          <Link href="/write" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
-            See all
-          </Link>
-        </div>
-        
-        <AnimatePresence>
-          {activity.length > 0 ? (
-            <div>
-              {activity.map((item: ActivityItem, idx: number) => (
-                <ActivityRow key={item.id} item={item} index={idx} />
-              ))}
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-8"
-            >
-              <p className="text-slate-500 text-sm mb-3">No activity yet</p>
-              <Link 
-                href="/write" 
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.06] text-slate-300 text-sm font-medium hover:bg-white/[0.08] transition-colors"
-              >
-                Start writing
-                <ArrowRightIcon className="w-4 h-4" />
-              </Link>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </GlassCard>
     </div>
   );
 }
