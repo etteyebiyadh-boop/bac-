@@ -7,11 +7,19 @@ import { SiteLanguage, translations } from "@/lib/translations";
 import { db } from "@/lib/db";
 import { getCurriculumSlugs, getCurriculumTrack } from "@/lib/language-system";
 import { ResponsiveLessons } from "./responsive-lessons";
+import { unstable_noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+export async function generateMetadata() {
+  return {
+    title: "Library - Bac Excellence",
+  };
+}
+
 export default async function LibraryHubPage() {
+  unstable_noStore(); // Disable caching for language switching
   try {
     const user = await requireCurrentUser();
     const profile = await ensureStudentProfile(user.id);
