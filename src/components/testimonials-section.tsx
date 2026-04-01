@@ -96,7 +96,7 @@ export function TestimonialsSection() {
               </div>
 
               <blockquote className="quote" style={{ fontSize: "1rem", lineHeight: 1.6, color: "#374151", fontStyle: "italic" }}>
-                "{testimonial.quote}"
+                &quot;{testimonial.quote}&quot;
               </blockquote>
 
               <div className="verified" style={{ marginTop: "20px", display: "flex", alignItems: "center", gap: "8px", fontSize: "0.85rem", color: "#6b7280" }}>
