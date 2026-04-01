@@ -118,7 +118,9 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
 
   // Client-side translation lookup for module labels
   const getModuleLabel = (mod: string): string => {
+    console.log("[DEBUG] getModuleLabel called with lang:", lang, "mod:", mod);
     const currentTranslations = translations[lang as keyof typeof translations] || translations.en;
+    console.log("[DEBUG] currentTranslations.unit_1_title:", currentTranslations.unit_1_title);
     const labelMap: Record<string, string> = {
       'MODULE_1_HOLIDAYING_ART_SHOWS': currentTranslations.unit_1_title,
       'MODULE_2_EDUCATION_MATTERS': currentTranslations.unit_2_title,
@@ -129,7 +131,9 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
       'MODULE_7_WORK_COMMITMENT': currentTranslations.unit_7_title,
       'MODULE_8_LITERARY_TEXTS': currentTranslations.unit_8_title,
     };
-    return labelMap[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ");
+    const result = labelMap[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ");
+    console.log("[DEBUG] result for", mod, ":", result);
+    return result;
   };
 
   const currentTrack = curriculumTracks[selectedLanguage];
