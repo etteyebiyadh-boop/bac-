@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { MobileLessons } from "./mobile-lessons";
 import { DesktopLessons } from "./desktop-lessons";
+import { translations } from "@/lib/translations";
 
 interface ResponsiveLessonsProps {
   modules: any[];
@@ -35,12 +36,15 @@ export function ResponsiveLessons({
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    console.log("[DEBUG ResponsiveLessons] lang prop:", lang);
+    console.log("[DEBUG ResponsiveLessons] translations available:", Object.keys(translations));
+    console.log("[DEBUG ResponsiveLessons] unit_1_title for current lang:", (translations as any)[lang]?.unit_1_title);
     setMounted(true);
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  }, [lang]);
 
   if (!mounted) {
     return (

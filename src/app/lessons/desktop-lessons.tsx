@@ -116,24 +116,19 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
   const [activeTab, setActiveTab] = useState<"curriculum" | "reading" | "grammar" | "vocab">("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
 
-  // Client-side translation lookup for module labels
+  // Client-side translation lookup for module labels - use t prop directly
   const getModuleLabel = (mod: string): string => {
-    console.log("[DEBUG] getModuleLabel called with lang:", lang, "mod:", mod);
-    const currentTranslations = translations[lang as keyof typeof translations] || translations.en;
-    console.log("[DEBUG] currentTranslations.unit_1_title:", currentTranslations.unit_1_title);
     const labelMap: Record<string, string> = {
-      'MODULE_1_HOLIDAYING_ART_SHOWS': currentTranslations.unit_1_title,
-      'MODULE_2_EDUCATION_MATTERS': currentTranslations.unit_2_title,
-      'MODULE_3_CREATIVE_INVENTIVE_MINDS': currentTranslations.unit_3_title,
-      'MODULE_4_YOUTH_ISSUES': currentTranslations.unit_4_title,
-      'MODULE_5_WOMEN_POWER': currentTranslations.unit_5_title,
-      'MODULE_6_SUSTAINABLE_DEVELOPMENT': currentTranslations.unit_6_title,
-      'MODULE_7_WORK_COMMITMENT': currentTranslations.unit_7_title,
-      'MODULE_8_LITERARY_TEXTS': currentTranslations.unit_8_title,
+      'MODULE_1_HOLIDAYING_ART_SHOWS': t.unit_1_title,
+      'MODULE_2_EDUCATION_MATTERS': t.unit_2_title,
+      'MODULE_3_CREATIVE_INVENTIVE_MINDS': t.unit_3_title,
+      'MODULE_4_YOUTH_ISSUES': t.unit_4_title,
+      'MODULE_5_WOMEN_POWER': t.unit_5_title,
+      'MODULE_6_SUSTAINABLE_DEVELOPMENT': t.unit_6_title,
+      'MODULE_7_WORK_COMMITMENT': t.unit_7_title,
+      'MODULE_8_LITERARY_TEXTS': t.unit_8_title,
     };
-    const result = labelMap[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ");
-    console.log("[DEBUG] result for", mod, ":", result);
-    return result;
+    return labelMap[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ");
   };
 
   const currentTrack = curriculumTracks[selectedLanguage];
