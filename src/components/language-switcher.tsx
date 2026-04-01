@@ -21,8 +21,8 @@ export function LanguageSwitcher() {
     setLang(newLang);
     // Set cookie for persistence
     document.cookie = `site-lang=${newLang}; path=/; max-age=31536000`; // 1 year
-    // Refresh to apply changes globally
-    router.refresh();
+    // Hard refresh to ensure server components re-render with new language
+    window.location.reload();
   };
 
   return (

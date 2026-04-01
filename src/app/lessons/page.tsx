@@ -56,16 +56,17 @@ export default async function LibraryHubPage() {
       activeLanguages.push(siteLanguage);
     }
     
-    // Modules logic
+    // Modules logic - show ALL 8 BAC modules
     const modules: BacModule[] = [
       BacModule.MODULE_1_HOLIDAYING_ART_SHOWS,
       BacModule.MODULE_2_EDUCATION_MATTERS,
       BacModule.MODULE_3_CREATIVE_INVENTIVE_MINDS,
       BacModule.MODULE_4_YOUTH_ISSUES,
+      BacModule.MODULE_5_WOMEN_POWER,
+      BacModule.MODULE_6_SUSTAINABLE_DEVELOPMENT,
+      BacModule.MODULE_7_WORK_COMMITMENT,
+      BacModule.MODULE_8_LITERARY_TEXTS,
     ];
-    if (profile.bacSection === "LETTRES") {
-      modules.push(BacModule.MODULE_5_WOMEN_POWER, BacModule.MODULE_6_SUSTAINABLE_DEVELOPMENT);
-    }
 
     // Parallel fetch for speed - filter by Bac section
     const [grammarRules, vocabSets, readingPassages] = await Promise.all([
