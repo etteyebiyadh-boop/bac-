@@ -94,7 +94,8 @@ export default async function DashboardPage() {
                  <span style={{ fontSize: "1.2rem" }}>🏆</span>
                  <span>Challenges</span>
               </Link>
-              <Link href="/certificates" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
+              <Link href="/leaderboard" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}><span style={{ fontSize: "1.2rem" }}>🏆</span><span>Classement</span></Link>
+               <Link href="/certificates" className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6 }}>
                  <span style={{ fontSize: "1.2rem" }}>🎓</span>
                  <span>Certificates</span>
               </Link>
