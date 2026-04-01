@@ -30,12 +30,17 @@ function SignupContent() {
     e.preventDefault();
     setError("");
     
-    // Simulate signup logic for both email and phone
+    // Determine if we are sending email or phone
+    const payload = method === 'phone' 
+      ? { phone: emailOrPhone, password }
+      : { email: emailOrPhone, password };
+
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: emailOrPhone, password })
+      body: JSON.stringify(payload)
     });
+
     
     if (!res.ok) {
       setError(lang === "ar" ? "فشل إنشاء الحساب" : (lang === "fr" ? "Échec de l'inscription" : "Signup failed"));

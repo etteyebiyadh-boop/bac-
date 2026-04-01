@@ -22,18 +22,22 @@ model BacSubject {
 }
 
 model User {
-  id               String            @id @default(uuid())
-  email            String            @unique
-  passwordHash     String
-  fullName         String?
-  isPremium        Boolean           @default(false)
-  createdAt        DateTime          @default(now())
-  dailyMissions    DailyMission[]
-  exerciseAttempts ExerciseAttempt[]
+  id                String             @id @default(uuid())
+  email             String             @unique
+  phone             String?            @unique
+  passwordHash      String
+  fullName          String?
+  isPremium         Boolean            @default(false)
+  createdAt         DateTime           @default(now())
+  dailyMissions     DailyMission[]
+  exerciseAttempts  ExerciseAttempt[]
   lessonCompletions LessonCompletion[]
-  studentProfile   StudentProfile?
-  submissions      Submission[]
+  studentProfile    StudentProfile?
+  submissions       Submission[]
+
+  @@index([phone])
 }
+
 
 model Submission {
   id              String         @id @default(uuid())
@@ -59,28 +63,21 @@ model Submission {
 }
 
 model Exam {
-  id               String       @id @default(uuid())
-  slug             String       @unique
-  language         Language     @default(ENGLISH)
-  year             Int
-  title            String
-  
-  // Part I: Reading Comprehension
-  readingTitle     String?
-  readingContent   String?
-  readingQuestions Json?        // Array of { question: string, type: 'mcq' | 'gap-fill' | 'true-false', choices?: string[], answer: any }
-
-  // Part II: Language / Grammar
-  languageQuestions Json?       // Array of { prompt: string, type: 'grammar' | 'vocab', answer: any }
-
-  // Part III: Writing
-  prompt           String
-  modelAnswer      String
-  
-  methodology      String
-  difficulty       Difficulty
-  estimatedMinutes Int          @default(45)
-  submissions      Submission[]
+  id                String       @id @default(uuid())
+  slug              String       @unique
+  language          Language     @default(ENGLISH)
+  year              Int
+  title             String
+  prompt            String
+  modelAnswer       String
+  methodology       String
+  difficulty        Difficulty
+  estimatedMinutes  Int          @default(45)
+  languageQuestions Json?
+  readingContent    String?
+  readingQuestions  Json?
+  readingTitle      String?
+  submissions       Submission[]
 
   @@index([language, year])
 }
@@ -111,12 +108,12 @@ model Lesson {
   skillFocus       String
   difficulty       Difficulty         @default(MEDIUM)
   estimatedMinutes Int                @default(5)
-  videoUrl         String?
   takeawayJson     Json
   createdAt        DateTime           @default(now())
-  completions      LessonCompletion[]
+  videoUrl         String?
   dailyMissions    DailyMission[]
   exercises        Exercise[]
+  completions      LessonCompletion[]
 
   @@index([language, skillFocus])
 }
@@ -184,8 +181,8 @@ model LessonCompletion {
   lessonId    String
   completedAt DateTime @default(now())
   xpEarned    Int      @default(50)
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonId])
   @@index([userId, completedAt])
@@ -207,11 +204,11 @@ model GrammarRule {
   difficulty   Difficulty      @default(MEDIUM)
   isEssential  Boolean         @default(false)
   relatedRules Json?
-  videoUrl     String?
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   bacModule    BacModule?
   bacSections  BacSection[]
+  videoUrl     String?
 
   @@index([language, category])
   @@index([bacModule])
@@ -311,6 +308,52 @@ model ReadingPassage {
   @@index([bacModule])
   @@index([difficulty])
   @@index([themes])
+}
+
+model Challenge {
+  id              String          @id @default(uuid())
+  challengerId    String
+  challengedId    String?
+  challengerName  String
+  challengedEmail String?
+  examSlug        String
+  examTitle       String
+  language        Language        @default(ENGLISH)
+  status          ChallengeStatus @default(PENDING)
+  challengerScore Float?
+  challengedScore Float?
+  winnerId        String?
+  xpReward        Int             @default(100)
+  createdAt       DateTime        @default(now())
+  expiresAt       DateTime
+  completedAt     DateTime?
+
+  @@index([challengerId])
+  @@index([challengedId])
+  @@index([status])
+}
+
+model AnalyticsEvent {
+  id         String   @id @default(uuid())
+  userId     String
+  event      String
+  properties Json?
+  timestamp  DateTime @default(now())
+
+  @@index([userId, timestamp])
+  @@index([event, timestamp])
+}
+
+model Feedback {
+  id           String   @id @default(uuid())
+  submissionId String
+  userId       String
+  rating       Int
+  comment      String?
+  createdAt    DateTime @default(now())
+
+  @@index([submissionId])
+  @@index([userId])
 }
 
 enum Language {
@@ -425,56 +468,10 @@ enum MissionStatus {
   COMPLETED
 }
 
-model Challenge {
-  id              String           @id @default(uuid())
-  challengerId    String
-  challengedId    String?
-  challengerName  String
-  challengedEmail String?
-  examSlug        String
-  examTitle       String
-  language        Language         @default(ENGLISH)
-  status          ChallengeStatus  @default(PENDING)
-  challengerScore Float?
-  challengedScore Float?
-  winnerId        String?
-  xpReward        Int              @default(100)
-  createdAt       DateTime         @default(now())
-  expiresAt       DateTime
-  completedAt     DateTime?
-
-  @@index([challengerId])
-  @@index([challengedId])
-  @@index([status])
-}
-
 enum ChallengeStatus {
   PENDING
   ACCEPTED
   COMPLETED
   EXPIRED
   DECLINED
-}
-
-model AnalyticsEvent {
-  id         String   @id @default(uuid())
-  userId     String
-  event      String
-  properties Json?
-  timestamp  DateTime @default(now())
-
-  @@index([userId, timestamp])
-  @@index([event, timestamp])
-}
-
-model Feedback {
-  id           String   @id @default(uuid())
-  submissionId String
-  userId       String
-  rating       Int      // 1-5 stars
-  comment      String?
-  createdAt    DateTime @default(now())
-
-  @@index([submissionId])
-  @@index([userId])
 }

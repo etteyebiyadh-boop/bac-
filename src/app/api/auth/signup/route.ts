@@ -5,19 +5,34 @@ import { hashPassword, setSessionCookie, signToken } from "@/lib/auth";
 import { trackSignup } from "@/lib/analytics";
 
 const schema = z.object({
-  email: z.string().email(),
+  email: z.string().email().optional(),
+  phone: z.string().min(8).optional(),
   password: z.string().min(6)
+}).refine(data => data.email || data.phone, {
+  message: "Either email or phone must be provided",
+  path: ["email"]
 });
 
 export async function POST(req: Request) {
   try {
     const body = schema.parse(await req.json());
-    const existing = await db.user.findUnique({ where: { email: body.email } });
-    if (existing) return NextResponse.json({ error: "Email already used" }, { status: 409 });
+    
+    // Check duplication for email if provided
+    if (body.email) {
+      const existingEmail = await db.user.findUnique({ where: { email: body.email } });
+      if (existingEmail) return NextResponse.json({ error: "Email already used" }, { status: 409 });
+    }
+
+    // Check duplication for phone if provided
+    if (body.phone) {
+      const existingPhone = await db.user.findUnique({ where: { phone: body.phone } });
+      if (existingPhone) return NextResponse.json({ error: "Phone number already used" }, { status: 409 });
+    }
 
     const user = await db.user.create({
       data: {
-        email: body.email,
+        email: body.email || `phone_user_${Date.now()}@bac-excellence.tn`, // Dummy email if phone-only
+        phone: body.phone,
         passwordHash: await hashPassword(body.password),
         studentProfile: {
           create: {
@@ -29,7 +44,8 @@ export async function POST(req: Request) {
     });
 
     // Track signup event
-    await trackSignup(user.id, user.email);
+    await trackSignup(user.id, user.email || user.phone || "unknown");
+
 
     const token = signToken({ userId: user.id, email: user.email });
     await setSessionCookie(token);
