@@ -7,7 +7,11 @@ import { trackSignup } from "@/lib/analytics";
 const schema = z.object({
   email: z.string().email().optional(),
   phone: z.string().min(8).optional(),
-  password: z.string().min(6)
+  password: z.string().min(6),
+  fullName: z.string().min(2).optional(),
+  bacSection: z.string().optional(),
+  primaryLanguage: z.string().optional(),
+  targetScore: z.number().optional().default(15)
 }).refine(data => data.email || data.phone, {
   message: "Either email or phone must be provided",
   path: ["email"]
@@ -31,13 +35,15 @@ export async function POST(req: Request) {
 
     const user = await db.user.create({
       data: {
-        email: body.email || `phone_user_${Date.now()}@bac-excellence.tn`, // Dummy email if phone-only
+        email: body.email || `phone_user_${Date.now()}@bac-excellence.tn`,
         phone: body.phone,
+        fullName: body.fullName || "Bac Student",
         passwordHash: await hashPassword(body.password),
         studentProfile: {
           create: {
-            targetScore: 15,
-            primaryLanguage: "ENGLISH"
+            bacSection: (body.bacSection as any) || "MATH", // Default or provided
+            targetScore: body.targetScore || 15,
+            primaryLanguage: (body.primaryLanguage as any) || "ENGLISH"
           }
         }
       }

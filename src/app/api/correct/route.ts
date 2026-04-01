@@ -20,6 +20,7 @@ type CorrectionRequestPayload = {
   readingAnswers?: unknown;
   languageAnswers?: unknown;
   imageFile?: File | null;
+  bacSection?: string | null;
 };
 
 function getErrorStatus(error: any): number | undefined {
@@ -82,6 +83,7 @@ async function parseCorrectionRequest(req: NextRequest): Promise<CorrectionReque
     readingAnswers: parseOptionalJsonField(formData.get("readingAnswers")),
     languageAnswers: parseOptionalJsonField(formData.get("languageAnswers")),
     imageFile: isUploadedFile(uploadedImage) ? uploadedImage : null,
+    bacSection: getOptionalFormValue(formData.get("bacSection")),
   };
 }
 
@@ -128,6 +130,7 @@ function buildSystemPrompt(input: {
   readingAnswers?: unknown;
   languageAnswers?: unknown;
   studentEssay: string;
+  bacSection?: string | null;
 }) {
   // Select relevant BAC examples for few-shot prompting
   const wordCount = input.studentEssay.split(/\s+/).filter(Boolean).length;
@@ -160,6 +163,7 @@ Grading Protocol (Tunisian Ministry Standards):
 - Calculate Language score (out of 8) based on grammar rule application.
 - Grade Writing (out of 10) considering grammar accuracy, vocabulary sophistication, and argument coherence.
 - Sum them up for an Overall Score out of 30, then convert to /20.
+- SECTION CONTEXT: The student is in Section ${input.bacSection || "GENERAL"}. Adjust expectations accordingly (e.g., more technical precision for Math/Tech, more literary depth for Lettres).
 - Be CRITICAL: A "good" essay should score 13-15, not 18+. Only truly exceptional work deserves 16+.
 
 Output a JSON object with:
@@ -186,6 +190,11 @@ Now grade this student essay based on official Tunisian Ministry criteria:
 1. Grammar & Syntax (5 pts): Accuracy of tenses, subject-verb agreement, articles, prepositions
 2. Vocabulary range & accuracy (5 pts): Word variety, appropriateness, collocations
 3. Structure, Coherence & Flow (10 pts): Introduction quality, paragraph development, connectors, conclusion
+
+SECTION CONTEXT: The student is in Section ${input.bacSection || "GENERAL"}.
+${input.bacSection === "LETTRES" ? "- EXPECTATION: High literary sophistication, complex narrative structures, and deep thematic analysis." : ""}
+${input.bacSection === "MATH" || input.bacSection === "SCIENCE" || input.bacSection === "INFO" ? "- EXPECTATION: Logical clarity, precise technical vocabulary (innovation/environment topics), and efficient argumentation." : ""}
+${input.bacSection === "TECH" ? "- EXPECTATION: Functional precision, descriptive accuracy (processes/mechanisms), and clear structure." : ""}
 
 Exam Prompt: ${input.examPrompt || "Free writing topic"}
 Student Essay: "${input.studentEssay}"
@@ -229,6 +238,7 @@ export async function POST(req: NextRequest) {
       readingAnswers,
       languageAnswers,
       imageFile,
+      bacSection,
     } = payload;
 
     if (!studentText && !imageFile && type !== "FULL_MOCK") {
@@ -321,6 +331,7 @@ export async function POST(req: NextRequest) {
       readingAnswers,
       languageAnswers,
       studentEssay: sanitizedStudentText,
+      bacSection,
     });
 
     const response = await getReliableCompletion({

@@ -354,13 +354,33 @@ export function LanguageModules({ activeLanguages, sectionLabel, targetScore }: 
   );
 }
 
-export function HighYieldTopics({ lang }: { lang: SiteLanguage }) {
+export function HighYieldTopics({ lang, section }: { lang: SiteLanguage, section?: string | null }) {
   const t = translations[lang] || translations.en;
-  const topics = [
-    { title: lang === "ar" ? "الابداع والابتكار" : (lang === "fr" ? "Creativite et innovation" : "Creativity and Innovation"), coef: "Core", skill: "English" },
-    { title: lang === "ar" ? "Connecteurs logiques" : (lang === "fr" ? "Connecteurs logiques" : "Connectors"), coef: "Essay", skill: "Writing" },
-    { title: lang === "ar" ? "Lecture rapide et inference" : (lang === "fr" ? "Lecture rapide et inference" : "Skimming and inference"), coef: "Exam", skill: "Reading" }
-  ];
+  
+  const topicsBySection: Record<string, any[]> = {
+    "LETTRES": [
+      { title: lang === "ar" ? "تحليل النصوص الأدبية" : "Literary Text Analysis", coef: "Module 8", skill: "Literature" },
+      { title: lang === "ar" ? "رواية القصص والغموض" : "Narrative & Mystery", coef: "Module 1", skill: "Art/Style" },
+      { title: lang === "ar" ? "البلاغة والأسلوب" : "Rhetoric & Style", coef: "Essay", skill: "Advanced Writing" }
+    ],
+    "MATH": [
+      { title: lang === "ar" ? "الابتكار التكنولوجي" : "Technology & Innovation", coef: "Module 3", skill: "Vocab" },
+      { title: lang === "ar" ? "مخاطر البيئة" : "Environmental Risks", coef: "Module 6", skill: "Reading" },
+      { title: lang === "ar" ? "القواعد الوظيفية" : "Functional Grammar", coef: "Grammar", skill: "Accuracy" }
+    ],
+    "TECH": [
+      { title: "Robotics & Engineering", coef: "Module 3", skill: "Technical Vocab" },
+      { title: "Energy & Sustainability", coef: "Module 6", skill: "Comprehension" },
+      { title: "Process Descriptions", coef: "Writing", skill: "Structure" }
+    ],
+    "default": [
+      { title: "Creative & Inventive Minds", coef: "Module 3", skill: "English" },
+      { title: "Connectors", coef: "Essay", skill: "Writing" },
+      { title: "Skimming and Inference", coef: "Exam", skill: "Reading" }
+    ]
+  };
+
+  const topics = topicsBySection[section || "default"] || topicsBySection["default"];
 
   return (
     <div className="real-glass stack" style={{ padding: "32px", height: "100%", background: "rgba(10,10,20,0.6)" }}>

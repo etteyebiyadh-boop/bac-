@@ -12,6 +12,7 @@ interface MobileLessonsProps {
   grammarRules: any[];
   vocabSets: any[];
   readingPassages: any[];
+  listeningResources: any[];
   curriculumTracks: Record<string, any>;
   availableSlugs: string[];
   activeLanguages: Language[];
@@ -116,7 +117,7 @@ const langToSiteLang: Record<string, string> = {
   'ITALIAN': 'it'
 };
 
-export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels }: MobileLessonsProps) {
+export function MobileLessons({ modules, grammarRules, vocabSets, readingPassages, listeningResources, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels }: MobileLessonsProps) {
   const [activeTab, setActiveTab] = useState("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
 
@@ -150,10 +151,12 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
   const langGrammar = grammarRules.filter((g: any) => g.language === selectedLanguage);
   const langVocab = vocabSets.filter((v: any) => v.language === selectedLanguage);
   const langReading = readingPassages.filter((r: any) => r.language === selectedLanguage);
+  const langListening = (listeningResources || []).filter((l: any) => l.language === selectedLanguage);
 
   const tabs = [
     { id: "curriculum", label: "Path", icon: TargetIcon },
     { id: "reading", label: "Read", icon: BookIcon },
+    { id: "listening", label: "Listen", icon: FireIcon }, // Added Listen
     { id: "grammar", label: "Grammar", icon: LessonsIcon },
     { id: "vocab", label: "Vocab", icon: FireIcon },
   ];
@@ -371,6 +374,47 @@ export function MobileLessons({ modules, grammarRules, vocabSets, readingPassage
                           {reading.wordCount} words · {reading.difficulty}
                         </div>
                       </Link>
+                    ))}
+                  </div>
+                </CollapsibleSection>
+              );
+            })}
+          </>
+        )}
+
+        {activeTab === "listening" && (
+          <>
+            {modules.map((mod: any) => {
+              const modListening = langListening.filter((l: any) => l.bacModule === mod);
+              if (modListening.length === 0) return null;
+
+              return (
+                <CollapsibleSection
+                  key={mod}
+                  title={getModuleLabel(mod)}
+                  count={modListening.length}
+                  icon={FireIcon}
+                  color="#ec4899"
+                >
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    {modListening.map((item: any) => (
+                      <div
+                        key={item.id}
+                        className="card"
+                        style={{
+                          padding: "16px",
+                          borderRadius: "12px",
+                          borderLeft: "3px solid #ec4899",
+                        }}
+                      >
+                        <div style={{ fontWeight: 600, fontSize: "14px", color: "white" }}>{item.title}</div>
+                        <div style={{ fontSize: "11px", color: "var(--ink-dim)", marginTop: "4px" }}>
+                          {Math.floor(item.durationSeconds / 60)}m {item.durationSeconds % 60}s · {item.difficulty}
+                        </div>
+                        <button className="button-link" style={{ marginTop: "12px", background: "#ec4899", color: "white", width: "100%", justifyContent: "center", border: "none", padding: "8px", fontSize: "12px" }}>
+                          {lang === "ar" ? "استماع" : lang === "fr" ? "Écouter" : "Play"}
+                        </button>
+                      </div>
                     ))}
                   </div>
                 </CollapsibleSection>

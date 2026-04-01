@@ -155,7 +155,7 @@ export default async function DashboardPage() {
                  <GradePredictions />
               </div>
               <div className="stack" style={{ gap: "24px" }}>
-                 <HighYieldTopics lang={langCookie} />
+                 <HighYieldTopics lang={langCookie} section={serializedProfile.bacSection} />
                  <WordOfTheDay lang={langCookie} />
               </div>
            </div>

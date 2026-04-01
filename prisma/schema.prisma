@@ -314,6 +314,26 @@ model ReadingPassage {
   @@index([themes])
 }
 
+model ListeningResource {
+  id              String         @id @default(uuid())
+  slug            String         @unique
+  language        Language       @default(ENGLISH)
+  title           String
+  audioUrl        String
+  transcript      String?
+  durationSeconds Int
+  difficulty      Difficulty     @default(MEDIUM)
+  themes          Json
+  questions       Json?
+  bacRelevance    String
+  bacModule       BacModule?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([language])
+  @@index([bacModule])
+}
+
 model Challenge {
   id              String          @id @default(uuid())
   challengerId    String

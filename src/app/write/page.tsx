@@ -41,6 +41,7 @@ export default async function WritingLabPage() {
 
       <WriteWorkspace 
         lang={langCookie} 
+        bacSection={profile.bacSection}
         exams={JSON.parse(JSON.stringify(exams))}
         selectedExam={null} 
         scanAvailable={visionAvailability.available}

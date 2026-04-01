@@ -53,6 +53,12 @@ Maîtrise les 12 points de la section I:
 - Vocabulaire contextuel expliqué
 - Timed practice comme l'examen
 
+### 📢 New: Listening & Literary Focus
+Maîtrisez les épreuves de compréhension orale et d'analyse textuelle :
+- **Listening Hub** - Exercices audio avec transcription et questions.
+- **Literary Masterclass** - Textes classiques (Dickens, etc.) pour le Module 8.
+- **Section-Specific** - Contenu adapté (Math, Sciences, Lettres...).
+
 ### 🎓 BAC Calculator
 Simule ta moyenne et optimise tes efforts:
 - Toutes les sections: Math, Sciences, Lettres, Éco, Tech, Info

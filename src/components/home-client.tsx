@@ -144,8 +144,8 @@ const landingCopy: Record<SiteLanguage, LandingCopy> = {
         description: "The animation tells a story: each study action adds a real layer instead of moving abstract shapes.",
       },
       {
-        title: "A student-first mood",
-        description: "The page feels serious, ambitious, and emotionally tied to the Bac goal from the first second.",
+        title: "Listening & Reading",
+        description: "Full audio resources and literary texts specifically for Module 8 (Literature sections).",
       },
     ],
     workflowEyebrow: "Built around the Bac workflow",
@@ -243,8 +243,8 @@ const landingCopy: Record<SiteLanguage, LandingCopy> = {
         description: "L'animation raconte une progression: chaque effort ajoute une vraie couche au lieu de déplacer des formes abstraites.",
       },
       {
-        title: "Une ambiance plus juste",
-        description: "La page paraît plus sérieuse, ambitieuse et liée au vrai objectif du Bac dès la première seconde.",
+        title: "Écoute & Lecture",
+        description: "Ressources audio complètes et textes littéraires avancés pour le Module 8 (sections Lettres).",
       },
     ],
     workflowEyebrow: "Construit autour du vrai rythme Bac",
@@ -342,8 +342,8 @@ const landingCopy: Record<SiteLanguage, LandingCopy> = {
         description: "الأنيميشن يروي قصة: كل خدمة دراسية تضيف طبقة حقيقية بدل أشكال تتحرّك بلا معنى.",
       },
       {
-        title: "إحساس أقرب للطالب",
-        description: "الصفحة ولات أكثر جدية وطموح ومرتبطة بهدف الباك من أول ثانية.",
+        title: "استماع وقراءة",
+        description: "موارد صوتية كاملة ونصوص أدبية معمقة للمحور الثامن (خاص بشعبة الآداب).",
       },
     ],
     workflowEyebrow: "مبنية على منطق خدمة الباك",

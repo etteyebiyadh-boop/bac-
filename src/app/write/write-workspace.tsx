@@ -48,6 +48,7 @@ type WriteWorkspaceProps = {
   exams: ExamOption[];
   selectedExam: ExamOption | null;
   lang: SiteLanguage;
+  bacSection: string | null;
   scanAvailable: boolean;
   scanProviderLabel: string | null;
 };
@@ -70,7 +71,7 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
   );
 }
 
-export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanProviderLabel }: WriteWorkspaceProps) {
+export function WriteWorkspace({ exams, selectedExam, lang, bacSection, scanAvailable, scanProviderLabel }: WriteWorkspaceProps) {
   const router = useRouter();
   const t = translations[lang];
   const [selectedExamId, setSelectedExamId] = useState(selectedExam?.id ?? "");
@@ -223,6 +224,7 @@ export function WriteWorkspace({ exams, selectedExam, lang, scanAvailable, scanP
         promptText: currentPromptText,
         studentText: isScanMode ? scanText : studentText,
         language: currentLanguage,
+        bacSection: bacSection,
         sourceMode: isScanMode ? "scan" : "text"
       })
     });

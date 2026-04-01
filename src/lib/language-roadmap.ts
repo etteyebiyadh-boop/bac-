@@ -185,15 +185,27 @@ export function getRoadmapTone(targetScore: number) {
 
 export function getSectionRoadmapMessage(section: string | null | undefined) {
   if (section === "LETTRES") {
-    return "Language-heavy path: writing and reading should stay your top weekly priorities.";
+    return "Official path for Literature: focus on textual analysis, literary themes (Module 8), and sophisticated essay structure.";
   }
 
-  if (section === "ECONOMIE_GESTION") {
-    return "Balanced path: build vocabulary precision, then protect your writing structure.";
+  if (section === "MATH" || section === "SCIENCE" || section === "INFO") {
+    return "Technical Excellence path: prioritize grammar precision and vocabulary for Modules 3 (Innovation) and 6 (Environment).";
+  }
+
+  if (section === "TECH") {
+    return "Applied Technology path: concentrate on technical reading sets and precise functional grammar.";
+  }
+
+  if (section === "ECO") {
+    return "Economics & Management path: balance vocabulary for social issues with clear, structured paragraph writing.";
+  }
+
+  if (section === "SPORT") {
+    return "Sport section path: focus on core accessibility and consistent vocabulary across official modules.";
   }
 
   if (section) {
-    return "Score-efficient path: fix grammar and paragraph control first, then deepen reading speed.";
+    return "Personalized Bac Excellence path: optimize your study time by focusing on high-impact modules first.";
   }
 
   return "Set your Bac section to get a tighter roadmap for your weekly work.";

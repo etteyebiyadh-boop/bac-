@@ -12,6 +12,7 @@ interface DesktopLessonsProps {
   grammarRules: any[];
   vocabSets: any[];
   readingPassages: any[];
+  listeningResources: any[];
   curriculumTracks: Record<string, any>;
   availableSlugs: string[];
   activeLanguages: Language[];
@@ -121,8 +122,8 @@ const langToSiteLang: Record<string, string> = {
   'ITALIAN': 'it'
 };
 
-export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels, bacSection }: DesktopLessonsProps) {
-  const [activeTab, setActiveTab] = useState<"curriculum" | "reading" | "grammar" | "vocab">("curriculum");
+export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassages, listeningResources, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels, bacSection }: DesktopLessonsProps) {
+  const [activeTab, setActiveTab] = useState<"curriculum" | "reading" | "listening" | "grammar" | "vocab">("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
 
   // Client-side translation lookup for module labels - use t prop directly
@@ -155,11 +156,13 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
   const langGrammar = grammarRules.filter((g: any) => g.language === selectedLanguage);
   const langVocab = vocabSets.filter((v: any) => v.language === selectedLanguage);
   const langReading = readingPassages.filter((r: any) => r.language === selectedLanguage);
+  const langListening = (listeningResources || []).filter((l: any) => l.language === selectedLanguage);
 
   const tabs = [
     { id: "curriculum" as const, label: "Learning Path", icon: TargetIcon, color: "#6366f1" },
-    { id: "reading" as const, label: "Reading Practice", icon: BookIcon, color: "#f59e0b" },
-    { id: "grammar" as const, label: "Grammar & Verbs", icon: LessonsIcon, color: "#6366f1" },
+    { id: "reading" as const, label: "Reading", icon: BookIcon, color: "#f59e0b" },
+    { id: "listening" as const, label: "Listening", icon: FireIcon, color: "#ec4899" }, // Added Listening
+    { id: "grammar" as const, label: "Grammar", icon: LessonsIcon, color: "#6366f1" },
     { id: "vocab" as const, label: "Vocabulary", icon: FireIcon, color: "#10b981" },
   ];
 
@@ -405,6 +408,59 @@ export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassag
                           {lang === "ar" ? "بدء القراءة" : lang === "fr" ? "Commencer" : "Start Reading"}
                         </span>
                       </Link>
+                    ))}
+                  </div>
+                </CollapsibleSection>
+              );
+            })}
+          </div>
+        )}
+
+        {activeTab === "listening" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {modules.map((mod: any) => {
+              const modListening = langListening.filter((l: any) => l.bacModule === mod);
+              if (modListening.length === 0) return null;
+
+              return (
+                <CollapsibleSection
+                  key={mod}
+                  title={getModuleLabel(mod)}
+                  subtitle={`${modListening.length} listening resources`}
+                  count={modListening.length}
+                  icon={FireIcon}
+                  color="#ec4899"
+                >
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }}>
+                    {modListening.map((item: any) => (
+                      <div
+                        key={item.id}
+                        className="card"
+                        style={{
+                          padding: "20px",
+                          borderRadius: "14px",
+                          borderLeft: "4px solid #ec4899",
+                          background: "var(--glass-bg)",
+                        }}
+                      >
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                          <div>
+                            <div style={{ fontWeight: 700, fontSize: "16px", color: "white" }}>{item.title}</div>
+                            <div style={{ fontSize: "13px", color: "var(--ink-dim)", marginTop: "4px" }}>
+                              {Math.floor(item.durationSeconds / 60)}m {item.durationSeconds % 60}s · {item.difficulty}
+                            </div>
+                          </div>
+                          <div style={{ padding: "8px", background: "rgba(236, 72, 153, 0.2)", borderRadius: "50%" }}>
+                            <FireIcon className="w-4 h-4" style={{ color: "#ec4899" }} />
+                          </div>
+                        </div>
+                        <div style={{ marginTop: "16px", padding: "12px", background: "rgba(255,255,255,0.02)", borderRadius: "8px", fontSize: "12px", color: "var(--ink-dim)", fontStyle: "italic" }}>
+                          {item.bacRelevance}
+                        </div>
+                        <button className="button-link" style={{ marginTop: "16px", background: "#ec4899", color: "white", width: "100%", justifyContent: "center", border: "none" }}>
+                          {lang === "ar" ? "استماع" : lang === "fr" ? "Écouter" : "Play Audio"}
+                        </button>
+                      </div>
                     ))}
                   </div>
                 </CollapsibleSection>

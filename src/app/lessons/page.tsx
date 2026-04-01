@@ -78,7 +78,7 @@ export default async function LibraryHubPage() {
     ];
 
     // Parallel fetch for speed - filter by Bac section
-    const [grammarRules, vocabSets, readingPassages] = await Promise.all([
+    const [grammarRules, vocabSets, readingPassages, listeningResources] = await Promise.all([
       db.grammarRule.findMany({
         where: { 
           language: { in: activeLanguages },
@@ -110,6 +110,16 @@ export default async function LibraryHubPage() {
           ]
         },
         orderBy: { title: "asc" }
+      }),
+      db.listeningResource.findMany({
+        where: { 
+          language: { in: activeLanguages },
+          OR: [
+            { bacModule: { in: modules } },
+            { bacModule: { equals: null } }
+          ]
+        },
+        orderBy: { title: "asc" }
       })
     ]);
 
@@ -131,6 +141,7 @@ export default async function LibraryHubPage() {
         grammarRules={JSON.parse(JSON.stringify(grammarRules))}
         vocabSets={JSON.parse(JSON.stringify(vocabSets))}
         readingPassages={JSON.parse(JSON.stringify(readingPassages))}
+        listeningResources={JSON.parse(JSON.stringify(listeningResources))}
         curriculumTracks={curriculumTracks}
         availableSlugs={availableSlugs}
         activeLanguages={activeLanguages}

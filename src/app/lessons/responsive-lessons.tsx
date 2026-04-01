@@ -10,6 +10,7 @@ interface ResponsiveLessonsProps {
   grammarRules: any[];
   vocabSets: any[];
   readingPassages: any[];
+  listeningResources: any[];
   curriculumTracks: Record<string, any>;
   availableSlugs: string[];
   activeLanguages: any[];
@@ -24,6 +25,7 @@ export function ResponsiveLessons({
   grammarRules,
   vocabSets,
   readingPassages,
+  listeningResources,
   curriculumTracks,
   availableSlugs,
   activeLanguages,
@@ -53,6 +55,7 @@ export function ResponsiveLessons({
         grammarRules={grammarRules}
         vocabSets={vocabSets}
         readingPassages={readingPassages}
+        listeningResources={listeningResources}
         curriculumTracks={curriculumTracks}
         availableSlugs={availableSlugs}
         activeLanguages={activeLanguages}
@@ -71,6 +74,7 @@ export function ResponsiveLessons({
         grammarRules={grammarRules}
         vocabSets={vocabSets}
         readingPassages={readingPassages}
+        listeningResources={listeningResources}
         curriculumTracks={curriculumTracks}
         availableSlugs={availableSlugs}
         activeLanguages={activeLanguages}
@@ -87,6 +91,7 @@ export function ResponsiveLessons({
       grammarRules={grammarRules}
       vocabSets={vocabSets}
       readingPassages={readingPassages}
+      listeningResources={listeningResources}
       curriculumTracks={curriculumTracks}
       availableSlugs={availableSlugs}
       activeLanguages={activeLanguages}
