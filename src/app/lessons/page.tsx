@@ -42,6 +42,20 @@ export default async function LibraryHubPage() {
 
     const activeLanguages = [...new Set([profile.primaryLanguage, ...secondaryLanguages])].filter(Boolean) as Language[];
     
+    // Also include the site language from cookie so content switches when user changes language
+    const siteLangToLanguage: Record<string, Language> = {
+      'en': Language.ENGLISH,
+      'fr': Language.FRENCH,
+      'ar': Language.ARABIC,
+      'es': Language.SPANISH,
+      'de': Language.GERMAN,
+      'it': Language.ITALIAN
+    };
+    const siteLanguage = siteLangToLanguage[langCookie];
+    if (siteLanguage && !activeLanguages.includes(siteLanguage)) {
+      activeLanguages.push(siteLanguage);
+    }
+    
     // Modules logic
     const modules: BacModule[] = [
       BacModule.MODULE_1_HOLIDAYING_ART_SHOWS,
