@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LessonsIcon, BookIcon, TargetIcon, FireIcon } from "@/components/icons";
 import { Language } from "@prisma/client";
 import { getLanguageLabel } from "@/lib/learning";
+import { translations } from "@/lib/translations";
 
 interface DesktopLessonsProps {
   modules: any[];
@@ -114,6 +115,22 @@ function getModuleFromTheme(theme: string, currentModule: string): string | null
 export function DesktopLessons({ modules, grammarRules, vocabSets, readingPassages, curriculumTracks, availableSlugs, activeLanguages, lang, t, moduleLabels, bacSection }: DesktopLessonsProps) {
   const [activeTab, setActiveTab] = useState<"curriculum" | "reading" | "grammar" | "vocab">("curriculum");
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(activeLanguages[0] || "ENGLISH");
+
+  // Client-side translation lookup for module labels
+  const getModuleLabel = (mod: string): string => {
+    const currentTranslations = translations[lang as keyof typeof translations] || translations.en;
+    const labelMap: Record<string, string> = {
+      'MODULE_1_HOLIDAYING_ART_SHOWS': currentTranslations.unit_1_title,
+      'MODULE_2_EDUCATION_MATTERS': currentTranslations.unit_2_title,
+      'MODULE_3_CREATIVE_INVENTIVE_MINDS': currentTranslations.unit_3_title,
+      'MODULE_4_YOUTH_ISSUES': currentTranslations.unit_4_title,
+      'MODULE_5_WOMEN_POWER': currentTranslations.unit_5_title,
+      'MODULE_6_SUSTAINABLE_DEVELOPMENT': currentTranslations.unit_6_title,
+      'MODULE_7_WORK_COMMITMENT': currentTranslations.unit_7_title,
+      'MODULE_8_LITERARY_TEXTS': currentTranslations.unit_8_title,
+    };
+    return labelMap[mod] || mod.replace(/MODULE_\d+_/, "").replace(/_/g, " ");
+  };
 
   const currentTrack = curriculumTracks[selectedLanguage];
   const langGrammar = grammarRules.filter((g: any) => g.language === selectedLanguage);

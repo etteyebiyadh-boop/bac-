@@ -9,6 +9,7 @@ import { getCurriculumSlugs, getCurriculumTrack } from "@/lib/language-system";
 import { ResponsiveLessons } from "./responsive-lessons";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function LibraryHubPage() {
   try {

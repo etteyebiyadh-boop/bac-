@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LessonsIcon, BookIcon, TargetIcon, FireIcon } from "@/components/icons";
 import { Language } from "@prisma/client";
 import { getLanguageLabel } from "@/lib/learning";
+import { translations } from "@/lib/translations";
 
 interface MobileLessonsProps {
   modules: any[];
