@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { PlanToggleForm } from "./plan-toggle-form";
 import { LessonForm } from "./lesson-form";
 import { SocialGenerator } from "./social-generator";
@@ -9,7 +10,25 @@ import { AnalyticsDashboard } from "./analytics-dashboard";
 type AdminTab = "USERS" | "CONTENT" | "MARKETING" | "ANALYTICS";
 
 export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
-  const [activeTab, setActiveTab] = useState<AdminTab>("USERS");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const initialTab = (searchParams.get("tab") as AdminTab) || "USERS";
+  const [activeTab, setActiveTab] = useState<AdminTab>(initialTab);
+
+  useEffect(() => {
+    const tab = searchParams.get("tab") as AdminTab;
+    if (tab && tab !== activeTab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams, activeTab]);
+
+  const handleTabChange = (tab: AdminTab) => {
+    setActiveTab(tab);
+    // Update URL without a full reload
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", tab);
+    router.replace(`/admin?${params.toString()}`);
+  };
 
   return (
     <div className="page-stack">
@@ -37,7 +56,7 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
         ].map(tab => (
           <button 
             key={tab.id}
-            onClick={() => setActiveTab(tab.id as AdminTab)}
+            onClick={() => handleTabChange(tab.id as AdminTab)}
             className="nav-link"
             style={{ 
               background: activeTab === tab.id ? "rgba(255,255,255,0.1)" : "transparent",

@@ -92,7 +92,7 @@ export function AdminAccessButton() {
     const code = window.prompt("Enter Admin Verification Code:");
     if (code === "fubisra06") {
       document.cookie = "admin_pass=fubisra06; path=/; max-age=86400;";
-      router.push("/admin");
+      router.push("/admin?tab=MARKETING");
     } else if (code !== null) {
       alert("Unauthorized Access.");
     }
@@ -101,7 +101,7 @@ export function AdminAccessButton() {
   return (
     <button onClick={handleClick} className="nav-link" style={{ display: "flex", alignItems: "center", gap: "16px", padding: "16px", borderRadius: "16px", opacity: 0.6, background: "transparent", border: "none", color: "white", cursor: "pointer", width: "100%", textAlign: "left", fontFamily: "inherit" }}>
       <span style={{ fontSize: "1.2rem" }}>⚙️</span>
-      <span style={{ fontSize: "1rem", fontWeight: 600 }}>Social Studio</span>
+      <span style={{ fontSize: "1rem", fontWeight: 600 }}>Media Engine / Admin</span>
     </button>
   );
 }

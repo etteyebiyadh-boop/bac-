@@ -25,7 +25,7 @@ function AdminAccessLink({ t, email }: { t: any; email: string }) {
     const code = window.prompt("Enter Admin Verification Code:");
     if (code === "fubisra06") {
       document.cookie = "admin_pass=fubisra06; path=/; max-age=86400;";
-      router.push("/admin");
+      router.push("/admin?tab=MARKETING");
     } else if (code !== null) {
       alert("Unauthorized Access.");
     }
