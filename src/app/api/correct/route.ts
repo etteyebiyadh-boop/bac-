@@ -180,7 +180,8 @@ Output a JSON object with:
 - "strengths": Array of 3 specific strengths.
 - "improvements": Array of 3 actionable improvements.
 - "recommendedLesson": { "slug": "link", "title": "Title", "summary": "Why this lesson?", "skillFocus": "grammar/vocab/structure" }
-`;
+
+IMPORTANT INSTRUCTION: Your final output MUST be exactly the requested JSON object and absolutely nothing else. Return valid JSON only.`;
   }
 
   return `You are an elite Tunisian Baccalaureate examiner with 20 years of experience grading official BAC exams for ${input.language}.
@@ -222,7 +223,7 @@ Output a JSON object with:
 - "improvements": Array of 3 specific areas to improve
 - "recommendedLesson": { "slug": "link-to-best-matching-lesson", "title": "Lesson Title", "summary": "Why this lesson helps?", "skillFocus": "grammar/vocab/structure" }
 
-Remember: You are grading against REAL Tunisian BAC standards where the national average is around 11-12/20. Be honest and constructive.`;
+IMPORTANT INSTRUCTION: Your final output MUST be exactly the requested JSON object and absolutely nothing else. Return valid JSON only.`;
 }
 
 export async function POST(req: NextRequest) {
@@ -338,9 +339,12 @@ export async function POST(req: NextRequest) {
     });
 
     const response = await getReliableCompletion({
-      messages: [{ role: "system", content: systemPrompt }],
+      messages: [
+         { role: "system", content: systemPrompt },
+         { role: "user", content: "Grade my essay according to the rubric. Provide strictly the JSON object as requested. Make sure to escape quotes." }
+      ],
       response_format: { type: "json_object" },
-      max_tokens: 900,
+      max_tokens: 2500,
       temperature: 0.2,
     });
 
