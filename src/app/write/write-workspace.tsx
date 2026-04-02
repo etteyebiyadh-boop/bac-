@@ -460,216 +460,248 @@ export function WriteWorkspace({ exams, selectedExam, lang, bacSection, scanAvai
             </div>
           )}
 
-          <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
-            <div className="stack" style={{ gap: "12px" }}>
-              <div className="row-between">
-                <label className="field-label" htmlFor={isScanMode ? "work-image" : "student-text"}>
-                  {isScanMode
-                    ? (lang === "fr" ? "Photo du devoir" : (lang === "ar" ? "صورة العمل" : "Work photo"))
-                    : t.wr_essay}
-                </label>
-                {!isScanMode ? <span className="muted">{wordCount} {lang === "ar" ? "كلمة" : "words"}</span> : null}
-              </div>
-              {!isScanMode ? (
-                <textarea
-                  id="student-text"
-                  rows={16}
-                  placeholder={lang === "ar" ? "اكتب مقالك هنا. ابدأ بتوطئة، ثم طور أفكارك، وانته بخاتمة موجزة." : (lang === "fr" ? "Écrivez votre texte ici. Prévoyez une introduction, un développement et une conclusion." : "Write your essay here. Aim for a clear introduction, developed ideas, and a short conclusion.")}
-                  value={studentText}
-                  onChange={(event) => setStudentText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
-                  style={{ padding: "24px", borderRadius: "16px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--glass-border)", fontSize: "1.1rem", lineHeight: "1.6", resize: "vertical", textAlign: (activeExam?.language === "ARABIC" || freeLanguage === "ARABIC") ? "right" : "left" }}
-                />
-              ) : (
-                <div className="stack" style={{ gap: "16px" }}>
-                  <div style={{ padding: "24px", borderRadius: "16px", border: "1px dashed var(--accent-glow)", background: "rgba(245, 158, 11, 0.05)" }}>
-                    <div className="stack" style={{ gap: "10px" }}>
-                      <strong>{lang === "fr" ? "Importer une photo de la copie" : (lang === "ar" ? "ارفع صورة لورقة الإجابة" : "Upload a photo of the answer")}</strong>
-                      <p className="muted" style={{ fontSize: "13px", lineHeight: 1.6 }}>
-                        {lang === "fr"
-                          ? "Meilleur resultat : cadre serre, bonne lumiere, feuille a plat, une seule reponse par image."
-                          : (lang === "ar"
-                              ? "أفضل نتيجة: صورة قريبة، إضاءة جيدة، الورقة مستقيمة، وإجابة واحدة في كل صورة."
-                              : "Best result: close crop, strong light, flat page, and one answer per photo.")}
-                      </p>
-                      <input
-                        id="work-image"
-                        type="file"
-                        accept="image/*"
-                        capture="environment"
-                        onChange={(event) => {
-                          const nextFile = event.target.files?.[0] ?? null;
-                          setScanFile(nextFile);
-                          setScanText("");
-                          setError("");
-                          setResult(null);
-                        }}
-                        style={{ color: "var(--ink)" }}
-                      />
+          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr,1fr] gap-x-8 gap-y-8" style={{ alignItems: "start" }}>
+            {/* LEFT COLUMN: Input Source */}
+            <div className="stack" style={{ gap: "24px" }}>
+              <div className="stack" style={{ gap: "12px" }}>
+                <div className="row-between">
+                  <label className="field-label" htmlFor={isScanMode ? "work-image" : "student-text"}>
+                    {isScanMode
+                      ? (lang === "fr" ? "Photo du devoir" : (lang === "ar" ? "صورة العمل" : "Work photo"))
+                      : t.wr_essay}
+                  </label>
+                  {!isScanMode ? <span className="muted">{wordCount} {lang === "ar" ? "كلمة" : "words"}</span> : null}
+                </div>
+                {!isScanMode ? (
+                  <textarea
+                    id="student-text"
+                    rows={18}
+                    placeholder={lang === "ar" ? "اكتب مقالك هنا. ابدأ بتوطئة، ثم طور أفكارك، وانته بخاتمة موجزة." : (lang === "fr" ? "Écrivez votre texte ici. Prévoyez une introduction, un développement et une conclusion." : "Write your essay here. Aim for a clear introduction, developed ideas, and a short conclusion.")}
+                    value={studentText}
+                    onChange={(event) => setStudentText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
+                    style={{ padding: "24px", borderRadius: "16px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--glass-border)", fontSize: "1.1rem", lineHeight: "1.7", resize: "vertical", textAlign: (activeExam?.language === "ARABIC" || freeLanguage === "ARABIC") ? "right" : "left", minHeight: "450px" }}
+                  />
+                ) : (
+                  <div className="stack" style={{ gap: "16px" }}>
+                    <div style={{ padding: "24px", borderRadius: "16px", border: "1px dashed var(--accent-glow)", background: "rgba(245, 158, 11, 0.05)" }}>
+                      <div className="stack" style={{ gap: "10px" }}>
+                        <strong>{lang === "fr" ? "Importer une photo de la copie" : (lang === "ar" ? "ارفع صورة لورقة الإجابة" : "Upload a photo of the answer")}</strong>
+                        <p className="muted" style={{ fontSize: "13px", lineHeight: 1.6 }}>
+                          {lang === "fr"
+                            ? "Meilleur resultat : cadre serre, bonne lumiere, feuille a plat, une seule reponse par image."
+                            : (lang === "ar"
+                                ? "أفضل نتيجة: صورة قريبة، إضاءة جيدة، الورقة مستقيمة، وإجابة واحدة في كل صورة."
+                                : "Best result: close crop, strong light, flat page, and one answer per photo.")}
+                        </p>
+                        <input
+                          id="work-image"
+                          type="file"
+                          accept="image/*"
+                          capture="environment"
+                          onChange={(event) => {
+                            const nextFile = event.target.files?.[0] ?? null;
+                            setScanFile(nextFile);
+                            setScanText("");
+                            setError("");
+                            setResult(null);
+                          }}
+                          style={{ color: "var(--ink)" }}
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  {scanFile ? (
-                    <div className="card stack" style={{ padding: "18px", gap: "16px", background: "rgba(255,255,255,0.02)" }}>
-                      <div className="row-between" style={{ gap: "12px" }}>
-                        <div className="stack" style={{ gap: "4px" }}>
-                          <strong style={{ wordBreak: "break-word" }}>{scanFile.name}</strong>
+                    {scanFile ? (
+                      <div className="card stack" style={{ padding: "18px", gap: "16px", background: "rgba(255,255,255,0.02)" }}>
+                        <div className="row-between" style={{ gap: "12px" }}>
+                          <div className="stack" style={{ gap: "4px" }}>
+                            <strong style={{ wordBreak: "break-word" }}>{scanFile.name}</strong>
+                            <span className="muted" style={{ fontSize: "12px" }}>
+                              {(scanFile.size / (1024 * 1024)).toFixed(2)} MB
+                            </span>
+                          </div>
+                          <button
+                            type="button"
+                            className="pill"
+                            onClick={clearScanDraft}
+                            style={{ cursor: "pointer", border: "1px solid var(--glass-border)", background: "transparent", color: "var(--ink)" }}
+                          >
+                            {lang === "fr" ? "Retirer" : (lang === "ar" ? "إزالة" : "Remove")}
+                          </button>
+                        </div>
+
+                        {scanPreviewUrl ? (
+                          <div style={{ position: "relative", width: "100%", height: "420px", background: "rgba(0,0,0,0.28)", borderRadius: "14px", border: "1px solid var(--glass-border)", overflow: "hidden" }}>
+                            <Image
+                              src={scanPreviewUrl}
+                              alt="Work preview"
+                              fill
+                              style={{ objectFit: "contain" }}
+                              unoptimized
+                            />
+                          </div>
+                        ) : null}
+
+                        <div className="row-between" style={{ gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
                           <span className="muted" style={{ fontSize: "12px" }}>
-                            {(scanFile.size / (1024 * 1024)).toFixed(2)} MB
+                            {scanText
+                              ? (lang === "fr"
+                                  ? "Relisez le texte extrait avant de lancer la correction."
+                                  : (lang === "ar"
+                                      ? "راجع النص المستخرج قبل تشغيل التصحيح."
+                                      : "Review the extracted text before running the correction."))
+                              : (lang === "fr"
+                                  ? "Etape 1: laissez l'IA lire la photo."
+                                  : (lang === "ar"
+                                      ? "الخطوة 1: دع الذكاء الاصطناعي يقرأ الصورة."
+                                      : "Step 1: let the AI read the photo."))}
+                          </span>
+                          <button
+                            type="button"
+                            className="pill hover-glow"
+                            onClick={extractScanText}
+                            disabled={isExtractingScan || !scanAvailable || !scanFile}
+                            style={{
+                              cursor: isExtractingScan || !scanAvailable || !scanFile ? "not-allowed" : "pointer",
+                              border: "1px solid var(--accent)",
+                              background: "rgba(245, 158, 11, 0.14)",
+                              color: "var(--ink)",
+                              opacity: isExtractingScan || !scanAvailable || !scanFile ? 0.6 : 1
+                            }}
+                          >
+                            {isExtractingScan
+                              ? (lang === "fr" ? "Lecture..." : (lang === "ar" ? "جاري القراءة..." : "Reading..."))
+                              : scanText
+                                ? (lang === "fr" ? "Relire la photo" : (lang === "ar" ? "إعادة قراءة الصورة" : "Re-read photo"))
+                                : (lang === "fr" ? "Lire la photo avec l'IA" : (lang === "ar" ? "اقرأ الصورة بالذكاء الاصطناعي" : "Read photo with AI"))}
+                          </button>
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {scanText ? (
+                      <div className="stack" style={{ gap: "10px" }}>
+                        <div className="row-between" style={{ gap: "12px", flexWrap: "wrap" }}>
+                          <label className="field-label" htmlFor="scan-text-review">
+                            {lang === "fr" ? "Texte extrait a verifier" : (lang === "ar" ? "النص المستخرج للمراجعة" : "Extracted text to review")}
+                          </label>
+                          <span className="muted" style={{ fontSize: "12px" }}>
+                            {lang === "fr"
+                              ? "Etape 2: corrigez l'OCR si besoin"
+                              : (lang === "ar" ? "الخطوة 2: صحح أخطاء القراءة إذا وجدت" : "Step 2: fix OCR mistakes if needed")}
                           </span>
                         </div>
-                        <button
-                          type="button"
-                          className="pill"
-                          onClick={clearScanDraft}
-                          style={{ cursor: "pointer", border: "1px solid var(--glass-border)", background: "transparent", color: "var(--ink)" }}
-                        >
-                          {lang === "fr" ? "Retirer" : (lang === "ar" ? "إزالة" : "Remove")}
-                        </button>
+                        <textarea
+                          id="scan-text-review"
+                          rows={12}
+                          value={scanText}
+                          onChange={(event) => setScanText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
+                          placeholder={lang === "fr" ? "Le texte lu depuis la photo apparaitra ici." : (lang === "ar" ? "سيظهر هنا النص المقروء من الصورة." : "The text read from the photo will appear here.")}
+                          style={{ padding: "24px", borderRadius: "16px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--accent-glow)", fontSize: "1.05rem", lineHeight: "1.6", resize: "vertical", textAlign: currentLanguage === "ARABIC" ? "right" : "left" }}
+                        />
                       </div>
+                    ) : null}
+                  </div>
+                )}
+              </div>
 
-                      {scanPreviewUrl ? (
-                        <div style={{ position: "relative", width: "100%", height: "420px", background: "rgba(0,0,0,0.28)", borderRadius: "14px", border: "1px solid var(--glass-border)", overflow: "hidden" }}>
-                          <Image
-                            src={scanPreviewUrl}
-                            alt="Work preview"
-                            fill
-                            style={{ objectFit: "contain" }}
-                            unoptimized
-                          />
+              <button
+                className="full-width hover-glow primary-action"
+                onClick={submitEssay}
+                disabled={isLoading || !canSubmit}
+                style={{ padding: "22px", fontSize: "1.2rem", fontWeight: 900, borderRadius: "16px", boxShadow: "0 8px 32px rgba(99, 102, 241, 0.2)" }}
+              >
+                {isLoading
+                  ? (isScanMode
+                      ? (lang === "fr" ? "Lecture de la photo + correction..." : (lang === "ar" ? "جاري قراءة الصورة ثم التصحيح..." : "Reading the photo and correcting..."))
+                      : t.wr_correcting)
+                  : (isScanMode
+                      ? (lang === "fr" ? "Scanner et corriger avec l'IA" : (lang === "ar" ? "امسح الصورة وصحح بالذكاء الاصطناعي" : "Scan and correct with AI"))
+                      : t.wr_submit)}
+              </button>
+
+              {activeExam && !result && !isScanMode ? (
+                <button 
+                  type="button" 
+                  onClick={startFocusMode} 
+                  className="button-link hover-glow" 
+                  style={{ background: "rgba(239, 68, 68, 0.05)", border: "1px solid var(--error)", color: "var(--error)", padding: "20px", fontSize: "1.1rem", fontWeight: 800, justifyContent: "center", cursor: "pointer", borderRadius: "16px" }}
+                >
+                  ⏱️ Start Timed Mock Exam (Focus Mode)
+                </button>
+              ) : null}
+            </div>
+
+            {/* RIGHT COLUMN: Toolbox */}
+            <aside className="stack" style={{ gap: "24px", position: "sticky", top: "100px" }}>
+              <div className="card stack" style={{ padding: "28px", background: "rgba(245, 158, 11, 0.05)", border: "1px solid var(--accent-glow)", borderRadius: "20px" }}>
+                <h3 className="eyebrow" style={{ color: "var(--accent)" }}>💡 15/20 Cheat Sheet</h3>
+                <p className="muted" style={{ fontSize: "13px", marginTop: "4px" }}>
+                  {lang === "ar" ? "اضغط على أي رابط لإضافته فوراً إلى مسودتك." : (lang === "fr" ? "Appuyez sur n'importe quel connecteur pour l'insérer." : "Tap any connector to instantly inject it into your draft.")}
+                </p>
+                
+                <div className="stack" style={{ gap: "20px", marginTop: "16px" }}>
+                    {(() => {
+                      const currentLang = activeExam?.language || freeLanguage;
+                      const connectorGroups: Record<string, { label: string, labels: Record<string, string>, words: string[] }[]> = {
+                        ENGLISH: [
+                          { label: "Contrast", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Nevertheless,", "On the other hand,", "Conversely,", "Despite this,"] },
+                          { label: "Addition", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Furthermore,", "Moreover,", "In addition,", "Not only... but also"] },
+                          { label: "Conclusion", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["To sum up,", "Ultimately,", "Taking everything into consideration,"] }
+                        ],
+                        FRENCH: [
+                          { label: "Contraste", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Néanmoins,", "Pourtant,", "En revanche,", "Cependant,"] },
+                          { label: "Addition", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["De plus,", "En outre,", "Par ailleurs,", "D'ailleurs,"] },
+                          { label: "Conclusion", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["En conclusion,", "Finalement,", "Pour conclure,", "Somme toute,"] }
+                        ],
+                        ARABIC: [
+                          { label: "التناقض", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["بالمقابل،", "وعلى الرغم من ذلك،", "بيد أن،", "من ناحية أخرى،"] },
+                          { label: "الإضافة", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["علاوة على ذلك،", "بالإضافة إلى ذلك،", "وفضلاً عن ذلك،", "كما أن،"] },
+                          { label: "الخاتمة", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["ختاماً،", "وفي النهاية،", "ومما سبق نستنتج أن،", "وخلاصة القول،"] }
+                        ],
+                        SPANISH: [
+                          { label: "Contraste", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Sin embargo,", "No obstante,", "Por otro lado,", "En cambio,"] },
+                          { label: "Adición", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Además,", "Asimismo,", "Incluso,", "Por otra parte,"] },
+                          { label: "Conclusión", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["En conclusión,", "Para concluir,", "En resumen,", "Por último,"] }
+                        ],
+                        GERMAN: [
+                          { label: "Gegensatz", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Trotzdem,", "Dagegen,", "Andererseits,", "Dennoch,"] },
+                          { label: "Ergänzung", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Außerdem,", "Zudem,", "Darüber hinaus,", "Ebenfalls,"] },
+                          { label: "Schluss", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["Schließlich,", "Zum Schluss,", "Zusammenfassend,", "Zuletzt,"] }
+                        ],
+                        ITALIAN: [
+                          { label: "Contrasto", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Tuttavia,", "Eppure,", "D'altra parte,", "Ciononostante,"] },
+                          { label: "Aggiunta", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Inoltre,", "In aggiunta,", "Oltre a ciò,", "Pure,"] },
+                          { label: "Conclusione", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["In conclusione,", "Per concludere,", "In breve,", "Infine,"] }
+                        ]
+                      };
+
+                      const groups = connectorGroups[currentLang as string] || connectorGroups.ENGLISH;
+
+                      return groups.map(group => (
+                        <div key={group.label}>
+                          <strong style={{ fontSize: "0.95rem", color: "white" }}>{group.labels[lang] || group.label}</strong>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "10px", direction: currentLang === "ARABIC" ? "rtl" : "ltr" }}>
+                            {group.words.map(w => (
+                                <button 
+                                  key={w} 
+                                  type="button" 
+                                  className="pill hover-glow" 
+                                  style={{ fontSize: "12px", cursor: "pointer", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--ink)" }} 
+                                  onClick={(e) => { 
+                                    e.preventDefault(); 
+                                    appendConnector(w); 
+                                  }}
+                                >
+                                  {w}
+                                </button>
+                            ))}
+                          </div>
                         </div>
-                      ) : null}
-
-                      <div className="row-between" style={{ gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
-                        <span className="muted" style={{ fontSize: "12px" }}>
-                          {scanText
-                            ? (lang === "fr"
-                                ? "Relisez le texte extrait avant de lancer la correction."
-                                : (lang === "ar"
-                                    ? "راجع النص المستخرج قبل تشغيل التصحيح."
-                                    : "Review the extracted text before running the correction."))
-                            : (lang === "fr"
-                                ? "Etape 1: laissez l'IA lire la photo."
-                                : (lang === "ar"
-                                    ? "الخطوة 1: دع الذكاء الاصطناعي يقرأ الصورة."
-                                    : "Step 1: let the AI read the photo."))}
-                        </span>
-                        <button
-                          type="button"
-                          className="pill hover-glow"
-                          onClick={extractScanText}
-                          disabled={isExtractingScan || !scanAvailable || !scanFile}
-                          style={{
-                            cursor: isExtractingScan || !scanAvailable || !scanFile ? "not-allowed" : "pointer",
-                            border: "1px solid var(--accent)",
-                            background: "rgba(245, 158, 11, 0.14)",
-                            color: "var(--ink)",
-                            opacity: isExtractingScan || !scanAvailable || !scanFile ? 0.6 : 1
-                          }}
-                        >
-                          {isExtractingScan
-                            ? (lang === "fr" ? "Lecture..." : (lang === "ar" ? "جاري القراءة..." : "Reading..."))
-                            : scanText
-                              ? (lang === "fr" ? "Relire la photo" : (lang === "ar" ? "إعادة قراءة الصورة" : "Re-read photo"))
-                              : (lang === "fr" ? "Lire la photo avec l'IA" : (lang === "ar" ? "اقرأ الصورة بالذكاء الاصطناعي" : "Read photo with AI"))}
-                        </button>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {scanText ? (
-                    <div className="stack" style={{ gap: "10px" }}>
-                      <div className="row-between" style={{ gap: "12px", flexWrap: "wrap" }}>
-                        <label className="field-label" htmlFor="scan-text-review">
-                          {lang === "fr" ? "Texte extrait a verifier" : (lang === "ar" ? "النص المستخرج للمراجعة" : "Extracted text to review")}
-                        </label>
-                        <span className="muted" style={{ fontSize: "12px" }}>
-                          {lang === "fr"
-                            ? "Etape 2: corrigez l'OCR si besoin"
-                            : (lang === "ar" ? "الخطوة 2: صحح أخطاء القراءة إذا وجدت" : "Step 2: fix OCR mistakes if needed")}
-                        </span>
-                      </div>
-                      <textarea
-                        id="scan-text-review"
-                        rows={12}
-                        value={scanText}
-                        onChange={(event) => setScanText(event.target.value.slice(0, MAX_ESSAY_CHARS))}
-                        placeholder={lang === "fr" ? "Le texte lu depuis la photo apparaitra ici." : (lang === "ar" ? "سيظهر هنا النص المقروء من الصورة." : "The text read from the photo will appear here.")}
-                        style={{ padding: "24px", borderRadius: "16px", background: "rgba(0,0,0,0.3)", border: "1px solid var(--accent-glow)", fontSize: "1.05rem", lineHeight: "1.6", resize: "vertical", textAlign: currentLanguage === "ARABIC" ? "right" : "left" }}
-                      />
-                    </div>
-                  ) : null}
+                      ));
+                    })()}
                 </div>
-              )}
-            </div>
-
-            <div className="card stack" style={{ padding: "28px", background: "rgba(245, 158, 11, 0.05)", border: "1px solid var(--accent-glow)" }}>
-               <h3 className="eyebrow" style={{ color: "var(--accent)" }}>💡 15/20 Cheat Sheet</h3>
-               <p className="muted" style={{ fontSize: "13px", marginTop: "4px" }}>
-                 {lang === "ar" ? "اضغط على أي رابط لإضافته فوراً إلى مسودتك." : (lang === "fr" ? "Appuyez sur n'importe quel connecteur pour l'insérer." : "Tap any connector to instantly inject it into your draft.")}
-               </p>
-               
-               <div className="stack" style={{ gap: "20px", marginTop: "16px" }}>
-                  {(() => {
-                    const currentLang = activeExam?.language || freeLanguage;
-                    const connectorGroups: Record<string, { label: string, labels: Record<string, string>, words: string[] }[]> = {
-                      ENGLISH: [
-                        { label: "Contrast", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Nevertheless,", "On the other hand,", "Conversely,", "Despite this,"] },
-                        { label: "Addition", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Furthermore,", "Moreover,", "In addition,", "Not only... but also"] },
-                        { label: "Conclusion", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["To sum up,", "Ultimately,", "Taking everything into consideration,"] }
-                      ],
-                      FRENCH: [
-                        { label: "Contraste", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Néanmoins,", "Pourtant,", "En revanche,", "Cependant,"] },
-                        { label: "Addition", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["De plus,", "En outre,", "Par ailleurs,", "D'ailleurs,"] },
-                        { label: "Conclusion", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["En conclusion,", "Finalement,", "Pour conclure,", "Somme toute,"] }
-                      ],
-                      ARABIC: [
-                        { label: "التناقض", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["بالمقابل،", "وعلى الرغم من ذلك،", "بيد أن،", "من ناحية أخرى،"] },
-                        { label: "الإضافة", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["علاوة على ذلك،", "بالإضافة إلى ذلك،", "وفضلاً عن ذلك،", "كما أن،"] },
-                        { label: "الخاتمة", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["ختاماً،", "وفي النهاية،", "ومما سبق نستنتج أن،", "وخلاصة القول،"] }
-                      ],
-                      SPANISH: [
-                        { label: "Contraste", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Sin embargo,", "No obstante,", "Por otro lado,", "En cambio,"] },
-                        { label: "Adición", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Además,", "Asimismo,", "Incluso,", "Por otra parte,"] },
-                        { label: "Conclusión", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["En conclusión,", "Para concluir,", "En resumen,", "Por último,"] }
-                      ],
-                      GERMAN: [
-                        { label: "Gegensatz", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Trotzdem,", "Dagegen,", "Andererseits,", "Dennoch,"] },
-                        { label: "Ergänzung", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Außerdem,", "Zudem,", "Darüber hinaus,", "Ebenfalls,"] },
-                        { label: "Schluss", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["Schließlich,", "Zum Schluss,", "Zusammenfassend,", "Zuletzt,"] }
-                      ],
-                      ITALIAN: [
-                        { label: "Contrasto", labels: { ar: "التناقض", fr: "Contraste", en: "Contrast" }, words: ["Tuttavia,", "Eppure,", "D'altra parte,", "Ciononostante,"] },
-                        { label: "Aggiunta", labels: { ar: "الإضافة", fr: "Addition", en: "Addition" }, words: ["Inoltre,", "In aggiunta,", "Oltre a ciò,", "Pure,"] },
-                        { label: "Conclusione", labels: { ar: "الخاتمة", fr: "Conclusion", en: "Conclusion" }, words: ["In conclusione,", "Per concludere,", "In breve,", "Infine,"] }
-                      ]
-                    };
-
-                    const groups = connectorGroups[currentLang as string] || connectorGroups.ENGLISH;
-
-                    return groups.map(group => (
-                      <div key={group.label}>
-                        <strong style={{ fontSize: "0.95rem", color: "white" }}>{group.labels[lang] || group.label}</strong>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "10px", direction: currentLang === "ARABIC" ? "rtl" : "ltr" }}>
-                           {group.words.map(w => (
-                              <button 
-                                key={w} 
-                                 type="button" 
-                                 className="pill hover-glow" 
-                                 style={{ fontSize: "12px", cursor: "pointer", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "var(--ink)" }} 
-                                 onClick={(e) => { 
-                                   e.preventDefault(); 
-                                   appendConnector(w); 
-                                 }}
-                               >
-                                {w}
-                              </button>
-                           ))}
-                        </div>
-                      </div>
-                    ));
-                  })()}
-               </div>
-            </div>
+              </div>
+            </aside>
           </div>
 
           <button
