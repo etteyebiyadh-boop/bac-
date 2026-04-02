@@ -111,11 +111,13 @@ export async function requireAdminUser() {
   
   const jar = await cookies();
   const pass = jar.get("admin_pass")?.value;
-  if (pass === "fubisra06" || isAdminEmail(user.email)) {
+  const securedPasscode = process.env.ADMIN_PASSCODE || "fubisra06";
+
+  if (pass === securedPasscode || isAdminEmail(user.email)) {
     return user;
   }
 
-  redirect("/dashboard");
+  redirect("/admin/gate");
 }
 
 export async function getUserFromRequest(req: NextRequest) {

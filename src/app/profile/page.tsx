@@ -1,5 +1,6 @@
 import { requireCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
+import Link from "next/link";
 
 export default async function ProfilePage() {
   const user = await requireCurrentUser();
@@ -26,8 +27,11 @@ export default async function ProfilePage() {
         </div>
       </div>
       
-      <div style={{ textAlign: "center" }}>
+      <div className="stack" style={{ textAlign: "center", gap: "24px" }}>
         <LogoutButton />
+        <Link href="/admin" style={{ opacity: 0.3, fontSize: "12px", textDecoration: "none", color: "white", padding: "12px", display: "inline-block" }}>
+          ⚙️ Control Room
+        </Link>
       </div>
     </div>
   );
