@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+  <rect width="1080" height="1080" fill="#0f172a"/>
+  <rect x="10" y="10" width="1060" height="1060" rx="20" fill="none" stroke="#6366f1" stroke-width="4"/>
+  <!-- Tunisian Flag -->
+  <g transform="translate(960, 60)">
+    <rect width="60" height="40" rx="4" fill="#E70013"/>
+    <circle cx="30" cy="20" r="12" fill="white"/>
+    <circle cx="32" cy="20" r="10" fill="#E70013"/>
+    <path d="M38 20 L46 24 L43 20 L46 16 Z" fill="white"/>
+  </g>
+  <rect x="60" y="60" width="48" height="48" rx="12" fill="white"/>
+  <text x="84" y="96" text-anchor="middle" fill="#6366f1" font-size="24" font-weight="900" font-family="Arial">B</text>
+  <text x="124" y="96" fill="white" font-size="28" font-weight="700" font-family="Arial">Bac Excellence</text>
+  <text x="540" y="200" text-anchor="middle" fill="white" font-size="48" font-weight="700" font-family="Arial">Notre Impact en Chiffres 🇹🇳</text>
+  <rect x="60" y="300" width="460" height="280" rx="20" fill="rgba(99,102,241,0.3)"/>
+  <text x="290" y="420" text-anchor="middle" fill="white" font-size="72" font-weight="900" font-family="Arial">50K+</text>
+  <text x="290" y="480" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="28" font-family="Arial">Élèves inscrits</text>
+  <rect x="560" y="300" width="460" height="280" rx="20" fill="rgba(99,102,241,0.3)"/>
+  <text x="790" y="420" text-anchor="middle" fill="white" font-size="72" font-weight="900" font-family="Arial">250K+</text>
+  <text x="790" y="480" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="28" font-family="Arial">Rédactions corrigées</text>
+  <rect x="60" y="620" width="460" height="280" rx="20" fill="rgba(99,102,241,0.3)"/>
+  <text x="290" y="740" text-anchor="middle" fill="white" font-size="72" font-weight="900" font-family="Arial">4.8/5</text>
+  <text x="290" y="800" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="28" font-family="Arial">Note moyenne</text>
+  <rect x="560" y="620" width="460" height="280" rx="20" fill="rgba(99,102,241,0.3)"/>
+  <text x="790" y="740" text-anchor="middle" fill="white" font-size="72" font-weight="900" font-family="Arial">+3pts</text>
+  <text x="790" y="800" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="28" font-family="Arial">En moyenne</text>
+  <text x="540" y="1000" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="28" font-family="Arial">bac-excellence.vercel.app</text>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="50%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="1080" fill="url(#bg)"/>
+  <!-- Tunisian Flag -->
+  <g transform="translate(960, 60)">
+    <rect width="60" height="40" rx="4" fill="#E70013"/>
+    <circle cx="30" cy="20" r="12" fill="white"/>
+    <circle cx="32" cy="20" r="10" fill="#E70013"/>
+    <path d="M38 20 L46 24 L43 20 L46 16 Z" fill="white"/>
+  </g>
+  <rect x="60" y="60" width="48" height="48" rx="12" fill="white"/>
+  <text x="84" y="96" text-anchor="middle" fill="#dc2626" font-size="24" font-weight="900" font-family="Arial">B</text>
+  <text x="124" y="96" fill="white" font-size="28" font-weight="700" font-family="Arial">Bac Excellence</text>
+  <text x="540" y="250" text-anchor="middle" fill="white" font-size="52" font-weight="900" font-family="Arial">Ce que tu obtiens GRATUITEMENT 🇹🇳</text>
+  <text x="200" y="450" fill="white" font-size="36" font-family="Arial">✓ Corrections IA réalistes</text>
+  <text x="200" y="520" fill="white" font-size="36" font-family="Arial">✓ 8 modules officiels BAC 2026</text>
+  <text x="200" y="590" fill="white" font-size="36" font-family="Arial">✓ Examens passés avec corrigés</text>
+  <text x="200" y="660" fill="white" font-size="36" font-family="Arial">✓ 6 langues 🇬🇧🇫🇷🇸🇦🇪🇸🇩🇪🇮🇹</text>
+  <rect x="290" y="780" width="500" height="80" rx="40" fill="white"/>
+  <text x="540" y="832" text-anchor="middle" fill="#dc2626" font-size="28" font-weight="700" font-family="Arial">Rejoins maintenant →</text>
+</svg>

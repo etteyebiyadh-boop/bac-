@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="1080" fill="url(#bg)"/>
+  <!-- Tunisian Flag -->
+  <g transform="translate(960, 60)">
+    <rect width="60" height="40" rx="4" fill="#E70013"/>
+    <circle cx="30" cy="20" r="12" fill="white"/>
+    <circle cx="32" cy="20" r="10" fill="#E70013"/>
+    <path d="M38 20 L46 24 L43 20 L46 16 Z" fill="white"/>
+  </g>
+  <rect x="60" y="60" width="48" height="48" rx="12" fill="white"/>
+  <text x="84" y="96" text-anchor="middle" fill="#7c3aed" font-size="24" font-weight="900" font-family="Arial">B</text>
+  <text x="124" y="96" fill="white" font-size="28" font-weight="700" font-family="Arial">Bac Excellence</text>
+  <text x="540" y="200" text-anchor="middle" fill="white" font-size="44" font-weight="900" font-family="Arial">Les 8 Modules Officiels 🇹🇳</text>
+  <rect x="60" y="300" width="240" height="120" rx="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="180" y="375" text-anchor="middle" fill="white" font-size="24" font-weight="600" font-family="Arial">1. Vacances</text>
+  <rect x="320" y="300" width="240" height="120" rx="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="440" y="375" text-anchor="middle" fill="white" font-size="24" font-weight="600" font-family="Arial">2. Éducation</text>
+  <rect x="580" y="300" width="240" height="120" rx="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="700" y="375" text-anchor="middle" fill="white" font-size="24" font-weight="600" font-family="Arial">3. Innovation</text>
+  <rect x="780" y="300" width="240" height="120" rx="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="900" y="375" text-anchor="middle" fill="white" font-size="24" font-weight="600" font-family="Arial">4. Jeunesse</text>
+  <rect x="60" y="440" width="240" height="120" rx="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="180" y="515" text-anchor="middle" fill="white" font-size="24" font-weight="600" font-family="Arial">5. Femme</text>
+  <rect x="320" y="440" width="240" height="120" rx="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="440" y="515" text-anchor="middle" fill="white" font-size="24" font-weight="600" font-family="Arial">6. Environnement</text>
+  <rect x="580" y="440" width="240" height="120" rx="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="700" y="515" text-anchor="middle" fill="white" font-size="24" font-weight="600" font-family="Arial">7. Travail</text>
+  <rect x="780" y="440" width="240" height="120" rx="16" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  <text x="900" y="515" text-anchor="middle" fill="white" font-size="24" font-weight="600" font-family="Arial">8. Littérature</text>
+  <rect x="290" y="700" width="500" height="80" rx="40" fill="white"/>
+  <text x="540" y="752" text-anchor="middle" fill="#7c3aed" font-size="28" font-weight="700" font-family="Arial">Programme complet →</text>
+</svg>
