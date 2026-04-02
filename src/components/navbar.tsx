@@ -133,11 +133,14 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
                 {link.label}
               </Link>
             ))}
+            {session && <AdminAccessLink t={t} email={session.email} />}
             <div style={{ height: "1px", background: "var(--glass-border)", margin: "8px 0" }} />
             <div className="row-between" style={{ padding: "0 16px" }}>
                <LanguageSwitcher />
                {session ? (
-                 <AdminAccessLink t={t} email={session.email} />
+                 <Link className="pill" href="/profile" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", color: "white" }}>
+                    {(session.email || 'User').split('@')[0]}
+                 </Link>
                ) : (
                  <Link className="pill" href="/auth/signup" style={{ background: "white", color: "black", border: "none" }}>{t.nav_join}</Link>
                )}
