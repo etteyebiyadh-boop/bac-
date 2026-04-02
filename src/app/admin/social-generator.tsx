@@ -217,7 +217,22 @@ function CardShell({
             boxShadow: `0 4px 12px ${t.glow}`
           }}>B</div>
           <div>
-            <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: "2px", color: "#fff", display: "block" }}>BAC EXCELLENCE</span>
+            <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: "2px", color: "#fff", display: "flex", alignItems: "center", gap: "6px" }}>
+              BAC EXCELLENCE <span style={{ 
+                width: 16, height: 12, 
+                borderRadius: 2, 
+                background: "#e70013", 
+                display: "flex", 
+                alignItems: "center", 
+                justifyContent: "center",
+                position: "relative",
+                overflow: "hidden",
+                border: "1px solid rgba(255,255,255,0.2)"
+              }}>
+                <div style={{ width: 6, height: 6, borderRadius: "50%", border: "1.5px solid #fff", position: "absolute" }}></div>
+                <div style={{ width: 3, height: 3, background: "#e70013", borderRadius: "50%", position: "absolute", right: 2, bottom: 4 }}></div>
+              </span>
+            </span>
             <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "1px", color: t.accent, opacity: 0.8 }}>ELITE PREP</span>
           </div>
         </div>
@@ -428,7 +443,7 @@ export function SocialGenerator() {
   async function handleBatchExport() {
     setIsExporting(true);
     const cardRefs = [
-      { name: "hook", ref: hookRef },
+      { name: "00-hook", ref: hookRef },
       ...(synonyms.length ? [{ name: "01-synonyms", ref: synRef }] : []),
       ...(antonyms.length ? [{ name: "02-antonyms", ref: antRef }] : []),
       ...(vocabulary.length ? [{ name: "03-vocabulary", ref: vocabRef }] : []),
@@ -441,6 +456,22 @@ export function SocialGenerator() {
       ...(commonMistakes.length ? [{ name: "10-mistakes", ref: mistakeRef }] : []),
       ...(grammarPatterns.length ? [{ name: "11-grammar", ref: grammarRef }] : []),
       ...(writingTips.length ? [{ name: "12-tips", ref: tipsRef }] : []),
+      { name: "h11-myth-fact", ref: mythFactRef },
+      { name: "h12-study-schedule", ref: studyScheduleRef },
+      { name: "g01-grade-flip", ref: gradeFlipRef },
+      { name: "g02-referral-milestone", ref: referralRef },
+      { name: "g03-study-stats", ref: statsRef },
+      { name: "b01-streak-badge", ref: streakBadgeRef },
+      { name: "b02-master-badge", ref: masterBadgeRef },
+      { name: "b03-top10-badge", ref: top10BadgeRef },
+      { name: "q01-quiz-card", ref: quizPollRef },
+      { name: "q02-checklist", ref: checklistRef },
+      { name: "q03-motivation", ref: motivationRef },
+      { name: "q04-essay-compare", ref: essayCompareRef },
+      { name: "q05-did-you-know", ref: didYouKnowRef },
+      { name: "q06-this-or-that", ref: thisOrThatRef },
+      { name: "q07-fill-blank", ref: fillBlankRef },
+      { name: "q08-myth-fact", ref: mythFactRef },
     ];
     
     await exportAllCards(cardRefs, topic || "mastery-pack");
@@ -455,9 +486,28 @@ export function SocialGenerator() {
         <div className="stack" style={{ maxWidth: 760 }}>
           <span className="eyebrow" style={{ color: "var(--primary)" }}>Elite Media Forge</span>
           <h2 className="section-title" style={{ fontSize: "2.4rem" }}>Social Studio & Mastery Hub.</h2>
-          <p className="muted">One click → Viral script + <strong>12 branded shareable mastery cards</strong> (synonyms, collocations, idioms, connectors, paraphrases, grammar patterns & more).</p>
+          <p className="muted">One click → Viral script + <strong>27+ branded shareable mastery cards</strong> (synonyms, collocations, idioms, connectors, paraphrases, grammar patterns & badges).</p>
         </div>
-        <span className="pill success-pill">12-Card Pack 💎</span>
+        <div className="stack" style={{ gap: 12, alignItems: "flex-end" }}>
+          <span className="pill success-pill">27-Card Mega Pack 💎</span>
+          <button 
+            onClick={handleBatchExport}
+            disabled={isExporting}
+            style={{ 
+              background: "white", 
+              color: "black", 
+              border: "none", 
+              borderRadius: 12, 
+              padding: "12px 24px", 
+              fontWeight: 900, 
+              fontSize: 13, 
+              cursor: "pointer",
+              boxShadow: "0 10px 20px rgba(255,255,255,0.1)"
+            }}
+          >
+            {isExporting ? "📦 Forging ZIP..." : "⚡ Download EVERYTHING (ZIP)"}
+          </button>
+        </div>
       </div>
 
       {/* ─ Two-Column: Config + Designer ─ */}
@@ -476,7 +526,16 @@ export function SocialGenerator() {
 
             <div className="grid grid-cols-2" style={{ gap: 14 }}>
               {[
-                { label: "Language Track", val: language, set: setLanguage, opts: [["ENGLISH","English (Elite)"],["FRENCH","French (Elite)"],["ARABIC","Arabic (Elite)"]] },
+                { label: "Language Track", val: language, set: setLanguage, opts: [
+                  ["ENGLISH","🇬🇧 English (Elite)"],
+                  ["FRENCH","🇫🇷 French (Elite)"],
+                  ["ARABIC","🇹🇳 Arabic (Elite)"],
+                  ["ITALIAN","🇮🇹 Italian (Option)"],
+                  ["SPANISH","🇪🇸 Spanish (Option)"],
+                  ["GERMAN","🇩🇪 German (Option)"],
+                  ["RUSSIAN","🇷🇺 Russian (Option)"],
+                  ["CHINESE","🇨🇳 Chinese (Option)"]
+                ] },
                 { label: "Format", val: platform, set: setPlatform, opts: [["Instagram Carousel","Instagram Carousel"],["Cheat Sheet Story","Viral Cheat Sheet"],["High-Impact Thread","Mastery Thread"],["Educational Post","Premium Post"]] },
                 { label: "BAC Section", val: section, set: setSection, opts: [["","All Sections"],["MATHEMATIQUES","Mathématiques"],["SCIENCES_EXPERIMENTALES","Sciences Exp"],["ECONOMIE_GESTION","Eco & Gestion"],["LETTRES","Lettres"],["SCIENCES_INFORMATIQUE","Informatique"]] },
               ].map(({ label, val, set, opts }) => (

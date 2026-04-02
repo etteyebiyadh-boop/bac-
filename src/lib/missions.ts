@@ -113,20 +113,36 @@ export async function ensureDailyMission(userId: string) {
 
   const copy = missionCopy(skillFocus);
 
-  return db.dailyMission.create({
-    data: {
-      userId,
-      lessonId: lesson?.id,
-      exerciseId: exercise?.id,
-      missionDate,
-      title: copy.title,
-      description: copy.description,
-      skillFocus,
-      status: MissionStatus.READY,
-      xpReward: exercise?.xpReward ?? 20
-    },
-    include: missionInclude
-  });
+  try {
+    return await db.dailyMission.create({
+      data: {
+        userId,
+        lessonId: lesson?.id,
+        exerciseId: exercise?.id,
+        missionDate,
+        title: copy.title,
+        description: copy.description,
+        skillFocus,
+        status: MissionStatus.READY,
+        xpReward: exercise?.xpReward ?? 20
+      },
+      include: missionInclude
+    });
+  } catch (e: any) {
+    // If another request created it simultaneously, fetch it
+    if (e.code === "P2002") {
+      return db.dailyMission.findUnique({
+        where: {
+          userId_missionDate: {
+            userId,
+            missionDate
+          }
+        },
+        include: missionInclude
+      }) as Promise<DailyMissionRecord>;
+    }
+    throw e;
+  }
 }
 
 export async function getXpTotal(userId: string) {

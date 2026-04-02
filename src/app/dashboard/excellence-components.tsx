@@ -21,11 +21,13 @@ import {
 } from "@/lib/language-roadmap";
 import type { CurriculumLanguageCode } from "@/lib/language-system";
 
-export function DailyStreakWidget() {
-  const [streakDays, setStreakDays] = useState(0);
-  const [loading, setLoading] = useState(true);
+export function DailyStreakWidget({ initialMetrics }: { initialMetrics?: any }) {
+  const [metrics, setMetrics] = useState<any>(initialMetrics || null);
+  const [streakDays, setStreakDays] = useState(initialMetrics?.currentStreak || 0);
+  const [loading, setLoading] = useState(!initialMetrics);
 
   useEffect(() => {
+    if (initialMetrics) return;
     fetch("/api/dashboard")
       .then(res => res.json())
       .then(data => {
@@ -104,11 +106,12 @@ export function AdminAccessButton() {
   );
 }
 
-export function OverallProgress() {
-  const [metrics, setMetrics] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export function OverallProgress({ initialMetrics }: { initialMetrics?: any }) {
+  const [metrics, setMetrics] = useState<any>(initialMetrics || null);
+  const [loading, setLoading] = useState(!initialMetrics);
 
   useEffect(() => {
+    if (initialMetrics) return;
     fetch("/api/dashboard")
       .then(res => res.json())
       .then(data => {
@@ -188,11 +191,12 @@ export function OverallProgress() {
   );
 }
 
-export function GradePredictions() {
-  const [metrics, setMetrics] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export function GradePredictions({ initialMetrics }: { initialMetrics?: any }) {
+  const [metrics, setMetrics] = useState<any>(initialMetrics || null);
+  const [loading, setLoading] = useState(!initialMetrics);
 
   useEffect(() => {
+    if (initialMetrics) return;
     fetch("/api/dashboard")
       .then(res => res.json())
       .then(data => {

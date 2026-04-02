@@ -78,27 +78,28 @@ Return ONLY a valid JSON object with these EXACT keys:
   }
 }
 
-QUANTITY:
-- synonyms: 5 items
-- antonyms: 5 items
-- vocabulary: 4 items
-- phrases: 6 items
-- collocations: 5 items
-- idioms: 4 items
-- connectors: 6 items (mix of types)
-- wordFamily: 3 items
-- paraphrases: 3 items
-- commonMistakes: 4 items
-- grammarPatterns: 3 items
-- writingTips: 5 tips
+QUANTITY & QUALITY INSTRUCTIONS (MAKE IT RICH, ELITE & ADVANCED !!):
+- synonyms: 10 items (sophisticated, academic vocabulary with subtle nuance explained)
+- antonyms: 10 items (complex relational opposites with contextual markers)
+- vocabulary: 8 items (comprehensive definitions + 2 examples each: one simple, one academic/BAC-style)
+- phrases: 10 items (sophisticated, multi-clause structures for critical analysis and formal argumentation)
+- collocations: 10 items (academic and literary pairings that impress examiners)
+- idioms: 8 items (metaphorical expressions with historical/cultural context where relevant)
+- connectors: 10 items (sophisticated transition markers for flow and cohesion)
+- wordFamily: 5 items (detailed morphological breakdown across all parts of speech)
+- paraphrases: 6 items (showing transformation from basic/colloquial to formal/academic register)
+- commonMistakes: 8 items (deep-dive into 'False Friends', structural errors, and register mismatches)
+- grammarPatterns: 6 items (complex syntax: inversion, cleft sentences, advanced modals, subjunctive)
+- writingTips: 10 tips (strategic advice on structure, hook-building, conclusion-crafting, and vocabulary variety)
 
-All content MUST be in ${language} and DIRECTLY relevant to "${topic}". High-scoring, exam-ready. Elite quality only.`;
+All examples MUST be detailed, context-rich, and clearly demonstrate high-end mastery of ${language}. They should be ready to be copied into a 20/20 BAC exam paper. Elite quality only. Use complex sentence structures in examples to show what a top-tier student would write.
+`;
 
     const response = await getReliableCompletion({
         messages: [{ role: "user", content: prompt }],
         response_format: { type: "json_object" },
-        max_tokens: 2400,
-        temperature: 0.6,
+        max_tokens: 3500,
+        temperature: 0.65,
     });
 
     const content = response.choices[0]?.message?.content || "{}";

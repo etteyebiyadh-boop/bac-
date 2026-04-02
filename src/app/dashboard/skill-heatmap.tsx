@@ -75,12 +75,37 @@ function ScoreCell({ score }: { score: number }) {
   );
 }
 
-export function SkillProgressHeatmap() {
+export function SkillProgressHeatmap({ initialHistory }: { initialHistory?: any[] }) {
   const [history, setHistory] = useState<SkillHistory[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialHistory);
   const [averages, setAverages] = useState({ grammar: 0, vocabulary: 0, structure: 0 });
 
   useEffect(() => {
+    if (initialHistory) {
+      const processed = initialHistory
+        .slice(0, 10)
+        .reverse()
+        .map((sub: any) => ({
+          date: new Date(sub.createdAt).toLocaleDateString("en-US", { 
+            month: "short", 
+            day: "numeric" 
+          }),
+          grammar: sub.grammarScore,
+          vocabulary: sub.vocabularyScore,
+          structure: sub.structureScore
+        }));
+      
+      setHistory(processed);
+      
+      if (processed.length > 0) {
+        setAverages({
+          grammar: processed.reduce((s: number, h: SkillHistory) => s + h.grammar, 0) / processed.length,
+          vocabulary: processed.reduce((s: number, h: SkillHistory) => s + h.vocabulary, 0) / processed.length,
+          structure: processed.reduce((s: number, h: SkillHistory) => s + h.structure, 0) / processed.length
+        });
+      }
+      return;
+    }
     fetch("/api/dashboard")
       .then(res => res.json())
       .then(data => {

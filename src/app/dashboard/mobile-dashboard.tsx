@@ -12,6 +12,7 @@ interface MobileDashboardProps {
   profile: any;
   translations: any;
   lang: string;
+  initialData?: any;
 }
 
 interface ProgressDetail {
@@ -28,10 +29,10 @@ interface ActivityItem {
   type: "essay" | "mock" | "lesson" | "exercise";
 }
 
-export function MobileDashboard({ user, profile, translations: t, lang }: MobileDashboardProps) {
+export function MobileDashboard({ user, profile, translations: t, lang, initialData }: MobileDashboardProps) {
   const [greeting, setGreeting] = useState("");
   const [activeTab, setActiveTab] = useState("activity");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!initialData);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   
@@ -55,6 +56,39 @@ export function MobileDashboard({ user, profile, translations: t, lang }: Mobile
 
   // Fetch real dashboard data
   useEffect(() => {
+    if (initialData) {
+      if (initialData.metrics) {
+        const metrics = initialData.metrics;
+        setStreak(metrics.currentStreak || 0);
+        const avgScore = metrics.averageScore;
+        if (avgScore) {
+          setAverageScore(avgScore);
+          setProgress(Math.round((avgScore / 20) * 100));
+        }
+        setTotalEssays(metrics.totalCorrections || 0);
+        const breakdown = metrics.averageBreakdown;
+        if (breakdown) {
+          setGranularProgress([
+            { label: "Grammar", value: Math.round((breakdown.grammar / 20) * 100) || 0, color: "#6366f1" },
+            { label: "Vocab", value: Math.round((breakdown.vocabulary / 20) * 100) || 0, color: "#10b981" },
+            { label: "Writing", value: Math.round((breakdown.structure / 20) * 100) || 0, color: "#f59e0b" },
+            { label: "Reading", value: 0, color: "#ec4899" },
+            { label: "Listening", value: 0, color: "#8b5cf6" }
+          ]);
+        }
+        if (initialData.recentSubmissions && initialData.recentSubmissions.length > 0) {
+          const activity = initialData.recentSubmissions.slice(0, 3).map((sub: any) => ({
+            id: sub.id,
+            title: sub.exam?.title || (sub.language ? `${sub.language} Essay` : "Writing Practice"),
+            score: sub.overallScore,
+            date: formatDistanceToNow(new Date(sub.createdAt), { addSuffix: false }),
+            type: sub.exam ? "mock" : "essay" as const
+          }));
+          setRecentActivity(activity);
+        }
+      }
+      return;
+    }
     fetch("/api/dashboard")
       .then(res => res.json())
       .then(data => {
@@ -159,6 +193,11 @@ export function MobileDashboard({ user, profile, translations: t, lang }: Mobile
     { Icon: TargetIcon, label: "BAC Week", href: "/bac-week", color: "#ec4899", desc: "7-day prep" },
     { Icon: TrophyIcon, label: "Classement", href: "/leaderboard", color: "#f59e0b", desc: "Top élèves" },
   ];
+  
+  const isAdmin = ["anis@bacexcellence.com", "admin@bacexcellence.com"].includes(user.email?.toLowerCase());
+  const finalQuickActions = isAdmin 
+    ? [...quickActions, { Icon: TargetIcon, label: "Admin Console", href: "/admin", color: "var(--primary)", desc: "Control Room" }]
+    : quickActions;
 
   const stats = [
     { label: "Essays", value: totalEssays.toString(), Icon: BookIcon, color: "#6366f1" },
@@ -247,17 +286,40 @@ export function MobileDashboard({ user, profile, translations: t, lang }: Mobile
 
       {/* Quick Actions */}
       <h2 className="stagger-item" style={{ fontSize: "18px", fontWeight: 800, marginBottom: "12px" }}>Quick Actions</h2>
-      <div className="stagger-item" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "10px", marginBottom: "20px" }}>
-        {quickActions.map((action, idx) => {
-          const IconComponent = action.Icon;
-          return (
-            <Link key={idx} href={action.href} className="card card-interactive micro-bounce hover-lift" style={{ padding: "16px", borderRadius: "16px", textDecoration: "none", borderLeft: `3px solid ${action.color}`, background: `linear-gradient(135deg, ${action.color}08, transparent)` }}>
-              <IconComponent className="w-7 h-7" style={{ color: action.color, marginBottom: "8px" }} />
-              <div style={{ fontSize: "15px", fontWeight: 700, color: "white" }}>{action.label}</div>
-              <div style={{ fontSize: "12px", color: "var(--ink-dim)" }}>{action.desc}</div>
-            </Link>
-          );
-        })}
+      <div className="stagger-item grid grid-cols-2" style={{ gap: "12px", marginBottom: "30px" }}>
+        {finalQuickActions.map((action, i) => (
+          <Link 
+            key={i} 
+            href={action.href} 
+            className="card interactive-card"
+            style={{ 
+              padding: "16px",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid var(--glass-border)",
+              borderRadius: "16px"
+            }}
+          >
+            <div style={{ 
+              width: "40px", 
+              height: "40px", 
+              borderRadius: "12px", 
+              background: `${action.color}15`,
+              color: action.color,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+              <action.Icon className="w-5 h-5" />
+            </div>
+            <div>
+              <div style={{ fontSize: "14px", fontWeight: 700 }}>{action.label}</div>
+              <div className="muted" style={{ fontSize: "11px" }}>{action.desc}</div>
+            </div>
+          </Link>
+        ))}
       </div>
 
       {/* Stats */}

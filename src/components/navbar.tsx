@@ -133,8 +133,14 @@ export function Navbar({ session, translations, lang }: NavbarProps) {
                 {link.label}
               </Link>
             ))}
-            {session && <AdminAccessLink t={t} email={session.email} />}
-            <div style={{ height: "1px", background: "var(--glass-border)", margin: "8px 0" }} />
+            
+            {session && isAdminEmail(session.email) && (
+              <div style={{ marginTop: "8px" }}>
+                <AdminAccessLink t={t} email={session.email} />
+              </div>
+            )}
+            
+            <div style={{ height: "1px", background: "var(--glass-border)", margin: "16px 0" }} />
             <div className="row-between" style={{ padding: "0 16px" }}>
                <LanguageSwitcher />
                {session ? (

@@ -14,7 +14,21 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
   return (
     <div className="page-stack">
       {/* Tab Switcher */}
-      <nav className="row-between" style={{ justifyContent: "center", gap: "12px", background: "rgba(255,255,255,0.03)", padding: "8px", borderRadius: "100px", border: "1px solid var(--glass-border)", maxWidth: "450px", margin: "0 auto" }}>
+      <nav className="row-between" style={{ 
+        justifyContent: "center", 
+        gap: "8px", 
+        background: "rgba(255,255,255,0.03)", 
+        padding: "8px", 
+        borderRadius: "100px", 
+        border: "1px solid var(--glass-border)", 
+        maxWidth: "500px", 
+        margin: "0 auto",
+        overflowX: "auto",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+        whiteSpace: "nowrap",
+        flexWrap: "nowrap"
+      }}>
         {[
           { id: "USERS", label: "Students", icon: "💎" },
           { id: "CONTENT", label: "Curriculum", icon: "📚" },
@@ -30,9 +44,12 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
               color: activeTab === tab.id ? "white" : "var(--ink-dim)",
               border: "none",
               cursor: "pointer",
-              padding: "10px 20px",
+              padding: "10px 16px",
               minHeight: "auto",
-              boxShadow: "none"
+              boxShadow: "none",
+              borderRadius: "50px",
+              fontSize: "13px",
+              flexShrink: 0
             }}
           >
             {tab.icon} {tab.label}
