@@ -9,23 +9,50 @@ import { WriteWorkspace } from "./write-workspace";
 export const dynamic = "force-dynamic";
 
 export default async function WritingLabPage() {
-  const user = await requireCurrentUser();
-  const profile = await ensureStudentProfile(user.id);
+  let user;
+  let profile;
+  let exams: any[] = [];
+  let vocabSets: any[] = [];
+  let error: string | null = null;
+
+  try {
+    user = await requireCurrentUser();
+    profile = await ensureStudentProfile(user.id);
+  } catch (e) {
+    console.error("Auth error:", e);
+    error = "Authentication required";
+  }
+
   const cookieStore = await cookies();
   const langCookie = (cookieStore.get("site-lang")?.value as SiteLanguage) || "en";
   const t = translations[langCookie] || translations.en;
 
-  // We should also look for vocabulary and synonyms here to provide as cheat sheets.
-  const vocabSets = await db.vocabularySet.findMany({
-    where: { language: profile.primaryLanguage },
-    take: 10,
-    include: { items: true }
-  });
+  // Only fetch data if user is authenticated
+  if (profile) {
+    try {
+      // Fetch vocabulary sets
+      vocabSets = await db.vocabularySet.findMany({
+        where: { language: profile.primaryLanguage },
+        take: 10,
+        include: { items: true }
+      });
+    } catch (e) {
+      console.error("Vocab fetch error:", e);
+      vocabSets = [];
+    }
 
-  const exams = await db.exam.findMany({
-    where: { language: profile.primaryLanguage },
-    orderBy: { year: "desc" }
-  });
+    try {
+      // Fetch exams
+      exams = await db.exam.findMany({
+        where: { language: profile.primaryLanguage },
+        orderBy: { year: "desc" }
+      });
+    } catch (e) {
+      console.error("Exam fetch error:", e);
+      exams = [];
+    }
+  }
+
   const visionAvailability = getVisionAvailability();
 
   return (
@@ -39,14 +66,21 @@ export default async function WritingLabPage() {
         </div>
       </section>
 
-      <WriteWorkspace 
-        lang={langCookie} 
-        bacSection={profile.bacSection}
-        exams={JSON.parse(JSON.stringify(exams))}
-        selectedExam={null} 
-        scanAvailable={visionAvailability.available}
-        scanProviderLabel={visionAvailability.providerLabel}
-      />
+      {error ? (
+        <section className="card stack" style={{ padding: "48px", textAlign: "center" }}>
+          <h2 className="section-title" style={{ color: "var(--primary)" }}>⚠️ {error}</h2>
+          <p className="muted">Please sign in to access the Writing Lab.</p>
+        </section>
+      ) : (
+        <WriteWorkspace 
+          lang={langCookie} 
+          bacSection={profile?.bacSection ?? null}
+          exams={JSON.parse(JSON.stringify(exams))}
+          selectedExam={null} 
+          scanAvailable={visionAvailability.available}
+          scanProviderLabel={visionAvailability.providerLabel}
+        />
+      )}
     </div>
   );
 }
