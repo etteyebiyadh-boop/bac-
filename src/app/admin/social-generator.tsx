@@ -542,11 +542,54 @@ export function SocialGenerator() {
                   </select>
                 </label>
               ))}
-              <label className="stack" style={{ gap: 7 }}>
-                <span className="eyebrow" style={{ fontSize: 10, opacity: 0.6 }}>Topic / Skill</span>
-                <input placeholder='e.g. "Advanced Connectors"' value={topic} onChange={e => setTopic(e.target.value)} required
-                  style={{ padding: 13, borderRadius: 10, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "0.95rem" }} />
-              </label>
+              <div className="stack col-span-2" style={{ gap: 7 }}>
+                <span className="eyebrow" style={{ fontSize: 10, opacity: 0.6 }}>Topic / Skill Library</span>
+                <div className="grid grid-cols-[1fr,1fr] gap-2">
+                  <select 
+                    value={topic} 
+                    onChange={e => setTopic(e.target.value)} 
+                    style={{ padding: 13, borderRadius: 10, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", color: "white" }}
+                  >
+                    <option value="">-- Quick Select BAC Skill --</option>
+                    <optgroup label="💎 High-Value Grammar">
+                      <option value="Passive Voice Mastery">Passive Voice Mastery</option>
+                      <option value="Advanced Conditionals (Type 1,2,3)">Conditionals (Type 1,2,3)</option>
+                      <option value="Inversion after Negative Adverbials">Inversion Hacks</option>
+                      <option value="Reported Speech Precision">Reported Speech</option>
+                      <option value="Wish & If Only (Regrets/Desires)">Wish & If Only</option>
+                      <option value="Causative Form (Have/Get)">Causative Form</option>
+                      <option value="Modal Verbs in the Past">Modals in the Past</option>
+                      <option value="Compound Adjectives">Compound Adjectives</option>
+                      <option value="Relative Clauses (Defining/Non)">Relative Clauses</option>
+                      <option value="Gerund vs Infinitive">Gerund vs Infinitive</option>
+                    </optgroup>
+                    <optgroup label="🌍 Vocabulary & Themes">
+                      <option value="Education and Vocational Training">Education & Schooling</option>
+                      <option value="Brain Drain & Migration">Brain Drain</option>
+                      <option value="Sustainable Development & Ecology">Sustainability</option>
+                      <option value="Technology & Innovation">Tech & Innovation</option>
+                      <option value="Social Media & Cyber-crime">Social Media Risks</option>
+                      <option value="Human Rights & Volunteering">Human Rights</option>
+                      <option value="Adventure & Tourism">Adventure/Tourism</option>
+                      <option value="Healthy Lifestyle & Nutrition">Health & Nutrition</option>
+                    </optgroup>
+                    <optgroup label="✍️ Writing & Methods">
+                      <option value="Argumentative Essay Connectors">Essay Connectors</option>
+                      <option value="Article Writing Hooks">Article Writing</option>
+                      <option value="Formal Letter Structure">Formal Letters</option>
+                      <option value="Email to a Friend">Informal Email</option>
+                      <option value="Paraphrasing Techniques">Paraphrase Like a Pro</option>
+                    </optgroup>
+                  </select>
+                  <input 
+                    placeholder='Or type custom topic...' 
+                    value={topic} 
+                    onChange={e => setTopic(e.target.value)} 
+                    required
+                    style={{ padding: 13, borderRadius: 10, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", fontSize: "0.95rem" }} 
+                  />
+                </div>
+              </div>
             </div>
 
             <button type="submit" disabled={loading} style={{ background: "var(--primary)", color: "black", border: "none", borderRadius: 14, padding: "18px 0", fontSize: "1.1rem", fontWeight: 900, cursor: "pointer", width: "100%" }}>
