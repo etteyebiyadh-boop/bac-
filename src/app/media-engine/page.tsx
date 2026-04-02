@@ -1,7 +1,7 @@
 "use client";
 
 import { AIContentGenerator } from "@/components/ai-content-generator";
-import { Sparkles, Download, Image, FileText, Wand2 } from "lucide-react";
+import { Sparkles, Download, Image as ImageIcon, FileText, Wand2 } from "lucide-react";
 import Link from "next/link";
 
 export default function MediaEnginePage() {
@@ -77,7 +77,7 @@ export default function MediaEnginePage() {
         <div className="container mx-auto px-6">
           <div className="flex items-center gap-4 mb-12">
             <div className="p-3 bg-indigo-500/20 rounded-xl">
-              <Image size={24} className="text-indigo-400" />
+              <ImageIcon size={24} className="text-indigo-400" />
             </div>
             <div>
               <h2 className="text-3xl font-bold text-white">Shareable Cards</h2>
@@ -145,11 +145,11 @@ export default function MediaEnginePage() {
       {/* Features */}
       <section className="py-20">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">What's Included</h2>
+          <h2 className="text-3xl font-bold text-white text-center mb-12">What&apos;s Included</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="p-6 bg-white/5 rounded-2xl border border-white/10">
               <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mb-4">
-                <Image size={24} className="text-indigo-400" />
+                <ImageIcon size={24} className="text-indigo-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">10 SVG Cards</h3>
               <p className="text-white/60">High-quality, scalable graphics with Tunisian flag integration. Perfect for Instagram, Facebook, LinkedIn.</p>
