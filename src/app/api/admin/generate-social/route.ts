@@ -43,8 +43,15 @@ export async function POST(req: NextRequest) {
     const { topic, language, platform, section } = await req.json();
     
     const sectionContext = section ? `Target Section: ${section}.` : "Target: All BAC sections.";
-
+    const variationSeed = Math.floor(Math.random() * 1000000);
+    
     const prompt = `${BAC_AI_PERSONA}
+
+    VARIETY DIRECTIVE (Seed: ${variationSeed}): 
+    - DO NOT use generic, overused textbook examples. 
+    - Create fresh, modern, and highly relatable scenarios for Tunisian students. 
+    - Use diverse sentence structures and high-impact vocabulary.
+    - If this topic is generated twice, ensure the content is 100% different.
 
 Create a COMPLETE viral content pack for: ${language} - "${topic}". ${sectionContext}
 
@@ -98,8 +105,8 @@ All examples MUST be detailed, context-rich, and clearly demonstrate high-end ma
     const response = await getReliableCompletion({
         messages: [{ role: "user", content: prompt }],
         response_format: { type: "json_object" },
-        max_tokens: 3500,
-        temperature: 0.65,
+        max_tokens: 3800,
+        temperature: 0.8,
     });
 
     const content = response.choices[0]?.message?.content || "{}";

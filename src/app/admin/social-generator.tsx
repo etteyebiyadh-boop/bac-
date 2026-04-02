@@ -7,6 +7,16 @@ import { saveAs } from "file-saver";
 
 type Theme = "grammar" | "vocab" | "mindset" | "elite" | "cyber" | "retro" | "gold" | "vibrant" | "midnight" | "glass";
 
+interface CardShellProps {
+  refProp?: React.RefObject<HTMLDivElement | null>;
+  theme?: Theme;
+  watermark?: string;
+  label: string;
+  accent: string;
+  language?: string;
+  children: React.ReactNode;
+}
+
 const THEMES: Record<Theme, { bg: string; accent: string; glow: string; border: string; overlay: string }> = {
   grammar:  { 
     bg: "linear-gradient(145deg, #1e1b4b 0%, #0f0a1e 50%, #000000 100%)", 
@@ -80,21 +90,6 @@ const THEMES: Record<Theme, { bg: string; accent: string; glow: string; border: 
   },
 };
 
-const CARD_THEMES: Record<string, Theme> = {
-  synonyms:       "grammar",
-  antonyms:       "retro",
-  vocabulary:     "vocab",
-  phrases:        "midnight",
-  collocations:   "elite",
-  idioms:         "mindset",
-  connectors:     "cyber",
-  wordFamily:     "vibrant",
-  paraphrases:    "gold",
-  commonMistakes: "retro",
-  grammarPatterns:"grammar",
-  writingTips:    "glass",
-};
-
 async function exportCard(ref: React.RefObject<HTMLDivElement | null>, name: string): Promise<Blob | null> {
   if (!ref.current) return null;
   try {
@@ -128,15 +123,8 @@ async function exportAllCards(
 }
 
 function CardShell({
-  refProp, theme, watermark, label, accent, children,
-}: {
-  refProp: React.RefObject<HTMLDivElement | null>;
-  theme: Theme;
-  watermark: string;
-  label: string;
-  accent: string;
-  children: React.ReactNode;
-}) {
+  refProp, theme = "grammar", watermark = "@bacexcellence", label, accent, language, children,
+}: CardShellProps) {
   const t = THEMES[theme];
   return (
     <div ref={refProp} style={{
@@ -236,17 +224,35 @@ function CardShell({
             <span style={{ fontSize: 9, fontWeight: 600, letterSpacing: "1px", color: t.accent, opacity: 0.8 }}>ELITE PREP</span>
           </div>
         </div>
-        <span style={{ 
-          fontSize: 10, 
-          fontWeight: 800, 
-          color: accent, 
-          letterSpacing: 1.2, 
-          background: `linear-gradient(135deg, ${accent}20 0%, ${accent}08 100%)`, 
-          padding: "5px 12px", 
-          borderRadius: 20, 
-          border: `1.5px solid ${accent}40`,
-          boxShadow: `0 2px 8px ${accent}20`
-        }}>{label}</span>
+        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <span style={{ 
+            fontSize: 10, 
+            fontWeight: 800, 
+            color: accent, 
+            letterSpacing: 1.2, 
+            background: `linear-gradient(135deg, ${accent}20 0%, ${accent}08 100%)`, 
+            padding: "5px 12px", 
+            borderRadius: 20, 
+            border: `1.5px solid ${accent}40`,
+            boxShadow: `0 2px 8px ${accent}20`
+          }}>{label}</span>
+          {language && (
+            <span style={{ fontSize: 18, filter: "drop-shadow(0 0 4px rgba(0,0,0,0.5))" }}>
+              {(() => {
+                const lang = language.toUpperCase();
+                if (lang.includes("ENGLISH")) return "🇬🇧";
+                if (lang.includes("FRENCH")) return "🇫🇷";
+                if (lang.includes("ARABIC")) return "🇹🇳";
+                if (lang.includes("ITALIAN")) return "🇮🇹";
+                if (lang.includes("SPANISH")) return "🇪🇸";
+                if (lang.includes("GERMAN")) return "🇩🇪";
+                if (lang.includes("RUSSIAN")) return "🇷🇺";
+                if (lang.includes("CHINESE")) return "🇨🇳";
+                return "🌍";
+              })()}
+            </span>
+          )}
+        </div>
       </div>
       
       {/* Divider */}
@@ -287,16 +293,6 @@ function ExportRow({ label, color, onExport }: { label: string; color: string; o
       <button onClick={onExport} style={{ background: color, color: "#000", border: "none", borderRadius: 8, padding: "8px 18px", fontWeight: 900, fontSize: 11, cursor: "pointer" }}>⬇️ Export .png</button>
     </div>
   );
-}
-
-function downloadBlob(blob: Blob | null, name: string) {
-  if (!blob) return;
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.download = `bac-${name}.png`;
-  a.href = url;
-  a.click();
-  URL.revokeObjectURL(url);
 }
 
 // ─── MAIN COMPONENT ─────────────────────────────────────────────────────────
@@ -653,7 +649,7 @@ export function SocialGenerator() {
           {/* Preview */}
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
             <span className="eyebrow" style={{ fontSize: 10 }}>Preview (exports at 3×)</span>
-            <CardShell refProp={hookRef} theme={cardTheme} watermark={watermark} label="HOOK CARD" accent={t.accent}>
+            <CardShell refProp={hookRef} theme={cardTheme} watermark={watermark} label="HOOK CARD" accent={t.accent} language={language}>
               <h1 style={{ fontSize: "1.85rem", fontWeight: 950, lineHeight: 1.08, margin: "0 0 14px", color: "#fff", overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as any }}>{cardTitle}</h1>
               <div style={{ fontSize: "0.92rem", lineHeight: 1.65, opacity: 0.92, whiteSpace: "pre-wrap", paddingLeft: 14, borderLeft: `4px solid ${t.accent}`, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 5, WebkitBoxOrient: "vertical" as any }}>{cardBody}</div>
               <div style={{ marginTop: 14, display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", background: `${t.accent}18`, border: `1px solid ${t.accent}33`, borderRadius: 8 }}>
@@ -717,7 +713,7 @@ export function SocialGenerator() {
           <div className="stack" style={{ gap: 16 }}>
             <ExportRow label="🎯 Grade Flip Card" color={ac} onExport={() => exportCard(gradeFlipRef, "grade-flip")} />
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <CardShell refProp={gradeFlipRef} theme="vocab" watermark={watermark} label="GRADE FLIP" accent={ac}>
+              <CardShell refProp={gradeFlipRef} theme="vocab" watermark={watermark} label="GRADE FLIP" accent={ac} language={language}>
                 <div style={{ textAlign: "center", padding: "20px 0" }}>
                   <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>MY BAC TRANSFORMATION</div>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 20, marginBottom: 16 }}>
