@@ -220,8 +220,8 @@ export function BacWeekClient({ bacSection, targetScore, lang }: BacWeekClientPr
             </div>
 
             <p className="muted" style={{ fontSize: "1.2rem", maxWidth: "600px", margin: "20px auto 30px" }}>
-              7 jours d'entraînement hardcore. 4 heures par jour de pratique stratégique. 
-              Générez votre roadmap ciblée pour garantir l'excellence le jour de l'épreuve nationale.
+              7 jours d&apos;entraînement hardcore. 4 heures par jour de pratique stratégique. 
+              Générez votre roadmap ciblée pour garantir l&apos;excellence le jour de l&apos;épreuve nationale.
             </p>
             
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px", marginTop: "20px", textAlign: "center" }}>
@@ -479,7 +479,7 @@ export function BacWeekClient({ bacSection, targetScore, lang }: BacWeekClientPr
           </div>
 
           <div className="card border-0" style={{ padding: "30px", background: "linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1))", borderRadius: "24px" }}>
-             <h3 className="font-bold text-white mb-2 leading-tight" style={{ fontSize: "1.1rem" }}>"Le succès est la somme de petits efforts, répétés jour après jour."</h3>
+             <h3 className="font-bold text-white mb-2 leading-tight" style={{ fontSize: "1.1rem" }}>&quot;Le succès est la somme de petits efforts, répétés jour après jour.&quot;</h3>
              <p className="muted text-sm mt-4">— Bac Excellence AI System</p>
           </div>
         </div>
