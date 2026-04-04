@@ -399,8 +399,9 @@ export function SocialGenerator() {
     if (!topic) return;
     setLoading(true);
     [setSynonyms, setAntonyms, setVocabulary, setPhrases, setCollocations, setIdioms,
-     setConnectors, setWordFamily, setParaphrases, setCommonMistakes, setGrammarPatterns, setWritingTips, setGrowthCards]
-      .forEach(fn => fn(null as any));
+     setConnectors, setWordFamily, setParaphrases, setCommonMistakes, setGrammarPatterns, setWritingTips]
+      .forEach(fn => fn([]));
+    setGrowthCards(null);
     setScript("");
 
     try {

@@ -104,22 +104,22 @@ Return ONLY a valid JSON object with these EXACT keys:
   }
 }
 
-QUANTITY & QUALITY INSTRUCTIONS (MAKE IT RICH, ELITE & ADVANCED !!):
-- synonyms: 10 items (sophisticated, academic vocabulary with subtle nuance explained)
-- antonyms: 10 items (complex relational opposites with contextual markers)
-- vocabulary: 8 items (comprehensive definitions + 2 examples each: one simple, one academic/BAC-style)
-- phrases: 10 items (sophisticated, multi-clause structures for critical analysis and formal argumentation)
-- collocations: 10 items (academic and literary pairings that impress examiners)
-- idioms: 8 items (metaphorical expressions with historical/cultural context where relevant)
-- connectors: 10 items (sophisticated transition markers for flow and cohesion)
-- wordFamily: 5 items (detailed morphological breakdown across all parts of speech)
-- paraphrases: 6 items (showing transformation from basic/colloquial to formal/academic register)
-- commonMistakes: 8 items (deep-dive into 'False Friends', structural errors, and register mismatches)
-- grammarPatterns: 6 items (complex syntax: inversion, cleft sentences, advanced modals, subjunctive)
-- writingTips: 10 tips (strategic advice on structure, hook-building, conclusion-crafting, and vocabulary variety)
-- growthCards: Ensure every field is contextually relevant to ${topic} and demonstrates ELITE ${language} mastery.
+QUANTITY & QUALITY INSTRUCTIONS (ELITE & ADVANCED ONLY !!):
+- synonyms: 5 items (sophisticated with subtle nuance)
+- antonyms: 5 items (complex relational opposites)
+- vocabulary: 5 items (definitions + 1 short example per item)
+- phrases: 6 items (sophisticated structures for formal argumentation)
+- collocations: 6 items (academic pairings)
+- idioms: 5 items (metaphorical expressions)
+- connectors: 6 items (sophisticated transition markers)
+- wordFamily: 3 items (morphological breakdown)
+- paraphrases: 4 items (showing transformation to formal/academic register)
+- commonMistakes: 5 items (structural errors and register mismatches)
+- grammarPatterns: 4 items (complex syntax: inversion, cleft sentences, etc.)
+- writingTips: 5 tips (strategic advice on structure and hook-building)
+- growthCards: Every field MUST be contextually relevant to ${topic}.
 
-All examples MUST be detailed, context-rich, and clearly demonstrate high-end mastery of ${language}. They should be ready to be copied into a 20/20 BAC exam paper. Elite quality only. Use complex sentence structures in examples to show what a top-tier student would write.
+Quality over Quantity: Each example must demonstrate high-end mastery of ${language}. They should represent what a 20/20 BAC student would use. Keep it concise but elite.
 `;
 
     const response = await getReliableCompletion({
