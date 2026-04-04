@@ -1,9 +1,7 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { MobileExam } from "./mobile-exam";
-import { WriteWorkspace } from "@/app/write/write-workspace";
 import { SiteLanguage, translations } from "@/lib/translations";
+import { ExamModeSimulator } from "@/components/ExamModeSimulator";
 
 type ExamOption = {
   id: string;
@@ -15,6 +13,10 @@ type ExamOption = {
   estimatedMinutes: number;
   language: string;
   slug: string;
+  readingTitle?: string;
+  readingContent?: string;
+  readingQuestions?: any;
+  languageQuestions?: any;
 };
 
 interface ResponsiveExamProps {
@@ -54,14 +56,6 @@ export function ResponsiveExam({
             <p className="muted" style={{ maxWidth: "800px" }}>{exam.methodology}</p>
           </div>
         </section>
-        <WriteWorkspace 
-          lang={lang} 
-          bacSection={bacSection}
-          exams={[exam]} 
-          selectedExam={exam} 
-          scanAvailable={scanAvailable}
-          scanProviderLabel={scanProviderLabel}
-        />
       </div>
     );
   }
@@ -78,43 +72,27 @@ export function ResponsiveExam({
   }
 
   return (
-    <div className="page-stack" style={{ direction: lang === "ar" ? "rtl" : "ltr" }}>
-      <section className="card stack hero-panel" style={{ padding: "48px 32px", border: "1px solid var(--primary)", background: "rgba(99, 102, 241, 0.03)" }}>
-        <div style={{ position: "absolute", right: "-10%", top: "-50%", width: "400px", height: "400px", background: "radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%)", borderRadius: "50%" }} />
-        <div className="stack" style={{ zIndex: 1, position: "relative", gap: "16px" }}>
-          <span className="eyebrow" style={{ color: "var(--primary)" }}>{t.nav_exams} - {exam.year}</span>
-          <h1 className="section-title" style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", lineHeight: 1 }}>{exam.title}</h1>
-          <p className="muted" style={{ maxWidth: "800px" }}>{exam.methodology}</p>
-          
-          <div style={{ marginTop: "24px" }}>
-             <button 
-               className="button-link hover-glow" 
-               style={{ background: "var(--primary)", color: "black", padding: "20px 48px", fontSize: "1.2rem", fontWeight: 900 }}
-               onClick={() => {
-                 // Trigger focus mode in WriteWorkspace if possible or just rely on the section below
-                 const el = document.getElementById("write-workspace-anchor");
-                 el?.scrollIntoView({ behavior: "smooth" });
-               }}
-             >
-                {lang === "ar" ? "🎯 ابدا الـ MOCK EXAM توا (3 سوايع تركيز)" : "🎯 START FULL 3-HOUR MOCK EXAM"}
-             </button>
-             <p className="muted" style={{ marginTop: "16px", fontSize: "0.9rem" }}>
-                {lang === "ar" 
-                  ? "ما تنساش تبارتاجي السكور متاعك باش تشجع صحابك! 🔥" 
-                  : "Don't forget to share your score to challenge your friends! 🔥"}
-             </p>
-          </div>
+    <div className="container" style={{ direction: lang === "ar" ? "rtl" : "ltr", paddingTop: "80px", paddingBottom: "120px" }}>
+      <header className="stack" style={{ gap: "16px", marginBottom: "80px" }}>
+        <div className="row-between" style={{ alignItems: "flex-end" }}>
+           <div className="stack" style={{ gap: "16px" }}>
+              <span className="eyebrow" style={{ color: "var(--primary)" }}>{t.nav_exams} - SESSION {exam.year}</span>
+              <h1 className="hero-title" style={{ fontSize: "5rem", maxWidth: "1000px" }}>{exam.title}</h1>
+           </div>
+           <div className="card pill" style={{ border: "1px solid var(--glass-border)", padding: "12px 32px", height: "fit-content" }}>
+              <span style={{ fontWeight: 900 }}>{exam.difficulty}</span>
+           </div>
         </div>
-      </section>
+        <p className="muted" style={{ fontSize: "1.2rem", maxWidth: "800px" }}>
+          {exam.methodology}
+        </p>
+      </header>
 
-      <div id="write-workspace-anchor" />
-      <WriteWorkspace 
+      <ExamModeSimulator 
+        exam={exam} 
         lang={lang} 
-        bacSection={bacSection}
-        exams={[exam]} 
-        selectedExam={exam} 
-        scanAvailable={scanAvailable}
-        scanProviderLabel={scanProviderLabel}
+        bacSection={bacSection} 
+        scanAvailable={scanAvailable} 
       />
     </div>
   );
