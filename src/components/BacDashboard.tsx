@@ -6,6 +6,8 @@ import { DailyMissions } from "@/components/DailyMissions";
 import { getSmartRecommendations, getWeeklyStreak } from "@/lib/personalization";
 import { getStudentStats, generateDailyMissions } from "@/lib/gamification";
 import { Language } from "@prisma/client";
+import { Brain, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export async function BacDashboard() {
   const user = await getCurrentUser();
@@ -55,6 +57,28 @@ export async function BacDashboard() {
       <div className="grid grid-cols-3 gap-64" style={{ gridTemplateColumns: "1fr 380px" }}>
         {/* Main Learning Hub */}
         <div className="stack" style={{ gap: "60px" }}>
+           {/* Diagnostic Funnel Banner */}
+           <Link href="/diagnostic" className="card-vibrant hover-scale" style={{ 
+              padding: "32px", 
+              background: "linear-gradient(90deg, var(--primary), #ec4899)",
+              border: "none",
+              color: "white",
+              display: "flex",
+              alignItems: "center",
+              gap: "32px",
+              justifyContent: "space-between"
+           }}>
+              <div className="stack" style={{ gap: "12px" }}>
+                 <div className="row" style={{ gap: "8px", fontSize: "12px", fontWeight: 900 }}>
+                    <Brain size={18} /> BAC READINESS EVALUATION
+                 </div>
+                 <h2 style={{ fontSize: "1.8rem", fontWeight: 900 }}>What&apos;s your predicted June score?</h2>
+                 <p style={{ opacity: 0.9, fontSize: "14px" }}>Take the 10-min Diagnostic Test and unlock your personalized roadmap.</p>
+              </div>
+              <div style={{ padding: "16px", background: "rgba(255,255,255,0.2)", borderRadius: "50%" }}>
+                 <ArrowRight size={24} />
+              </div>
+           </Link>
            <LearningHub 
              currentStreak={streak}
              progressPercent={progressPercent || 10}
