@@ -40,29 +40,43 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { topic, language, platform, section } = await req.json();
+    const { topic, language, platform, section, campaignMode } = await req.json();
     
+    const context = campaignMode ? "FULL 7-DAY VIRAL CAMPAIGN (Monday-Sunday)" : `SINGLE CONTENT PACK for ${platform}`;
     const sectionContext = section ? `Target Section: ${section}.` : "Target: All BAC sections.";
-    const variationSeed = Math.floor(Math.random() * 1000000);
     
     const prompt = `${BAC_AI_PERSONA}
 
-    VARIETY DIRECTIVE (Seed: ${variationSeed}): 
-    - DO NOT use generic, overused textbook examples. 
-    - Create fresh, modern, and highly relatable scenarios for Tunisian students. 
-    - Use diverse sentence structures and high-impact vocabulary.
-    - If this topic is generated twice, ensure the content is 100% different.
+    VIRAL CAMPAIGN DIRECTIVE: 
+    - Construct a high-conversion series of posts/videos.
+    - Phase 1 (Education): Hook them with value.
+    - Phase 2 (Desire): Show them the "Bac Excellence" platform results.
+    - Phase 3 (Action): Scarcity and XP rewards.
 
-Create a COMPLETE viral content pack for: ${language} - "${topic}". ${sectionContext}
-
-PLATFORM: ${platform}
+Create a ${context} for: ${language} - "${topic}". ${sectionContext}
 
 Return ONLY a valid JSON object with these EXACT keys:
 
 {
-  "script": "<hook (1 line)\\n\\nvalue (2-3 lines)\\n\\nCTA (1 line) + emojis + hashtags>",
-  "visualTitle": "<viral hook, MAX 6 words, pattern interrupt style>",
-  "visualBody": "<EXACTLY 2 SHORT LINES in ${language}, 80 chars max — curiosity gap or value bomb>",
+  "campaignPlan": [
+    { "day": "Mon", "type": "Educational Hook", "visual": "...", "caption": "..." },
+    { "day": "Tue", "type": "The 'Bac Excellence' Advantage", "visual": "...", "caption": "..." },
+    { "day": "Wed", "type": "Peak Performance Quiz", "visual": "...", "caption": "..." },
+    { "day": "Thu", "type": "Common Mistakes / Recovery", "visual": "...", "caption": "..." },
+    { "day": "Fri", "type": "Live Study Deep-Dive", "visual": "...", "caption": "..." },
+    { "day": "Sat", "type": "Social Proof / Student Success", "visual": "...", "caption": "..." },
+    { "day": "Sun", "type": "The 20/20 Challenge Launch", "visual": "...", "caption": "..." }
+  ],
+  "tiktokScript": {
+    "hook": "0-3s hook with visual interrupt",
+    "body": [
+       { "time": "3-15s", "visual": "[Overlay: text]", "audio": "what to say" },
+       { "time": "15-45s", "visual": "[Screen share: Bac Excellence dashboard]", "audio": "..." }
+    ],
+    "cta": "Engagement hack for comments"
+  },
+  "viralTitle": "<MAX 6 words, high-impact hook>",
+  "visualBody": "<EXACTLY 2 LINES — curiosity gap focused>",
 
   "synonyms": [{ "word": "...", "synonym": "...", "usage": "short usage tip" }],
   "antonyms": [{ "word": "...", "antonym": "...", "contrast": "one-line contrast note" }],
@@ -77,9 +91,10 @@ Return ONLY a valid JSON object with these EXACT keys:
   "commonMistakes": [{ "mistake": "wrong usage", "correction": "correct usage", "rule": "why it's wrong" }],
   "grammarPatterns": [{ "pattern": "Subject + V + Object structure", "example": "...", "tip": "when to use it" }],
   "writingTips": ["concise actionable tip 1 for ${language} writing at the BAC level", "tip 2", "..."],
-
+  
   "growthCards": {
     "gradeFlip": { "before": "8/20", "after": "18/20", "benefit": "re-written in perfect ${language}" },
+    "challenge": { "title": "7-Day X Mastery", "reward": "Elite Badge", "rule": "tag 3 friends" },
     "quiz": { "question": "sophisticated ${language} question", "optionA": "...", "optionB": "...", "correct": "A" },
     "checklist": ["5 items specific to mastering ${topic}"],
     "motivation": { "quote": "powerful quote in ${language} or about learning", "author": "..." },
@@ -87,14 +102,7 @@ Return ONLY a valid JSON object with these EXACT keys:
     "didYouKnow": "surprising fact about ${topic} or ${language} usage",
     "thisOrThat": { "option1": "choice A", "option2": "choice B" },
     "fillBlank": { "sentence": "sentence with _____ blank", "options": ["word 1", "word 2", "word 3", "word 4"], "answer": "the correct one" },
-    "mythFact": { "myth": "common misconception about ${topic}", "fact": "the reality" },
-    "schedule": [
-      { "day": "Mon", "task": "..." },
-      { "day": "Tue", "task": "..." },
-      { "day": "Wed", "task": "..." },
-      { "day": "Thu", "task": "..." },
-      { "day": "Fri", "task": "..." }
-    ]
+    "mythFact": { "myth": "common misconception about ${topic}", "fact": "the reality" }
   },
 
   "captions": {
@@ -104,28 +112,15 @@ Return ONLY a valid JSON object with these EXACT keys:
   }
 }
 
-QUANTITY & QUALITY INSTRUCTIONS (ELITE & ADVANCED ONLY !!):
-- synonyms: 5 items (sophisticated with subtle nuance)
-- antonyms: 5 items (complex relational opposites)
-- vocabulary: 5 items (definitions + 1 short example per item)
-- phrases: 6 items (sophisticated structures for formal argumentation)
-- collocations: 6 items (academic pairings)
-- idioms: 5 items (metaphorical expressions)
-- connectors: 6 items (sophisticated transition markers)
-- wordFamily: 3 items (morphological breakdown)
-- paraphrases: 4 items (showing transformation to formal/academic register)
-- commonMistakes: 5 items (structural errors and register mismatches)
-- grammarPatterns: 4 items (complex syntax: inversion, cleft sentences, etc.)
-- writingTips: 5 tips (strategic advice on structure and hook-building)
-- growthCards: Every field MUST be contextually relevant to ${topic}.
-
-Quality over Quantity: Each example must demonstrate high-end mastery of ${language}. They should represent what a 20/20 BAC student would use. Keep it concise but elite.
+QUANTITY INSTRUCTIONS:
+- synonyms/antonyms/vocabulary/phrases/collocations: 5 items each.
+- Full 7-day campaign strategy included. 
 `;
 
     const response = await getReliableCompletion({
         messages: [{ role: "user", content: prompt }],
         response_format: { type: "json_object" },
-        max_tokens: 3800,
+        max_tokens: 4000,
         temperature: 0.8,
     });
 
@@ -138,11 +133,11 @@ Quality over Quantity: Each example must demonstrate high-end mastery of ${langu
       throw new Error("AI returned invalid JSON format.");
     }
 
-    // Sanitize specifically for React rendering safety
     const sanitized = {
-      script: typeof body.script === 'object' ? JSON.stringify(body.script, null, 2) : (body.script || ""),
-      visualTitle: typeof body.visualTitle === 'object' ? JSON.stringify(body.visualTitle) : (body.visualTitle || "Hook Title"),
-      visualBody: typeof body.visualBody === 'object' ? JSON.stringify(body.visualBody, null, 2) : (body.visualBody || ""),
+      campaignPlan: Array.isArray(body.campaignPlan) ? body.campaignPlan : [],
+      tiktokScript: typeof body.tiktokScript === 'object' ? body.tiktokScript : null,
+      visualTitle: body.viralTitle || body.visualTitle || "Hook Title",
+      visualBody: typeof body.visualBody === 'string' ? body.visualBody : (Array.isArray(body.visualBody) ? body.visualBody.join('\n') : ""),
       captions: typeof body.captions === 'object' ? body.captions : {},
       synonyms:       Array.isArray(body.synonyms)       ? body.synonyms       : [],
       antonyms:       Array.isArray(body.antonyms)       ? body.antonyms       : [],

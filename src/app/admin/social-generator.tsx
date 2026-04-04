@@ -309,6 +309,9 @@ export function SocialGenerator() {
   const [watermark, setWatermark] = useState("@bacexcellence");
 
   const [isExporting, setIsExporting] = useState(false);
+  const [campaignMode, setCampaignMode] = useState(true);
+  const [campaignPlan, setCampaignPlan] = useState<any[]>([]);
+  const [tiktokScript, setTiktokScript] = useState<any>(null);
 
   // Content state
   const [synonyms,        setSynonyms]        = useState<any[]>([]);
@@ -398,6 +401,8 @@ export function SocialGenerator() {
     e.preventDefault();
     if (!topic) return;
     setLoading(true);
+    setCampaignPlan([]);
+    setTiktokScript(null);
     [setSynonyms, setAntonyms, setVocabulary, setPhrases, setCollocations, setIdioms,
      setConnectors, setWordFamily, setParaphrases, setCommonMistakes, setGrammarPatterns, setWritingTips]
       .forEach(fn => fn([]));
@@ -408,11 +413,13 @@ export function SocialGenerator() {
       const res  = await fetch("/api/admin/generate-social", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, language, platform, section }),
+        body: JSON.stringify({ topic, language, platform, section, campaignMode }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
 
+      setCampaignPlan(data.campaignPlan || []);
+      setTiktokScript(data.tiktokScript || null);
       setScript(data.script || "");
       generateCaptions(topic);
       if (data.visualTitle) setCardTitle(data.visualTitle);
@@ -487,12 +494,18 @@ export function SocialGenerator() {
       {/* ─ Hero Banner ─ */}
       <div className="card row-between" style={{ padding: 40, border: "1px solid var(--primary)", background: "radial-gradient(circle at right, rgba(99,102,241,0.12), transparent)" }}>
         <div className="stack" style={{ maxWidth: 760 }}>
-          <span className="eyebrow" style={{ color: "var(--primary)" }}>Elite Media Forge</span>
-          <h2 className="section-title" style={{ fontSize: "2.4rem" }}>Social Studio & Mastery Hub.</h2>
-          <p className="muted">One click → Viral script + <strong>27+ branded shareable mastery cards</strong> (synonyms, collocations, idioms, connectors, paraphrases, grammar patterns & badges).</p>
+          <span className="eyebrow" style={{ color: "var(--primary)" }}>Media Forge 2.0</span>
+          <h2 className="section-title" style={{ fontSize: "2.4rem" }}>Viral Campaign Architect.</h2>
+          <p className="muted">Turn a topic into a **7-Day Study Mastery Campaign** that converts scrollers into students.</p>
         </div>
         <div className="stack" style={{ gap: 12, alignItems: "flex-end" }}>
-          <span className="pill success-pill">27-Card Mega Pack 💎</span>
+          <div className="row" style={{ gap: "12px" }}>
+             <label className="row" style={{ gap: "8px", cursor: "pointer", fontSize: "12px", fontWeight: 700 }}>
+                <input type="checkbox" checked={campaignMode} onChange={e => setCampaignMode(e.target.checked)} />
+                7-DAY CAMPAIGN MODE
+             </label>
+             <span className="pill success-pill">Viral Loop ACTIVE 🔄</span>
+          </div>
           <button 
             onClick={handleBatchExport}
             disabled={isExporting}
@@ -508,10 +521,69 @@ export function SocialGenerator() {
               boxShadow: "0 10px 20px rgba(255,255,255,0.1)"
             }}
           >
-            {isExporting ? "📦 Forging ZIP..." : "⚡ Download EVERYTHING (ZIP)"}
+            {isExporting ? "📦 Forging ZIP..." : "⚡ Download 27+ Page Pack"}
           </button>
         </div>
       </div>
+
+      {campaignPlan.length > 0 && (
+         <div className="card stack" style={{ padding: "32px", background: "rgba(10,15,25,0.8)", border: "1px solid var(--primary)" }}>
+            <h3 style={{ fontSize: "1.5rem", fontWeight: 900, marginBottom: "24px" }}>📅 7-DAY VIRAL SCHEDULE</h3>
+            <div className="grid grid-cols-7 gap-12">
+               {campaignPlan.map((day, i) => (
+                  <div key={i} className="card stack" style={{ padding: "16px", gap: "8px", background: "rgba(255,255,255,0.03)", fontSize: "11px" }}>
+                     <strong style={{ color: "var(--primary)", fontSize: "14px" }}>{day.day}</strong>
+                     <span className="muted" style={{ fontWeight: 800 }}>{day.type}</span>
+                     <p style={{ opacity: 0.8 }}>{day.visual}</p>
+                  </div>
+               ))}
+            </div>
+         </div>
+      )}
+
+      {tiktokScript && (
+         <div className="grid grid-cols-2 gap-32">
+            <div className="card stack" style={{ padding: "32px", border: "1px solid #ff0050", background: "rgba(255,0,80,0.02)" }}>
+               <div className="row-between" style={{ marginBottom: "20px" }}>
+                  <h3 style={{ fontWeight: 900 }}>🎥 TIKTOK/REELS SCRIPT</h3>
+                  <span className="pill" style={{ background: "#ff0050", color: "white", border: "none" }}>VIRAL HOOK</span>
+               </div>
+               <div className="stack" style={{ gap: "16px" }}>
+                  <div style={{ padding: "12px", background: "rgba(0,0,0,0.3)", borderRadius: "8px", borderLeft: "4px solid #ff0050" }}>
+                     <span className="muted" style={{ fontSize: "10px" }}>HOOK (0-3s)</span>
+                     <p style={{ fontWeight: 800 }}>{tiktokScript.hook}</p>
+                  </div>
+                  {tiktokScript.body.map((step: any, i: number) => (
+                     <div key={i} className="row" style={{ gap: "12px", alignItems: "flex-start" }}>
+                        <span className="muted" style={{ fontSize: "10px", minWidth: "40px" }}>{step.time}</span>
+                        <div className="stack" style={{ gap: "4px" }}>
+                           <span style={{ fontSize: "10px", color: "var(--primary)" }}>{step.visual}</span>
+                           <p>{step.audio}</p>
+                        </div>
+                     </div>
+                  ))}
+               </div>
+               <div className="stack" style={{ marginTop: "20px", padding: "12px", background: "rgba(255,255,255,0.05)", borderRadius: "8px" }}>
+                  <span className="muted" style={{ fontSize: "10px" }}>Engagement Hack</span>
+                  <p style={{ fontSize: "13px" }}>{tiktokScript.cta}</p>
+               </div>
+            </div>
+            
+            <div className="card stack" style={{ padding: "32px", border: "1px solid var(--accent)", background: "rgba(245,158,11,0.02)" }}>
+               <h3 style={{ fontWeight: 900, marginBottom: "20px" }}>📱 SOCIAL CAPTIONS</h3>
+               <div className="stack" style={{ gap: "20px" }}>
+                  {Object.entries(captions).map(([plat, text]: any) => (
+                     <div key={plat} className="stack" style={{ gap: "8px" }}>
+                        <span className="eyebrow" style={{ color: "var(--accent)" }}>{plat.toUpperCase()}</span>
+                        <div style={{ padding: "12px", background: "rgba(0,0,0,0.3)", borderRadius: "8px", fontSize: "12px", whiteSpace: "pre-wrap" }}>
+                           {text}
+                        </div>
+                     </div>
+                  ))}
+               </div>
+            </div>
+         </div>
+      )}
 
       {/* ─ Two-Column: Config + Designer ─ */}
       <div className="grid grid-cols-2" style={{ gap: 40, alignItems: "start" }}>
