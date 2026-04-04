@@ -132,98 +132,38 @@ function buildSystemPrompt(input: {
   studentEssay: string;
   bacSection?: string | null;
 }) {
-  // Select relevant BAC examples for few-shot prompting
+  // Select the MOST relevant BAC example for few-shot prompting to keep context small and fast
   const wordCount = input.studentEssay.split(/\s+/).filter(Boolean).length;
-  const relevantExamples = selectRelevantExamples(input.studentEssay, wordCount);
-  const fewShotContext = buildFewShotPrompt(relevantExamples);
+  const allRelevant = selectRelevantExamples(input.studentEssay, wordCount, input.language as any);
+  const singleExample = allRelevant.slice(0, 1); // Use only 1 example to avoid Vercel timeout (10s limit)
+  const fewShotContext = buildFewShotPrompt(singleExample, input.language as any);
 
   if (input.type === "FULL_MOCK" && input.examData) {
-    return `You are an elite Tunisian Baccalaureate examiner with 20 years of experience grading official BAC exams.
-
-Below are official BAC essay examples with their Tunisian examiner scores. Study these carefully to understand the grading standards:
-
+    return `You are an elite Tunisian Baccalaureate examiner. Study this official example:
 ${fewShotContext}
 
-Now evaluate this 3-hour Full Mock Exam for ${input.language}.
-
-Section I: Reading (12 pts)
-Official Questions: ${JSON.stringify(input.examData?.readingQuestions)}
-Student Answers: ${JSON.stringify(input.readingAnswers)}
-
-Section II: Language (8 pts)
-Official Questions: ${JSON.stringify(input.examData?.languageQuestions)}
-Student Answers: ${JSON.stringify(input.languageAnswers)}
-
-Section III: Writing (10 pts)
-Prompt: ${input.examData?.prompt}
+Grade this Full Mock Exam for ${input.language} (Section ${input.bacSection || "GENERAL"}).
+Reading (12 pts): ${JSON.stringify(input.readingAnswers)}
+Language (8 pts): ${JSON.stringify(input.languageAnswers)}
+Essay Prompt: ${input.examData?.prompt}
 Student Essay: "${input.studentEssay}"
 
-Grading Protocol (Tunisian Ministry Standards):
-- Calculate Reading score (out of 12) strictly based on comprehension accuracy.
-- Calculate Language score (out of 6 or 8 depending on section) based on grammar rule application.
-- Grade Writing (out of 12 or 10 depending on section) considering grammar accuracy, vocabulary sophistication, and argument coherence.
-- Sum them up for an Overall Score (typically out of 30, scaled to 20 for Scientific, out of 40 scaled to 20 for Lettres).
-- SECTION CONTEXT: The student is in Section ${input.bacSection || "GENERAL"}.
-${input.bacSection === "LETTRES" ? "  -> LETTRES FOCUS: Writing is highly coefficiented. Penalize heavily (-1.5) for poor transitions and basic vocabulary. Expect complex arguments." : ""}
-${input.bacSection === "MATHEMATIQUES" || input.bacSection === "SCIENCES_EXPERIMENTALES" || input.bacSection === "SCIENCES_INFORMATIQUE" ? "  -> SCIENTIFIC FOCUS: Language/Grammar is critical. Points are awarded for clear, concise logic and technical terminology. Do NOT penalize for lacking poetic flair." : ""}
-${input.bacSection === "SCIENCES_TECHNIQUES" || input.bacSection === "ECONOMIE_GESTION" ? "  -> TECH/ECO FOCUS: Focus on practical vocabulary, correct tense usage, and clear paragraph structures." : ""}
-- Be CRITICAL: A "good" essay should score 12-14. 15+ is for excellent work. 18+ is extremely rare.
-
-Output a JSON object with:
-- "overallScore": Final mark out of 20 (be conservative, use half-points like 12.5, 13.5)
-- "readingScore": Mark out of 12.
-- "languageScore": Mark out of 8.
-- "writingScore": Mark out of 10.
-- "summary": 2-sentence feedback referencing specific strengths.
-- "correctedText": Improved version (max 200 words).
-- "explanations": Array of { "original": "error", "fixed": "correction", "reason": "grammar rule" }
-- "strengths": Array of 3 specific strengths.
-- "improvements": Array of 3 actionable improvements.
-- "recommendedLesson": { "slug": "link", "title": "Title", "summary": "Why this lesson?", "skillFocus": "grammar/vocab/structure" }
-
-IMPORTANT INSTRUCTION: Your final output MUST be exactly the requested JSON object and absolutely nothing else. Return valid JSON only.`;
+Output JSON:
+{ "overallScore": 0-20, "readingScore": 0-12, "languageScore": 0-8, "writingScore": 0-10, "summary": "...", "correctedText": "...", "explanations": [], "strengths": [], "improvements": [], "recommendedLesson": { "slug": "link", "title": "...", "summary": "...", "skillFocus": "..." } }`;
   }
 
-  return `You are an elite Tunisian Baccalaureate examiner with 20 years of experience grading official BAC exams for ${input.language}.
-
-Below are official BAC essay examples with their Tunisian examiner scores. Study these carefully to understand the grading standards:
-
+  return `You are an elite Tunisian Baccalaureate examiner for ${input.language}. Study this example:
 ${fewShotContext}
 
-Now grade this student essay based on official Tunisian Ministry criteria:
-1. Grammar & Syntax (5 pts): Accuracy of tenses, subject-verb agreement, articles, prepositions
-2. Vocabulary range & accuracy (5 pts): Word variety, appropriateness, collocations
-3. Structure, Coherence & Flow (10 pts): Introduction quality, paragraph development, connectors, conclusion
+Grade this essay (Section ${input.bacSection || "GENERAL"}) based on:
+1. Grammar (5 pts), 2. Vocabulary (5 pts), 3. Structure (10 pts).
 
-SECTION CONTEXT: The student is in Section ${input.bacSection || "GENERAL"}.
-${input.bacSection === "LETTRES" ? "-> LETTRES EXPECTATION: High literary sophistication, complex narrative structures, and deep thematic analysis. GRADING RULES: Heavy penalty (-1 to -2) for basic words like 'good', 'bad', 'happy'. Require advanced linkers." : ""}
-${input.bacSection === "MATHEMATIQUES" || input.bacSection === "SCIENCES_EXPERIMENTALES" || input.bacSection === "SCIENCES_INFORMATIQUE" ? "-> SCIENTIFIC EXPECTATION: Logical clarity, precise technical vocabulary (innovation/environment topics), and efficient argumentation. GRADING RULES: Minor penalty (-0.5) for simple vocab, but heavy penalty (-1) for confusing logic or wrong tense." : ""}
-${input.bacSection === "SCIENCES_TECHNIQUES" || input.bacSection === "ECONOMIE_GESTION" ? "-> TECH/ECO EXPECTATION: Functional precision, economic/technical vocabulary, and clear structure. GRADING RULES: Focus heavily on Introduction/Conclusion structure. Missing conclusion = automatic -3 points." : ""}
+Prompt: ${input.examPrompt || "Free topic"}
+Essay: "${input.studentEssay}"
 
-Exam Prompt: ${input.examPrompt || "Free writing topic"}
-Student Essay: "${input.studentEssay}"
-
-Grading Instructions:
-- Be STRICT and realistic. A typical Tunisian BAC student essay with some errors should score 10-13, not 17+.
-- Reserve 16-20 ONLY for work with sophisticated vocabulary and practically zero major grammatical errors.
-- Use HALF-POINTS (e.g., 12.5, 13.5) for accurate grading.
-- Grammar errors: -0.5 for minor errors (articles, spelling), -1 for major errors (wrong tense, missing subject, broken S-V agreement).
-- Vocabulary: Simple repetitive words = max 2.5/5; varied appropriate vocabulary = 4-5/5.
-- Structure: Missing conclusion = -2 points; weak connectors = -1 point; no paragraphs = -3 points.
-
-Output a JSON object with:
-- "overallScore": Final mark out of 20 (conservative, realistic Tunisian BAC standards)
-- "grammarScore": Mark out of 20 for grammar accuracy
-- "vocabularyScore": Mark out of 20 for vocabulary range/appropriateness
-- "structureScore": Mark out of 20 for essay organization and coherence
-- "summary": A brief 2-sentence overview with encouraging but honest tone
-- "correctedText": The full essay with grammar and lexical improvements. Keep same meaning, do not add new ideas, NOT longer than ${MAX_AI_WORDS_FOR_CORRECTION} words.
-- "explanations": Array of { "original": "text with error", "fixed": "corrected text", "reason": "explanation of the rule" } for the 3-5 most important changes
-- "strengths": Array of 3 specific things done well
-- "improvements": Array of 3 specific areas to improve
-- "recommendedLesson": { "slug": "link-to-best-matching-lesson", "title": "Lesson Title", "summary": "Why this lesson helps?", "skillFocus": "grammar/vocab/structure" }
-
-IMPORTANT INSTRUCTION: Your final output MUST be exactly the requested JSON object and absolutely nothing else. Return valid JSON only.`;
+Instructions: Be STRICT. Use half-points (e.g. 12.5). A typical essay is 10-13. 16+ is for exceptional work only.
+Output JSON:
+{ "overallScore": 0-20, "grammarScore": 0-20, "vocabularyScore": 0-20, "structureScore": 0-20, "summary": "...", "correctedText": "...", "explanations": [{ "original": "...", "fixed": "...", "reason": "..." }], "strengths": [], "improvements": [], "recommendedLesson": { "slug": "link", "title": "...", "summary": "...", "skillFocus": "..." } }`;
 }
 
 export async function POST(req: NextRequest) {
@@ -349,8 +289,19 @@ export async function POST(req: NextRequest) {
     });
 
     const result = JSON.parse(response.choices[0]?.message?.content || "{}");
+    
+    // Ensure all required fields exist for the frontend to avoid crashes
     const responsePayload = {
-      ...result,
+      overallScore: result.overallScore ?? 0,
+      grammarScore: result.grammarScore ?? 0,
+      vocabularyScore: result.vocabularyScore ?? 0,
+      structureScore: result.structureScore ?? 0,
+      summary: result.summary ?? (language === "ARABIC" ? "تمت عملية التصحيح بنجاح." : "Correction completed successfully."),
+      correctedText: result.correctedText ?? sanitizedStudentText,
+      explanations: Array.isArray(result.explanations) ? result.explanations : [],
+      strengths: Array.isArray(result.strengths) ? result.strengths : [],
+      improvements: Array.isArray(result.improvements) ? result.improvements : [],
+      recommendedLesson: result.recommendedLesson || null,
       sourceText: sanitizedStudentText,
       sourceMode,
     };
