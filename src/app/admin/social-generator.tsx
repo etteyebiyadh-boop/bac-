@@ -323,12 +323,14 @@ export function SocialGenerator() {
   const [commonMistakes,  setCommonMistakes]  = useState<any[]>([]);
   const [grammarPatterns, setGrammarPatterns] = useState<any[]>([]);
   const [writingTips,     setWritingTips]     = useState<string[]>([]);
+  const [growthCards,     setGrowthCards]     = useState<any>(null);
 
   // Computed property to check if any content exists
   const hasContent = synonyms.length > 0 || antonyms.length > 0 || vocabulary.length > 0 || 
                      phrases.length > 0 || collocations.length > 0 || idioms.length > 0 ||
                      connectors.length > 0 || wordFamily.length > 0 || paraphrases.length > 0 ||
-                     commonMistakes.length > 0 || grammarPatterns.length > 0 || writingTips.length > 0;
+                     commonMistakes.length > 0 || grammarPatterns.length > 0 || writingTips.length > 0 ||
+                     !!growthCards;
 
   // Card refs
   const hookRef        = useRef<HTMLDivElement>(null);
@@ -397,8 +399,8 @@ export function SocialGenerator() {
     if (!topic) return;
     setLoading(true);
     [setSynonyms, setAntonyms, setVocabulary, setPhrases, setCollocations, setIdioms,
-     setConnectors, setWordFamily, setParaphrases, setCommonMistakes, setGrammarPatterns, setWritingTips]
-      .forEach(fn => fn([] as any));
+     setConnectors, setWordFamily, setParaphrases, setCommonMistakes, setGrammarPatterns, setWritingTips, setGrowthCards]
+      .forEach(fn => fn(null as any));
     setScript("");
 
     try {
@@ -429,6 +431,7 @@ export function SocialGenerator() {
       if (data.commonMistakes)  setCommonMistakes(data.commonMistakes);
       if (data.grammarPatterns) setGrammarPatterns(data.grammarPatterns);
       if (data.writingTips)     setWritingTips(data.writingTips);
+      if (data.growthCards)    setGrowthCards(data.growthCards);
     } catch (err: any) {
       alert(err.message);
     } finally {
@@ -452,22 +455,25 @@ export function SocialGenerator() {
       ...(commonMistakes.length ? [{ name: "10-mistakes", ref: mistakeRef }] : []),
       ...(grammarPatterns.length ? [{ name: "11-grammar", ref: grammarRef }] : []),
       ...(writingTips.length ? [{ name: "12-tips", ref: tipsRef }] : []),
-      { name: "h11-myth-fact", ref: mythFactRef },
-      { name: "h12-study-schedule", ref: studyScheduleRef },
-      { name: "g01-grade-flip", ref: gradeFlipRef },
-      { name: "g02-referral-milestone", ref: referralRef },
-      { name: "g03-study-stats", ref: statsRef },
-      { name: "b01-streak-badge", ref: streakBadgeRef },
-      { name: "b02-master-badge", ref: masterBadgeRef },
-      { name: "b03-top10-badge", ref: top10BadgeRef },
-      { name: "q01-quiz-card", ref: quizPollRef },
-      { name: "q02-checklist", ref: checklistRef },
-      { name: "q03-motivation", ref: motivationRef },
-      { name: "q04-essay-compare", ref: essayCompareRef },
-      { name: "q05-did-you-know", ref: didYouKnowRef },
-      { name: "q06-this-or-that", ref: thisOrThatRef },
-      { name: "q07-fill-blank", ref: fillBlankRef },
-      { name: "q08-myth-fact", ref: mythFactRef },
+      
+      // Growth & Viral Cards
+      { name: "v01-grade-flip", ref: gradeFlipRef },
+      { name: "v02-referral-hero", ref: referralRef },
+      { name: "v03-study-stats", ref: statsRef },
+      { name: "v04-streak-badge", ref: streakBadgeRef },
+      { name: "v05-master-badge", ref: masterBadgeRef },
+      { name: "v06-top10-badge", ref: top10BadgeRef },
+      
+      // Educational Interactive Cards
+      { name: "e01-quiz-poll", ref: quizPollRef },
+      { name: "e02-checklist", ref: checklistRef },
+      { name: "e03-motivation", ref: motivationRef },
+      { name: "e04-essay-transformation", ref: essayCompareRef },
+      { name: "e05-did-you-know", ref: didYouKnowRef },
+      { name: "e06-this-or-that", ref: thisOrThatRef },
+      { name: "e07-fill-blank", ref: fillBlankRef },
+      { name: "e08-myth-fact", ref: mythFactRef },
+      { name: "e09-study-schedule", ref: studyScheduleRef },
     ];
     
     await exportAllCards(cardRefs, topic || "mastery-pack");
@@ -761,17 +767,17 @@ export function SocialGenerator() {
                   <div style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", marginBottom: 12 }}>MY BAC TRANSFORMATION</div>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 20, marginBottom: 16 }}>
                     <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 48, fontWeight: 900, color: "#fb7185" }}>8/20</div>
+                      <div style={{ fontSize: 48, fontWeight: 900, color: "#fb7185" }}>{growthCards?.gradeFlip?.before || "8/20"}</div>
                       <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>Before</div>
                     </div>
                     <div style={{ fontSize: 32, color: ac }}>→</div>
                     <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 48, fontWeight: 900, color: ac }}>16/20</div>
+                      <div style={{ fontSize: 48, fontWeight: 900, color: ac }}>{growthCards?.gradeFlip?.after || "17/20"}</div>
                       <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)" }}>After Bac Excellence</div>
                     </div>
                   </div>
                   <div style={{ fontSize: 13, color: "#fff", background: "rgba(34,197,94,0.1)", padding: "10px 16px", borderRadius: 8, border: "1px solid rgba(34,197,94,0.3)" }}>
-                    💡 AI correction helped me jump 8 points!
+                    💡 {growthCards?.gradeFlip?.benefit || `AI correction helped me jump ${parseInt(growthCards?.gradeFlip?.after) - parseInt(growthCards?.gradeFlip?.before) || 9} points!`}
                   </div>
                 </div>
               </CardShell>
@@ -965,7 +971,7 @@ export function SocialGenerator() {
               <CardShell refProp={quizPollRef} theme="cyber" watermark={watermark} label="QUIZ TIME" accent={ac}>
                 <div style={{ textAlign: "center", padding: "12px 0" }}>
                   <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10, letterSpacing: 1 }}>WHICH IS CORRECT?</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 16 }}>&quot;___ have I seen such talent&quot;</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 16 }}>&quot;{growthCards?.quiz?.question || "___ have I seen such talent"}&quot;</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 14 }}>
                     <div style={{ 
                       padding: "12px 16px", 
@@ -980,7 +986,7 @@ export function SocialGenerator() {
                       gap: 8
                     }}>
                       <span style={{ width: 20, height: 20, borderRadius: "50%", background: ac, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "#000" }}>A</span>
-                      Never
+                      {growthCards?.quiz?.optionA || "Never"}
                     </div>
                     <div style={{ 
                       padding: "12px 16px", 
@@ -994,7 +1000,7 @@ export function SocialGenerator() {
                       gap: 8
                     }}>
                       <span style={{ width: 20, height: 20, borderRadius: "50%", background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12 }}>B</span>
-                      Not
+                      {growthCards?.quiz?.optionB || "Not"}
                     </div>
                   </div>
                   <div style={{ fontSize: 10, color: ac, background: `${ac}15`, padding: "6px 12px", borderRadius: 6, display: "inline-block" }}>
@@ -1013,41 +1019,41 @@ export function SocialGenerator() {
             <div style={{ display: "flex", justifyContent: "center" }}>
               <CardShell refProp={checklistRef} theme="vocab" watermark={watermark} label="CHECKLIST" accent={ac}>
                 <div style={{ padding: "12px 0" }}>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 12, textAlign: "center", letterSpacing: 1 }}>EXAM DAY ESSENTIALS</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 12, textAlign: "center", letterSpacing: 1 }}>{topic?.toUpperCase() || "EXAM DAY"} ESSENTIALS</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                    {[
-                      { item: "ID Card", checked: true },
-                      { item: "Exam Entry Card", checked: true },
-                      { item: "Blue Pen", checked: true },
-                      { item: "Water Bottle", checked: false },
-                      { item: "Watch", checked: false },
-                    ].map((chk, i) => (
+                    {(growthCards?.checklist || [
+                      "Elite Vocabulary",
+                      "Perfect Connectors",
+                      "Formal Register",
+                      "Complex Structures",
+                      "Zero Proofreading Errors",
+                    ]).map((chk: string, i: number) => (
                       <div key={i} style={{ 
                         display: "flex", 
                         alignItems: "center", 
                         gap: 10,
                         padding: "8px 12px",
-                        background: chk.checked ? `${ac}15` : "rgba(255,255,255,0.03)",
-                        border: `1.5px solid ${chk.checked ? ac : "rgba(255,255,255,0.1)"}`,
+                        background: i < 3 ? `${ac}15` : "rgba(255,255,255,0.03)",
+                        border: `1.5px solid ${i < 3 ? ac : "rgba(255,255,255,0.1)"}`,
                         borderRadius: 8
                       }}>
                         <div style={{ 
                           width: 18, height: 18, 
                           borderRadius: 4, 
-                          background: chk.checked ? ac : "transparent",
-                          border: `2px solid ${chk.checked ? ac : "rgba(255,255,255,0.3)"}`,
+                          background: i < 3 ? ac : "transparent",
+                          border: `2px solid ${i < 3 ? ac : "rgba(255,255,255,0.3)"}`,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center"
                         }}>
-                          {chk.checked && <span style={{ fontSize: 12, color: "#000" }}>✓</span>}
+                          {i < 3 && <span style={{ fontSize: 12, color: "#000" }}>✓</span>}
                         </div>
                         <span style={{ 
                           fontSize: 12, 
-                          color: chk.checked ? "#fff" : "rgba(255,255,255,0.6)",
-                          fontWeight: chk.checked ? 700 : 500,
-                          textDecoration: chk.checked ? "line-through" : "none"
-                        }}>{chk.item}</span>
+                          color: i < 3 ? "#fff" : "rgba(255,255,255,0.6)",
+                          fontWeight: i < 3 ? 700 : 500,
+                          textDecoration: i < 3 ? "line-through" : "none"
+                        }}>{chk}</span>
                       </div>
                     ))}
                   </div>
@@ -1073,7 +1079,7 @@ export function SocialGenerator() {
                     marginBottom: 16,
                     fontStyle: "italic"
                   }}>
-                    &quot;Success is the sum of small efforts, repeated day in and day out&quot;
+                    &quot;{growthCards?.motivation?.quote || "Success is the sum of small efforts, repeated day in and day out"}&quot;
                   </div>
                   <div style={{ 
                     fontSize: 11, 
@@ -1081,7 +1087,7 @@ export function SocialGenerator() {
                     fontWeight: 600,
                     letterSpacing: 2
                   }}>
-                    — ROBERT COLLIER
+                    — {growthCards?.motivation?.author || "ROBERT COLLIER"}
                   </div>
                   <div style={{ 
                     marginTop: 16,
@@ -1117,8 +1123,8 @@ export function SocialGenerator() {
                       borderRadius: 8,
                       borderLeft: "3px solid #fb7185"
                     }}>
-                      <div style={{ fontSize: 9, color: "#fb7185", marginBottom: 3, fontWeight: 700 }}>BEFORE (12/20)</div>
-                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>&quot;The problem is very big and affects many people...&quot;</div>
+                      <div style={{ fontSize: 9, color: "#fb7185", marginBottom: 3, fontWeight: 700 }}>BEFORE</div>
+                      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", lineHeight: 1.4 }}>&quot;{growthCards?.essayTransformation?.before || "The problem is very big and affects many people..."}&quot;</div>
                     </div>
                     <div style={{ 
                       padding: "10px 12px", 
@@ -1127,8 +1133,8 @@ export function SocialGenerator() {
                       borderRadius: 8,
                       borderLeft: `3px solid ${ac}`
                     }}>
-                      <div style={{ fontSize: 9, color: ac, marginBottom: 3, fontWeight: 700 }}>AFTER (18/20)</div>
-                      <div style={{ fontSize: 11, color: "#fff", lineHeight: 1.4, fontWeight: 500 }}>&quot;This pressing issue has profound ramifications for society at large...&quot;</div>
+                      <div style={{ fontSize: 9, color: ac, marginBottom: 3, fontWeight: 700 }}>AFTER</div>
+                      <div style={{ fontSize: 11, color: "#fff", lineHeight: 1.4, fontWeight: 500 }}>&quot;{growthCards?.essayTransformation?.after || "This pressing issue has profound ramifications for society at large..."}&quot;</div>
                     </div>
                   </div>
                   <div style={{ 
@@ -1141,7 +1147,7 @@ export function SocialGenerator() {
                     borderRadius: 6,
                     border: `1px solid ${ac}40`
                   }}>
-                    🚀 +6 points with better vocabulary
+                    🚀 {growthCards?.essayTransformation?.result || "+6 points with better vocabulary"}
                   </div>
                 </div>
               </CardShell>
@@ -1159,7 +1165,7 @@ export function SocialGenerator() {
                   <div style={{ fontSize: 48, marginBottom: 10 }}>🧠</div>
                   <div style={{ fontSize: 11, color: ac, marginBottom: 8, letterSpacing: 2, fontWeight: 800 }}>DID YOU KNOW?</div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: "#fff", lineHeight: 1.5, marginBottom: 12 }}>
-                    Students who use &quot;Moreover&quot; and &quot;Furthermore&quot; in their essays score 15% higher on average
+                    {growthCards?.didYouKnow || "Students who use \"Moreover\" and \"Furthermore\" in their essays score 15% higher on average"}
                   </div>
                   <div style={{ 
                     padding: "8px 16px",
@@ -1196,9 +1202,8 @@ export function SocialGenerator() {
                       borderRadius: 12,
                       textAlign: "center"
                     }}>
-                      <div style={{ fontSize: 24, marginBottom: 6 }}>📚</div>
-                      <div style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>Study Solo</div>
-                      <div style={{ fontSize: 9, color: ac, marginTop: 3 }}>Focus mode</div>
+                      <div style={{ fontSize: 24, marginBottom: 6 }}>🔴</div>
+                      <div style={{ fontSize: 13, color: "#fff", fontWeight: 700 }}>{growthCards?.thisOrThat?.option1 || "Study Solo"}</div>
                     </div>
                     <div style={{ 
                       flex: 1,
@@ -1208,13 +1213,12 @@ export function SocialGenerator() {
                       borderRadius: 12,
                       textAlign: "center"
                     }}>
-                      <div style={{ fontSize: 24, marginBottom: 6 }}>👥</div>
-                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 700 }}>Study Group</div>
-                      <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", marginTop: 3 }}>Team power</div>
+                      <div style={{ fontSize: 24, marginBottom: 6 }}>🔵</div>
+                      <div style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 700 }}>{growthCards?.thisOrThat?.option2 || "Study Group"}</div>
                     </div>
                   </div>
                   <div style={{ fontSize: 10, color: ac, background: `${ac}15`, padding: "6px 12px", borderRadius: 6, display: "inline-block" }}>
-                    💬 Comment: Solo or Group?
+                    💬 Comment: Left or Right?
                   </div>
                 </div>
               </CardShell>
@@ -1231,10 +1235,10 @@ export function SocialGenerator() {
                 <div style={{ textAlign: "center", padding: "12px 0" }}>
                   <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10, letterSpacing: 1 }}>COMPLETE THE SENTENCE</div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", lineHeight: 1.6, marginBottom: 14 }}>
-                    &quot;The government should <span style={{ color: ac, fontWeight: 800, textDecoration: "underline" }}>__________</span> stricter laws to protect the environment.&quot;
+                    &quot;{growthCards?.fillBlank?.sentence || "The government should __________ stricter laws to protect the environment."}&quot;
                   </div>
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 12 }}>
-                    {["implement", "enforce", "establish", "introduce"].map((word, i) => (
+                    {(growthCards?.fillBlank?.options || ["implement", "enforce", "establish", "introduce"]).map((word: string, i: number) => (
                       <div key={i} style={{ 
                         padding: "6px 12px", 
                         background: `linear-gradient(135deg, ${ac}25 0%, ${ac}08 100%)`,
@@ -1275,7 +1279,7 @@ export function SocialGenerator() {
                         <span style={{ fontSize: 14 }}>❌</span>
                         <span style={{ fontSize: 10, color: "#fb7185", fontWeight: 800 }}>MYTH</span>
                       </div>
-                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>&quot;Longer essays always get higher scores&quot;</div>
+                      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.7)" }}>&quot;{growthCards?.mythFact?.myth || "Longer essays always get higher scores"}&quot;</div>
                     </div>
                     <div style={{ 
                       padding: "12px", 
@@ -1288,7 +1292,7 @@ export function SocialGenerator() {
                         <span style={{ fontSize: 14 }}>✅</span>
                         <span style={{ fontSize: 10, color: ac, fontWeight: 800 }}>FACT</span>
                       </div>
-                      <div style={{ fontSize: 12, color: "#fff" }}>&quot;Quality and structure matter more than word count&quot;</div>
+                      <div style={{ fontSize: 12, color: "#fff" }}>&quot;{growthCards?.mythFact?.fact || "Quality and structure matter more than word count"}&quot;</div>
                     </div>
                   </div>
                 </div>
@@ -1304,42 +1308,42 @@ export function SocialGenerator() {
             <div style={{ display: "flex", justifyContent: "center" }}>
               <CardShell refProp={studyScheduleRef} theme="grammar" watermark={watermark} label="WEEKLY PLAN" accent={ac}>
                 <div style={{ padding: "8px 0" }}>
-                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10, textAlign: "center" }}>MY BAC STUDY PLAN</div>
+                  <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", marginBottom: 10, textAlign: "center" }}>MY {topic?.toUpperCase() || "BAC"} STUDY PLAN</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    {[
-                      { day: "Mon", task: "Grammar connectors", done: true },
-                      { day: "Tue", task: "Vocabulary list", done: true },
-                      { day: "Wed", task: "Essay writing", done: false },
-                      { day: "Thu", task: "Practice exam", done: false },
-                      { day: "Fri", task: "Review mistakes", done: false },
-                    ].map((item, i) => (
+                    {(growthCards?.schedule || [
+                      { day: "Mon", task: "Grammar & Connectors", done: true },
+                      { day: "Tue", task: "Vocabulary mastery", done: true },
+                      { day: "Wed", task: "Essay writing practice", done: false },
+                      { day: "Thu", task: "Past exam papers", done: false },
+                      { day: "Fri", task: "Final review & Quiz", done: false },
+                    ]).map((item: any, i: number) => (
                       <div key={i} style={{ 
                         display: "flex", 
                         alignItems: "center", 
                         gap: 10,
                         padding: "6px 10px",
-                        background: item.done ? `${ac}12` : "rgba(255,255,255,0.03)",
-                        border: `1px solid ${item.done ? ac : "rgba(255,255,255,0.1)"}`,
+                        background: item.done || i < 2 ? `${ac}12` : "rgba(255,255,255,0.03)",
+                        border: `1px solid ${item.done || i < 2 ? ac : "rgba(255,255,255,0.1)"}`,
                         borderRadius: 6
                       }}>
                         <div style={{ 
                           width: 28, height: 28, 
                           borderRadius: "50%", 
-                          background: item.done ? ac : "rgba(255,255,255,0.1)",
+                          background: item.done || i < 2 ? ac : "rgba(255,255,255,0.1)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                           fontSize: 10,
                           fontWeight: 800,
-                          color: item.done ? "#fff" : "rgba(255,255,255,0.5)"
+                          color: item.done || i < 2 ? "#fff" : "rgba(255,255,255,0.5)"
                         }}>{item.day}</div>
                         <span style={{ 
                           fontSize: 11, 
-                          color: item.done ? "#fff" : "rgba(255,255,255,0.6)",
-                          fontWeight: item.done ? 600 : 400,
+                          color: item.done || i < 2 ? "#fff" : "rgba(255,255,255,0.6)",
+                          fontWeight: item.done || i < 2 ? 600 : 400,
                           flex: 1
                         }}>{item.task}</span>
-                        {item.done && <span style={{ fontSize: 12 }}>✓</span>}
+                        {(item.done || i < 2) && <span style={{ fontSize: 12 }}>✓</span>}
                       </div>
                     ))}
                   </div>

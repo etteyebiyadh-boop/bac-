@@ -78,6 +78,25 @@ Return ONLY a valid JSON object with these EXACT keys:
   "grammarPatterns": [{ "pattern": "Subject + V + Object structure", "example": "...", "tip": "when to use it" }],
   "writingTips": ["concise actionable tip 1 for ${language} writing at the BAC level", "tip 2", "..."],
 
+  "growthCards": {
+    "gradeFlip": { "before": "8/20", "after": "18/20", "benefit": "re-written in perfect ${language}" },
+    "quiz": { "question": "sophisticated ${language} question", "optionA": "...", "optionB": "...", "correct": "A" },
+    "checklist": ["5 items specific to mastering ${topic}"],
+    "motivation": { "quote": "powerful quote in ${language} or about learning", "author": "..." },
+    "essayTransformation": { "before": "basic/simple version", "after": "elite/advanced version", "result": "why it is better" },
+    "didYouKnow": "surprising fact about ${topic} or ${language} usage",
+    "thisOrThat": { "option1": "choice A", "option2": "choice B" },
+    "fillBlank": { "sentence": "sentence with _____ blank", "options": ["word 1", "word 2", "word 3", "word 4"], "answer": "the correct one" },
+    "mythFact": { "myth": "common misconception about ${topic}", "fact": "the reality" },
+    "schedule": [
+      { "day": "Mon", "task": "..." },
+      { "day": "Tue", "task": "..." },
+      { "day": "Wed", "task": "..." },
+      { "day": "Thu", "task": "..." },
+      { "day": "Fri", "task": "..." }
+    ]
+  },
+
   "captions": {
     "instagram": "<optimized for Instagram feed — visual storytelling, carousel-ready>",
     "tiktok": "<optimized for TikTok — fast hook, trend potential, sound-friendly>",
@@ -98,6 +117,7 @@ QUANTITY & QUALITY INSTRUCTIONS (MAKE IT RICH, ELITE & ADVANCED !!):
 - commonMistakes: 8 items (deep-dive into 'False Friends', structural errors, and register mismatches)
 - grammarPatterns: 6 items (complex syntax: inversion, cleft sentences, advanced modals, subjunctive)
 - writingTips: 10 tips (strategic advice on structure, hook-building, conclusion-crafting, and vocabulary variety)
+- growthCards: Ensure every field is contextually relevant to ${topic} and demonstrates ELITE ${language} mastery.
 
 All examples MUST be detailed, context-rich, and clearly demonstrate high-end mastery of ${language}. They should be ready to be copied into a 20/20 BAC exam paper. Elite quality only. Use complex sentence structures in examples to show what a top-tier student would write.
 `;
@@ -136,6 +156,7 @@ All examples MUST be detailed, context-rich, and clearly demonstrate high-end ma
       commonMistakes: Array.isArray(body.commonMistakes) ? body.commonMistakes : [],
       grammarPatterns:Array.isArray(body.grammarPatterns)? body.grammarPatterns: [],
       writingTips:    Array.isArray(body.writingTips)    ? body.writingTips    : [],
+      growthCards:    typeof body.growthCards === 'object' ? body.growthCards : {},
     };
 
     return NextResponse.json({ ok: true, ...sanitized });
