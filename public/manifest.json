@@ -1,0 +1,21 @@
+{
+  "name": "Bac Excellence 2026",
+  "short_name": "Bac Excellence",
+  "description": "The Ultimate AI-Powered Tunisian Bac Prep Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000205",
+  "theme_color": "#6366f1",
+  "icons": [
+    {
+      "src": "/student.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/student.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

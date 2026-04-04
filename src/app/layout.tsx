@@ -16,7 +16,8 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: `${APP_NAME} | All-in-one Tunisian Bac Prep`,
   description:
-    "Master French, English, Arabic, and all Option Languages for the Tunisian Baccalaureate with AI-powered instant corrections and targeted practice."
+    "Master French, English, Arabic, and all Option Languages for the Tunisian Baccalaureate with AI-powered instant corrections and targeted practice.",
+  manifest: "/manifest.json"
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
@@ -28,6 +29,16 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang={langCookie} dir={langCookie === "ar" ? "rtl" : "ltr"}>
       <body className="bg-[#000205] text-white antialiased">
+        <script dangerouslySetInnerHTML={{ __html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/sw.js').then(
+                function(registration) { console.log('SW Registered'); },
+                function(err) { console.log('SW registration failed: ', err); }
+              );
+            });
+          }
+        ` }} />
         {/* Legacy magic background for compatibility */}
         <div className="magic-background">
           <div className="glow-orb orb-indigo" />

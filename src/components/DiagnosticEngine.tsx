@@ -49,29 +49,104 @@ const DIAGNOSTIC_QUESTIONS = [
     options: ["catalyst", "hindrance", "obstacle", "stagnation"],
     correct: 0,
     points: 2
+  },
+  {
+    id: 6,
+    type: "grammar",
+    question: "Conditionals: 'If they _______ more attention to the instructions, they wouldn't have failed.'",
+    options: ["paid", "had paid", "would pay", "pay"],
+    correct: 1,
+    points: 2
+  },
+  {
+    id: 7,
+    type: "grammar",
+    question: "Passive Voice: 'The results of the Baccalaureate _______ tomorrow morning.'",
+    options: ["will announce", "will be announced", "are announcing", "have announced"],
+    correct: 1,
+    points: 2
+  },
+  {
+    id: 8,
+    type: "vocabulary",
+    question: "Many students strive to find a balance between their studies and their _______ activities.",
+    options: ["extracurricular", "mandatory", "compulsory", "tedious"],
+    correct: 0,
+    points: 2
+  },
+  {
+    id: 9,
+    type: "grammar",
+    question: "Modal Perfects: 'She is not here. She _______ forgotten about the meeting.'",
+    options: ["must have", "should have", "could", "must"],
+    correct: 0,
+    points: 2
+  },
+  {
+    id: 10,
+    type: "reading",
+    question: "Inference: 'The stadium was silent as the athlete prepared for the final attempt.' What is the atmosphere?",
+    options: ["Festive", "Tense", "Bored", "Angry"],
+    correct: 1,
+    points: 2
   }
 ];
 
 export function DiagnosticEngine() {
-  const [step, setStep] = useState<"intro" | "test" | "result">("intro");
+  const [step, setStep] = useState<"intro" | "test" | "saving" | "result">("intro");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const [score, setScore] = useState(0);
 
   const startTest = () => setStep("test");
 
+  const submitResults = async (finalScore: number, finalAnswers: number[]) => {
+    setStep("saving");
+    try {
+      // Calculate split scores
+      const grammarQuestions = DIAGNOSTIC_QUESTIONS.filter(q => q.type === "grammar");
+      const vocabQuestions = DIAGNOSTIC_QUESTIONS.filter(q => q.type === "vocabulary");
+      const readingQuestions = DIAGNOSTIC_QUESTIONS.filter(q => q.type === "reading");
+
+      const getPoints = (type: string) => {
+        return DIAGNOSTIC_QUESTIONS.reduce((acc, q, idx) => {
+          if (q.type === type && finalAnswers[idx] === q.correct) return acc + q.points;
+          return acc;
+        }, 0);
+      };
+
+      await fetch("/api/diagnostic", {
+        method: "POST",
+        body: JSON.stringify({
+          score: finalScore,
+          maxScore: DIAGNOSTIC_QUESTIONS.length * 2,
+          grammarScore: getPoints("grammar"),
+          vocabularyScore: getPoints("vocabulary"),
+          readingScore: getPoints("reading"),
+          answers: finalAnswers
+        })
+      });
+    } catch (e) {
+      console.error("Failed to save results", e);
+    } finally {
+      setStep("result");
+    }
+  };
+
   const handleAnswer = (idx: number) => {
     const updatedAnswers = [...answers, idx];
     setAnswers(updatedAnswers);
 
+    let newScore = score;
     if (idx === DIAGNOSTIC_QUESTIONS[currentIdx].correct) {
-      setScore(prev => prev + DIAGNOSTIC_QUESTIONS[currentIdx].points);
+      newScore = score + DIAGNOSTIC_QUESTIONS[currentIdx].points;
+      setScore(newScore);
     }
 
     if (currentIdx < DIAGNOSTIC_QUESTIONS.length - 1) {
       setCurrentIdx(prev => prev + 1);
     } else {
-      setStep("result");
+      submitResults(newScore, updatedAnswers);
     }
   };
 
@@ -103,6 +178,19 @@ export function DiagnosticEngine() {
            <span className="row" style={{ gap: "8px" }}><Languages size={18} /> Multi-Language</span>
            <span className="row" style={{ gap: "8px" }}><PenTool size={18} /> Section Targeted</span>
         </div>
+      </div>
+    );
+  }
+
+  if (step === "saving") {
+    return (
+      <div className="stack" style={{ gap: "24px", alignItems: "center", justifyContent: "center", margin: "150px auto", textAlign: "center" }}>
+        <div className="loader" style={{ width: "48px", height: "48px", border: "4px solid var(--primary)", borderTopColor: "transparent", borderRadius: "50%", animation: "spin 1s linear infinite" }} />
+        <h2 style={{ fontSize: "1.8rem", fontWeight: 800 }}>Analyzing results...</h2>
+        <p className="muted">Our AI is generating your 2026 success roadmap.</p>
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes spin { to { transform: rotate(360deg); } }
+        `}} />
       </div>
     );
   }

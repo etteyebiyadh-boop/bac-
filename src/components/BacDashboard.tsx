@@ -1,3 +1,4 @@
+import { PWAInstallButton } from "@/components/PWAInstallButton";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { LearningHub } from "@/components/LearningHub";
@@ -8,7 +9,6 @@ import { getStudentStats, generateDailyMissions } from "@/lib/gamification";
 import { Language } from "@prisma/client";
 import { Brain, ArrowRight } from "lucide-react";
 import Link from "next/link";
-
 export async function BacDashboard() {
   const user = await getCurrentUser();
   if (!user) return null;
@@ -92,12 +92,13 @@ export async function BacDashboard() {
              section={profile?.bacSection || "Technical Section"}
              streak={streak || 0}
              progress={progressPercent || 10}
-             predictedScore="18.5/20"
+             predictedScore={profile?.predictedScore ? `${profile.predictedScore.toFixed(1)}/20` : "14.0/20"}
            />
         </div>
 
         {/* Side Progress Widget */}
-        <aside style={{ position: "sticky", top: "120px" }}>
+        <aside className="stack" style={{ position: "sticky", top: "120px", gap: "24px" }}>
+           <PWAInstallButton />
            <DailyMissions 
              level={stats.level} 
              xp={stats.xp} 

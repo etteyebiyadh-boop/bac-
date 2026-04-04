@@ -20,18 +20,31 @@ export async function analyzeStudentLevel(userId: string, language: Language): P
     take: 20,
   });
 
-  if (attempts.length === 0) return "B1"; // Default for BAC students
+  // If we have enough exercise data, use that
+  if (attempts.length >= 10) {
+    const correctCount = attempts.filter(a => a.isCorrect).length;
+    const accuracy = correctCount / attempts.length;
+    if (accuracy > 0.8) return "B2";
+    if (accuracy < 0.4) return "A2";
+    return "B1";
+  }
 
-  const correctCount = attempts.filter(a => a.isCorrect).length;
-  const accuracy = correctCount / attempts.length;
+  // Baseline: Use the latest diagnostic result
+  const diagnostic = await db.diagnosticResult.findFirst({
+    where: { userId },
+    orderBy: { createdAt: "desc" }
+  });
 
-  // Simple heuristic: if accuracy > 80% on medium, they are likely B2.
-  // If accuracy < 40% on medium, they are likely A2.
-  if (accuracy > 0.8) return "B2";
-  if (accuracy < 0.4) return "A2";
+  if (diagnostic) {
+    const ratio = diagnostic.score / diagnostic.maxScore;
+    if (ratio >= 0.8) return "B2";
+    if (ratio >= 0.5) return "B1";
+    return "A2";
+  }
   
-  return "B1";
+  return "B1"; // Default for BAC students
 }
+
 
 /**
  * Detects weak points (skills with high error rates).

@@ -37,6 +37,7 @@ model User {
   lessonCompletions LessonCompletion[]
   studentProfile    StudentProfile?
   submissions       Submission[]
+  diagnosticResults DiagnosticResult[]
 
   @@index([phone])
 }
@@ -93,6 +94,8 @@ model StudentProfile {
   examYear               Int?
   primaryLanguage        Language    @default(ENGLISH)
   secondaryLanguagesJson Json?
+  predictedScore         Float?
+  lastDiagnosticDate     DateTime?
   createdAt              DateTime    @default(now())
   updatedAt              DateTime    @updatedAt
   bacSection             BacSection?
@@ -100,6 +103,22 @@ model StudentProfile {
 
   @@index([userId])
 }
+
+model DiagnosticResult {
+  id              String   @id @default(uuid())
+  userId          String
+  score           Float
+  maxScore        Float
+  grammarScore    Float
+  vocabularyScore Float
+  readingScore    Float
+  answersJson     Json
+  createdAt       DateTime @default(now())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
 
 model Lesson {
   id               String             @id @default(uuid())

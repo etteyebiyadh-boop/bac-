@@ -44,7 +44,20 @@ async function inferWeakestSkill(userId: string): Promise<SkillFocus> {
     }
   });
 
-  if (recentSubmissions.length === 0) return "structure";
+  if (recentSubmissions.length === 0) {
+    // Check latest diagnostic as baseline
+    const diagnostic = await db.diagnosticResult.findFirst({
+      where: { userId },
+      orderBy: { createdAt: "desc" }
+    });
+
+    if (diagnostic) {
+      if (diagnostic.grammarScore < diagnostic.maxScore * 0.3) return "grammar";
+      if (diagnostic.vocabularyScore < diagnostic.maxScore * 0.3) return "vocabulary";
+      return "structure";
+    }
+    return "structure";
+  }
 
   const total = recentSubmissions.reduce(
     (accumulator, submission) => {
@@ -62,6 +75,7 @@ async function inferWeakestSkill(userId: string): Promise<SkillFocus> {
     structure: total.structure / recentSubmissions.length
   });
 }
+
 
 export async function ensureStudentProfile(userId: string) {
   return db.studentProfile.upsert({
