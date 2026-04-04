@@ -216,9 +216,9 @@ export default function MediaEnginePage() {
         <div className="container mx-auto px-6 text-center">
           <p className="text-white/40">
             Bac Excellence Media Engine Pro © 2026 • 
-            <a href="/" className="text-indigo-400 hover:text-indigo-300 ml-1">
+            <Link href="/" className="text-indigo-400 hover:text-indigo-300 ml-1">
               Command Suite
-            </a>
+            </Link>
           </p>
         </div>
       </footer>

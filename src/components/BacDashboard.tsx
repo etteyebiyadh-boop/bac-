@@ -47,8 +47,8 @@ export async function BacDashboard() {
           Welcome back, <span className="text-gradient">{(user.fullName || "Student").split(" ")[0]}</span>
         </h1>
         <p className="muted" style={{ fontSize: "1.2rem", maxWidth: "800px" }}>
-          You're on the path to <strong style={{ color: "white" }}>{profile?.bacSection || "Excellence"}</strong>. 
-          Master today's missions to secure your target score.
+          You&apos;re on the path to <strong style={{ color: "white" }}>{profile?.bacSection || "Excellence"}</strong>. 
+          Master today&apos;s missions to secure your target score.
         </p>
       </header>
 

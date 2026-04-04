@@ -47,7 +47,7 @@ export function DailyMissions({ level, xp, rank, missions }: DailyMissionsProps)
       {/* Daily Challenges */}
       <div className="stack" style={{ gap: "20px" }}>
         <h3 className="row" style={{ gap: "10px", fontWeight: 800 }}>
-          <Zap size={18} fill="currentColor" /> TODAY'S MISSIONS
+          <Zap size={18} fill="currentColor" /> TODAY&apos;S MISSIONS
         </h3>
 
         <div className="stack" style={{ gap: "12px" }}>
