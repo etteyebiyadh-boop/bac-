@@ -49,13 +49,20 @@ export function PWAInstallButton() {
       cursor: "pointer"
     }} onClick={isInstalled ? undefined : handleInstall}>
       <div style={{
-         padding: "12px",
-         background: isInstalled ? "rgba(34, 197, 94, 0.1)" : "rgba(99, 102, 241, 0.1)",
+         padding: "4px",
+         background: "rgba(255, 255, 255, 0.05)",
          borderRadius: "12px",
-         color: isInstalled ? "#22c55e" : "var(--primary)"
+         position: "relative",
+         overflow: "hidden"
       }}>
-         {isInstalled ? <CheckCircle2 size={24} /> : <Smartphone size={24} className="pulse" />}
+         <img 
+           src="/app-icon.png" 
+           alt="Bac Excellence" 
+           style={{ width: "40px", height: "40px", borderRadius: "10px", objectFit: "cover" }} 
+           className={isInstalled ? "" : "pulse"}
+         />
       </div>
+
       <div className="stack" style={{ gap: "4px" }}>
         <h4 style={{ fontWeight: 800, fontSize: "14px" }}>
            {isInstalled ? "BAC EXCELLENCE ON MOBILE" : "DOWNLOAD BAC EXCELLENCE"}
