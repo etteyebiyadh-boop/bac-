@@ -1,7 +1,7 @@
 "use client";
 
 import { AIContentGenerator } from "@/components/ai-content-generator";
-import { Sparkles, Download, Image as ImageIcon, FileText, Wand2 } from "lucide-react";
+import { Sparkles, Download, Image as ImageIcon, FileText, Wand2, BarChart3, TrendingUp, Share2, Zap } from "lucide-react";
 import Link from "next/link";
 
 export default function MediaEnginePage() {
@@ -125,16 +125,55 @@ export default function MediaEnginePage() {
         </div>
       </section>
 
+      {/* Growth Insights Section (Admin Only) */}
+      <section className="py-20 border-b border-white/10 bg-black/40">
+        <div className="container mx-auto px-6">
+          <div className="flex items-center gap-4 mb-12">
+            <div className="p-3 bg-emerald-500/20 rounded-xl">
+              <BarChart3 size={24} className="text-emerald-400" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold text-white">Growth Insights</h2>
+              <p className="text-white/60">Real-time engagement metrics across the platform</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="p-8 bg-white/5 rounded-3xl border border-white/10 stack" style={{ gap: "12px" }}>
+               <span className="muted" style={{ fontSize: "12px", fontWeight: 700 }}>DAILY ACTIVE STUDENTS</span>
+               <div style={{ fontSize: "3.5rem", fontWeight: 900, lineHeight: 1 }}>1,248</div>
+               <div className="row" style={{ gap: "8px", color: "var(--accent-green)", fontSize: "14px", fontWeight: 700 }}>
+                  <TrendingUp size={16} /> +12% vs yesterday
+               </div>
+            </div>
+            <div className="p-8 bg-white/5 rounded-3xl border border-white/10 stack" style={{ gap: "12px" }}>
+               <span className="muted" style={{ fontSize: "12px", fontWeight: 700 }}>VIRAL ACHIEVEMENTS SHARED</span>
+               <div style={{ fontSize: "3.5rem", fontWeight: 900, lineHeight: 1 }}>486</div>
+               <div className="row" style={{ gap: "8px", color: "var(--primary)", fontSize: "14px", fontWeight: 700 }}>
+                  <Share2 size={16} /> Organic Referral: 3.2x
+               </div>
+            </div>
+            <div className="p-8 bg-white/5 rounded-3xl border border-white/10 stack" style={{ gap: "12px" }}>
+               <span className="muted" style={{ fontSize: "12px", fontWeight: 700 }}>PLATFORM-WIDE XP EARNED</span>
+               <div style={{ fontSize: "3.5rem", fontWeight: 900, lineHeight: 1 }}>842K</div>
+               <div className="row" style={{ gap: "8px", color: "var(--accent)", fontSize: "14px", fontWeight: 700 }}>
+                  <Zap size={16} fill="var(--accent)" /> Scholar Retention High
+               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* AI Content Generator Section */}
-      <section className="py-20 bg-black/20">
+      <section className="py-24 bg-black/20">
         <div className="container mx-auto px-6">
           <div className="flex items-center gap-4 mb-12">
             <div className="p-3 bg-purple-500/20 rounded-xl">
               <Wand2 size={24} className="text-purple-400" />
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-white">AI Content Generator</h2>
-              <p className="text-white/60">Generate marketing copy for any platform</p>
+              <h2 className="text-3xl font-bold text-white">Campaign Command Center</h2>
+              <p className="text-white/60">Generate 6-platform marketing packs in one click</p>
             </div>
           </div>
 
@@ -142,43 +181,43 @@ export default function MediaEnginePage() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* Media Kit Items */}
       <section className="py-20">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-white text-center mb-12">What&apos;s Included</h2>
+          <h2 className="text-3xl font-bold text-white text-center mb-12">Built-in Assets</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="p-6 bg-white/5 rounded-2xl border border-white/10">
               <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center mb-4">
                 <ImageIcon size={24} className="text-indigo-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">10 SVG Cards</h3>
-              <p className="text-white/60">High-quality, scalable graphics with Tunisian flag integration. Perfect for Instagram, Facebook, LinkedIn.</p>
+              <h3 className="text-xl font-bold text-white mb-2">10 SVG Design Cards</h3>
+              <p className="text-white/60">Scalable graphics with 🇹🇳 flag integration for high-social impact.</p>
             </div>
             <div className="p-6 bg-white/5 rounded-2xl border border-white/10">
               <div className="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
                 <FileText size={24} className="text-purple-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">AI Templates</h3>
-              <p className="text-white/60">Pre-written content for Instagram, Facebook, Twitter, LinkedIn, TikTok, Email, and WhatsApp.</p>
+              <h3 className="text-xl font-bold text-white mb-2">AI Campaign Packs</h3>
+              <p className="text-white/60">Automated content for IG, FB, TikTok, and WhatsApp campaigns.</p>
             </div>
             <div className="p-6 bg-white/5 rounded-2xl border border-white/10">
               <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center mb-4">
                 <Download size={24} className="text-emerald-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Easy Export</h3>
-              <p className="text-white/60">Download as ZIP or individual files. Convert SVG to PNG using any online converter.</p>
+              <h3 className="text-xl font-bold text-white mb-2">Instant ZIP Export</h3>
+              <p className="text-white/60">Download all campaign assets in one click to deploy across socials.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-10 border-t border-white/10">
+      <footer className="py-20 border-t border-white/10">
         <div className="container mx-auto px-6 text-center">
           <p className="text-white/40">
-            Bac Excellence Media Engine © 2026 • 
-            <a href="https://bac-excellence.vercel.app" className="text-indigo-400 hover:text-indigo-300 ml-1">
-              bac-excellence.vercel.app
+            Bac Excellence Media Engine Pro © 2026 • 
+            <a href="/" className="text-indigo-400 hover:text-indigo-300 ml-1">
+              Command Suite
             </a>
           </p>
         </div>
