@@ -1,9 +1,14 @@
 import { requireCurrentUser } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
+import { SectionSelector } from "@/components/SectionSelector";
+import { db } from "@/lib/db";
 import Link from "next/link";
 
 export default async function ProfilePage() {
   const user = await requireCurrentUser();
+  const profile = await db.studentProfile.findUnique({
+    where: { userId: user.id }
+  });
 
   return (
     <div className="stack" style={{ gap: "40px", maxWidth: "600px", margin: "0 auto", padding: "40px 0" }}>
@@ -25,6 +30,10 @@ export default async function ProfilePage() {
             </span>
           </div>
         </div>
+      </div>
+
+      <div className="card stack" style={{ padding: "40px" }}>
+        <SectionSelector initialSection={profile?.bacSection || undefined} userId={user.id} />
       </div>
       
       <div className="stack" style={{ textAlign: "center", gap: "24px" }}>

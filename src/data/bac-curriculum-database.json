@@ -1,0 +1,174 @@
+{
+  "system": "Tunisian Baccalaureate 2026",
+  "sections": [
+    {
+      "name": "Bac Math",
+      "languages": [
+        {
+          "name": "English",
+          "units": [
+            {
+              "name": "Grammar",
+              "lessons": [
+                {
+                  "slug": "en-math-conditionals",
+                  "title": "Conditional Types 2 & 3",
+                  "content": {
+                    "explanation": "Mastering hypothetical situations and past regrets for the BAC exam.",
+                    "examples": ["If science were a priority, we would solve many issues.", "If they had invested more, the tech sector would have flourished."],
+                    "exercises": "Complete: If I (be) a mathematician, I (solve) the problem.",
+                    "correction": "were / would solve"
+                  },
+                  "sources": ["bac.org.tn", "bacweb.tn"]
+                }
+              ]
+            },
+            {
+              "name": "Vocabulary Themes",
+              "lessons": [
+                {
+                  "slug": "en-math-tech",
+                  "title": "Science and Technology",
+                  "content": {
+                    "explanation": "High-frequency terms for the scientific sections.",
+                    "examples": ["Artificial Intelligence", "Information Technology", "Cybersecurity"],
+                    "exercises": "Define AI in one sentence.",
+                    "correction": "AI is the simulation of human intelligence by machines."
+                  },
+                  "sources": ["Wikipedia", "BBC Tech"]
+                }
+              ]
+            }
+          ]
+        },
+        { "name": "French", "units": [] },
+        { "name": "Arabic", "units": [] },
+        { "name": "German", "units": [] },
+        { "name": "Spanish", "units": [] },
+        { "name": "Italian", "units": [] }
+      ]
+    },
+    {
+      "name": "Bac Sciences",
+      "languages": [
+        {
+          "name": "English",
+          "units": [
+            {
+              "name": "Vocabulary Themes",
+              "lessons": [
+                {
+                  "slug": "en-sci-env",
+                  "title": "Sustainable Development",
+                  "content": {
+                    "explanation": "Terms related to ecology and environmental protection.",
+                    "examples": ["Renewable energy", "Global warming", "Biodiversity"],
+                    "exercises": "Translate 'Ecology' to Arabic.",
+                    "correction": "علم البيئة"
+                  },
+                  "sources": ["National Geographic", "UN Environment"]
+                }
+              ]
+            }
+          ]
+        },
+        { "name": "French", "units": [] },
+        { "name": "Arabic", "units": [] },
+        { "name": "German", "units": [] },
+        { "name": "Spanish", "units": [] },
+        { "name": "Italian", "units": [] }
+      ]
+    },
+    {
+      "name": "Bac Economie & Gestion",
+      "languages": [
+        {
+          "name": "English",
+          "units": [
+            {
+              "name": "Vocabulary Themes",
+              "lessons": [
+                {
+                  "slug": "en-eco-biz",
+                  "title": "Business and Economy",
+                  "content": {
+                    "explanation": "Vocabulary for business and formal communication.",
+                    "examples": ["Stock market", "Entrepreneurship", "Inflation"],
+                    "exercises": "What is 'Entrepreneurship'?",
+                    "correction": "The activity of setting up a business."
+                  },
+                  "sources": ["The Economist", "Forbes"]
+                }
+              ]
+            }
+          ]
+        },
+        { "name": "French", "units": [] },
+        { "name": "Arabic", "units": [] },
+        { "name": "German", "units": [] },
+        { "name": "Spanish", "units": [] },
+        { "name": "Italian", "units": [] }
+      ]
+    },
+    {
+      "name": "Bac Technique",
+      "languages": [
+        { "name": "English", "units": [] },
+        { "name": "French", "units": [] },
+        { "name": "Arabic", "units": [] },
+        { "name": "German", "units": [] },
+        { "name": "Spanish", "units": [] },
+        { "name": "Italian", "units": [] }
+      ]
+    },
+    {
+      "name": "Bac Informatique",
+      "languages": [
+        { "name": "English", "units": [] },
+        { "name": "French", "units": [] },
+        { "name": "Arabic", "units": [] },
+        { "name": "German", "units": [] },
+        { "name": "Spanish", "units": [] },
+        { "name": "Italian", "units": [] }
+      ]
+    },
+    {
+      "name": "Bac Lettres",
+      "languages": [
+        {
+          "name": "English",
+          "units": [
+            {
+              "name": "Units",
+              "lessons": [
+                {
+                  "slug": "en-let-lit",
+                  "title": "Literary Texts & Analysis",
+                  "content": {
+                    "explanation": "Advanced reading strategies for Bac Lettres.",
+                    "examples": ["Imagery", "Metaphor", "Symbolism"],
+                    "exercises": "Analyze the metaphor in 'Life is a journey'.",
+                    "correction": "Compares life to a path with a destination."
+                  },
+                  "sources": ["SparkNotes", "Poetry Foundation"]
+                }
+              ]
+            }
+          ]
+        },
+        { "name": "French", "units": [] },
+        { "name": "Arabic", "units": [] },
+        { "name": "German", "units": [] },
+        { "name": "Spanish", "units": [] },
+        { "name": "Italian", "units": [] }
+      ]
+    }
+  ],
+  "ux_features": {
+    "modes": ["Learn Mode", "Practice Mode", "Exam Mode"],
+    "systems": ["Progress tracking", "Continue learning", "Daily streak", "Smart recommendations"]
+  },
+  "personalization_ai": {
+    "functions": ["Analyze level", "Suggest study next", "Detect weak points", "Recommend exercises"]
+  }
+}

@@ -74,6 +74,23 @@ pas les coups de folie la veille."
 🚀 Bac Excellence
 Prépare-toi intelligemment 🇹🇳`,
       hashtags: ["#Motivation", "#Bac2026", "#Study", "#Tunisia"]
+    },
+    prediction: {
+      title: "🔮 BAC 2026 Prediction",
+      template: `🔮 PRÉDICTIONS BAC 2026 : ANGLAIS 🇬🇧 🇹🇳
+
+D'après l'analyse des 15 dernières années, voici les thèmes CHAUDS pour cette session :
+
+🔥 TOP 1: Sustainable Development (Trés probable car sujet d'actualité)
+🔥 TOP 2: Creative Minds / AI (Le nouveau module star)
+🔥 TOP 3: Education & Lifelong Learning
+
+💡 Astuce du Senior : Prépare tes connecteurs de "Comparison" et de "Addition". Ils valent 2 points sur la note de writing !
+
+🎯 Rejoins Bac Excellence pour les corrigés types de ces sujets.
+
+👆 Lien en bio #Bac2026`,
+      hashtags: ["#Predictions", "#Bac2026", "#AnglaisBac", "#Tunisie"]
     }
   },
   facebook: {
@@ -107,6 +124,24 @@ Mention Très Bien x3 plus probable
 
 #Bac2026 #BacTunisie #Education #Tunisia`,
       hashtags: ["#Bac2026", "#BacTunisie", "#Education", "#Tunisia"]
+    },
+    booster_section: {
+      title: "🚀 Section Booster",
+      template: `📚 ÉLÈVES DE BAC MATH & SC ? CETTE ANNONCE EST POUR VOUS ! 🧬📐
+
+Vous pensez que les langues sont secondaires ? ERREUR.
+C'est la différence entre une mention "Bien" et "Très Bien".
+
+Bac Excellence a créé un parcours SPÉCIFIQUE pour les sections techniques :
+✅ Vocabulaire scientifique & technologique
+✅ Structure d'essai logique et précise
+✅ Gain de temps : 15min / jour suffisent
+
+Ne laisse pas 2 points de grammaire gâcher ta moyenne générale.
+
+Inscris-toi gratuitement aujourd'hui 🇹🇳
+👉 bac-excellence.vercel.app`,
+      hashtags: ["#BacMath", "#BacSc", "#Bac2026", "#Excellence"]
     }
   },
   twitter: {
