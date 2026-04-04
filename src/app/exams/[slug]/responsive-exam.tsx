@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { MobileExam } from "./mobile-exam";
 import { SiteLanguage, translations } from "@/lib/translations";
