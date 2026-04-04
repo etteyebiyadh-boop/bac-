@@ -7,9 +7,22 @@ import { LessonForm } from "./lesson-form";
 import { SocialGenerator } from "./social-generator";
 import { AnalyticsDashboard } from "./analytics-dashboard";
 
-type AdminTab = "USERS" | "CONTENT" | "MARKETING" | "ANALYTICS";
+import { Shield, AlertTriangle, ShieldCheck, Activity, Users, Lock, ChevronRight } from "lucide-react";
 
-export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
+type AdminTab = "USERS" | "CONTENT" | "SECURITY" | "MARKETING" | "ANALYTICS";
+
+interface TabbedAdminProps {
+  recentUsers: any[];
+  securityStats: {
+    totalUsers: number;
+    recentLogins: number;
+    failedAttempts: number;
+    suspiciousEvents: any[];
+    premiumUsers: number;
+  };
+}
+
+export function TabbedAdmin({ recentUsers, securityStats }: TabbedAdminProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialTab = (searchParams.get("tab") as AdminTab) || "USERS";
@@ -40,17 +53,17 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
         padding: "8px", 
         borderRadius: "100px", 
         border: "1px solid var(--glass-border)", 
-        maxWidth: "500px", 
+        maxWidth: "650px", 
         margin: "0 auto",
         overflowX: "auto",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
-        whiteSpace: "nowrap",
-        flexWrap: "nowrap"
+        whiteSpace: "nowrap"
       }}>
         {[
           { id: "USERS", label: "Students", icon: "💎" },
           { id: "CONTENT", label: "Curriculum", icon: "📚" },
+          { id: "SECURITY", label: "Security", icon: "🛡️" },
           { id: "ANALYTICS", label: "Analytics", icon: "📊" },
           { id: "MARKETING", label: "Media Engine", icon: "🚀" }
         ].map(tab => (
@@ -67,8 +80,7 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
               minHeight: "auto",
               boxShadow: "none",
               borderRadius: "50px",
-              fontSize: "13px",
-              flexShrink: 0
+              fontSize: "13px"
             }}
           >
             {tab.icon} {tab.label}
@@ -106,26 +118,76 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
           <section className="card stack" style={{ background: "rgba(99, 102, 241, 0.03)", border: "1px solid var(--primary)" }}>
              <span className="eyebrow" style={{ color: "var(--primary)" }}>Language Sections Hub</span>
              <h2 className="section-title">Organized Content Audit</h2>
-             <p className="muted">Use the &quot;Library&quot; page to filter your tracks and visualize the exact content your students see. Ensure each track (Arabic, French, English, and Optionals) has at least 3 high-quality starting modules.</p>
-             <div className="grid grid-cols-2">
-                <div className="card" style={{ padding: "24px" }}>
-                   <strong>Mandatory Tracks</strong>
-                   <ul className="stack" style={{ marginTop: "12px", listStyle: "none", padding: 0 }}>
-                      <li>📖 ARABIC (Official BAC)</li>
-                      <li>📖 FRENCH (Official BAC)</li>
-                      <li>📖 ENGLISH (Official BAC)</li>
-                   </ul>
-                </div>
-                <div className="card" style={{ padding: "24px" }}>
-                   <strong>Optional Exclusives</strong>
-                   <ul className="stack" style={{ marginTop: "12px", listStyle: "none", padding: 0 }}>
-                      <li>🇪🇸 SPANISH (Optional)</li>
-                      <li>🇩🇪 GERMAN (Optional)</li>
-                      <li>🇮🇹 ITALIAN (Optional)</li>
-                   </ul>
-                </div>
-             </div>
+             <p className="muted">Use the &quot;Library&quot; page to filter your tracks and visualize the exact content your students see.</p>
           </section>
+        </div>
+      )}
+
+      {activeTab === "SECURITY" && (
+        <div className="page-stack fadeIn">
+           <header className="row-between">
+              <div className="stack" style={{ gap: "8px" }}>
+                 <div className="row" style={{ gap: "8px", color: "var(--primary)", fontWeight: 900 }}>
+                    <Shield size={20} /> CYBERSECURITY COMMAND CENTER
+                 </div>
+              </div>
+              <div className="card row" style={{ padding: "16px 24px", gap: "12px", border: "1px solid #22c55e", background: "rgba(34, 197, 94, 0.05)" }}>
+                 <ShieldCheck size={24} color="#22c55e" />
+                 <div className="stack">
+                    <strong style={{ fontSize: "14px", color: "#22c55e" }}>PLATFORM SECURE</strong>
+                    <span className="muted" style={{ fontSize: "10px" }}>Active Protections ACTIVE</span>
+                 </div>
+              </div>
+           </header>
+
+           <div className="grid grid-cols-3 gap-24">
+              <div className="card stack" style={{ padding: "24px", gap: "16px" }}>
+                 <Activity size={20} color="var(--primary)" />
+                 <h3 className="muted" style={{ fontSize: "12px", letterSpacing: "1px" }}>AUTH STABILITY</h3>
+                 <div className="row-between">
+                    <strong>{securityStats.recentLogins} Success</strong>
+                    <strong style={{ color: "var(--accent)" }}>{securityStats.failedAttempts} Failed</strong>
+                 </div>
+              </div>
+              <div className="card stack" style={{ padding: "24px", gap: "16px" }}>
+                 <Users size={20} color="var(--primary)" />
+                 <h3 className="muted" style={{ fontSize: "12px", letterSpacing: "1px" }}>PROTECTION</h3>
+                 <div className="row-between">
+                    <strong>{securityStats.totalUsers} Total</strong>
+                    <strong style={{ color: "#22c55e" }}>{securityStats.premiumUsers} Elite</strong>
+                 </div>
+              </div>
+              <div className="card stack" style={{ padding: "24px", gap: "16px" }}>
+                 <Lock size={20} color="var(--primary)" />
+                 <h3 className="muted" style={{ fontSize: "12px", letterSpacing: "1px" }}>IP STATUS</h3>
+                 <div className="row-between">
+                    <strong>0 Blocked</strong>
+                    <ShieldCheck size={16} color="#22c55e" />
+                 </div>
+              </div>
+           </div>
+
+           <section className="stack" style={{ gap: "24px" }}>
+              <h2 style={{ fontSize: "1.5rem", fontWeight: 800 }}>🚨 RECENT ALERTS</h2>
+              <div className="stack" style={{ gap: "12px" }}>
+                 {securityStats.suspiciousEvents.length > 0 ? (
+                    securityStats.suspiciousEvents.map((event: any) => (
+                       <div key={event.id} className="card row-between" style={{ padding: "16px" }}>
+                          <div className="row" style={{ gap: "12px" }}>
+                             <AlertTriangle size={18} color="var(--accent)" />
+                             <div className="stack">
+                                <strong>{event.event}</strong>
+                                <span className="muted" style={{ fontSize: "11px" }}>{event.userId}</span>
+                             </div>
+                          </div>
+                          <span className="muted" style={{ fontSize: "11px" }}>{new Date(event.timestamp).toLocaleTimeString()}</span>
+                       </div>
+                    ))
+                 ) : (
+                    <p className="muted" style={{ textAlign: "center", padding: "40px" }}>No threats detected.</p>
+                 )}
+              </div>
+           </section>
         </div>
       )}
 
@@ -140,6 +202,7 @@ export function TabbedAdmin({ recentUsers }: { recentUsers: any[] }) {
           <SocialGenerator />
         </div>
       )}
+
 
       <style jsx>{`
         .fadeIn {

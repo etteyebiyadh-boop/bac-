@@ -7,16 +7,35 @@ export const dynamic = "force-dynamic";
 export default async function AdminPage() {
   await requireAdminUser();
 
-  const recentUsers = await db.user.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 30,
-    select: {
-      id: true,
-      email: true,
-      isPremium: true,
-      createdAt: true
-    }
-  });
+  const [recentUsers, recentLogins, failedAttempts, suspiciousEvents, premiumUsers] = await Promise.all([
+    db.user.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 30,
+      select: {
+        id: true,
+        email: true,
+        isPremium: true,
+        createdAt: true
+      }
+    }),
+    db.analyticsEvent.count({ where: { event: "auth:login" } }),
+    db.analyticsEvent.count({ where: { event: "auth:login_failed" } }),
+    db.analyticsEvent.findMany({
+      where: { event: { startsWith: "security:" } },
+      orderBy: { timestamp: "desc" },
+      take: 10
+    }),
+    db.user.count({ where: { isPremium: true } })
+  ]);
+
+  const securityStats = {
+    totalUsers: recentUsers.length,
+    recentLogins,
+    failedAttempts,
+    suspiciousEvents,
+    premiumUsers
+  };
+
 
   return (
     <div className="page-stack">
@@ -40,7 +59,11 @@ export default async function AdminPage() {
         </div>
       </section>
 
-      <TabbedAdmin recentUsers={JSON.parse(JSON.stringify(recentUsers))} />
+      <TabbedAdmin 
+        recentUsers={JSON.parse(JSON.stringify(recentUsers))} 
+        securityStats={JSON.parse(JSON.stringify(securityStats))}
+      />
+
     </div>
   );
 }
