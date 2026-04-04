@@ -306,6 +306,7 @@ Partage à ceux qui passent le BAC! 🇹🇳`,
 export function AIContentGenerator() {
   const [selectedPlatform, setSelectedPlatform] = useState<string>("instagram");
   const [selectedTemplate, setSelectedTemplate] = useState<string>("launch");
+  const [selectedSection, setSelectedSection] = useState<string>("GENERAL");
   const [generated, setGenerated] = useState<GeneratedContent | null>(null);
   const [copied, setCopied] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -316,16 +317,26 @@ export function AIContentGenerator() {
   const generateContent = () => {
     setIsGenerating(true);
     
-    // Simulate AI generation
+    // Simulate AI generation with section injection
     setTimeout(() => {
       const template = templates[selectedTemplate as keyof typeof templates] as any;
       if (template) {
+        let content = template.template;
+        
+        // Dynamic context injection
+        if (selectedSection !== "GENERAL") {
+          content = `🎯 TARGETED CAMPAIGN: BAC ${selectedSection}\n\n` + content.replace(
+            "On a du contenu spécifique pour TOI!", 
+            `On a tout ce qu&apos;il faut pour les élèves de BAC ${selectedSection}! 🏆`
+          );
+        }
+
         setGenerated({
           id: Date.now().toString(),
           type: selectedTemplate,
           title: template.title,
-          content: template.template,
-          hashtags: template.hashtags || [],
+          content: content,
+          hashtags: [...(template.hashtags || []), `#Bac${selectedSection}`],
           platform: selectedPlatform
         });
       }
@@ -375,14 +386,41 @@ export function AIContentGenerator() {
           marginBottom: "20px"
         }}>
           <Sparkles size={24} color="white" />
-          <span style={{ color: "white", fontWeight: 700 }}>AI Media Engine</span>
+          <span style={{ color: "white", fontWeight: 700 }}>AI Media Engine Pro</span>
         </div>
         <h2 style={{ color: "white", fontSize: "32px", fontWeight: 800 }}>
-          Generate Marketing Content
+          Campaign Command Suite
         </h2>
         <p style={{ color: "rgba(255,255,255,0.6)", marginTop: "12px" }}>
-          AI-powered content generator for Bac Excellence marketing
+          Generate high-conversion section-targeted marketing campaigns in seconds
         </p>
+      </div>
+
+      {/* Section Targeting */}
+      <div style={{ marginBottom: "30px" }}>
+        <label style={{ color: "white", fontSize: "14px", fontWeight: 600, display: "block", marginBottom: "12px" }}>
+          Target Bac Section
+        </label>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          {["GENERAL", "MATH", "SCIENCES", "LETTRES", "ECONOMIE", "TECHNIQUE", "INFO"].map((section) => (
+            <button
+              key={section}
+              onClick={() => setSelectedSection(section)}
+              style={{
+                padding: "10px 16px",
+                borderRadius: "10px",
+                border: "none",
+                background: selectedSection === section ? "var(--primary)" : "rgba(255,255,255,0.05)",
+                color: "white",
+                fontSize: "12px",
+                fontWeight: 700,
+                cursor: "pointer"
+              }}
+            >
+              {section}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Platform Selector */}
