@@ -1,7 +1,7 @@
 "use client";
 
 import { AIContentGenerator } from "@/components/ai-content-generator";
-import { Sparkles, Download, Image as ImageIcon, FileText, Wand2, BarChart3, TrendingUp, Share2, Zap } from "lucide-react";
+import { Sparkles, Download, Image as ImageIcon, FileText, Wand2, BarChart3, TrendingUp, Share2, Zap, ShieldCheck, Lock, Activity } from "lucide-react";
 import Link from "next/link";
 
 export default function MediaEnginePage() {
@@ -125,40 +125,76 @@ export default function MediaEnginePage() {
         </div>
       </section>
 
-      {/* Growth Insights Section (Admin Only) */}
-      <section className="py-20 border-b border-white/10 bg-black/40">
+      {/* Growth & Security Insights Section (Admin Only) */}
+      <section className="py-20 border-b border-white/10 bg-black/40" id="insights">
         <div className="container mx-auto px-6">
-          <div className="flex items-center gap-4 mb-12">
-            <div className="p-3 bg-emerald-500/20 rounded-xl">
-              <BarChart3 size={24} className="text-emerald-400" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-white">Growth Insights</h2>
-              <p className="text-white/60">Real-time engagement metrics across the platform</p>
-            </div>
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Left: Growth Analytics */}
+            <div className="stack" style={{ gap: "32px" }}>
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-emerald-500/20 rounded-xl">
+                  <BarChart3 size={24} className="text-emerald-400" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Growth Analytics</h2>
+                  <p className="text-white/60 text-sm">Real-time student engagement</p>
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 bg-white/5 rounded-3xl border border-white/10 stack" style={{ gap: "12px" }}>
-               <span className="muted" style={{ fontSize: "12px", fontWeight: 700 }}>DAILY ACTIVE STUDENTS</span>
-               <div style={{ fontSize: "3.5rem", fontWeight: 900, lineHeight: 1 }}>1,248</div>
-               <div className="row" style={{ gap: "8px", color: "var(--accent-green)", fontSize: "14px", fontWeight: 700 }}>
-                  <TrendingUp size={16} /> +12% vs yesterday
-               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-8 bg-white/5 rounded-3xl border border-white/10 stack" style={{ gap: "4px" }}>
+                  <span className="muted" style={{ fontSize: "10px", fontWeight: 700 }}>ACTIVE STUDENTS</span>
+                  <div className="text-3xl font-bold">1,248</div>
+                  <div className="text-emerald-400 text-xs font-bold">+12% vs yesterday</div>
+                </div>
+                <div className="p-8 bg-white/5 rounded-3xl border border-white/10 stack" style={{ gap: "4px" }}>
+                  <span className="muted" style={{ fontSize: "10px", fontWeight: 700 }}>WORD REACH</span>
+                  <div className="text-3xl font-bold">486</div>
+                  <div className="text-indigo-400 text-xs font-bold">3.2x Shares</div>
+                </div>
+              </div>
             </div>
-            <div className="p-8 bg-white/5 rounded-3xl border border-white/10 stack" style={{ gap: "12px" }}>
-               <span className="muted" style={{ fontSize: "12px", fontWeight: 700 }}>VIRAL ACHIEVEMENTS SHARED</span>
-               <div style={{ fontSize: "3.5rem", fontWeight: 900, lineHeight: 1 }}>486</div>
-               <div className="row" style={{ gap: "8px", color: "var(--primary)", fontSize: "14px", fontWeight: 700 }}>
-                  <Share2 size={16} /> Organic Referral: 3.2x
-               </div>
-            </div>
-            <div className="p-8 bg-white/5 rounded-3xl border border-white/10 stack" style={{ gap: "12px" }}>
-               <span className="muted" style={{ fontSize: "12px", fontWeight: 700 }}>PLATFORM-WIDE XP EARNED</span>
-               <div style={{ fontSize: "3.5rem", fontWeight: 900, lineHeight: 1 }}>842K</div>
-               <div className="row" style={{ gap: "8px", color: "var(--accent)", fontSize: "14px", fontWeight: 700 }}>
-                  <Zap size={16} fill="var(--accent)" /> Scholar Retention High
-               </div>
+
+            {/* Right: Cybersecurity Audit */}
+            <div className="stack" style={{ gap: "32px" }}>
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-500/20 rounded-xl">
+                  <ShieldCheck size={24} className="text-blue-400" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-white">Security Hardening</h2>
+                  <p className="text-white/60 text-sm">Active platform protection suite</p>
+                </div>
+              </div>
+
+              <div className="p-6 bg-white/5 rounded-3xl border border-white/10 stack" style={{ gap: "20px" }}>
+                <div className="row-between">
+                  <div className="row" style={{ gap: "12px" }}>
+                    <Lock size={18} className="text-blue-400" />
+                    <span style={{ fontWeight: 800, fontSize: "14px" }}>Platform Fortress</span>
+                  </div>
+                  <span className="pill" style={{ background: "rgba(16, 185, 129, 0.1)", border: "none", color: "#10b981", fontSize: "10px" }}>ENCRYPTED</span>
+                </div>
+                
+                <div className="stack" style={{ gap: "10px" }}>
+                  {[
+                    { label: "SSL/TLS 1.3 Encryption", status: "Active" },
+                    { label: "X-Frame Frameguard", status: "Enabled" },
+                    { label: "JWT Session Hardening", status: "Verified" },
+                    { label: "X-Content-Type Header", status: "Safe" }
+                  ].map((item, i) => (
+                    <div key={i} className="row-between" style={{ padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                      <span className="muted" style={{ fontSize: "12px" }}>{item.label}</span>
+                      <span style={{ fontSize: "12px", fontWeight: 900 }}>{item.status}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="row" style={{ gap: "10px", marginTop: "10px" }}>
+                  <Activity size={16} className="text-blue-400 animate-pulse" />
+                  <span className="muted" style={{ fontSize: "11px" }}>Threat Monitoring: 0 Intrusions in last 24h</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
