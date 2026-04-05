@@ -17,7 +17,9 @@ export function BulkGenerator() {
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState<BulkItem[]>([]);
   
-  // Video Preview Refs
+  // Video Tools State
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordProgress, setRecordProgress] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
 
@@ -113,7 +115,7 @@ export function BulkGenerator() {
       // LOGO: BAC EXCELLENCE
       ctx.save();
       const logoX = canvas.width / 2;
-      const logoY = 150;
+      const logoY = 160;
       
       // Gradient Box for "B"
       const boxSize = 80;
@@ -131,44 +133,34 @@ export function BulkGenerator() {
       ctx.textBaseline = "middle";
       ctx.fillText("B", logoX, logoY);
       
-      ctx.font = "900 32px sans-serif";
+      ctx.font = "900 36px sans-serif";
       ctx.letterSpacing = "6px";
-      ctx.fillText("BAC EXCELLENCE", logoX, logoY + 90);
+      ctx.fillText("BAC EXCELLENCE", logoX, logoY + 95);
       
       ctx.font = "600 16px sans-serif";
       ctx.fillStyle = "#6366f1";
       ctx.fillText("ELITE PREP / 2026", logoX, logoY + 125);
-      ctx.restore();
 
-      // FIXED BRANDING SENTENCES (Bottom)
-      ctx.save();
-      const bottomY = canvas.height - 180;
-      
-      // Glass Bar for branding
-      ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
-      ctx.beginPath();
-      ctx.roundRect(100, bottomY - 60, canvas.width - 200, 120, 30);
-      ctx.fill();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-      ctx.stroke();
-
+      // FIXED BRANDING SENTENCES (Top - under logo)
+      const brandingY = logoY + 180;
       ctx.textAlign = "center";
       
       // English
-      ctx.font = "600 24px sans-serif";
+      ctx.font = "600 22px sans-serif";
       ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-      ctx.fillText("The first AI platform in Tunisia for languages", canvas.width/2, bottomY - 15);
+      ctx.fillText("The first AI platform in Tunisia for languages", canvas.width/2, brandingY);
       
       // Arabic
-      ctx.font = "bold 28px sans-serif";
-      ctx.fillStyle = "var(--primary)";
-      ctx.fillText("أول منصة ذكاء اصطناعي في تونس للغات", canvas.width/2, bottomY + 25);
+      ctx.font = "bold 26px sans-serif";
+      ctx.fillStyle = "white";
+      ctx.fillText("أول منصة ذكاء اصطناعي في تونس للغات", canvas.width/2, brandingY + 40);
+      
       ctx.restore();
 
       // Placeholder for bulk content text (Central Area)
       ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
-      ctx.font = "italic 18px sans-serif";
-      ctx.fillText("[ ADD BULK CONTENT HERE IN CANVA ]", canvas.width/2, canvas.height/2 + 50);
+      ctx.font = "italic 20px sans-serif";
+      ctx.fillText("[ ADD BULK CONTENT HERE IN CANVA ]", canvas.width/2, canvas.height/2 + 100);
 
       animationRef.current = requestAnimationFrame(render);
     };
@@ -177,15 +169,54 @@ export function BulkGenerator() {
     return () => cancelAnimationFrame(animationRef.current);
   }, []);
 
+  // 4. GENERATE VIDEO (Recorder Fallback)
+  const generateVideo = async () => {
+    if (!canvasRef.current) return;
+    setIsRecording(true);
+    setRecordProgress(0);
+
+    const canvas = canvasRef.current;
+    const stream = canvas.captureStream(60); 
+    const recorder = new MediaRecorder(stream, { mimeType: "video/webm;codecs=vp9" });
+    const chunks: Blob[] = [];
+
+    recorder.ondataavailable = (e) => chunks.push(e.data);
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: "video/webm" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `bac-excellence-template.webm`;
+      a.click();
+      setIsRecording(false);
+      setRecordProgress(0);
+    };
+
+    recorder.start();
+
+    // Record for 7 seconds
+    const duration = 7000;
+    const start = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - start;
+      const progress = Math.min(100, (elapsed / duration) * 100);
+      setRecordProgress(progress);
+      if (elapsed >= duration) {
+        clearInterval(interval);
+        recorder.stop();
+      }
+    }, 100);
+  };
+
   return (
     <div className="stack" style={{ gap: "40px", padding: "40px 0" }}>
       
       {/* HEADER */}
       <header className="card row-between" style={{ padding: "40px", border: "1px solid var(--primary)", background: "rgba(99, 102, 241, 0.03)" }}>
         <div className="stack" style={{ gap: "12px" }}>
-           <span className="eyebrow" style={{ color: "var(--primary)" }}>Bulk Content Forge 1.0</span>
-           <h2 className="section-title" style={{ fontSize: "2.5rem" }}>Massive Content, Minimized Effort.</h2>
-           <p className="muted">Generate 30+ educational reels/posts in seconds and export to Canva Bulk Create.</p>
+           <span className="eyebrow" style={{ color: "var(--primary)" }}>Bulk Content Forge 1.2</span>
+           <h2 className="section-title" style={{ fontSize: "2.5rem" }}>Massive Content Engine.</h2>
+           <p className="muted">Generate high-volume social content and branded video backgrounds instantly.</p>
         </div>
         <Sparkles size={48} color="var(--primary)" style={{ opacity: 0.3 }} />
       </header>
@@ -209,13 +240,17 @@ export function BulkGenerator() {
             <div className="stack" style={{ width: "160px", gap: "8px" }}>
                <span className="eyebrow" style={{ fontSize: "10px" }}>Language</span>
                <select value={language} onChange={e => setLanguage(e.target.value)} style={{ padding: "12px", borderRadius: "10px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", color: "white" }}>
-                 <option value="ENGLISH">🇬🇧 English</option>
-                 <option value="FRENCH">🇫🇷 French</option>
-                 <option value="ARABIC">🇹🇳 Arabic</option>
+                 <option value="ENGLISH">🇬🇧 English (Elite)</option>
+                 <option value="FRENCH">🇫🇷 French (Elite)</option>
+                 <option value="ARABIC">🇹🇳 Arabic (Elite)</option>
                  <option value="ITALIAN">🇮🇹 Italian</option>
+                 <option value="SPANISH">🇪🇸 Spanish</option>
+                 <option value="GERMAN">🇩🇪 German</option>
+                 <option value="RUSSIAN">🇷🇺 Russian</option>
+                 <option value="CHINESE">🇨🇳 Chinese</option>
                </select>
             </div>
-            <div className="stack" style={{ width: "100px", gap: "8px" }}>
+            <div className="stack" style={{ width: "80px", gap: "8px" }}>
                <span className="eyebrow" style={{ fontSize: "10px" }}>Count</span>
                <input type="number" value={count} onChange={e => setCount(Number(e.target.value))} style={{ padding: "12px", borderRadius: "10px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", color: "white" }} />
             </div>
@@ -296,45 +331,67 @@ export function BulkGenerator() {
                   height={1920} 
                   style={{ width: "100%", height: "100%", display: "block" }} 
                 />
+                
+                {isRecording && (
+                  <div style={{ 
+                    position: "absolute", 
+                    inset: 0, 
+                    background: "rgba(0,0,0,0.8)", 
+                    display: "flex", 
+                    flexDirection: "column", 
+                    alignItems: "center", 
+                    justifyContent: "center",
+                    gap: "16px",
+                    zIndex: 20
+                  }}>
+                    <Loader2 className="animate-spin" size={40} color="var(--accent)" />
+                    <div className="stack" style={{ alignItems: "center", gap: "8px" }}>
+                      <strong style={{ color: "white", fontSize: "16px" }}>BUILDING VIDEO...</strong>
+                      <span style={{ color: "var(--accent)", fontWeight: 800 }}>{Math.round(recordProgress)}%</span>
+                    </div>
+                    <div style={{ width: "70%", height: "6px", background: "rgba(255,255,255,0.1)", borderRadius: "10px", overflow: "hidden" }}>
+                       <div style={{ width: `${recordProgress}%`, height: "100%", background: "var(--accent)", boxShadow: "0 0 15px var(--accent)" }} />
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="stack" style={{ gap: "12px" }}>
                 <p className="muted" style={{ fontSize: "11px", textAlign: "center" }}>
-                  Download the official high-quality branded background for your Canva bulk content.
+                   Generate your branded template instantly (works with any browser).
                 </p>
-                <a 
-                  href="/videos/template.mp4"
-                  download="bac-excellence-template.mp4"
+                <button 
+                  onClick={generateVideo}
+                  disabled={isRecording}
                   className="row-center" 
                   style={{ 
                     gap: "12px", 
                     padding: "16px", 
                     borderRadius: "12px", 
-                    background: "white", 
+                    background: isRecording ? "rgba(255,255,255,0.1)" : "white", 
                     color: "black", 
                     fontWeight: 900, 
                     border: "none", 
-                    textDecoration: "none",
-                    cursor: "pointer",
+                    cursor: isRecording ? "wait" : "pointer",
                     boxShadow: "0 10px 20px rgba(255,255,255,0.1)"
                   }}
                 >
-                  <Video size={18} />
-                  Download Ready MP4 Template
-                </a>
+                  {isRecording ? <Square size={18} fill="currentColor" /> : <Video size={18} />}
+                  {isRecording ? "Preparing MP4..." : "Export Branded Template (.mp4)"}
+                </button>
               </div>
            </div>
 
            <div className="card stack" style={{ padding: "24px", gap: "12px", background: "rgba(34, 197, 94, 0.05)", border: "1px solid #22c55e" }}>
               <div className="row" style={{ gap: "8px", color: "#22c55e" }}>
                 <Sparkles size={16} />
-                <strong style={{ fontSize: "12px" }}>CANVA BULK TIP</strong>
+                <strong style={{ fontSize: "12px" }}>CANVA WORKFLOW</strong>
               </div>
-              <p style={{ fontSize: "12px", opacity: 0.8 }}>
-                1. Import the generated **CSV** file into Canva.<br/>
-                2. Upload the **MP4 Template** as background.<br/>
-                3. Connect CSV fields to text elements.<br/>
-                4. Click &quot;Generate&quot; to get {items.length || 30} videos instantly.
+              <p style={{ fontSize: "11px", opacity: 0.8, lineHeight: 1.6 }}>
+                1. Download **CSV Table**.<br/>
+                2. Export **Branded Template**.<br/>
+                3. Upload both to Canva.<br/>
+                4. Use &quot;Bulk Create&quot; to auto-generate all reels.
               </p>
            </div>
         </div>

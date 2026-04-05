@@ -37,7 +37,7 @@ export function DailyStreakWidget({ initialMetrics }: { initialMetrics?: any }) 
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [initialMetrics]);
 
   if (loading) {
     return (
