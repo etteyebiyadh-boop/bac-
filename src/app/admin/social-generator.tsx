@@ -717,22 +717,33 @@ export function SocialGenerator() {
             <div className="row-between">
               <h3 className="section-title" style={{ fontSize: "1.5rem" }}>1. Content Config 🤖</h3>
               <button type="button" onClick={() => {
-                const s = ["Advanced Connectors","Conditional Type 3","Top BAC Synonyms","Subjunctive Mastery","Inversion Hack","Passive Voice","Modal Verbs","Essay Writing Phrases"];
-                setTopic(s[Math.floor(Math.random() * s.length)]);
+                // Pick a random Surprise Me topic from the current language
+                const surpriseByLang: Record<string, string[]> = {
+                  ENGLISH: ["Passive Voice Mastery","Conditional Type 3","Inversion Hacks","Modal Verbs in the Past","Essay Connectors","Wish & If Only","Reported Speech","Causative Form"],
+                  FRENCH:  ["Le Subjonctif Présent","Le Conditionnel Passé","La Voix Passive","Les Connecteurs Logiques","La Nominalisation","Le Discours Indirect","La Concordance des Temps","Le Gérondif"],
+                  ARABIC:  ["الجملة الفعلية والاسمية","الفعل المبني للمجهول","أسلوب الشرط","الأساليب الإنشائية","الاستعارة والتشبيه","المفعول المطلق","أسلوب التوكيد","الصور البيانية"],
+                  ITALIAN: ["Il Congiuntivo Presente","Il Condizionale Passato","La Voce Passiva","Il Discorso Indiretto","I Connettivi Logici","Il Gerundio","I Tempi del Passato","I Pronomi Relativi"],
+                  SPANISH: ["El Subjuntivo Presente","El Condicional Compuesto","La Voz Pasiva","El Estilo Indirecto","Los Conectores Discursivos","Ser vs Estar","El Gerundio","Los Tiempos del Pasado"],
+                  GERMAN:  ["Der Konjunktiv II","Das Passiv (Vorgangs- & Zustandspassiv)","Die Indirekte Rede","Relativsätze","Kausale Konnektoren","Infinitivkonstruktionen","Die Wortstellung","Partizipialattribute"],
+                  RUSSIAN: ["Виды глагола","Причастия и деепричастия","Падежи существительных","Сложноподчинённые предложения","Степени сравнения","Возвратные глаголы","Числительные","Глаголы движения"],
+                  CHINESE: ["把字句和被字句","补语用法","连词使用","量词系统","离合词","兼语句","结果补语","趋向补语"],
+                };
+                const list = surpriseByLang[language] || surpriseByLang["ENGLISH"];
+                setTopic(list[Math.floor(Math.random() * list.length)]);
               }} style={{ background: "transparent", border: "none", color: "var(--primary)", fontSize: 10, cursor: "pointer", fontWeight: 800 }}>🎲 SURPRISE ME</button>
             </div>
 
             <div className="grid grid-cols-2" style={{ gap: 14 }}>
               {[
                 { label: "Language Track", val: language, set: setLanguage, opts: [
-                  ["ENGLISH","🇬🇧 English (Elite)"],
-                  ["FRENCH","🇫🇷 French (Elite)"],
-                  ["ARABIC","🇹🇳 Arabic (Elite)"],
-                  ["ITALIAN","🇮🇹 Italian (Option)"],
-                  ["SPANISH","🇪🇸 Spanish (Option)"],
-                  ["GERMAN","🇩🇪 German (Option)"],
-                  ["RUSSIAN","🇷🇺 Russian (Option)"],
-                  ["CHINESE","🇨🇳 Chinese (Option)"]
+                  ["ENGLISH", "🇬🇧 English (Elite)"],
+                  ["FRENCH",  "🇫🇷 French (Elite)"],
+                  ["ARABIC",  "🇹🇳 Arabic (Elite)"],
+                  ["ITALIAN", "🇮🇹 Italian (Option)"],
+                  ["SPANISH", "🇪🇸 Spanish (Option)"],
+                  ["GERMAN",  "🇩🇪 German (Option)"],
+                  ["RUSSIAN", "🇷🇺 Russian (Option)"],
+                  ["CHINESE", "🇨🇳 Chinese (Option)"],
                 ] },
                 { label: "Format", val: platform, set: setPlatform, opts: [["Instagram Carousel","Instagram Carousel"],["Cheat Sheet Story","Viral Cheat Sheet"],["High-Impact Thread","Mastery Thread"],["Educational Post","Premium Post"]] },
                 { label: "BAC Section", val: section, set: setSection, opts: [["","All Sections"],["MATHEMATIQUES","Mathématiques"],["SCIENCES_EXPERIMENTALES","Sciences Exp"],["ECONOMIE_GESTION","Eco & Gestion"],["LETTRES","Lettres"],["SCIENCES_INFORMATIQUE","Informatique"]] },
@@ -745,43 +756,241 @@ export function SocialGenerator() {
                 </label>
               ))}
               <div className="stack col-span-2" style={{ gap: 7 }}>
-                <span className="eyebrow" style={{ fontSize: 10, opacity: 0.6 }}>Topic / Skill Library</span>
+                <span className="eyebrow" style={{ fontSize: 10, opacity: 0.6 }}>Topic / Skill Library — {language}</span>
                 <div className="grid grid-cols-[1fr,1fr] gap-2">
                   <select 
                     value={topic} 
                     onChange={e => setTopic(e.target.value)} 
                     style={{ padding: 13, borderRadius: 10, background: "rgba(255,255,255,0.05)", border: "1px solid var(--glass-border)", color: "white" }}
                   >
-                    <option value="">-- Quick Select BAC Skill --</option>
-                    <optgroup label="💎 High-Value Grammar">
-                      <option value="Passive Voice Mastery">Passive Voice Mastery</option>
-                      <option value="Advanced Conditionals (Type 1,2,3)">Conditionals (Type 1,2,3)</option>
-                      <option value="Inversion after Negative Adverbials">Inversion Hacks</option>
-                      <option value="Reported Speech Precision">Reported Speech</option>
-                      <option value="Wish & If Only (Regrets/Desires)">Wish & If Only</option>
-                      <option value="Causative Form (Have/Get)">Causative Form</option>
-                      <option value="Modal Verbs in the Past">Modals in the Past</option>
-                      <option value="Compound Adjectives">Compound Adjectives</option>
-                      <option value="Relative Clauses (Defining/Non)">Relative Clauses</option>
-                      <option value="Gerund vs Infinitive">Gerund vs Infinitive</option>
-                    </optgroup>
-                    <optgroup label="🌍 Vocabulary & Themes">
-                      <option value="Education and Vocational Training">Education & Schooling</option>
-                      <option value="Brain Drain & Migration">Brain Drain</option>
-                      <option value="Sustainable Development & Ecology">Sustainability</option>
-                      <option value="Technology & Innovation">Tech & Innovation</option>
-                      <option value="Social Media & Cyber-crime">Social Media Risks</option>
-                      <option value="Human Rights & Volunteering">Human Rights</option>
-                      <option value="Adventure & Tourism">Adventure/Tourism</option>
-                      <option value="Healthy Lifestyle & Nutrition">Health & Nutrition</option>
-                    </optgroup>
-                    <optgroup label="✍️ Writing & Methods">
-                      <option value="Argumentative Essay Connectors">Essay Connectors</option>
-                      <option value="Article Writing Hooks">Article Writing</option>
-                      <option value="Formal Letter Structure">Formal Letters</option>
-                      <option value="Email to a Friend">Informal Email</option>
-                      <option value="Paraphrasing Techniques">Paraphrase Like a Pro</option>
-                    </optgroup>
+                    <option value="">-- Select BAC Skill --</option>
+
+                    {/* ── ENGLISH ── */}
+                    {language === "ENGLISH" && (<>
+                      <optgroup label="💎 Grammar Mastery">
+                        <option value="Passive Voice Mastery">Passive Voice</option>
+                        <option value="Advanced Conditionals (Type 1,2,3)">Conditionals 1/2/3</option>
+                        <option value="Inversion after Negative Adverbials">Inversion Hacks</option>
+                        <option value="Reported Speech Precision">Reported Speech</option>
+                        <option value="Wish & If Only (Regrets/Desires)">Wish & If Only</option>
+                        <option value="Causative Form (Have/Get something done)">Causative Form</option>
+                        <option value="Modal Verbs in the Past (must have / should have)">Modals in the Past</option>
+                        <option value="Compound Adjectives (well-known, thought-provoking)">Compound Adjectives</option>
+                        <option value="Relative Clauses (Defining & Non-Defining)">Relative Clauses</option>
+                        <option value="Gerund vs Infinitive">Gerund vs Infinitive</option>
+                      </optgroup>
+                      <optgroup label="🌍 BAC Vocab Themes">
+                        <option value="Education and Vocational Training — English">Education & Schooling</option>
+                        <option value="Brain Drain & Migration — English">Brain Drain</option>
+                        <option value="Sustainable Development & Ecology — English">Sustainability</option>
+                        <option value="Technology & Innovation — English">Tech & Innovation</option>
+                        <option value="Social Media & Cyber-crime — English">Social Media Risks</option>
+                        <option value="Human Rights & Volunteering — English">Human Rights</option>
+                        <option value="Healthy Lifestyle & Nutrition — English">Health & Nutrition</option>
+                        <option value="Youth & Society — English">Youth & Society</option>
+                      </optgroup>
+                      <optgroup label="✍️ Writing Skills">
+                        <option value="Argumentative Essay Connectors — English">Essay Connectors</option>
+                        <option value="Article Writing Hooks — English">Article Writing</option>
+                        <option value="Formal Letter Structure — English">Formal Letters</option>
+                        <option value="Email to a Friend — English">Informal Email</option>
+                        <option value="Paraphrasing Techniques — English">Paraphrase Pro</option>
+                      </optgroup>
+                    </>)}
+
+                    {/* ── FRENCH ── */}
+                    {language === "FRENCH" && (<>
+                      <optgroup label="💎 Grammaire Prioritaire">
+                        <option value="Le Subjonctif Présent et Passé">Le Subjonctif</option>
+                        <option value="Le Conditionnel Présent et Passé">Le Conditionnel</option>
+                        <option value="La Voix Passive en français">La Voix Passive</option>
+                        <option value="Le Discours Indirect — Concordance des Temps">Le Discours Indirect</option>
+                        <option value="Les Connecteurs Logiques du BAC">Les Connecteurs</option>
+                        <option value="La Nominalisation (verbe → nom)">La Nominalisation</option>
+                        <option value="Le Gérondif et le Participe Présent">Le Gérondif</option>
+                        <option value="Les Pronoms Relatifs (dont, lequel, auquel)">Pronoms Relatifs</option>
+                        <option value="La Concordance des Temps">Concordance des Temps</option>
+                        <option value="L'Imparfait vs Le Passé Composé">Imparfait vs Passé Composé</option>
+                      </optgroup>
+                      <optgroup label="🌍 Thèmes Vocabulaire BAC">
+                        <option value="La Mondialisation et ses effets — Français">La Mondialisation</option>
+                        <option value="L'Environnement et le Développement Durable — Français">L'Environnement</option>
+                        <option value="Les Droits de l'Homme — Français">Les Droits de l'Homme</option>
+                        <option value="La Technologie et l'Intelligence Artificielle — Français">La Technologie & IA</option>
+                        <option value="La Jeunesse et la Société — Français">La Jeunesse</option>
+                        <option value="L'Immigration et la Fuite des Cerveaux — Français">L'Immigration</option>
+                        <option value="La Culture et l'Identité — Français">Culture & Identité</option>
+                        <option value="La Santé et le Mode de Vie — Français">Santé & Mode de Vie</option>
+                      </optgroup>
+                      <optgroup label="✍️ Expression Écrite">
+                        <option value="La Dissertation Argumentative — Français">La Dissertation</option>
+                        <option value="Le Commentaire de Texte — Français">Le Commentaire</option>
+                        <option value="La Lettre Formelle en français">La Lettre Formelle</option>
+                        <option value="L'Article de Presse — Français">L'Article de Presse</option>
+                        <option value="La Reformulation et La Paraphrase — Français">La Reformulation</option>
+                      </optgroup>
+                    </>)}
+
+                    {/* ── ARABIC ── */}
+                    {language === "ARABIC" && (<>
+                      <optgroup label="💎 النحو والصرف">
+                        <option value="الجملة الفعلية والاسمية — العربية">الجملة الفعلية والاسمية</option>
+                        <option value="الفعل المبني للمجهول — العربية">الفعل المبني للمجهول</option>
+                        <option value="أسلوب الشرط وجوابه — العربية">أسلوب الشرط</option>
+                        <option value="الأساليب الإنشائية (الأمر والنهي والاستفهام) — العربية">الأساليب الإنشائية</option>
+                        <option value="أسلوب التوكيد والمفعول المطلق — العربية">التوكيد والمفعول المطلق</option>
+                        <option value="الحال والتمييز — العربية">الحال والتمييز</option>
+                        <option value="البدل والنعت والعطف — العربية">البدل والنعت والعطف</option>
+                        <option value="الإعراب التفصيلي — العربية">الإعراب التفصيلي</option>
+                      </optgroup>
+                      <optgroup label="🎭 الأدب والبلاغة">
+                        <option value="الاستعارة والتشبيه والكناية — العربية">الاستعارة والتشبيه</option>
+                        <option value="الصور البيانية وتحليل النصوص — العربية">الصور البيانية</option>
+                        <option value="تحليل القصيدة الشعرية — العربية">تحليل الشعر</option>
+                        <option value="الموازين والأوزان الشعرية — العربية">العروض والموازين</option>
+                        <option value="أنواع الأساليب الأدبية — العربية">الأساليب الأدبية</option>
+                      </optgroup>
+                      <optgroup label="✍️ التعبير الكتابي">
+                        <option value="المقالة الحجاجية — العربية">المقالة الحجاجية</option>
+                        <option value="روابط الحجاج والتعليل — العربية">روابط الحجاج</option>
+                        <option value="التلخيص واعادة الصياغة — العربية">التلخيص والصياغة</option>
+                        <option value="الرسالة الرسمية بالعربية">الرسالة الرسمية</option>
+                        <option value="مفردات القضايا الاجتماعية — العربية">القضايا الاجتماعية</option>
+                      </optgroup>
+                    </>)}
+
+                    {/* ── ITALIAN ── */}
+                    {language === "ITALIAN" && (<>
+                      <optgroup label="💎 Grammatica Prioritaria">
+                        <option value="Il Congiuntivo (presente, passato, imperfetto)">Il Congiuntivo</option>
+                        <option value="Il Condizionale Presente e Passato">Il Condizionale</option>
+                        <option value="La Voce Passiva in italiano">La Voce Passiva</option>
+                        <option value="Il Discorso Indiretto — Concordanza dei Tempi">Il Discorso Indiretto</option>
+                        <option value="I Pronomi Relativi (che, cui, il quale)">I Pronomi Relativi</option>
+                        <option value="Il Gerundio e il Participio Presente">Il Gerundio</option>
+                        <option value="Passato Prossimo vs Imperfetto vs Trapassato">I Tempi del Passato</option>
+                        <option value="I Connettivi Logici dell'Italiano">I Connettivi</option>
+                      </optgroup>
+                      <optgroup label="🌍 Temi Vocabolario BAC">
+                        <option value="L'Ambiente e lo Sviluppo Sostenibile — Italiano">L'Ambiente</option>
+                        <option value="La Tecnologia e l'Intelligenza Artificiale — Italiano">La Tecnologia</option>
+                        <option value="La Globalizzazione — Italiano">La Globalizzazione</option>
+                        <option value="I Giovani e la Società — Italiano">I Giovani</option>
+                        <option value="I Diritti Umani — Italiano">I Diritti Umani</option>
+                        <option value="La Cultura Italiana — Italiano">La Cultura Italiana</option>
+                      </optgroup>
+                      <optgroup label="✍️ Scrittura">
+                        <option value="Il Tema Argomentativo — Italiano">Il Tema Argomentativo</option>
+                        <option value="La Lettera Formale in Italiano">La Lettera Formale</option>
+                        <option value="L'Articolo di Giornale — Italiano">L'Articolo</option>
+                      </optgroup>
+                    </>)}
+
+                    {/* ── SPANISH ── */}
+                    {language === "SPANISH" && (<>
+                      <optgroup label="💎 Gramática Prioritaria">
+                        <option value="El Subjuntivo Presente y Pasado">El Subjuntivo</option>
+                        <option value="El Condicional Simple y Compuesto">El Condicional</option>
+                        <option value="La Voz Pasiva en Español">La Voz Pasiva</option>
+                        <option value="El Estilo Indirecto — Concordancia Verbal">El Estilo Indirecto</option>
+                        <option value="Los Conectores Discursivos del BAC">Los Conectores</option>
+                        <option value="Ser vs Estar — Usos y Diferencias">Ser vs Estar</option>
+                        <option value="El Gerundio y el Infinitivo">El Gerundio</option>
+                        <option value="Los Tiempos del Pasado (pretérito/imperfecto/pluscuamperfecto)">Tiempos del Pasado</option>
+                      </optgroup>
+                      <optgroup label="🌍 Temas Vocabulario BAC">
+                        <option value="El Medio Ambiente y la Sostenibilidad — Español">El Medio Ambiente</option>
+                        <option value="La Tecnología y La IA — Español">La Tecnología</option>
+                        <option value="La Globalización — Español">La Globalización</option>
+                        <option value="Los Jóvenes y la Sociedad — Español">Los Jóvenes</option>
+                        <option value="Los Derechos Humanos — Español">Los Derechos Humanos</option>
+                        <option value="La Cultura Hispana — Español">La Cultura Hispana</option>
+                      </optgroup>
+                      <optgroup label="✍️ Escritura">
+                        <option value="El Ensayo Argumentativo — Español">El Ensayo</option>
+                        <option value="La Carta Formal en Español">La Carta Formal</option>
+                        <option value="El Artículo Periodístico — Español">El Artículo</option>
+                      </optgroup>
+                    </>)}
+
+                    {/* ── GERMAN ── */}
+                    {language === "GERMAN" && (<>
+                      <optgroup label="💎 Grammatik Prioritäten">
+                        <option value="Der Konjunktiv II (Gegenwart und Vergangenheit)">Der Konjunktiv II</option>
+                        <option value="Das Passiv (Vorgangspassiv und Zustandspassiv)">Das Passiv</option>
+                        <option value="Die Indirekte Rede (Konjunktiv I)">Die Indirekte Rede</option>
+                        <option value="Relativsätze mit Relativpronomen">Relativsätze</option>
+                        <option value="Infinitivkonstruktionen (um...zu, ohne...zu, statt...zu)">Infinitivkonstruktionen</option>
+                        <option value="Kausale, konzessive und finale Konnektoren">Konnektoren</option>
+                        <option value="Die Wortstellung im Haupt- und Nebensatz">Wortstellung</option>
+                        <option value="Partizipialattribute und Partizipialsätze">Partizipialattribute</option>
+                      </optgroup>
+                      <optgroup label="🌍 Wortschatz Themen">
+                        <option value="Umwelt und Nachhaltigkeit — Deutsch">Umwelt</option>
+                        <option value="Technologie und Künstliche Intelligenz — Deutsch">Technologie & KI</option>
+                        <option value="Globalisierung — Deutsch">Globalisierung</option>
+                        <option value="Jugend und Gesellschaft — Deutsch">Jugend</option>
+                        <option value="Menschenrechte — Deutsch">Menschenrechte</option>
+                      </optgroup>
+                      <optgroup label="✍️ Schreiben">
+                        <option value="Der Argumentative Aufsatz — Deutsch">Der Aufsatz</option>
+                        <option value="Der Formelle Brief auf Deutsch">Der Formelle Brief</option>
+                        <option value="Der Zeitungsartikel — Deutsch">Der Zeitungsartikel</option>
+                      </optgroup>
+                    </>)}
+
+                    {/* ── RUSSIAN ── */}
+                    {language === "RUSSIAN" && (<>
+                      <optgroup label="💎 Грамматика">
+                        <option value="Виды глагола — совершенный и несовершенный">Виды глагола</option>
+                        <option value="Причастия и деепричастия в русском языке">Причастия и деепричастия</option>
+                        <option value="Падежи существительных — все 6 падежей">Падежи</option>
+                        <option value="Сложноподчинённые предложения">Сложные предложения</option>
+                        <option value="Степени сравнения прилагательных">Степени сравнения</option>
+                        <option value="Возвратные глаголы на -ся/-сь">Возвратные глаголы</option>
+                        <option value="Глаголы движения (идти/ходить/ехать/ездить)">Глаголы движения</option>
+                        <option value="Числительные — количественные и порядковые">Числительные</option>
+                      </optgroup>
+                      <optgroup label="🌍 Тематика">
+                        <option value="Экология и устойчивое развитие — Русский">Экология</option>
+                        <option value="Технологии и ИИ — Русский">Технологии</option>
+                        <option value="Молодёжь и общество — Русский">Молодёжь</option>
+                        <option value="Права человека — Русский">Права человека</option>
+                        <option value="Русская культура и литература — Русский">Культура</option>
+                      </optgroup>
+                      <optgroup label="✍️ Письмо">
+                        <option value="Аргументативное эссе — Русский">Эссе</option>
+                        <option value="Официальное письмо — Русский">Официальное письмо</option>
+                        <option value="Газетная статья — Русский">Статья</option>
+                      </optgroup>
+                    </>)}
+
+                    {/* ── CHINESE ── */}
+                    {language === "CHINESE" && (<>
+                      <optgroup label="💎 语法重点">
+                        <option value="把字句和被字句 — 汉语">把字句和被字句</option>
+                        <option value="结果补语和趋向补语 — 汉语">结果补语和趋向补语</option>
+                        <option value="连词使用 (虽然...但是, 因为...所以) — 汉语">连词使用</option>
+                        <option value="量词系统 — 汉语">量词系统</option>
+                        <option value="离合词的用法 — 汉语">离合词</option>
+                        <option value="兼语句 — 汉语">兼语句</option>
+                        <option value="程度补语 (得) — 汉语">程度补语</option>
+                        <option value="紧缩句和条件句 — 汉语">紧缩句和条件句</option>
+                      </optgroup>
+                      <optgroup label="🌍 词汇主题">
+                        <option value="环境保护和可持续发展 — 汉语">环境保护</option>
+                        <option value="科技发展和人工智能 — 汉语">科技发展</option>
+                        <option value="全球化 — 汉语">全球化</option>
+                        <option value="青年与社会 — 汉语">青年与社会</option>
+                        <option value="人权 — 汉语">人权</option>
+                        <option value="中国文化与传统 — 汉语">中国文化</option>
+                      </optgroup>
+                      <optgroup label="✍️ 写作技巧">
+                        <option value="议论文写作 — 汉语">议论文</option>
+                        <option value="说明文写作 — 汉语">说明文</option>
+                        <option value="书信格式 — 汉语">书信</option>
+                      </optgroup>
+                    </>)}
                   </select>
                   <input 
                     placeholder='Or type custom topic...' 
