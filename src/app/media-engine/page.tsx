@@ -19,14 +19,13 @@ export default function MediaEnginePage() {
           </Link>
           <div className="flex items-center gap-4">
             <span className="text-white/60 text-sm">Media Engine</span>
-            <a 
-              href="/media-kit/bac-excellence-shareable-cards.zip"
-              download
+            <Link 
+              href="/admin?tab=social"
               className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold transition-colors"
             >
               <Download size={16} />
-              Download ZIP
-            </a>
+              Open Media Forge
+            </Link>
           </div>
         </div>
       </header>
@@ -113,14 +112,14 @@ export default function MediaEnginePage() {
           </div>
 
           <div className="text-center">
-            <a 
-              href="/media-kit/bac-excellence-shareable-cards.zip"
-              download
+            <Link 
+              href="/admin?tab=social"
               className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-2xl font-bold text-lg transition-all shadow-lg shadow-indigo-500/25"
             >
               <Download size={24} />
-              Download All Cards (ZIP)
-            </a>
+              Generate &amp; Download Cards
+            </Link>
+            <p className="text-white/40 text-sm mt-3">Powered by Media Forge 2.0 — choose a topic, generate 28 branded cards, download as ZIP</p>
           </div>
         </div>
       </section>

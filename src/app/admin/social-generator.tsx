@@ -90,36 +90,133 @@ const THEMES: Record<Theme, { bg: string; accent: string; glow: string; border: 
   },
 };
 
-async function exportCard(ref: React.RefObject<HTMLDivElement | null>, name: string): Promise<Blob | null> {
+// Robust card capture — decodes base64 directly, never uses fetch() on data URLs
+async function exportCard(
+  ref: React.RefObject<HTMLDivElement | null>,
+  name: string
+): Promise<Blob | null> {
   if (!ref.current) return null;
   try {
-    const url = await toPng(ref.current, { cacheBust: true, pixelRatio: 3 });
-    const response = await fetch(url);
-    return await response.blob();
+    // Let the browser finish any pending paint before capturing
+    await new Promise<void>(r => requestAnimationFrame(() => r()));
+
+    const dataUrl = await toPng(ref.current, {
+      cacheBust: true,
+      pixelRatio: 2,       // 800×800 — retina quality, avoids OOM at 28 cards
+      skipFonts: false,
+      style: { fontFamily: "system-ui, -apple-system, sans-serif" },
+    });
+
+    // Decode base64 data URL → Blob without using fetch()
+    const [header, b64] = dataUrl.split(",");
+    const mime = header.match(/:(.*?);/)?.[1] ?? "image/png";
+    const binary = atob(b64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: mime });
   } catch (e) {
-    console.error(e);
+    console.error(`[exportCard] "${name}" failed:`, e);
     return null;
   }
 }
 
+// Organised ZIP with sub-folders + README.txt
 async function exportAllCards(
-  refs: { name: string; ref: React.RefObject<HTMLDivElement | null> }[],
-  topic: string
-) {
+  refs: { name: string; folder: string; ref: React.RefObject<HTMLDivElement | null> }[],
+  topic: string,
+  captions: string[]
+): Promise<{ ok: number; fail: number }> {
   const zip = new JSZip();
-  const folder = zip.folder(`bac-excellence-${topic.toLowerCase().replace(/\s+/g, "-")}`);
-  
-  if (!folder) return;
-  
-  for (const { name, ref } of refs) {
+  const slug = topic.toLowerCase().replace(/\s+/g, "-") || "mastery-pack";
+  const root = zip.folder("bac-excellence-" + slug)!;
+
+  const subFolders: Record<string, JSZip> = {
+    "01-hook":        root.folder("01-hook")!,
+    "02-mastery":     root.folder("02-mastery-cards")!,
+    "03-growth":      root.folder("03-growth-viral")!,
+    "04-badges":      root.folder("04-badges")!,
+    "05-interactive": root.folder("05-interactive")!,
+  };
+
+  let ok = 0;
+  let fail = 0;
+
+  for (const { name, folder, ref } of refs) {
+    // 80 ms gap between captures — prevents tab freeze & OOM
+    await new Promise(r => setTimeout(r, 80));
     const blob = await exportCard(ref, name);
     if (blob) {
-      folder.file(`${name}.png`, blob);
+      (subFolders[folder] ?? root).file(name + ".png", blob);
+      ok++;
+    } else {
+      fail++;
     }
   }
-  
-  const content = await zip.generateAsync({ type: "blob" });
-  saveAs(content, `bac-excellence-${topic.toLowerCase().replace(/\s+/g, "-")}-pack.zip`);
+
+  if (ok === 0) {
+    throw new Error(
+      "No cards could be captured (" + fail + " failed). " +
+      "Scroll through the page so all cards are rendered, then try again."
+    );
+  }
+
+  // Auto-generated README
+  const hashtags = "#BAC2026 #BacTunisie #EnglishBAC #StudyTips #BacExcellence #StudyMotivation";
+  const schedule = [
+    "Mon  ->  02-mastery-cards   (educational hook)",
+    "Tue  ->  05-interactive     (quiz or fill-blank)",
+    "Wed  ->  05-interactive     (motivation or myth-fact)",
+    "Thu  ->  03-growth-viral    (grade-flip or stats)",
+    "Fri  ->  04-badges          (streak or master badge)",
+    "Sat  ->  01-hook            (hook card — highest reach day)",
+    "Sun  ->  03-growth-viral    (referral card — tag 3 friends)",
+  ];
+  const captionBlock = captions.length
+    ? captions.map((c, i) => "--- Caption Variant " + (i + 1) + " ---\n" + c).join("\n\n")
+    : "Generate a topic pack first to unlock AI caption variants.";
+
+  root.file("README.txt", [
+    "BAC EXCELLENCE — CONTENT KIT",
+    "=============================",
+    "",
+    "Topic   : " + (topic || "Mastery Pack"),
+    "Created : " + new Date().toLocaleDateString("en-GB"),
+    "Cards   : " + ok + " PNG files at 800x800 (2x retina)",
+    "",
+    "FOLDER STRUCTURE",
+    "----------------",
+    "01-hook/           -> Post on Saturday for maximum reach",
+    "02-mastery-cards/  -> AI vocabulary + grammar cards",
+    "03-growth-viral/   -> Grade-flip, referral & stats",
+    "04-badges/         -> Achievement badges",
+    "05-interactive/    -> Quiz, checklist, fill-blank",
+    "",
+    "7-DAY POSTING SCHEDULE",
+    "----------------------",
+    ...schedule,
+    "",
+    "BEST TIMES (Tunis timezone)",
+    "---------------------------",
+    "Instagram Feed    ->  6-8 PM   |  Tue, Thu, Sat",
+    "Instagram Stories ->  12-1 PM  |  Daily",
+    "TikTok            ->  7-9 PM   |  Wed, Fri, Sun",
+    "WhatsApp Status   ->  8-10 PM  |  Daily",
+    "Facebook          ->  12-1 PM  |  Mon, Wed, Fri",
+    "",
+    "HASHTAGS",
+    "--------",
+    hashtags,
+    "",
+    "READY-TO-PASTE CAPTIONS",
+    "-----------------------",
+    captionBlock,
+    "",
+    "Generated by Bac Excellence Media Forge 2.0",
+  ].join("\n"));
+
+  const content = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
+  saveAs(content, "bac-excellence-" + slug + "-pack.zip");
+  return { ok, fail };
 }
 
 function CardShell({
@@ -449,43 +546,55 @@ export function SocialGenerator() {
 
   async function handleBatchExport() {
     setIsExporting(true);
-    const cardRefs = [
-      { name: "00-hook", ref: hookRef },
-      ...(synonyms.length ? [{ name: "01-synonyms", ref: synRef }] : []),
-      ...(antonyms.length ? [{ name: "02-antonyms", ref: antRef }] : []),
-      ...(vocabulary.length ? [{ name: "03-vocabulary", ref: vocabRef }] : []),
-      ...(phrases.length ? [{ name: "04-phrases", ref: phraseRef }] : []),
-      ...(collocations.length ? [{ name: "05-collocations", ref: collocRef }] : []),
-      ...(idioms.length ? [{ name: "06-idioms", ref: idiomRef }] : []),
-      ...(connectors.length ? [{ name: "07-connectors", ref: connRef }] : []),
-      ...(wordFamily.length ? [{ name: "08-word-family", ref: wfRef }] : []),
-      ...(paraphrases.length ? [{ name: "09-paraphrases", ref: paraRef }] : []),
-      ...(commonMistakes.length ? [{ name: "10-mistakes", ref: mistakeRef }] : []),
-      ...(grammarPatterns.length ? [{ name: "11-grammar", ref: grammarRef }] : []),
-      ...(writingTips.length ? [{ name: "12-tips", ref: tipsRef }] : []),
-      
-      // Growth & Viral Cards
-      { name: "v01-grade-flip", ref: gradeFlipRef },
-      { name: "v02-referral-hero", ref: referralRef },
-      { name: "v03-study-stats", ref: statsRef },
-      { name: "v04-streak-badge", ref: streakBadgeRef },
-      { name: "v05-master-badge", ref: masterBadgeRef },
-      { name: "v06-top10-badge", ref: top10BadgeRef },
-      
-      // Educational Interactive Cards
-      { name: "e01-quiz-poll", ref: quizPollRef },
-      { name: "e02-checklist", ref: checklistRef },
-      { name: "e03-motivation", ref: motivationRef },
-      { name: "e04-essay-transformation", ref: essayCompareRef },
-      { name: "e05-did-you-know", ref: didYouKnowRef },
-      { name: "e06-this-or-that", ref: thisOrThatRef },
-      { name: "e07-fill-blank", ref: fillBlankRef },
-      { name: "e08-myth-fact", ref: mythFactRef },
-      { name: "e09-study-schedule", ref: studyScheduleRef },
-    ];
-    
-    await exportAllCards(cardRefs, topic || "mastery-pack");
-    setIsExporting(false);
+    try {
+      const cardRefs: { name: string; folder: string; ref: React.RefObject<HTMLDivElement | null> }[] = [
+        { name: "00-hook",              folder: "01-hook",        ref: hookRef },
+
+        // AI Mastery Cards
+        ...(synonyms.length        ? [{ name: "01-synonyms",      folder: "02-mastery", ref: synRef }]     : []),
+        ...(antonyms.length        ? [{ name: "02-antonyms",      folder: "02-mastery", ref: antRef }]     : []),
+        ...(vocabulary.length      ? [{ name: "03-vocabulary",    folder: "02-mastery", ref: vocabRef }]   : []),
+        ...(phrases.length         ? [{ name: "04-phrases",       folder: "02-mastery", ref: phraseRef }]  : []),
+        ...(collocations.length    ? [{ name: "05-collocations",  folder: "02-mastery", ref: collocRef }]  : []),
+        ...(idioms.length          ? [{ name: "06-idioms",        folder: "02-mastery", ref: idiomRef }]   : []),
+        ...(connectors.length      ? [{ name: "07-connectors",    folder: "02-mastery", ref: connRef }]    : []),
+        ...(wordFamily.length      ? [{ name: "08-word-family",   folder: "02-mastery", ref: wfRef }]      : []),
+        ...(paraphrases.length     ? [{ name: "09-paraphrases",   folder: "02-mastery", ref: paraRef }]    : []),
+        ...(commonMistakes.length  ? [{ name: "10-mistakes",      folder: "02-mastery", ref: mistakeRef }] : []),
+        ...(grammarPatterns.length ? [{ name: "11-grammar",       folder: "02-mastery", ref: grammarRef }] : []),
+        ...(writingTips.length     ? [{ name: "12-tips",          folder: "02-mastery", ref: tipsRef }]    : []),
+
+        // Growth & Viral
+        { name: "v01-grade-flip",    folder: "03-growth",       ref: gradeFlipRef },
+        { name: "v02-referral-hero", folder: "03-growth",       ref: referralRef },
+        { name: "v03-study-stats",   folder: "03-growth",       ref: statsRef },
+
+        // Badges
+        { name: "v04-streak-badge",  folder: "04-badges",       ref: streakBadgeRef },
+        { name: "v05-master-badge",  folder: "04-badges",       ref: masterBadgeRef },
+        { name: "v06-top10-badge",   folder: "04-badges",       ref: top10BadgeRef },
+
+        // Interactive
+        { name: "e01-quiz-poll",     folder: "05-interactive",  ref: quizPollRef },
+        { name: "e02-checklist",     folder: "05-interactive",  ref: checklistRef },
+        { name: "e03-motivation",    folder: "05-interactive",  ref: motivationRef },
+        { name: "e04-essay-compare", folder: "05-interactive",  ref: essayCompareRef },
+        { name: "e05-did-you-know",  folder: "05-interactive",  ref: didYouKnowRef },
+        { name: "e06-this-or-that",  folder: "05-interactive",  ref: thisOrThatRef },
+        { name: "e07-fill-blank",    folder: "05-interactive",  ref: fillBlankRef },
+        { name: "e08-myth-fact",     folder: "05-interactive",  ref: mythFactRef },
+        { name: "e09-study-schedule",folder: "05-interactive",  ref: studyScheduleRef },
+      ];
+
+      const { ok, fail } = await exportAllCards(cardRefs, topic || "mastery-pack", captions);
+      if (fail > 0) {
+        alert(`✅ ${ok} cards exported!\n⚠️ ${fail} card(s) could not be captured — scroll through the page to render them all first.`);
+      }
+    } catch (err: any) {
+      alert(`❌ Export failed: ${err.message}`);
+    } finally {
+      setIsExporting(false);
+    }
   }
 
   return (
