@@ -304,7 +304,7 @@ export function BulkGenerator() {
                    <div style={{ fontSize: "24px", color: "#6366f1", fontWeight: "800", marginTop: "16px", letterSpacing: "4px" }}>ELITE PREP / 2026</div>
                    
                    {/* Slogans with perfect Arabic shaping */}
-                   <div style={{ marginTop: "60px", stack: "stack", gap: "16px" }}>
+                   <div style={{ marginTop: "60px", display: "flex", flexDirection: "column", gap: "16px" }}>
                       <div style={{ fontSize: "32px", color: "rgba(255,255,255,0.9)", fontWeight: "600" }}>The first AI platform in Tunisia for languages</div>
                       <div style={{ fontSize: "44px", color: "white", fontWeight: "900", marginTop: "15px" }}>أول منصة ذكاء اصطناعي في تونس للغات</div>
                    </div>
@@ -421,7 +421,7 @@ export function BulkGenerator() {
       {/* HIDDEN RENDERER (For Zip Image Pack Only) */}
       <div style={{ position: "absolute", left: "-9999px", top: 0, opacity: 0, pointerEvents: "none" }}>
           {items.map((it, idx) => (
-             <div key={idx} ref={el => cardRefs.current[idx] = el} style={{ width: "1080px", height: "1920px", background: "#060812", position: "relative", display: "flex", flexDirection: "column", padding: "80px", fontFamily: "sans-serif" }}>
+             <div key={idx} ref={el => { cardRefs.current[idx] = el; }} style={{ width: "1080px", height: "1920px", background: "#060812", position: "relative", display: "flex", flexDirection: "column", padding: "80px", fontFamily: "sans-serif" }}>
                 <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 30% 30%, rgba(99,102,241,0.1), transparent), radial-gradient(circle at 70% 70%, rgba(168,85,247,0.1), transparent)" }} />
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "120px" }}>
                    <div style={{ width: "120px", height: "120px", background: "linear-gradient(135deg, #6366f1, #a855f7)", borderRadius: "34px", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: "74px", fontWeight: "900", marginBottom: "40px" }}>B</div>
