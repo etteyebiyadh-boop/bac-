@@ -510,18 +510,32 @@ export function SocialGenerator() {
             onClick={handleBatchExport}
             disabled={isExporting}
             style={{ 
-              background: "white", 
+              background: isExporting ? "rgba(255,255,255,0.7)" : "white", 
               color: "black", 
               border: "none", 
               borderRadius: 12, 
               padding: "12px 24px", 
               fontWeight: 900, 
               fontSize: 13, 
-              cursor: "pointer",
-              boxShadow: "0 10px 20px rgba(255,255,255,0.1)"
+              cursor: isExporting ? "wait" : "pointer",
+              boxShadow: "0 10px 20px rgba(255,255,255,0.1)",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              transition: "all 0.2s"
             }}
           >
-            {isExporting ? "📦 Forging ZIP..." : "⚡ Download 27+ Page Pack"}
+            {isExporting ? (
+              <>
+                <span style={{ display: "inline-block", animation: "spin 1s linear infinite" }}>⏳</span>
+                Forging ZIP…
+              </>
+            ) : (
+              <>
+                <span>📦</span>
+                Download All Cards (.zip)
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -818,6 +832,59 @@ export function SocialGenerator() {
           </div>
         </div>
       )}
+
+      {/* ══════════ DOWNLOAD ALL ZIP CTA ══════════ */}
+      <div style={{
+        background: "linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(168,85,247,0.1) 50%, rgba(236,72,153,0.1) 100%)",
+        border: "1px solid rgba(168,85,247,0.4)",
+        borderRadius: 20,
+        padding: "28px 36px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 24,
+        flexWrap: "wrap",
+        marginTop: 32
+      }}>
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 900, color: "#a855f7", letterSpacing: 2, marginBottom: 6 }}>📦 ONE-CLICK DOWNLOAD</div>
+          <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", marginBottom: 6 }}>Get All Cards as a ZIP File</div>
+          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.55)" }}>
+            {hasContent
+              ? `${27 + [synonyms,antonyms,vocabulary,phrases,collocations,idioms,connectors,wordFamily,paraphrases,commonMistakes,grammarPatterns,writingTips].filter(a=>a.length>0).length} cards ready — includes all growth, interactive & AI mastery cards`
+              : "15+ static cards ready now — generate a pack to unlock 12 more AI-powered mastery cards"}
+          </div>
+        </div>
+        <button
+          onClick={handleBatchExport}
+          disabled={isExporting}
+          style={{
+            background: isExporting
+              ? "rgba(168,85,247,0.4)"
+              : "linear-gradient(135deg, #a855f7 0%, #6366f1 100%)",
+            color: "#fff",
+            border: "none",
+            borderRadius: 16,
+            padding: "18px 36px",
+            fontWeight: 900,
+            fontSize: 15,
+            cursor: isExporting ? "wait" : "pointer",
+            boxShadow: isExporting ? "none" : "0 8px 32px rgba(168,85,247,0.4)",
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            whiteSpace: "nowrap",
+            transition: "all 0.3s",
+            letterSpacing: 0.5
+          }}
+        >
+          {isExporting ? (
+            <><span>⏳</span> Creating ZIP…</>
+          ) : (
+            <><span>⬇️</span> Download All Cards (.zip)</>
+          )}
+        </button>
+      </div>
 
       {/* ══════════ GROWTH CARDS (For Platform Virality) ══════════ */}
       <div className="stack" style={{ gap: 48, marginTop: 32 }}>
@@ -1714,6 +1781,64 @@ export function SocialGenerator() {
           ); })()}
         </div>
       )}
+      {/* ══════════ STICKY FLOATING ZIP BUTTON ══════════ */}
+      <div style={{
+        position: "fixed",
+        bottom: 32,
+        right: 32,
+        zIndex: 9999,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-end",
+        gap: 8
+      }}>
+        {isExporting && (
+          <div style={{
+            background: "rgba(0,0,0,0.85)",
+            border: "1px solid rgba(168,85,247,0.5)",
+            borderRadius: 12,
+            padding: "10px 18px",
+            fontSize: 12,
+            color: "#a855f7",
+            fontWeight: 700,
+            backdropFilter: "blur(12px)"
+          }}>
+            ⏳ Capturing cards... please wait
+          </div>
+        )}
+        <button
+          onClick={handleBatchExport}
+          disabled={isExporting}
+          title="Download all cards as a single ZIP file"
+          style={{
+            background: isExporting
+              ? "rgba(30,30,40,0.9)"
+              : "linear-gradient(135deg, #a855f7 0%, #6366f1 60%, #ec4899 100%)",
+            color: "#fff",
+            border: isExporting ? "1px solid rgba(168,85,247,0.4)" : "none",
+            borderRadius: 20,
+            padding: "16px 24px",
+            fontWeight: 900,
+            fontSize: 14,
+            cursor: isExporting ? "wait" : "pointer",
+            boxShadow: isExporting
+              ? "none"
+              : "0 8px 40px rgba(168,85,247,0.5), 0 2px 8px rgba(0,0,0,0.4)",
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            whiteSpace: "nowrap",
+            transition: "all 0.3s",
+            backdropFilter: "blur(8px)"
+          }}
+        >
+          {isExporting ? (
+            <>⏳ Building ZIP…</>
+          ) : (
+            <>📦 Download All Cards</>
+          )}
+        </button>
+      </div>
     </section>
   );
 }
