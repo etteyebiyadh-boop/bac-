@@ -334,7 +334,7 @@ export function BulkGenerator() {
                 1. Import the generated **CSV** file into Canva.<br/>
                 2. Upload the **MP4 Template** as background.<br/>
                 3. Connect CSV fields to text elements.<br/>
-                4. Click "Generate" to get {items.length || 30} videos instantly.
+                4. Click &quot;Generate&quot; to get {items.length || 30} videos instantly.
               </p>
            </div>
         </div>
