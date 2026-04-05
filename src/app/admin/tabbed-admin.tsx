@@ -5,11 +5,12 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { PlanToggleForm } from "./plan-toggle-form";
 import { LessonForm } from "./lesson-form";
 import { SocialGenerator } from "./social-generator";
+import { BulkGenerator } from "./bulk-generator";
 import { AnalyticsDashboard } from "./analytics-dashboard";
 
 import { Shield, AlertTriangle, ShieldCheck, Activity, Users, Lock, ChevronRight } from "lucide-react";
 
-type AdminTab = "USERS" | "CONTENT" | "SECURITY" | "MARKETING" | "ANALYTICS";
+type AdminTab = "USERS" | "CONTENT" | "SECURITY" | "MARKETING" | "BULK" | "ANALYTICS";
 
 interface TabbedAdminProps {
   recentUsers: any[];
@@ -64,8 +65,9 @@ export function TabbedAdmin({ recentUsers, securityStats }: TabbedAdminProps) {
           { id: "USERS", label: "Students", icon: "💎" },
           { id: "CONTENT", label: "Curriculum", icon: "📚" },
           { id: "SECURITY", label: "Security", icon: "🛡️" },
-          { id: "ANALYTICS", label: "Analytics", icon: "📊" },
-          { id: "MARKETING", label: "Media Engine", icon: "🚀" }
+          { id: "MARKETING", label: "Media Engine", icon: "🚀" },
+          { id: "BULK", label: "Bulk Engine", icon: "💎" },
+          { id: "ANALYTICS", label: "Analytics", icon: "📊" }
         ].map(tab => (
           <button 
             key={tab.id}
@@ -200,6 +202,12 @@ export function TabbedAdmin({ recentUsers, securityStats }: TabbedAdminProps) {
       {activeTab === "MARKETING" && (
         <div className="page-stack fadeIn">
           <SocialGenerator />
+        </div>
+      )}
+
+      {activeTab === "BULK" && (
+        <div className="page-stack fadeIn">
+          <BulkGenerator />
         </div>
       )}
 
