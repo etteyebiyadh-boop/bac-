@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useState, useRef } from "react";
@@ -424,6 +425,19 @@ export function SocialGenerator() {
   const [grammarPatterns, setGrammarPatterns] = useState<any[]>([]);
   const [writingTips,     setWritingTips]     = useState<string[]>([]);
   const [growthCards,     setGrowthCards]     = useState<any>(null);
+
+  // ── Language-aware card labels ───────────────────────────────────────────
+  const CARD_LABELS: Record<string, Record<string, string>> = {
+    ENGLISH: { synonyms:"SYNONYMS", antonyms:"ANTONYMS", vocab:"VOCAB", phrases:"EXAM PHRASES", collocations:"COLLOCATIONS", idioms:"IDIOMS & EXPRESSIONS", connectors:"CONNECTORS", wordFamily:"WORD FAMILY", paraphrases:"PARAPHRASES", mistakes:"COMMON MISTAKES", grammar:"GRAMMAR PATTERNS", tips:"WRITING TIPS" },
+    FRENCH:  { synonyms:"SYNONYMES", antonyms:"ANTONYMES", vocab:"VOCABULAIRE", phrases:"EXPRESSIONS CLÉS", collocations:"COLLOCATIONS", idioms:"EXPRESSIONS IDIOMATIQUES", connectors:"CONNECTEURS", wordFamily:"FAMILLE DE MOTS", paraphrases:"REFORMULATIONS", mistakes:"ERREURS FRÉQUENTES", grammar:"STRUCTURES GRAMMATICALES", tips:"CONSEILS D'ÉCRITURE" },
+    ARABIC:  { synonyms:"المترادفات", antonyms:"الأضداد", vocab:"المفردات", phrases:"العبارات الجوهرية", collocations:"التلازم اللغوي", idioms:"التعبيرات الاصطلاحية", connectors:"أدوات الربط", wordFamily:"عائلة الكلمة", paraphrases:"إعادة الصياغة", mistakes:"الأخطاء الشائعة", grammar:"الأنماط النحوية", tips:"نصائح الكتابة" },
+    ITALIAN: { synonyms:"SINONIMI", antonyms:"CONTRARI", vocab:"VOCABOLARIO", phrases:"FRASI CHIAVE", collocations:"COLLOCAZIONI", idioms:"ESPRESSIONI IDIOMATICHE", connectors:"CONNETTIVI", wordFamily:"FAMIGLIA DI PAROLE", paraphrases:"PARAFRASI", mistakes:"ERRORI COMUNI", grammar:"STRUTTURE GRAMMATICALI", tips:"CONSIGLI DI SCRITTURA" },
+    SPANISH: { synonyms:"SINÓNIMOS", antonyms:"ANTÓNIMOS", vocab:"VOCABULARIO", phrases:"FRASES CLAVE", collocations:"COLOCACIONES", idioms:"EXPRESIONES IDIOMÁTICAS", connectors:"CONECTORES", wordFamily:"FAMILIA DE PALABRAS", paraphrases:"PARÁFRASIS", mistakes:"ERRORES COMUNES", grammar:"ESTRUCTURAS GRAMATICALES", tips:"CONSEJOS DE ESCRITURA" },
+    GERMAN:  { synonyms:"SYNONYME", antonyms:"ANTONYME", vocab:"WORTSCHATZ", phrases:"SCHLÜSSELAUSDRÜCKE", collocations:"KOLLOKATIONEN", idioms:"REDEWENDUNGEN", connectors:"KONNEKTOREN", wordFamily:"WORTFAMILIE", paraphrases:"UMSCHREIBUNGEN", mistakes:"HÄUFIGE FEHLER", grammar:"GRAMMATIKSTRUKTUREN", tips:"SCHREIBTIPPS" },
+    RUSSIAN: { synonyms:"СИНОНИМЫ", antonyms:"АНТОНИМЫ", vocab:"СЛОВАРНЫЙ ЗАПАС", phrases:"КЛЮЧЕВЫЕ ФРАЗЫ", collocations:"СЛОВОСОЧЕТАНИЯ", idioms:"ИДИОМЫ", connectors:"СОЮЗЫ И КОННЕКТОРЫ", wordFamily:"СЛОВООБРАЗОВАНИЕ", paraphrases:"ПЕРЕФРАЗИРОВАНИЕ", mistakes:"ЧАСТЫЕ ОШИБКИ", grammar:"ГРАММАТИЧЕСКИЕ СТРУКТУРЫ", tips:"СОВЕТЫ ПО ПИСЬМУ" },
+    CHINESE: { synonyms:"同义词", antonyms:"反义词", vocab:"词汇", phrases:"关键短语", collocations:"词组搭配", idioms:"成语与惯用语", connectors:"连词与连接词", wordFamily:"词族", paraphrases:"改写练习", mistakes:"常见错误", grammar:"语法结构", tips:"写作技巧" },
+  };
+  const L = CARD_LABELS[language] || CARD_LABELS["ENGLISH"];
 
   // Computed property to check if any content exists
   const hasContent = synonyms.length > 0 || antonyms.length > 0 || vocabulary.length > 0 || 
@@ -1847,8 +1861,8 @@ export function SocialGenerator() {
             <div className="stack" style={{ gap: 16 }}>
               <ExportRow label="① Synonyms" color={ac} onExport={() => exportCard(synRef, "synonyms")} />
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <CardShell refProp={synRef} theme="grammar" watermark={watermark} label="SYNONYMS" accent={ac}>
-                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>SYNONYMS — {topic}</div>
+                <CardShell refProp={synRef} theme="grammar" watermark={watermark} label={L.synonyms} accent={ac}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>{L.synonyms} — {topic}</div>
                   <div className="stack" style={{ gap: 6 }}>
                     {synonyms.slice(0, 5).map((s, i) => (
                       <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", background: "rgba(255,255,255,0.04)", borderRadius: 8, border: `1px solid ${ac}22` }}>
@@ -1869,8 +1883,8 @@ export function SocialGenerator() {
             <div className="stack" style={{ gap: 16 }}>
               <ExportRow label="② Antonyms" color={ac} onExport={() => exportCard(antRef, "antonyms")} />
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <CardShell refProp={antRef} theme="retro" watermark={watermark} label="ANTONYMS" accent={ac}>
-                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>ANTONYMS — {topic}</div>
+                <CardShell refProp={antRef} theme="retro" watermark={watermark} label={L.antonyms} accent={ac}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>{L.antonyms} — {topic}</div>
                   <div className="stack" style={{ gap: 6 }}>
                     {antonyms.slice(0, 5).map((a, i) => (
                       <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", background: "rgba(255,255,255,0.04)", borderRadius: 8, border: `1px solid ${ac}22` }}>
@@ -1890,8 +1904,8 @@ export function SocialGenerator() {
             <div className="stack" style={{ gap: 16 }}>
               <ExportRow label="③ Vocabulary" color={ac} onExport={() => exportCard(vocabRef, "vocabulary")} />
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <CardShell refProp={vocabRef} theme="vocab" watermark={watermark} label="VOCABULARY" accent={ac}>
-                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>VOCAB — {topic}</div>
+                <CardShell refProp={vocabRef} theme="vocab" watermark={watermark} label={L.vocab} accent={ac}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>{L.vocab} — {topic}</div>
                   <div className="stack" style={{ gap: 8 }}>
                     {vocabulary.slice(0, 3).map((v, i) => (
                       <div key={i} style={{ padding: "9px 11px", background: "rgba(255,255,255,0.03)", borderRadius: 9, border: `1px solid ${ac}22` }}>
@@ -1914,8 +1928,8 @@ export function SocialGenerator() {
             <div className="stack" style={{ gap: 16 }}>
               <ExportRow label="④ Exam Phrases" color={ac} onExport={() => exportCard(phraseRef, "phrases")} />
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <CardShell refProp={phraseRef} theme="midnight" watermark={watermark} label="EXAM PHRASES" accent={ac}>
-                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>HIGH-SCORING PHRASES — {topic}</div>
+                <CardShell refProp={phraseRef} theme="midnight" watermark={watermark} label={L.phrases} accent={ac}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>{L.phrases} — {topic}</div>
                   <div className="stack" style={{ gap: 7 }}>
                     {phrases.slice(0, 5).map((p, i) => (
                       <div key={i} style={{ display: "flex", gap: 8, padding: "7px 10px", background: `${ac}0d`, borderRadius: 8, border: `1px solid ${ac}22` }}>
@@ -1934,8 +1948,8 @@ export function SocialGenerator() {
             <div className="stack" style={{ gap: 16 }}>
               <ExportRow label="⑤ Collocations" color={ac} onExport={() => exportCard(collocRef, "collocations")} />
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <CardShell refProp={collocRef} theme="elite" watermark={watermark} label="COLLOCATIONS" accent={ac}>
-                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>COLLOCATIONS — {topic}</div>
+                <CardShell refProp={collocRef} theme="elite" watermark={watermark} label={L.collocations} accent={ac}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>{L.collocations} — {topic}</div>
                   <div className="stack" style={{ gap: 8 }}>
                     {collocations.slice(0, 5).map((c, i) => (
                       <div key={i} style={{ padding: "8px 11px", background: "rgba(255,255,255,0.04)", borderRadius: 8, border: "1px solid rgba(255,255,255,0.08)" }}>
@@ -1954,8 +1968,8 @@ export function SocialGenerator() {
             <div className="stack" style={{ gap: 16 }}>
               <ExportRow label="⑥ Idioms & Expressions" color={ac} onExport={() => exportCard(idiomRef, "idioms")} />
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <CardShell refProp={idiomRef} theme="mindset" watermark={watermark} label="IDIOMS" accent={ac}>
-                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>IDIOMS & EXPRESSIONS — {topic}</div>
+                <CardShell refProp={idiomRef} theme="mindset" watermark={watermark} label={L.idioms} accent={ac}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>{L.idioms} — {topic}</div>
                   <div className="stack" style={{ gap: 9 }}>
                     {idioms.slice(0, 4).map((id, i) => (
                       <div key={i} style={{ padding: "8px 11px", background: `${ac}0d`, borderRadius: 9, border: `1px solid ${ac}22` }}>
@@ -1975,8 +1989,8 @@ export function SocialGenerator() {
             <div className="stack" style={{ gap: 16 }}>
               <ExportRow label="⑦ Linking Words & Connectors" color={ac} onExport={() => exportCard(connRef, "connectors")} />
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <CardShell refProp={connRef} theme="cyber" watermark={watermark} label="CONNECTORS" accent={ac}>
-                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>CONNECTORS — {topic}</div>
+                <CardShell refProp={connRef} theme="cyber" watermark={watermark} label={L.connectors} accent={ac}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>{L.connectors} — {topic}</div>
                   <div className="stack" style={{ gap: 7 }}>
                     {connectors.slice(0, 6).map((c, i) => (
                       <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "6px 10px", background: `${ac}08`, borderRadius: 8, border: `1px solid ${ac}22` }}>
@@ -1995,8 +2009,8 @@ export function SocialGenerator() {
             <div className="stack" style={{ gap: 16 }}>
               <ExportRow label="⑧ Word Families" color="#a855f7" onExport={() => exportCard(wfRef, "word-family")} />
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <CardShell refProp={wfRef} theme="vibrant" watermark={watermark} label="WORD FAMILY" accent={ac}>
-                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 10 }}>WORD FAMILIES — {topic}</div>
+                <CardShell refProp={wfRef} theme="vibrant" watermark={watermark} label={L.wordFamily} accent={ac}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 10 }}>{L.wordFamily} — {topic}</div>
                   <div className="stack" style={{ gap: 12 }}>
                     {wordFamily.slice(0, 3).map((wf, i) => (
                       <div key={i} style={{ padding: "9px 12px", background: "rgba(255,255,255,0.08)", borderRadius: 9, border: "1px solid rgba(255,255,255,0.15)" }}>
@@ -2019,14 +2033,14 @@ export function SocialGenerator() {
             <div className="stack" style={{ gap: 16 }}>
               <ExportRow label="⑨ Paraphrases" color={ac} onExport={() => exportCard(paraRef, "paraphrases")} />
               <div style={{ display: "flex", justifyContent: "center" }}>
-                <CardShell refProp={paraRef} theme="gold" watermark={watermark} label="PARAPHRASE" accent={ac}>
-                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>PARAPHRASE MASTERY — {topic}</div>
+                <CardShell refProp={paraRef} theme="gold" watermark={watermark} label={L.paraphrases} accent={ac}>
+                  <div style={{ fontSize: 11, fontWeight: 900, color: ac, letterSpacing: 2, marginBottom: 8 }}>{L.paraphrases} — {topic}</div>
                   <div className="stack" style={{ gap: 10 }}>
                     {paraphrases.slice(0, 3).map((p, i) => (
                       <div key={i} style={{ padding: "9px 11px", background: `${ac}0a`, borderRadius: 9, border: `1px solid ${ac}22` }}>
                         <div style={{ fontSize: "0.72rem", color: "#fff", opacity: 0.5, marginBottom: 3 }}>ORIGINAL</div>
                         <div style={{ fontSize: "0.78rem", color: "#fff", opacity: 0.85, fontStyle: "italic", marginBottom: 6 }}>&quot;{p.original}&quot;</div>
-                        <div style={{ fontSize: "0.72rem", color: ac, marginBottom: 2 }}>PARAPHRASE ✅</div>
+                        <div style={{ fontSize: "0.72rem", color: ac, marginBottom: 2 }}>{L.paraphrases} ✅</div>
                         <div style={{ fontSize: "0.78rem", color: ac, fontWeight: 700 }}>&quot;{p.paraphrase}&quot;</div>
                       </div>
                     ))}
