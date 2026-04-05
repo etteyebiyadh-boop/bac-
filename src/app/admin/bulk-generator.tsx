@@ -301,7 +301,7 @@ export function BulkGenerator() {
               {/* HIDDEN Card Renderers (for ZIP cards) */}
               <div style={{ display: "none" }}>
                 {items.map((it, idx) => (
-                  <div key={idx} ref={el => cardRefs.current[idx] = el} style={{ width: "1080px", height: "1920px", background: "#0a0a0f", position: "relative", display: "flex", flexDirection: "column", padding: "80px" }}>
+                  <div key={idx} ref={el => { cardRefs.current[idx] = el; }} style={{ width: "1080px", height: "1920px", background: "#0a0a0f", position: "relative", display: "flex", flexDirection: "column", padding: "80px" }}>
                     <div style={{ textAlign: "center", marginBottom: "120px" }}>
                        <div style={{ width: "120px", height: "120px", background: "linear-gradient(135deg, #6366f1, #a855f7)", borderRadius: "30px", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: "70px", margin: "0 auto 30px" }}>B</div>
                        <div style={{ fontSize: "50px", fontWeight: 900, color: "white", letterSpacing: "10px" }}>BAC EXCELLENCE</div>
